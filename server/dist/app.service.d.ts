@@ -1,3 +1,10 @@
+import { ConfigType } from '@nestjs/config';
+import appConfig from './config/app.config';
 export declare class AppService {
-    getHello(): string;
+    private config;
+    constructor(config: ConfigType<typeof appConfig>);
+    getHello(): {
+        host: string;
+        port: number;
+    };
 }
