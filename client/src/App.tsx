@@ -1,47 +1,25 @@
-import './App.css';
-import { Button } from './components/ui/button';
-import { Input } from './components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tab, CreateChallenge, Record, HotChallenge } from '@/components/Component0117';
-import { ListComponent1, SelectComponent2 } from './components/ComponentSeong';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
     return (
         <div className="App">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
-                <div className="list flex flex-col w-full gap-2">
-                    <h3 className="flex text-md text-gray-400 font-bold hover:text-red-500 transition-all hover:text-lg">
-                        라벨
-                    </h3>
-                    <input type="text" className="flex px-2 py-2 border-2 border-gray-400 rounded-lg" />
-                </div>
-                <div className="list flex flex-col w-full gap-2">
-                    <h3 className="flex text-md text-gray-400 font-bold">라벨</h3>
-                    <input type="text" className="flex px-2 py-2 border-2 border-gray-400 rounded-lg" />
-                </div>
-                <div className="list flex flex-col w-full gap-2">
-                    <h3 className="flex text-md text-gray-400 font-bold">라벨</h3>
-                    <input type="text" className="flex px-2 py-2 border-2 border-gray-400 rounded-lg" />
-                </div>
-            </div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/register" element={<Register />} />
 
-            <Button>하이하이</Button>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input type="email" id="email" placeholder="Email" />
-            </div>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/main" element={<Main />} />
 
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture">Picture</Label>
-                <Input id="picture" type="file" />
-            </div>
+                    <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
+                    <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+                    <Route path="/challengeTear/:challenge_num" element={<ChallengeTear />} />
+                    <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
 
-            <Tab />
-            <CreateChallenge />
-            <HotChallenge />
-            <Record />
-            <ListComponent1 />
-            <SelectComponent2 />
+                    <Route path="/challengeNotice" element={<ChallengeNotice />} />
+                    <Route path="/challengeCreate" element={<ChallengeCreate />} />
+                </Routes>
+            </BrowserRouter>
         </div>
     );
 }
