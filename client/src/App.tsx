@@ -2,6 +2,7 @@ import './App.css'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { Label } from "@/components/ui/label"
+import { Tab, CreateChallenge, Record, HotChallenge } from '@/components/Component0117'
 
 function App() {
 
@@ -33,6 +34,12 @@ function App() {
         <Label htmlFor="picture">Picture</Label>
         <Input id="picture" type="file" />
       </div>
+
+      <Tab />
+      <CreateChallenge />
+      <HotChallenge />
+      <Record />
+
     </div>
   )
 }
