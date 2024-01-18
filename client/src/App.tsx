@@ -1,4 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Home } from './page/home/Home';
+import { Register } from './page/home/Register';
+// import { motion } from 'framer-motion';
 
 function App() {
     return (
@@ -7,6 +10,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
+                    {/* <Route path="/register" element={<Register />} />
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/main" element={<Main />} />
@@ -17,7 +21,7 @@ function App() {
                     <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
 
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
-                    <Route path="/challengeCreate" element={<ChallengeCreate />} />
+                    <Route path="/challengeCreate" element={<ChallengeCreate />} /> */}
                 </Routes>
             </BrowserRouter>
         </div>
