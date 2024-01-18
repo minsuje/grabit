@@ -6,11 +6,14 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-// import { users } from '../users/schema';
+import { users } from '../user/schema';
 
 export const challenge = pgTable('challenge', {
   challenge_num: serial('challenge_num').primaryKey(),
-  // userid_num: integer('userid_num').references(()=> users.userid_num, {onDelete: 'cascade', onUpdate: 'cascade'}),
+  userid_num: integer('userid_num').references(() => users.userid_num, {
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  }),
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
   topic: varchar('topic', { length: 50 }).notNull(),
   challenger_userid_num: integer('challenger_userid_num').notNull(),
@@ -23,9 +26,9 @@ export const challenge = pgTable('challenge', {
   }).notNull(),
 });
 
-// export const challengeRelations = relations(users, ({ many }) => ({
-//   posts: many(challenge),
-// }));
+export const challengeRelations = relations(users, ({ many }) => ({
+  posts: many(challenge),
+}));
 
 export const authentication = pgTable('authentication', {
   authentication_id: serial('authentication_id').primaryKey(),
