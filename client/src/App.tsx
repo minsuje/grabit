@@ -1,23 +1,26 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Main from './page/challenge/main';
+import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 
 function App() {
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/main" element={<Main />} />
+                    <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
+                    {/* <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
 
                     <Route path="/login" element={<Login />} />
-                    <Route path="/main" element={<Main />} />
 
-                    <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
+                    
                     <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
                     <Route path="/challengeTear/:challenge_num" element={<ChallengeTear />} />
                     <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
 
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
-                    <Route path="/challengeCreate" element={<ChallengeCreate />} />
+                    <Route path="/challengeCreate" element={<ChallengeCreate />} /> */}
                 </Routes>
             </BrowserRouter>
         </div>
