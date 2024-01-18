@@ -15,10 +15,16 @@ export function Home() {
                 <Rabbit />
             </div>
 
-            <div className="flex flex-col ">
-                <Button variant="default">로그인</Button>
+            <div className="flex flex-col">
+                <Link to="/login" className="mb-[5%]">
+                    <Button variant="default" className="w-[100%]">
+                        로그인
+                    </Button>
+                </Link>
                 <Link to="/register" className="mt-[5%] ">
-                    <Button variant="default">회원가입</Button>
+                    <Button variant="default" className="w-[100%]">
+                        회원가입
+                    </Button>
                 </Link>
             </div>
         </div>
