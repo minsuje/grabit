@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate": "drizzle-kit push:pg"
+    "migrate": "drizzle-kit push:pg",
+    "generate" : "drizzle-kit generate:pg --confg=drizzle.config2.ts"
   },
   "dependencies": {
     "@knaadh/nestjs-drizzle-pg": "^1.0.0",

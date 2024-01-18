@@ -1,8 +1,9 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 import { account } from '../account/schema';
+import { alarm } from '../alarm/schema';
 
-export const user = pgTable('user', {
+export const users = pgTable('users', {
     userid_num: serial('userid_num').primaryKey(),
     login_type: varchar('login_type', { length: 50 }).notNull(),
     userid: varchar('userid', { length: 20 }),
@@ -15,6 +16,10 @@ export const user = pgTable('user', {
     money: integer('money'),
 });
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(users, ({ many }) => ({
     posts: many(account),
+}));
+
+export const userWithalarmRelations = relations(users, ({ many }) => ({
+    posts: many(alarm),
 }));
