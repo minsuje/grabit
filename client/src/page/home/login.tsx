@@ -1,5 +1,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export function Login() {
     return (
@@ -12,6 +14,12 @@ export function Login() {
                 <Label htmlFor="password">비밀번호</Label>
                 <Input type="password" id="password" placeholder="비밀번호" />
             </div>
+            {/*  /main 더미 데이터*/}
+            <Link to="/main" className="mb-[5%]">
+                <Button variant="default" className="w-full">
+                    로그인
+                </Button>
+            </Link>
         </>
     );
 }
