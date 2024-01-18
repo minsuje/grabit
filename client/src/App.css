@@ -1,0 +1,7 @@
+/* 바깥에 있는 부모 요소에 대한 스타일 */
+.outer-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
