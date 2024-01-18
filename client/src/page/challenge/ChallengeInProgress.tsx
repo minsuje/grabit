@@ -1,5 +1,6 @@
 import { Tab } from '@/components/Component0117';
 import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
+import { Button } from '@/components/ui/button';
 
 function ChallengeInProgress() {
     return (
@@ -18,6 +19,9 @@ function ChallengeInProgress() {
             <ListComponent1 />
 
             <Tab />
+            <div className="text-center ">
+                <Button>인증하기</Button>
+            </div>
         </div>
     );
 }
