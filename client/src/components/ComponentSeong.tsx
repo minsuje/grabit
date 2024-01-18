@@ -2,35 +2,16 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function ListComponent1(ChallengeList) {
-    const ActiveChallenges = [
-        {
-            challengeName: '물마시기',
-            price: 15000,
-            day: 5,
-        },
-        {
-            challengeName: '하늘보기',
-            price: 10000,
-            day: 3,
-        },
-        {
-            challengeName: '독서하기',
-            price: 10000,
-            day: 5,
-        },
-    ];
+export function ListComponent1({ challenge }) {
     return (
         <div>
-            {ActiveChallenges.map((challenge, index) => (
-                <div key={index} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
-                    <div className="flex justify-between">
-                        <p>{challenge.challengeName}</p>
-                        <p>{challenge.day} 일 후 종료</p>
-                    </div>
-                    <p>{challenge.price} 원</p>
+            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+                <div className="flex justify-between">
+                    <p>{challenge.challengeName}</p>
+                    <p>{challenge.day} 일 후 종료</p>
                 </div>
-            ))}
+                <p>{challenge.price} 원</p>
+            </div>
         </div>
     );
 }

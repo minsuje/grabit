@@ -16,7 +16,6 @@ function ChallengeInProgress() {
             <ProgressComponent />
             <ProgressComponent />
             <br />
-            <ListComponent1 />
 
             <Tab />
             <div className="text-center ">
