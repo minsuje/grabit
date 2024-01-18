@@ -10,8 +10,8 @@ function Main() {
 
             <div className="font-bold text-xl p-2">진행중인 챌린지</div>
             <ListComponent1 />
-            <ListComponent1 />
-            <ListComponent1 />
+            {/* <ListComponent1 />
+            <ListComponent1 /> */}
 
             <HotChallenge />
 
