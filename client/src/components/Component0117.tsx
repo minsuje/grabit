@@ -24,20 +24,27 @@ function CreateChallenge() {
     );
 }
 
-function Tab() {
+function Tab({ tab1, tab2, tab1content, tab2content }: { tab1: string; tab2: string; tab1content: JSX.Element; tab2content: JSX.Element }) {
     return (
-        <div className="w-[100%] mt-10">
-            <Tabs defaultValue="account" className="w-[100%]">
+        <div className="w-full mt-10">
+            <Tabs defaultValue={tab1} className="w-full">
                 <TabsList>
-                    <TabsTrigger value="account">나</TabsTrigger>
-                    <TabsTrigger value="password">상대</TabsTrigger>
+                    <TabsTrigger value={tab1}>{tab1}</TabsTrigger>
+                    <TabsTrigger value={tab2}>{tab2}</TabsTrigger>
                 </TabsList>
-                <TabsContent value="account">내가 업로드한 사진</TabsContent>
-                <TabsContent value="password">상대가 업로드한 사진</TabsContent>
+                <TabsContent value={tab1}>{tab1content}</TabsContent>
+                <TabsContent value={tab2}>{tab2content}</TabsContent>
             </Tabs>
         </div>
     );
 }
+
+
+
+
+
+
+
 const recordData = [29, 19, 3];
 function Record() {
     return (

@@ -10,9 +10,11 @@ import { DailyMissionModule } from './daily-mission/daily-mission.module';
 import { DailyMissionModule } from './daily-mission/daily-mission.module';
 import { FollowModule } from './follow/follow.module';
 import { AccountModule } from './account/account.module';
+import { ChallengeModule } from './modules/challenge/challenge.module';
+
 
 @Module({
-  imports: [UserModule, DrizzleModule, AccountModule, FollowModule, DailyMissionModule],
+  imports: [UserModule, DrizzleModule, AccountModule, FollowModule, DailyMissionModule, ChallengeModule],
   controllers: [AppController],
   providers: [AppService],
 })
