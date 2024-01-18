@@ -26,7 +26,7 @@ function CreateChallenge() {
 
 function Tab() {
     return (
-        <div className="w-[100%]">
+        <div className="w-[100%] mt-10">
             <Tabs defaultValue="account" className="w-[100%]">
                 <TabsList>
                     <TabsTrigger value="account">나</TabsTrigger>
@@ -52,17 +52,34 @@ function Record() {
     );
 }
 
-const hotChallenge = ['물마시기', '걷기', '공부'];
 function HotChallenge() {
+    const hotChallenge = ['물마시기', '걷기', '공부'];
     return (
         <>
             <div className="font-bold text-xl p-2">인기 챌린지</div>
             <div className="flex gap-8 text-center">
-                {hotChallenge.map((value) => {
-                    return <div className="rounded-lg bg-slate-100 w-[30%] m-2 p-2">{value}</div>;
+                {hotChallenge.map((value, idx) => {
+                    return (
+                        <div key={idx} className="rounded-lg bg-slate-100 w-[30%] m-2 p-2">
+                            {value}
+                        </div>
+                    );
                 })}
             </div>
         </>
     );
 }
-export { CreateChallenge, Tab, Record, HotChallenge };
+
+function Ranking() {
+    return (
+        <div className="flex flex-col gap-3 p-2 font-bold ">
+            <div> 1위 알아서뭐해 3000점</div>
+            <div> 2위 망고가얼망고 2000점</div>
+            <div> 3위 요씨 1000점</div>
+            <div>.</div>
+            <div>.</div>
+            <div> 339위 나 1점</div>
+        </div>
+    );
+}
+export { CreateChallenge, Tab, Record, HotChallenge, Ranking };
