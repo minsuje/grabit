@@ -180,9 +180,6 @@ export declare const authentication: import("drizzle-orm/pg-core").PgTableWithCo
     };
     dialect: "pg";
 }>;
-export declare const challengeRelations: import("drizzle-orm").Relations<"challenge", {
-    authentication: import("drizzle-orm").One<"challenge", false>;
-}>;
 export declare const authentication_img_emoticon: import("drizzle-orm/pg-core").PgTableWithColumns<{
     name: "authentication_img_emoticon";
     schema: undefined;

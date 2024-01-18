@@ -1,21 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { DrizzleModule } from './drizzle/drizzle.module';
-import { AccountModule } from './account/account.module';
-import { DailyMissionModule } from './daily_mission/daily_mission.module';
-import { DailyMissionModule } from './daily-mission/daily-mission.module';
-import { DailyMissionModule } from './daily-mission/daily-mission.module';
-import { DailyMissionModule } from './daily-mission/daily-mission.module';
-import { FollowModule } from './follow/follow.module';
-import { AccountModule } from './account/account.module';
+import { UserModule } from './modules/user/user.module';
+import { AccountModule } from './modules/account/account.module';
+import { DailyMissionModule } from './modules/daily_mission/daily_mission.module';
+import { FollowModule } from './modules/follow/follow.module';
 import { ChallengeModule } from './modules/challenge/challenge.module';
-
+import { AlarmModule } from './alarm/alarm.module';
 
 @Module({
-  imports: [UserModule, DrizzleModule, AccountModule, FollowModule, DailyMissionModule, ChallengeModule],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [UserModule, AccountModule, FollowModule, DailyMissionModule, ChallengeModule, AlarmModule],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}

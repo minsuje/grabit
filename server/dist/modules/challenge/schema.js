@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authentication_img_emoticon = exports.challengeRelations = exports.authentication = exports.challenge = void 0;
+exports.authentication_img_emoticon = exports.authentication = exports.challenge = void 0;
 const pg_core_1 = require("drizzle-orm/pg-core");
-const drizzle_orm_1 = require("drizzle-orm");
 exports.challenge = (0, pg_core_1.pgTable)('challenge', {
     challenge_num: (0, pg_core_1.serial)('challenge_num').primaryKey(),
     challenge_name: (0, pg_core_1.varchar)('challenge_name', { length: 200 }).notNull(),
@@ -23,12 +22,6 @@ exports.authentication = (0, pg_core_1.pgTable)('authentication', {
     userid_num: (0, pg_core_1.integer)('userid_num').notNull(),
     authentication_img: (0, pg_core_1.varchar)('authentication_img', { length: 200 }).notNull(),
 });
-exports.challengeRelations = (0, drizzle_orm_1.relations)(exports.challenge, ({ one }) => ({
-    authentication: one(exports.challenge, {
-        fields: [exports.authentication.challenge_num],
-        references: [exports.challenge.challenge_num],
-    }),
-}));
 exports.authentication_img_emoticon = (0, pg_core_1.pgTable)('authentication_img_emoticon', {
     authentication_img_emoticon_id: (0, pg_core_1.serial)('authentication_img_emoticon_id').primaryKey(),
     authentication_img_comment_userid_num: (0, pg_core_1.integer)('authentication_img_comment_userid_num').notNull(),
