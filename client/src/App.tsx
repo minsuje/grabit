@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-
 import Main from './page/challenge/Main';
-
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import { Home } from './page/home/home';
 import { Register } from './page/home/Register';
 import { Login } from './page/home/Login';
+import { ChallengeTear } from '@/page/challenge/ChallengeTear';
 // import { motion } from 'framer-motion';
+import { ChallengeResult } from '@/page/challenge/challengeResult';
 
 function App() {
     return (
@@ -18,9 +18,8 @@ function App() {
                     <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
-
-              
-
+                    <Route path="/challengetear" element={<ChallengeTear />} />
+                    <Route path="/challengResult" element={<ChallengeResult />} />
                     <Route path="/login" element={<Login />} />
 
                     {/*
