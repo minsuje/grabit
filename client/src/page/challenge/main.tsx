@@ -2,7 +2,7 @@ import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import ChallengeData from './../../data/ChallengeData';
+import ChallengeData from '../../data/ChallengeData';
 
 function Main() {
     return (
@@ -14,7 +14,7 @@ function Main() {
 
             {ChallengeData.map((challenge) => {
                 return (
-                    <Link to="/challengeInProgress/1">
+                    <Link to={`/challengeInProgress/${challenge.challenge_num}`}>
                         <ListComponent1 challenge={challenge} />
                     </Link>
                 );
@@ -24,7 +24,9 @@ function Main() {
             <HotChallenge />
 
             <div className="text-right p-3">
-                <Button>챌린지 생성</Button>
+                <Link to="/challengeCreate">
+                    <Button>챌린지 생성</Button>
+                </Link>
             </div>
         </div>
     );
