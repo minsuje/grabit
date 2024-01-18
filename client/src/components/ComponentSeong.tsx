@@ -2,15 +2,15 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function ListComponent1() {
+export function ListComponent1({ challenge }) {
     return (
-        <div className="App">
-            <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
-                <div>
-                    <div className="text-black font-bold">물마시기</div>
-                    <div className="text-black mt-2">15000</div>
+        <div>
+            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+                <div className="flex justify-between">
+                    <p>{challenge.challengeName}</p>
+                    <p>{challenge.day} 일 후 종료</p>
                 </div>
-                <div className="text-black flex  ">5일 후 종료</div>
+                <p>{challenge.price} 원</p>
             </div>
         </div>
     );

@@ -63,11 +63,10 @@ function HotChallenge() {
     const hotChallenge = ['물마시기', '걷기', '공부'];
     return (
         <>
-            <div className="font-bold text-xl p-2">인기 챌린지</div>
-            <div className="flex gap-8 text-center">
+            <div className="flex gap-2 text-center">
                 {hotChallenge.map((value, idx) => {
                     return (
-                        <div key={idx} className="rounded-lg bg-slate-100 w-[30%] m-2 p-2">
+                        <div key={idx} className="rounded-lg bg-slate-100 w-full m-2 p-2">
                             {value}
                         </div>
                     );
