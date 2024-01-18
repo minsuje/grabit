@@ -16,13 +16,13 @@ export function ListComponent1({ challenge }) {
     );
 }
 
-export function ListComponent2() {
+export function ListComponent2({ challenge }) {
     return (
         <>
             <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
                 <div className="">
-                    <div className="text-black font-bold">물마시기</div>
-                    <div className="text-black mt-2">15,000</div>
+                    <div className="text-black font-bold">{challenge.challengeName}</div>
+                    <div className="text-black mt-2">{challenge.price} 원</div>
                 </div>
                 <div className="">
                     <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
