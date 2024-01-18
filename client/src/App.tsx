@@ -7,6 +7,8 @@ import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import { Home } from './page/home/home';
 import { Register } from './page/home/Register';
 import { Login } from './page/home/Login';
+import ChallengeNotice from './page/challenge/ChallengeNotice';
+import ChallengeCreate from './page/challenge/ChallengeCreate';
 // import { motion } from 'framer-motion';
 
 function App() {
@@ -14,9 +16,10 @@ function App() {
         <div className="App">
             <BrowserRouter>
                 <Routes>
+                    <Route path="/" element={<Main />} />
                     <Route path="/main" element={<Main />} />
                     <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
-                    <Route path="/" element={<Home />} />
+                    {/* <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
 
               
