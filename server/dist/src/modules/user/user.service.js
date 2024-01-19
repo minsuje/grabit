@@ -9,6 +9,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 let UserService = class UserService {
+    constructor() {
+        this.user = [];
+    }
+    createNewUser(createUserDto) {
+        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money, } = createUserDto;
+        const userInfo = {
+            login_type: login_type,
+            userid: userid,
+            social_userid: social_userid,
+            password: password,
+            name: name,
+            nickname: nickname,
+            profile_img: profile_img,
+            score_num: score_num,
+            money: money,
+        };
+        this.user.push(userInfo);
+        return userInfo;
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
