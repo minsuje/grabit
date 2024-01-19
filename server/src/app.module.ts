@@ -6,6 +6,7 @@ import { DailyMissionModule } from './modules/daily_mission/daily_mission.module
 import { FollowModule } from './modules/follow/follow.module';
 import { ChallengeModule } from './modules/challenge/challenge.module';
 import { AlarmModule } from './modules/alarm/alarm.module';
+import { ScoreModule } from './modules/score/score.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AlarmModule } from './modules/alarm/alarm.module';
     DailyMissionModule,
     ChallengeModule,
     AlarmModule,
+    ScoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],
