@@ -22,4 +22,21 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },
+  rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        arrowSpacing: ['error', { before: true, after: true }],
+        singleQuote: true,
+        semi: true,
+        useTabs: false,
+        tabWidth: 2,
+        trailingComma: 'true',
+        printWidth: 80,
+        bracketSpacing: true,
+        arrowParens: 'always',
+        endOfLine: 'auto',
+      },
+    ],
+  },
 };

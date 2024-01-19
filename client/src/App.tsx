@@ -9,6 +9,10 @@ import ChallengeNotice from './page/challenge/ChallengeNotice';
 import ChallengeCreate from './page/challenge/ChallengeCreate';
 // import { motion } from 'framer-motion';
 import { ChallengeResult } from '@/page/challenge/challengeResult';
+import ChallengeImage from './page/challenge/ChallengeImage';
+import ChallengeList from './page/challenge/ChallengeList';
+import ChallengeEdit from './page/challenge/ChallengeEdit';
+import ChallengeDetail from './page/challenge/ChallengeDetail';
 
 function App() {
     return (
@@ -25,9 +29,14 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
                     <Route path="/challengresult" element={<ChallengeResult />} />
+                    <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+                    <Route path="/challengeList" element={<ChallengeList />} />
+                    <Route path="/challengeEdit/:challenge_num" element={<ChallengeEdit />} />
+                    <Route path="/challengeDetail/:challenge_num" element={<ChallengeDetail />} />
 
-                    {/* <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+                    {/* 
                     <Route path="/challengeTear/:challenge_num" element={<ChallengeTear />} /> */}
+
                     <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
 
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
