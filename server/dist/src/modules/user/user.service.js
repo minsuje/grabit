@@ -8,25 +8,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
+const schema_1 = require("./schema");
+const db_1 = require("../../../db/db");
 let UserService = class UserService {
     constructor() {
-        this.user = [];
-    }
-    createNewUser(createUserDto) {
-        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
-        const userInfo = {
-            login_type: login_type,
-            userid: userid,
-            social_userid: social_userid,
-            password: password,
-            name: name,
-            nickname: nickname,
-            profile_img: profile_img,
-            score_num: score_num,
-            money: money,
+        this.createNewUser = async (login_type, createUserDto) => {
+            const { userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
+            const userInfo = {
+                login_type: login_type,
+                userid: userid,
+                social_userid: social_userid,
+                password: password,
+                name: name,
+                nickname: nickname,
+                profile_img: profile_img,
+                score_num: score_num,
+                money: money,
+            };
+            return await db_1.db.insert(schema_1.users).values(userInfo);
         };
-        this.user.push(userInfo);
-        return userInfo;
     }
 };
 exports.UserService = UserService;

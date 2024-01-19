@@ -1,13 +1,6 @@
+import { CreateUserDto } from './dto/create-user.dto';
 export declare class UserModule {
 }
 export interface User {
-    login_type: string;
-    userid?: string;
-    social_userid?: string;
-    password?: string;
-    name?: string;
-    nickname?: string;
-    profile_img?: string;
-    score_num: number;
-    money: number;
+    createUserDto: CreateUserDto;
 }
