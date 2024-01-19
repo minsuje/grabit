@@ -1,40 +1,50 @@
-import './App.css'
-import { Button } from './components/ui/button'
-import { Input } from './components/ui/input'
-import { Label } from "@/components/ui/label"
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Main from './page/challenge/Main';
+import ChallengeInProgress from './page/challenge/ChallengeInProgress';
+import { Home } from './page/home/home';
+import { Register } from './page/home/Register';
+import { Login } from '@/page/home/Login';
+import ChallengeNotice from './page/challenge/ChallengeNotice';
+import ChallengeCreate from './page/challenge/ChallengeCreate';
+// import { motion } from 'framer-motion';
+import { ChallengeResult } from '@/page/challenge/challengeResult';
+import ChallengeImage from './page/challenge/ChallengeImage';
+import ChallengeList from './page/challenge/ChallengeList';
+import ChallengeEdit from './page/challenge/ChallengeEdit';
+import ChallengeDetail from './page/challenge/ChallengeDetail';
 
 function App() {
+    return (
+        <div className="App">
+            <BrowserRouter>
+                <Routes>
+                    {/* 첫 화면 */}
+                    <Route path="/" element={<Home />} />
 
-  return (
-    <div className="App">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
-        <div className='list flex flex-col w-full gap-2'>
-          <h3 className='flex text-md text-gray-400 font-bold hover:text-red-500 transition-all hover:text-lg'>라벨</h3>
-          <input type="text" className='flex px-2 py-2 border-2 border-gray-400 rounded-lg' />
+                    <Route path="/login" element={<Login />} />
+
+                    <Route path="/main" element={<Main />} />
+                    <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
+                    <Route path="/register" element={<Register />} />
+                    {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
+                    <Route path="/challengresult" element={<ChallengeResult />} />
+                    <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+                    <Route path="/challengeList" element={<ChallengeList />} />
+                    <Route path="/challengeEdit/:challenge_num" element={<ChallengeEdit />} />
+                    <Route path="/challengeDetail/:challenge_num" element={<ChallengeDetail />} />
+
+                    {/* 
+                    <Route path="/challengeTear/:challenge_num" element={<ChallengeTear />} /> */}
+
+                    <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
+
+                    <Route path="/challengeNotice" element={<ChallengeNotice />} />
+                    <Route path="/challengeCreate" element={<ChallengeCreate />} />
+                </Routes>
+            </BrowserRouter>
         </div>
-        <div className='list flex flex-col w-full gap-2'>
-          <h3 className='flex text-md text-gray-400 font-bold'>라벨</h3>
-          <input type="text" className='flex px-2 py-2 border-2 border-gray-400 rounded-lg' />
-        </div>
-        <div className='list flex flex-col w-full gap-2'>
-          <h3 className='flex text-md text-gray-400 font-bold'>라벨</h3>
-          <input type="text" className='flex px-2 py-2 border-2 border-gray-400 rounded-lg' />
-        </div>
-      </div>
-
-      <Button>하이하이</Button>
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" placeholder="Email" />
-      </div>
-
-
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="picture">Picture</Label>
-        <Input id="picture" type="file" />
-      </div>
-    </div>
-  )
+    );
 }
 
-export default App
+export default App;
