@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.module';
+import { users } from './schema';
+import { db } from 'db/db';
 
 @Injectable()
 export class UserService {
-    private user: User[] = [];
     createNewUser(createUserDto: CreateUserDto) {
         const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money } =
             createUserDto;
-        const userInfo: User = {
+        const userInfo: CreateUserDto = {
             login_type: login_type,
             userid: userid,
             social_userid: social_userid,
@@ -19,7 +19,7 @@ export class UserService {
             score_num: score_num,
             money: money,
         };
-        this.user.push(userInfo);
+        // return db.insert(users).values(userInfo);
         return userInfo;
     }
 }
