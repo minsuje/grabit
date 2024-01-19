@@ -8,8 +8,14 @@ import { ChallengeModule } from './modules/challenge/challenge.module';
 import { AlarmModule } from './modules/alarm/alarm.module';
 
 @Module({
-    imports: [UserModule, FollowModule, DailyMissionModule, ChallengeModule, AlarmModule],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    UserModule,
+    FollowModule,
+    DailyMissionModule,
+    ChallengeModule,
+    AlarmModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
