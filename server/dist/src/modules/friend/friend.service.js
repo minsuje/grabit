@@ -6,12 +6,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FollowController = void 0;
+exports.FriendService = void 0;
 const common_1 = require("@nestjs/common");
-let FollowController = class FollowController {
+let FriendService = class FriendService {
+    create(createFriendDto) {
+        return 'This action adds a new friend';
+    }
+    findAll() {
+        return `This action returns all friend`;
+    }
+    findOne(id) {
+        return `This action returns a #${id} friend`;
+    }
+    update(id, updateFriendDto) {
+        return `This action updates a #${id} friend`;
+    }
+    remove(id) {
+        return `This action removes a #${id} friend`;
+    }
 };
-exports.FollowController = FollowController;
-exports.FollowController = FollowController = __decorate([
-    (0, common_1.Controller)('follow')
-], FollowController);
-//# sourceMappingURL=follow.controller.js.map
+exports.FriendService = FriendService;
+exports.FriendService = FriendService = __decorate([
+    (0, common_1.Injectable)()
+], FriendService);
+//# sourceMappingURL=friend.service.js.map

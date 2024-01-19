@@ -2,8 +2,8 @@ export declare const challenge: import("drizzle-orm/pg-core").PgTableWithColumns
     name: "challenge";
     schema: undefined;
     columns: {
-        challenge_num: import("drizzle-orm/pg-core").PgColumn<{
-            name: "challenge_num";
+        challenge_id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "challenge_id";
             tableName: "challenge";
             dataType: "number";
             columnType: "PgSerial";
@@ -62,8 +62,8 @@ export declare const challenge: import("drizzle-orm/pg-core").PgTableWithColumns
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;
-        goalMoney: import("drizzle-orm/pg-core").PgColumn<{
-            name: "goalMoney";
+        goal_money: import("drizzle-orm/pg-core").PgColumn<{
+            name: "goal_money";
             tableName: "challenge";
             dataType: "number";
             columnType: "PgInteger";
@@ -122,6 +122,30 @@ export declare const challenge: import("drizzle-orm/pg-core").PgTableWithColumns
             enumValues: [string, ...string[]];
             baseColumn: never;
         }, {}, {}>;
+        created_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "challenge";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updated_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
+            tableName: "challenge";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
     };
     dialect: "pg";
 }>;
@@ -144,8 +168,8 @@ export declare const authentication: import("drizzle-orm/pg-core").PgTableWithCo
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;
-        challenge_num: import("drizzle-orm/pg-core").PgColumn<{
-            name: "challenge_num";
+        challenge_id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "challenge_id";
             tableName: "authentication";
             dataType: "number";
             columnType: "PgInteger";
@@ -158,6 +182,18 @@ export declare const authentication: import("drizzle-orm/pg-core").PgTableWithCo
         }, {}, {}>;
         created_at: import("drizzle-orm/pg-core").PgColumn<{
             name: "created_at";
+            tableName: "authentication";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updated_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
             tableName: "authentication";
             dataType: "date";
             columnType: "PgTimestamp";
@@ -247,6 +283,30 @@ export declare const authentication_img_emoticon: import("drizzle-orm/pg-core").
             driverParam: string | number;
             notNull: true;
             hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        created_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "created_at";
+            tableName: "authentication_img_emoticon";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updated_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
+            tableName: "authentication_img_emoticon";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;
