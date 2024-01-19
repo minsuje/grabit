@@ -9,5 +9,5 @@ export const alarm = pgTable('alarm', {
     reference_id: integer('reference_id').notNull(),
     type: varchar('type', { length: 20 }).notNull(),
     is_confirm: varchar('is_confirm', { length: 10 }).notNull(),
-    created_at: timestamp('created_at').defaultNow().notNull(),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
 });
