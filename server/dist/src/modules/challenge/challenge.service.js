@@ -6,12 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChallengeService = void 0;
+exports.ChallengeCreateService = void 0;
 const common_1 = require("@nestjs/common");
-let ChallengeService = class ChallengeService {
+let ChallengeCreateService = class ChallengeCreateService {
 };
-exports.ChallengeService = ChallengeService;
-exports.ChallengeService = ChallengeService = __decorate([
+exports.ChallengeCreateService = ChallengeCreateService;
+exports.ChallengeCreateService = ChallengeCreateService = __decorate([
     (0, common_1.Injectable)()
-], ChallengeService);
+], ChallengeCreateService);
 //# sourceMappingURL=challenge.service.js.map

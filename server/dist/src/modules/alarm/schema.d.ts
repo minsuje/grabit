@@ -26,8 +26,8 @@ export declare const alarm: import("drizzle-orm/pg-core").PgTableWithColumns<{
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;
-        challenge_num: import("drizzle-orm/pg-core").PgColumn<{
-            name: "challenge_num";
+        reference_id: import("drizzle-orm/pg-core").PgColumn<{
+            name: "reference_id";
             tableName: "alarm";
             dataType: "number";
             columnType: "PgInteger";
@@ -35,6 +35,42 @@ export declare const alarm: import("drizzle-orm/pg-core").PgTableWithColumns<{
             driverParam: string | number;
             notNull: true;
             hasDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        type: import("drizzle-orm/pg-core").PgColumn<{
+            name: "type";
+            tableName: "alarm";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        is_confirm: import("drizzle-orm/pg-core").PgColumn<{
+            name: "is_confirm";
+            tableName: "alarm";
+            dataType: "string";
+            columnType: "PgVarchar";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, {}, {}>;
+        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+            name: "createdAt";
+            tableName: "alarm";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;

@@ -19,7 +19,8 @@ export const users = pgTable('users', {
   profile_img: varchar('profile_img', { length: 200 }),
   score_num: integer('score_num').notNull(),
   money: integer('money'),
-  createdAt: timestamp('createdAt').defaultNow(),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -34,7 +35,8 @@ export const account = pgTable('account', {
   transaction: varchar('transaction', { length: 20 }).notNull(),
   transaction_name: integer('transaction_name').notNull(),
   status: varchar('status', { length: 20 }).notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
   userid_num: integer('userid_num').references(() => users.userid_num, {
     onDelete: 'cascade',
   }),
@@ -56,6 +58,8 @@ export const score = pgTable('score', {
   userid_num: serial('userid_num').references(() => users.userid_num, {
     onDelete: 'cascade',
   }),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
   score_description: varchar('score_description', { length: 100 }),
   score_type: varchar('score_type', { length: 30 }),
   score: integer('score'),

@@ -9,4 +9,4 @@ exports.default = {
     user: 'testuser',
     database: 'grabit',
 };
-//# sourceMappingURL=drizzle.comfig2.js.map
+//# sourceMappingURL=drizzle.config2.js.map

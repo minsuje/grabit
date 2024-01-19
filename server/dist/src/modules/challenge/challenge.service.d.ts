@@ -1,2 +1,2 @@
-export declare class ChallengeService {
+export declare class ChallengeCreateService {
 }

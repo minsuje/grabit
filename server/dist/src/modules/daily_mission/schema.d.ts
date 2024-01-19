@@ -38,8 +38,20 @@ export declare const dailyMission: import("drizzle-orm/pg-core").PgTableWithColu
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;
-        createdAt: import("drizzle-orm/pg-core").PgColumn<{
+        created_at: import("drizzle-orm/pg-core").PgColumn<{
             name: "created_at";
+            tableName: "dailyMission";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, {}, {}>;
+        updated_at: import("drizzle-orm/pg-core").PgColumn<{
+            name: "updated_at";
             tableName: "dailyMission";
             dataType: "date";
             columnType: "PgTimestamp";

@@ -6,17 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FollowModule = void 0;
+exports.FriendModule = void 0;
 const common_1 = require("@nestjs/common");
-const follow_controller_1 = require("./follow.controller");
-const follow_service_1 = require("./follow.service");
-let FollowModule = class FollowModule {
+const friend_service_1 = require("./friend.service");
+const friend_controller_1 = require("./friend.controller");
+let FriendModule = class FriendModule {
 };
-exports.FollowModule = FollowModule;
-exports.FollowModule = FollowModule = __decorate([
+exports.FriendModule = FriendModule;
+exports.FriendModule = FriendModule = __decorate([
     (0, common_1.Module)({
-        controllers: [follow_controller_1.FollowController],
-        providers: [follow_service_1.FollowService]
+        controllers: [friend_controller_1.FriendController],
+        providers: [friend_service_1.FriendService],
     })
-], FollowModule);
-//# sourceMappingURL=follow.module.js.map
+], FriendModule);
+//# sourceMappingURL=friend.module.js.map
