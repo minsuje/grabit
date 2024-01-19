@@ -11,4 +11,4 @@ export class UserController {
     createUserDto(@Param('type') type: string, @Body() createUserDto: CreateUserDto): any {
         return db.insert(users).values(createUserDto);
     }
-}
+

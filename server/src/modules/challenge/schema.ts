@@ -16,16 +16,14 @@ export const challenge = pgTable('challenge', {
   }),
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
   topic: varchar('topic', { length: 50 }).notNull(),
-  challenger_userid_num: integer('challenger_userid_num').notNull(),
+  challenger_userid_num: integer('challenger_userid_num').array().notNull(),
   goal_money: integer('goal_money').notNull(),
   deadline: varchar('deadline', { length: 20 }).notNull(),
-  winner_userid_num: integer('winner_userid_num'),
+  winner_userid_num: integer('winner_userid_num').array(),
   authentication_term: integer('authentication_term').notNull(),
   authentication_time: varchar('authentication_time', {
     length: 100,
   }).notNull(),
-  created_at: timestamp('created_at').defaultNow().notNull(),
-  updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const challengeRelations = relations(users, ({ many }) => ({
@@ -39,7 +37,6 @@ export const authentication = pgTable('authentication', {
     { onDelete: 'cascade', onUpdate: 'cascade' },
   ),
   created_at: timestamp('created_at').defaultNow().notNull(),
-  updated_at: timestamp('updated_at').defaultNow().notNull(),
   userid_num: integer('userid_num').notNull(),
   authentication_img: varchar('authentication_img', {
     length: 200,
@@ -66,8 +63,6 @@ export const authentication_img_emoticon = pgTable(
     authentication_img_comment_emoticon: integer(
       'authentication_img_comment_emoticon',
     ).notNull(),
-    created_at: timestamp('created_at').defaultNow().notNull(),
-    updated_at: timestamp('updated_at').defaultNow().notNull(),
   },
 );
 
