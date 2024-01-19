@@ -6,8 +6,11 @@ import { users } from '../src/modules/user/schema';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(3000);
-  const user = db.select().from(users);
-
-  console.log(user);
+  getUsers();
 }
 bootstrap();
+
+async function getUsers() {
+  const user = await db.select().from(users);
+  console.log(user);
+}

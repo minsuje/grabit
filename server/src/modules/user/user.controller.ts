@@ -6,7 +6,7 @@ import { User } from './user.module';
 import { db } from '../../../db/db';
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
     @Post('/register/:type')
     createUserDto(@Param('type') type: string, @Body() createUserDto: CreateUserDto): User {
