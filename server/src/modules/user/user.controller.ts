@@ -5,10 +5,10 @@ import { UserService } from './user.service';
 import { User } from './user.module';
 @Controller('user')
 export class UserController {
-    constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-    @Post('/register/:type')
-    createUserDto(@Param('type') type: string, @Body() createUserDto: CreateUserDto): User {
-        return this.userService.createNewUser(createUserDto);
-    }
+  // @Post('/register/:type')
+  // createUserDto(@Param('type') type: string, @Body() createUserDto: CreateUserDto): User {
+  //     return this.userService.createNewUser(createUserDto);
+  // }
 }
