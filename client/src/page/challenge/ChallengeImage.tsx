@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 
 function ChallengeImage() {
-    const emotionList = useRef<HTMLInputElement>(null);
+    const emotionList: any = useRef<HTMLInputElement>(null);
 
     const [first, setFirst] = useState(0);
     const [second, setSecond] = useState(0);
     const [third, setThird] = useState(0);
     const [fourth, setFourth] = useState(0);
 
-    function addEmotion(emotion) {
+    function addEmotion(emotion: any) {
         switch (emotion) {
             case 'first':
                 setFirst(first + 1);

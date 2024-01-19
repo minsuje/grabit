@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEffect, useState } from 'react';
 
 function CreateChallenge() {
     return (
@@ -24,7 +25,17 @@ function CreateChallenge() {
     );
 }
 
-function Tab({ tab1, tab2, tab1content, tab2content }: { tab1: string; tab2: string; tab1content: JSX.Element; tab2content: JSX.Element }) {
+function Tab({
+    tab1,
+    tab2,
+    tab1content,
+    tab2content,
+}: {
+    tab1: string;
+    tab2: string;
+    tab1content: JSX.Element;
+    tab2content: JSX.Element;
+}) {
     return (
         <div className="w-full mt-10">
             <Tabs defaultValue={tab1} className="w-full">
@@ -38,12 +49,6 @@ function Tab({ tab1, tab2, tab1content, tab2content }: { tab1: string; tab2: str
         </div>
     );
 }
-
-
-
-
-
-
 
 const recordData = [29, 19, 3];
 function Record() {
@@ -60,7 +65,24 @@ function Record() {
 }
 
 function HotChallenge() {
-    const hotChallenge = ['물마시기', '걷기', '공부'];
+    const [hotChallenge, setHotChallenge] = useState<string[]>([]);
+    useEffect(() => {
+        setHotChallenge(['물마시기', '걷기', '공부']);
+        console.log(hotChallenge);
+        //     {
+        //         /* axios.post('/HotChallenge')
+        //         .then(response => {
+        //             console.log(response);
+        //             setHotchallenge(response)
+        //         })
+        //         .catch(error)=>{
+        //             console.error('HotChallenge Component에서 오류발생 :',error)
+        //         } */
+        //     }
+    }, []);
+
+    // const hotChallenge = ['물마시기', '걷기', '공부'];
+
     return (
         <>
             <div className="flex gap-2 text-center">
