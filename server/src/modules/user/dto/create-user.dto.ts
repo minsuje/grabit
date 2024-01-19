@@ -9,3 +9,8 @@ export class CreateUserDto {
     score_num: number;
     money: number;
 }
+
+export class LoginDto {
+    userid: string;
+    password: string;
+}
