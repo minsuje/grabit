@@ -19,6 +19,7 @@ export const users = pgTable('users', {
   profile_img: varchar('profile_img', { length: 200 }),
   score_num: integer('score_num').notNull(),
   money: integer('money'),
+  createdAt: timestamp('createdAt').defaultNow(),
 });
 
 export const userRelations = relations(users, ({ many }) => ({

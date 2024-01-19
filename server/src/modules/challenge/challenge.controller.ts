@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ChallengeCreateDto } from './dto/challenge-create.dto';
 
-@Controller('challenge')
-export class ChallengeController {}
+@Controller('/challengeCreate')
+export class ChallengeCreateController {
+  @Post()
+  postChallengeCreate(@Body() ChallengeCreateDto: ChallengeCreateDto) {
+    console.log('postChallengeCreate', ChallengeCreateDto);
+  }
+}
