@@ -1,5 +1,6 @@
 # Base image
-FROM node:18-alpine
+
+FROM oven/bun:latest AS base
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN bun i
+RUN bun install
 
 # Bundle app source
 COPY . .
