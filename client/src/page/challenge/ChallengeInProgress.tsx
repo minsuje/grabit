@@ -9,10 +9,60 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function ChallengeInProgress() {
     const { challenge_num } = useParams();
+    const myImage = (
+        <div className="grid grid-cols-2">
+            <Link to="/challengeImage/1">
+                <div>
+                    <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"></img>
+                </div>
+            </Link>
+
+            <Link to="/challengeImage/1">
+                <div>
+                    <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"></img>
+                </div>
+            </Link>
+            <Link to="/challengeImage/1">
+                <div>
+                    <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"></img>
+                </div>
+            </Link>
+            <Link to="/challengeImage/1">
+                <div>
+                    <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"></img>
+                </div>
+            </Link>
+        </div>
+    );
+    const otherImage = (
+        <div className="grid grid-cols-2">
+            <Link to="/challengeImage/2">
+                <div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"></img>
+                </div>
+            </Link>
+
+            <Link to="/challengeImage/2">
+                <div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"></img>
+                </div>
+            </Link>
+            <Link to="/challengeImage/2">
+                <div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"></img>
+                </div>
+            </Link>
+            <Link to="/challengeImage/2">
+                <div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"></img>
+                </div>
+            </Link>
+        </div>
+    );
 
     return (
         <div className="container">
@@ -29,7 +79,7 @@ function ChallengeInProgress() {
             <br />
             <ListComponent1 challenge={ChallengeData[Number(challenge_num)]} />
 
-            <Tab />
+            <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 
             <div className="text-center ">
                 <DropdownMenu>
