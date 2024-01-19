@@ -28,3 +28,10 @@ export class ChallengeCreateService {
     });
   };
 }
+
+@Injectable()
+export class ChallengeListService {
+  challengeList = async () => {
+    return await db.select().from(challenge);
+  };
+}
