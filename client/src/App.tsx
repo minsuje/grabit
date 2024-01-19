@@ -13,6 +13,7 @@ import ChallengeImage from './page/challenge/ChallengeImage';
 import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
 import ChallengeDetail from './page/challenge/ChallengeDetail';
+import '@/App.css';
 
 function App() {
     return (

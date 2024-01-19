@@ -4,28 +4,28 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 
 export function Register() {
     const { type } = useParams();
-    const [name, setName] = useState(''); // 이름
-    const [username, setUsername] = useState(''); // 아이디
-    const [nickname, setNickname] = useState(''); // 닉네임
-    const [password, setPassword] = useState(''); // 패스워드
-    const [confirmPassword, setConfirmPassword] = useState(''); // 패스워드 확인
+    const [name, setName] = useState<string>(''); // 이름
+    const [username, setUsername] = useState<string>(''); // 아이디
+    const [nickname, setNickname] = useState<string>(''); // 닉네임
+    const [password, setPassword] = useState<string>(''); // 패스워드
+    const [confirmPassword, setConfirmPassword] = useState<string>(''); // 패스워드 확인
 
     const [passwordError, setPasswordError] = useState(''); // 비밀번호 유효성 검사 값 저장
 
     const navigate = useNavigate(); //useNavigate 훅을 사용하여 navigate 함수를 가져옴
 
     // 비밀번호 유효성 검사
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newPassword = e.target.value;
         setPassword(newPassword);
         validatePassword(newPassword, confirmPassword);
     };
 
-    const handleConfirmPasswordChange = (e) => {
+    const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newConfirmPassword = e.target.value;
         setConfirmPassword(newConfirmPassword);
         validatePassword(password, newConfirmPassword);
@@ -40,27 +40,25 @@ export function Register() {
             setPasswordError('');
         }
     };
-
-    const register = () => {
+    const register = async () => {
         if (passwordError) {
             window.alert('비밀번호를 확인하세요.');
             return;
         }
 
-        axios
-            .post('/register/normal', {
+        try {
+            const res = await axios.post('/register/normal', {
                 name,
                 username,
                 nickname,
                 password,
-            })
-            .then((res) => {
-                console.log('회원가입 성공:', res);
-                navigate('/login');
-            })
-            .catch((err) => {
-                console.error('회원가입 실패:', err);
             });
+            console.log('회원가입 성공:', res);
+            navigate('/login');
+        } catch (err) {
+            console.error('회원가입 실패:', err);
+            // 여기서 사용자에게 오류 메시지를 표시할 수 있습니다.
+        }
     };
 
     console.log(`이름 : ${name}`);
