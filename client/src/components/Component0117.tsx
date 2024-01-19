@@ -88,7 +88,10 @@ function HotChallenge() {
             <div className="flex gap-2 text-center">
                 {hotChallenge.map((value, idx) => {
                     return (
-                        <div key={idx} className="rounded-lg bg-slate-100 w-full m-2 p-2">
+                        <div
+                            key={idx}
+                            className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2"
+                        >
                             {value}
                         </div>
                     );

@@ -1,5 +1,3 @@
-import { Tab } from '@/components/Component0117';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -23,70 +21,6 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         from: new Date(2022, 0, 20),
         to: addDays(new Date(2022, 0, 20), 20),
     });
-
-    const tab1content = (
-        <div>
-            <div className="user-list flex">
-                <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
-                <div className="flex w-fit items-center space-x-2">
-                    <Switch id="public" />
-                    <Label htmlFor="public" className="w-8">
-                        공개
-                    </Label>
-                </div>
-            </div>
-
-            <div className="user-list flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <Button>추가하기</Button>
-            </div>
-        </div>
-    );
-
-    const tab2content = (
-        <div>
-            <div className="user-list flex">
-                <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
-                <div className="flex w-fit items-center space-x-2">
-                    <Switch id="public" />
-                    <Label htmlFor="public" className="w-8">
-                        공개
-                    </Label>
-                </div>
-            </div>
-
-            <div className="user-list flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/kwonkuwhi.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/seejnn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <Button>추가하기</Button>
-            </div>
-        </div>
-    );
 
     return (
         <div className="container ">
@@ -122,7 +56,6 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                         </Avatar>
                         <span>홍길동</span>
                     </div>
-                    <Button>추가하기</Button>
                 </div>
             </div>
 
@@ -193,6 +126,9 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     <SelectItem value="every">매일</SelectItem>
                 </SelectContent>
             </Select>
+            <div className="user-list flex flex-col gap-4 pt-4">
+                <Button>참가하기</Button>
+            </div>
         </div>
     );
 }
