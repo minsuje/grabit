@@ -52,7 +52,9 @@ export const userWithalarmRelations = relations(users, ({ many }) => ({
 
 export const score = pgTable('score', {
   score_id: serial('score_id').primaryKey(),
-  userid_num: serial('userid_num'),
+  userid_num: serial('userid_num').references(() => users.userid_num, {
+    onDelete: 'cascade',
+  }),
   score_description: varchar('score_description', { length: 100 }),
   score_type: varchar('score_type', { length: 30 }),
   score: integer('score'),
@@ -68,7 +70,3 @@ export const tier = pgTable('tier', {
   tier_score: integer('tier_score'),
   tier_img: varchar('tier_img', { length: 200 }),
 });
-
-export const tierRelations = relations(users, ({ one }) => ({
-  tier: one(tier),
-}));
