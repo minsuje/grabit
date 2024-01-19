@@ -1,11 +1,5 @@
 import { relations } from 'drizzle-orm';
-import {
-  timestamp,
-  integer,
-  pgTable,
-  serial,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { timestamp, integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 import { alarm } from '../alarm/schema';
 
 export const users = pgTable('users', {
@@ -24,7 +18,7 @@ export const users = pgTable('users', {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-  posts: many(account),
+    posts: many(account),
 }));
 
 export const account = pgTable('account', {
@@ -50,7 +44,7 @@ export const account = pgTable('account', {
 // }));
 
 export const userWithalarmRelations = relations(users, ({ many }) => ({
-  posts: many(alarm),
+    posts: many(alarm),
 }));
 
 export const score = pgTable('score', {
@@ -66,12 +60,12 @@ export const score = pgTable('score', {
 });
 
 export const scoreRelations = relations(users, ({ one }) => ({
-  score: one(score),
+    score: one(score),
 }));
 
 export const tier = pgTable('tier', {
-  tier_id: serial('tier_id').primaryKey(),
-  tier_name: varchar('tier_name', { length: 30 }),
-  tier_score: integer('tier_score'),
-  tier_img: varchar('tier_img', { length: 200 }),
+    tier_id: serial('tier_id').primaryKey(),
+    tier_name: varchar('tier_name', { length: 30 }),
+    tier_score: integer('tier_score'),
+    tier_img: varchar('tier_img', { length: 200 }),
 });
