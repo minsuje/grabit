@@ -10,5 +10,5 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UserModule {}
 
 export interface User {
-    userInfos: CreateUserDto;
+    createUserDto: CreateUserDto;
 }

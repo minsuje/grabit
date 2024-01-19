@@ -5,9 +5,9 @@ import { db } from 'db/db';
 
 @Injectable()
 export class UserService {
-    createNewUser(createUserDto: CreateUserDto) {
-        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money } =
-            createUserDto;
+    createNewUser = async (login_type: any, createUserDto: CreateUserDto) => {
+        const { userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
+
         const userInfo: CreateUserDto = {
             login_type: login_type,
             userid: userid,
@@ -19,7 +19,7 @@ export class UserService {
             score_num: score_num,
             money: money,
         };
-        // return db.insert(users).values(userInfo);
-        return userInfo;
-    }
+        return await db.insert(users).values(userInfo);
+        // return userInfo;
+    };
 }
