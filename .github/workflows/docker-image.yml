@@ -18,6 +18,9 @@ jobs:
 
       - name: Build the Docker image
         run: docker build -t minsuje/grabit -f server/Dockerfile server
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          
       - name: taging
         run: docker tag grabit:latest minsuje/grabit:latest
       - name: Push to Dockerhub
