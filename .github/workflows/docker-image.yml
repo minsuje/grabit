@@ -18,7 +18,7 @@ jobs:
 
       - name: Build the Docker image
         env:
-            DATABASE_URL: ${{secrets.DATABASE_URL}}
+            DATABASE_URL: postgresql://testuser:1234@43.201.22.60:5432/grabit
         run: docker build -t minsuje/grabit -f server/Dockerfile server
         
           
