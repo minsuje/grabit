@@ -12,16 +12,14 @@ exports.challenge = (0, pg_core_1.pgTable)('challenge', {
     }),
     challenge_name: (0, pg_core_1.varchar)('challenge_name', { length: 200 }).notNull(),
     topic: (0, pg_core_1.varchar)('topic', { length: 50 }).notNull(),
-    challenger_userid_num: (0, pg_core_1.integer)('challenger_userid_num').notNull(),
+    challenger_userid_num: (0, pg_core_1.integer)('challenger_userid_num').array().notNull(),
     goal_money: (0, pg_core_1.integer)('goal_money').notNull(),
     deadline: (0, pg_core_1.varchar)('deadline', { length: 20 }).notNull(),
-    winner_userid_num: (0, pg_core_1.integer)('winner_userid_num'),
+    winner_userid_num: (0, pg_core_1.integer)('winner_userid_num').array(),
     authentication_term: (0, pg_core_1.integer)('authentication_term').notNull(),
     authentication_time: (0, pg_core_1.varchar)('authentication_time', {
         length: 100,
     }).notNull(),
-    created_at: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
-    updated_at: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
 exports.challengeRelations = (0, drizzle_orm_1.relations)(schema_1.users, ({ many }) => ({
     posts: many(exports.challenge),
@@ -30,7 +28,6 @@ exports.authentication = (0, pg_core_1.pgTable)('authentication', {
     authentication_id: (0, pg_core_1.serial)('authentication_id').primaryKey(),
     challenge_id: (0, pg_core_1.integer)('challenge_id').references(() => exports.challenge.challenge_id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     created_at: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
-    updated_at: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
     userid_num: (0, pg_core_1.integer)('userid_num').notNull(),
     authentication_img: (0, pg_core_1.varchar)('authentication_img', {
         length: 200,
@@ -44,8 +41,6 @@ exports.authentication_img_emoticon = (0, pg_core_1.pgTable)('authentication_img
     authentication_id: (0, pg_core_1.integer)('authentication_id').references(() => exports.authentication.authentication_id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     authentication_img_comment_userid_num: (0, pg_core_1.integer)('authentication_img_comment_userid_num').notNull(),
     authentication_img_comment_emoticon: (0, pg_core_1.integer)('authentication_img_comment_emoticon').notNull(),
-    created_at: (0, pg_core_1.timestamp)('created_at').defaultNow().notNull(),
-    updated_at: (0, pg_core_1.timestamp)('updated_at').defaultNow().notNull(),
 });
 exports.authenticationEmoticonRelations = (0, drizzle_orm_1.relations)(exports.authentication, ({ many }) => ({
     posts: many(exports.authentication_img_emoticon),
