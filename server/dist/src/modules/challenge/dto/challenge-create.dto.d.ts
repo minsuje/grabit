@@ -6,7 +6,7 @@ export declare class ChallengeCreateDto {
     challenger_userid_num: number[];
     goal_money: number;
     deadline: string;
-    winner_userid_num?: number;
+    winner_userid_num?: number[];
     authentication_term: number;
     authentication_time: string;
 }

@@ -13,7 +13,7 @@ let UserService = class UserService {
         this.user = [];
     }
     createNewUser(createUserDto) {
-        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money, } = createUserDto;
+        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
         const userInfo = {
             login_type: login_type,
             userid: userid,

@@ -8,9 +8,12 @@ import { db } from '../../../db/db';
 export class UserController {
   constructor(private userService: UserService) {}
 
-    @Post('/register/:type')
-    createUserDto(@Param('type') type: string, @Body() createUserDto: CreateUserDto): User {
-        return this.userService.createNewUser(createUserDto);
-        const createUser = db.insert().values(createUserDto);
-    }
+  @Post('/register/:type')
+  createUserDto(
+    @Param('type') type: string,
+    @Body() createUserDto: CreateUserDto,
+  ): User {
+    return this.userService.createNewUser(createUserDto);
+    // const createUser = db.insert().values(createUserDto);
+  }
 }

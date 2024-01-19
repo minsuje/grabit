@@ -8,7 +8,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChallengeCreateService = void 0;
 const common_1 = require("@nestjs/common");
+const schema_1 = require("./schema");
+const db_1 = require("../../../db/db");
 let ChallengeCreateService = class ChallengeCreateService {
+    constructor() {
+        this.newChallenge = async (body) => {
+            const { challenge_name, topic, challenger_userid_num, goal_money, deadline, authentication_term, authentication_time, } = body;
+            console.log(goal_money);
+            return await db_1.db.insert(schema_1.challenge).values({
+                challenge_name: challenge_name,
+                topic: topic,
+                challenger_userid_num: challenger_userid_num,
+                goal_money: goal_money,
+                deadline: deadline,
+                authentication_term: authentication_term,
+                authentication_time: authentication_time,
+            });
+        };
+    }
 };
 exports.ChallengeCreateService = ChallengeCreateService;
 exports.ChallengeCreateService = ChallengeCreateService = __decorate([
