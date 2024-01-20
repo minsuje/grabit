@@ -50,12 +50,13 @@ export class ChallengeService {
     let ingMyChallenge = [];
     for (let i = 0; i < myChallenge.length; i++) {
       if (
-        isAfter(myChallenge[i].authentication_start_date, new Date()) &&
-        isBefore(myChallenge[i].authentication_end_date, new Date())
+        isBefore(myChallenge[i].authentication_start_date, new Date()) &&
+        isAfter(myChallenge[i].authentication_end_date, new Date())
       ) {
         ingMyChallenge.push(myChallenge[i]);
       }
     }
+    console.log('ingMyChallenge', ingMyChallenge);
     // 참가 예정 챌린지
     let preMyChallenge = [];
     for (let i = 0; i < myChallenge.length; i++) {
