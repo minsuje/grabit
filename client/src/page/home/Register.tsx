@@ -3,22 +3,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { useState, ChangeEvent } from 'react';
 
 export function Register() {
-    interface User {
-        name: string;
-        username: string;
-        nickname: string;
-        password: string;
-    }
-
     const { type } = useParams();
     const [name, setName] = useState<string>(''); // 이름
-    const [userid, setUsername] = useState<string>(''); // 아이디
+    const [username, setUsername] = useState<string>(''); // 아이디
     const [nickname, setNickname] = useState<string>(''); // 닉네임
     const [password, setPassword] = useState<string>(''); // 패스워드
     const [confirmPassword, setConfirmPassword] = useState<string>(''); // 패스워드 확인
+
     const [passwordError, setPasswordError] = useState(''); // 비밀번호 유효성 검사 값 저장
 
     const navigate = useNavigate(); //useNavigate 훅을 사용하여 navigate 함수를 가져옴
@@ -52,9 +47,9 @@ export function Register() {
         }
 
         try {
-            const res = await axios.post('http://43.201.22.60:3000/register/normal', {
+            const res = await axios.post('/register/normal', {
                 name,
-                userid,
+                username,
                 nickname,
                 password,
             });
@@ -66,18 +61,8 @@ export function Register() {
         }
     };
 
-    // axios
-    //     .get('/register/normal')
-    //     .then((response) => {
-    //         console.log(response);
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error fetching data: ', error);
-    //         // 여기에서 오류 처리 로직
-    //     });
-
     console.log(`이름 : ${name}`);
-    console.log(`아이디 : ${userid}`);
+    console.log(`아이디 : ${username}`);
     console.log(`닉네임 : ${nickname}`);
     console.log(`password: ${password}`);
     console.log(`비밀번호확인: ${confirmPassword}`);
@@ -100,8 +85,8 @@ export function Register() {
                         <Label htmlFor="username">아이디</Label>
                         <Input
                             type="text"
-                            value={userid}
-                            id="userid"
+                            value={username}
+                            id="username"
                             placeholder="아이디"
                             onChange={(e) => setUsername(e.target.value)}
                         />
