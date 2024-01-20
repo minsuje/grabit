@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function ListComponent1({ challenge }) {
+export function ListComponent1({ challenge }: any) {
     return (
         <div>
             <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
