@@ -27,7 +27,7 @@ function App() {
 
                     <Route path="/main" element={<Main />} />
                     <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register/normal" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
                     <Route path="/challengresult" element={<ChallengeResult />} />
                     <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
