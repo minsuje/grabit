@@ -3,6 +3,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CreateChallenge() {
     return (
@@ -117,6 +119,7 @@ function Ranking() {
 }
 
 function ListComponentWithButton({ challenge }: any) {
+    const navigate = useNavigate();
     return (
         <div>
             <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
@@ -128,8 +131,25 @@ function ListComponentWithButton({ challenge }: any) {
                     <p>{challenge.goal_money}원</p>
                 </Link>
                 <div>
-                    <Button>수정</Button>
-                    <Button>삭제</Button>
+                    <Button
+                        onClick={() => {
+                            navigate(`/challengeEdit/${challenge.challenge_id}
+                    `);
+                        }}
+                    >
+                        수정
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            axios
+                                .delete(`http://43.201.22.60:3000/challengeEdit/${challenge.challenge_id}`)
+                                .then((response) => {
+                                    console.log('challengeEdit에서 chal');
+                                });
+                        }}
+                    >
+                        삭제
+                    </Button>
                 </div>
             </div>
         </div>

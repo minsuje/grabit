@@ -13,7 +13,7 @@ import {
 import { Link, useParams } from 'react-router-dom';
 
 function ChallengeInProgress() {
-    const { challenge_num } = useParams();
+    const { challenge_id } = useParams();
     const myImage = (
         <div className="grid grid-cols-2">
             <Link to="/challengeImage/1">
