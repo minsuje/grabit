@@ -23,7 +23,7 @@ export function Home() {
                         로그인
                     </Button>
                 </Link>
-                <Link to="/register" className="mt-[5%] ">
+                <Link to="/register/normal" className="mt-[5%] ">
                     <Button variant="default" className="w-[100%]">
                         회원가입
                     </Button>
