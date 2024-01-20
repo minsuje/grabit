@@ -9,7 +9,7 @@ import { useState, ChangeEvent } from 'react';
 export function Register() {
     const { type } = useParams();
     const [name, setName] = useState<string>(''); // 이름
-    const [username, setUsername] = useState<string>(''); // 아이디
+    const [userid, setUserid] = useState<string>(''); // 아이디
     const [nickname, setNickname] = useState<string>(''); // 닉네임
     const [password, setPassword] = useState<string>(''); // 패스워드
     const [confirmPassword, setConfirmPassword] = useState<string>(''); // 패스워드 확인
@@ -47,9 +47,9 @@ export function Register() {
         }
 
         try {
-            const res = await axios.post('/register/normal', {
+            const res = await axios.post('http://43.201.22.60:3000/register/normal', {
                 name,
-                username,
+                userid,
                 nickname,
                 password,
             });
@@ -62,7 +62,7 @@ export function Register() {
     };
 
     console.log(`이름 : ${name}`);
-    console.log(`아이디 : ${username}`);
+    console.log(`아이디 : ${userid}`);
     console.log(`닉네임 : ${nickname}`);
     console.log(`password: ${password}`);
     console.log(`비밀번호확인: ${confirmPassword}`);
@@ -82,13 +82,13 @@ export function Register() {
                         />
                     </div>
                     <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="username">아이디</Label>
+                        <Label htmlFor="userid">아이디</Label>
                         <Input
                             type="text"
-                            value={username}
-                            id="username"
+                            value={userid}
+                            id="userid"
                             placeholder="아이디"
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => setUserid(e.target.value)}
                         />
                     </div>
                     <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
