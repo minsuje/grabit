@@ -4,3 +4,4 @@ node_modules
 server/migration
 server/dist
 bun.lockb
+bun.lockb
