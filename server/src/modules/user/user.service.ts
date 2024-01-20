@@ -36,16 +36,13 @@ export class UserService {
             .select()
             .from(users)
             .where(eq(users.userid, userid) && eq(users.password, password));
-        console.log('loginAccess', loginAccess)
 
         if (loginAccess.length != 0) {
             isLogin = 'true';
-            console.log("isLogin if", isLogin);
-            console.log("isLogin if loginAccess", loginAccess);
-            return loginAccess;
+            return loginAccess;  // user 정보
         } else {
             console.log("isLogin else", isLogin);
-            return isLogin;
+            return isLogin;    // "false"
         }
     };
 }
