@@ -9,9 +9,4 @@ export class UserController {
     createUserDto(@Param('type') login_type: string, @Body() createUserDto: CreateUserDto): any {
         return this.userService.createNewUser(login_type, createUserDto);
     }
-
-    @Post('/login')
-    LoginDto(@Body() loginDto: LoginDto): any {
-        return this.userService.loginUser(loginDto);
-    }
 }
