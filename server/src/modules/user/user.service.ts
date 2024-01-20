@@ -23,26 +23,4 @@ export class UserService {
         return await db.insert(users).values(userInfo);
         // return userInfo;
     };
-
-    loginUser = async (loginDto: LoginDto) => {
-        const { userid, password } = loginDto;
-        let isLogin = 'false';
-
-        const inputLogin: LoginDto = {
-            userid,
-            password,
-        };
-        const loginAccess = await db
-            .select()
-            .from(users)
-            .where(eq(users.userid, userid) && eq(users.password, password));
-
-        if (loginAccess.length != 0) {
-            isLogin = 'true';
-            return loginAccess;  // user 정보
-        } else {
-            console.log("isLogin else", isLogin);
-            return isLogin;    // "false"
-        }
-    };
 }

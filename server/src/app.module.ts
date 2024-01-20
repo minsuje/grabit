@@ -6,16 +6,11 @@ import { DailyMissionModule } from './modules/daily_mission/daily_mission.module
 import { ChallengeModule } from './modules/challenge/challenge.module';
 import { AlarmModule } from './modules/alarm/alarm.module';
 import { FriendModule } from './modules/friend/friend.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [
-    UserModule,
-    DailyMissionModule,
-    ChallengeModule,
-    AlarmModule,
-    FriendModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [UserModule, DailyMissionModule, ChallengeModule, AlarmModule, FriendModule, AuthModule],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}
