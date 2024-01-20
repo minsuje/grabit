@@ -1,9 +1,14 @@
 # Base image
-
 FROM oven/bun:latest AS base
 
-# Create app directory
-WORKDIR /usr/src/app
+# Accept DATABASE_URL as a build argument
+ARG DATABASE_URL
+
+# Set the environment variable
+ENV DATABASE_URL=$DATABASE_URL
+
+# Create app directory in server folder
+WORKDIR /usr/src/app/server
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
@@ -14,8 +19,8 @@ RUN bun install
 # Bundle app source
 COPY . .
 
-# Creates a "dist" folder with the production build
-RUN bun run start
+EXPOSE 3000
 
 # Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+CMD ["sh", "-c", "bun run start"]
+
