@@ -4,6 +4,7 @@ import {
   serial,
   varchar,
   timestamp,
+  date,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { users } from '../user/schema';
@@ -21,10 +22,10 @@ export const challenge = pgTable('challenge', {
   goal_money: integer('goal_money').notNull(),
   deadline: varchar('deadline', { length: 20 }).notNull(),
   winner_userid_num: integer('winner_userid_num').array(),
-  authentication_term: integer('authentication_term').notNull(),
-  authentication_time: varchar('authentication_time', {
-    length: 100,
-  }).notNull(),
+  authentication_start_date: date('authentication_start_date').notNull(),
+  authentication_end_date: date('authentication_end_date').notNull(),
+  authentication_start_time: integer('authentication_start_time').notNull(),
+  authentication_end_time: integer('authentication_end_time').notNull(),
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at').defaultNow().notNull(),
 });

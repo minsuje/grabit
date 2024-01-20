@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { ChallengeCreateDto } from './dto/challenge-create.dto';
+import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
 import { Challenge } from './challenge.module';
 
@@ -8,7 +8,7 @@ export class ChallengeController {
   constructor(private ChallengeService: ChallengeService) {}
   // 챌린지 생성
   @Post('/challengeCreate')
-  postChallengeCreate(@Body() body: ChallengeCreateDto): any {
+  postChallengeCreate(@Body() body: ChallengeDto): any {
     return this.ChallengeService.newChallenge(body);
   }
 

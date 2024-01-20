@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChallengeCreateDto } from './dto/challenge-create.dto';
+import { ChallengeDto } from './dto/challenge.dto';
 import { challenge } from './schema';
 import { db } from '../../../db/db';
 import { eq, not } from 'drizzle-orm';
@@ -7,7 +7,7 @@ import { eq, not } from 'drizzle-orm';
 @Injectable()
 export class ChallengeService {
   // 챌린지 생성
-  newChallenge = async (body: ChallengeCreateDto) => {
+  newChallenge = async (body: ChallengeDto) => {
     const {
       challenge_name,
       is_public,
@@ -15,25 +15,30 @@ export class ChallengeService {
       challenger_userid_num,
       goal_money,
       deadline,
-      authentication_term,
-      authentication_time,
+      authentication_start_date,
+      authentication_end_date,
+      authentication_start_time,
+      authentication_end_time,
     } = body;
 
     console.log(goal_money);
     return await db.insert(challenge).values({
-      challenge_name: challenge_name,
-      is_public: is_public,
-      topic: topic,
-      challenger_userid_num: challenger_userid_num,
-      goal_money: goal_money,
-      deadline: deadline,
-      authentication_term: authentication_term,
-      authentication_time: authentication_time,
+      challenge_name,
+      is_public,
+      topic,
+      challenger_userid_num,
+      goal_money,
+      deadline,
+      authentication_start_date,
+      authentication_end_date,
+      authentication_start_time,
+      authentication_end_time,
     });
   };
 
   // 챌린지 목록
   challengeList = async () => {
+    const today = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
     const challengeAll = await db.select().from(challenge);
     let myChallenge = [];
     for (let i = 0; i < challengeAll.length; i++) {
@@ -42,7 +47,7 @@ export class ChallengeService {
         myChallenge.push(challengeAll[i]);
     }
     // 참여중인 챌린지
-    console.log(Date.now());
+    console.log(new Date().getFullYear());
     // 참가 예정 챌린지
 
     // 열려있는 챌린지

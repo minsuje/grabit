@@ -1,4 +1,4 @@
-export class ChallengeCreateDto {
+export class ChallengeDto {
   challenge_id?: number;
   userid_num?: number;
   challenge_name: string;
@@ -8,6 +8,8 @@ export class ChallengeCreateDto {
   goal_money: number;
   deadline: string;
   winner_userid_num?: number[];
-  authentication_term: number;
-  authentication_time: string;
+  authentication_start_date: string;
+  authentication_end_date: string;
+  authentication_start_time: number;
+  authentication_end_time: number;
 }
