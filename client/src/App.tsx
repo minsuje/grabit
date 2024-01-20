@@ -26,19 +26,19 @@ function App() {
                     <Route path="/login" element={<Login />} />
 
                     <Route path="/main" element={<Main />} />
-                    <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
-                    <Route path="/register/normal" element={<Register />} />
+                    <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+                    <Route path="/register" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
                     <Route path="/challengresult" element={<ChallengeResult />} />
                     <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
                     <Route path="/challengeList" element={<ChallengeList />} />
-                    <Route path="/challengeEdit/:challenge_num" element={<ChallengeEdit />} />
-                    <Route path="/challengeDetail/:challenge_num" element={<ChallengeDetail />} />
+                    <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
+                    <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
 
                     {/* 
-                    <Route path="/challengeTear/:challenge_num" element={<ChallengeTear />} /> */}
+                    <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
 
-                    <Route path="/challengeResult/:challenge_num" element={<ChallengeResult />} />
+                    <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
 
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
