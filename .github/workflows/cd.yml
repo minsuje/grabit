@@ -1,21 +1,48 @@
+# name: CD Pipeline
+
+# on:
+#   workflow_run:
+#     workflows: ["Docker Image CI"]
+#     types:
+#         - completed
+
+# jobs:
+
+#   build:
+
+#     runs-on: self-hosted
+
+#     steps:
+#     - name: Pull Docker image
+#       run: sudo docker pull seejnn/grabit:latest
+#     - name: Delete Old docker container
+#       run: sudo docker rm -f seejnn/grabit || true
+#     - name: Run Docker Container
+#       run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
+
+
+
+
+
+
 name: CD Pipeline
 
 on:
   workflow_run:
     workflows: ["Docker Image CI"]
     types:
-        - completed
+      - completed
 
 jobs:
-
-  build:
-
+  deploy:  # 작업 이름을 'deploy'로 변경
     runs-on: self-hosted
 
     steps:
     - name: Pull Docker image
       run: sudo docker pull seejnn/grabit:latest
-    - name: Delete Old docker container
-      run: sudo docker rm -f seejnn/grabit || true
+
+    - name: Delete Old Docker container
+      run: sudo docker rm -f server || echo "No existing container to remove."
+
     - name: Run Docker Container
       run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
