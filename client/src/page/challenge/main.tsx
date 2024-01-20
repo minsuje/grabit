@@ -32,7 +32,7 @@ function Main() {
     useEffect(() => {
         {
             axios
-                .post('/challengeInProgress')
+                .post('http://43.201.22.60:3000/challengeInProgress')
                 .then((response) => {
                     console.log(response);
                     setChallengeInProgress(response);

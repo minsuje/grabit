@@ -1,24 +1,15 @@
 const ChallengeData = [
     {
-
-        challenge_num: 0,
-        challengeName: '물마시기',
-        price: 15000,
-        day: 5,
-    },
-    {
-
-        challenge_num: 1,
-        challengeName: '하늘보기',
-        price: 10000,
-        day: 3,
-    },
-    {
-
-        challenge_num: 2,
-        challengeName: '독서하기',
-        price: 10000,
-        day: 5,
+        challenge_id: 1,
+        userid_num: 1,
+        challenge_name: '무슨무슨 챌린지',
+        topic: '건강',
+        challenger_userid_num: [1, 2],
+        goal_money: 1000,
+        deadline: '2024-1-20',
+        winner_userid_num: null,
+        authentication_term: 2,
+        authentication_time: '7:00 - 8:00',
     },
 ];
 export default ChallengeData;

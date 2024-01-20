@@ -102,7 +102,7 @@ function ChallengeInProgress() {
             <ProgressComponent />
             <ProgressComponent />
             <br />
-            <ListComponent1 challenge={ChallengeData[Number(challenge_num)]} />
+            <ListComponent1 challenge={ChallengeData[0]} />
 
             <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 

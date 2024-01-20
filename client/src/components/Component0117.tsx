@@ -1,6 +1,8 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
 
 function CreateChallenge() {
     return (
@@ -113,4 +115,24 @@ function Ranking() {
         </div>
     );
 }
-export { CreateChallenge, Tab, Record, HotChallenge, Ranking };
+
+function ListComponentWithButton({ challenge }: any) {
+    return (
+        <div>
+            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+                <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
+                    <div className="flex justify-between">
+                        <p>{challenge.challenge_name}</p>
+                        <p>{challenge.deadline}</p>
+                    </div>
+                    <p>{challenge.goal_money}원</p>
+                </Link>
+                <div>
+                    <Button>수정</Button>
+                    <Button>삭제</Button>
+                </div>
+            </div>
+        </div>
+    );
+}
+export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithButton };
