@@ -18,6 +18,8 @@ export function Register() {
 
     const navigate = useNavigate(); //useNavigate 훅을 사용하여 navigate 함수를 가져옴
 
+
+    
     // 비밀번호 유효성 검사
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newPassword = e.target.value;
