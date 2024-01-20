@@ -9,3 +9,7 @@ export declare class CreateUserDto {
     score_num: number;
     money: number;
 }
+export declare class LoginDto {
+    userid: string;
+    password: string;
+}

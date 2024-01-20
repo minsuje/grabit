@@ -23,18 +23,28 @@ let UserController = class UserController {
     createUserDto(login_type, createUserDto) {
         return this.userService.createNewUser(login_type, createUserDto);
     }
+    LoginDto(loginDto) {
+        return this.userService.loginUser(loginDto);
+    }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, common_1.Post)('/:type'),
+    (0, common_1.Post)('/register/:type'),
     __param(0, (0, common_1.Param)('type')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, create_user_dto_1.CreateUserDto]),
     __metadata("design:returntype", Object)
 ], UserController.prototype, "createUserDto", null);
+__decorate([
+    (0, common_1.Post)('/login'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_user_dto_1.LoginDto]),
+    __metadata("design:returntype", Object)
+], UserController.prototype, "LoginDto", null);
 exports.UserController = UserController = __decorate([
-    (0, common_1.Controller)('/register'),
+    (0, common_1.Controller)('/'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

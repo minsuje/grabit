@@ -105,8 +105,8 @@ export declare const users: import("drizzle-orm/pg-core").PgTableWithColumns<{
             columnType: "PgInteger";
             data: number;
             driverParam: string | number;
-            notNull: true;
-            hasDefault: false;
+            notNull: false;
+            hasDefault: true;
             enumValues: undefined;
             baseColumn: never;
         }, {}, {}>;

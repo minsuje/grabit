@@ -13,7 +13,7 @@ exports.users = (0, pg_core_1.pgTable)('users', {
     name: (0, pg_core_1.varchar)('name', { length: 100 }),
     nickname: (0, pg_core_1.varchar)('nickname', { length: 50 }),
     profile_img: (0, pg_core_1.varchar)('profile_img', { length: 200 }),
-    score_num: (0, pg_core_1.integer)('score_num').notNull(),
+    score_num: (0, pg_core_1.integer)('score_num').default(0),
     money: (0, pg_core_1.integer)('money'),
     created_at: (0, pg_core_1.timestamp)('created_at').defaultNow(),
     updated_at: (0, pg_core_1.timestamp)('updated_at').defaultNow(),

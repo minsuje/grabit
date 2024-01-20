@@ -6,6 +6,7 @@ const db_1 = require("../db/db");
 const schema_1 = require("../src/modules/user/schema");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    app.enableCors();
     await app.listen(3000);
     getUsers();
 }

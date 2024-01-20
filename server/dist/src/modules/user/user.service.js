@@ -10,6 +10,7 @@ exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const schema_1 = require("./schema");
 const db_1 = require("../../../db/db");
+const drizzle_orm_1 = require("drizzle-orm");
 let UserService = class UserService {
     constructor() {
         this.createNewUser = async (login_type, createUserDto) => {
@@ -26,6 +27,24 @@ let UserService = class UserService {
                 money: money,
             };
             return await db_1.db.insert(schema_1.users).values(userInfo);
+        };
+        this.loginUser = async (loginDto) => {
+            const { userid, password } = loginDto;
+            let isLogin = false;
+            const inputLogin = {
+                userid,
+                password,
+            };
+            const loginAccess = await db_1.db
+                .select()
+                .from(schema_1.users)
+                .where((0, drizzle_orm_1.sql) `${schema_1.users.userid} = ${userid} and ${schema_1.users.password} = ${password}`);
+            if (loginAccess) {
+                isLogin = true;
+                return loginAccess;
+            }
+            else
+                return isLogin;
         };
     }
 };
