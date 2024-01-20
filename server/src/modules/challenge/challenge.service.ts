@@ -56,7 +56,6 @@ export class ChallengeService {
         ingMyChallenge.push(myChallenge[i]);
       }
     }
-    console.log('ingMyChallenge', ingMyChallenge);
     // 참가 예정 챌린지
     let preMyChallenge = [];
     for (let i = 0; i < myChallenge.length; i++) {
@@ -76,7 +75,13 @@ export class ChallengeService {
         // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
         publicChallenge.push(publicChallengeAll[i]);
     }
-    return { ingMyChallenge, preMyChallenge, publicChallenge };
+    let prePublicChallenge = [];
+    for (let i = 0; i < publicChallenge.length; i++) {
+      if (isAfter(publicChallenge[i].authentication_start_date, new Date())) {
+        prePublicChallenge.push(publicChallenge[i]);
+      }
+    }
+    return { ingMyChallenge, preMyChallenge, prePublicChallenge };
   };
 
   // 챌린지 상세 정보 보기
