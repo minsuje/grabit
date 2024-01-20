@@ -35,7 +35,7 @@ export class UserService {
         const loginAccess = await db
             .select()
             .from(users)
-            .where(sql`${users.userid} = ${userid} and ${users.password} = ${password}`);
+            .where(eq(users.userid, userid) && eq(users.password, password));
 
         if (loginAccess) {
             isLogin = true;
