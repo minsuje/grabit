@@ -25,6 +25,8 @@ export const challenge = pgTable('challenge', {
   authentication_time: varchar('authentication_time', {
     length: 100,
   }).notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const challengeRelations = relations(users, ({ many }) => ({
@@ -38,6 +40,7 @@ export const authentication = pgTable('authentication', {
     { onDelete: 'cascade', onUpdate: 'cascade' },
   ),
   created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
   userid_num: integer('userid_num').notNull(),
   authentication_img: varchar('authentication_img', {
     length: 200,
@@ -64,6 +67,8 @@ export const authentication_img_emoticon = pgTable(
     authentication_img_comment_emoticon: integer(
       'authentication_img_comment_emoticon',
     ).notNull(),
+    created_at: timestamp('created_at').defaultNow().notNull(),
+    updated_at: timestamp('updated_at').defaultNow().notNull(),
   },
 );
 
