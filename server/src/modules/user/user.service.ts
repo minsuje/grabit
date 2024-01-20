@@ -38,11 +38,13 @@ export class UserService {
             .where(eq(users.userid, userid) && eq(users.password, password));
         console.log('loginAccess', loginAccess)
 
-        if (loginAccess) {
+        if (loginAccess.length != 0) {
             isLogin = 'true';
+            console.log("isLogin if", isLogin);
+            console.log("isLogin if loginAccess", loginAccess);
             return loginAccess;
         } else {
-            console.log("isLogin", isLogin);
+            console.log("isLogin else", isLogin);
             return isLogin;
         }
     };
