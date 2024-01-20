@@ -5,11 +5,13 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private userService: UserService) {}
 
+    // 회원가입
     @Post('/register/:type')
     createUserDto(@Param('type') login_type: string, @Body() createUserDto: CreateUserDto): any {
         return this.userService.createNewUser(login_type, createUserDto);
     }
 
+    // 로그인
     @Post('/login')
     LoginDto(@Body() loginDto: LoginDto): any {
         return this.userService.loginUser(loginDto);

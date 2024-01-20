@@ -28,10 +28,11 @@ export class UserService {
         const { userid, password } = loginDto;
         let isLogin = false;
 
-        const inputLogin: LoginDto = {
-            userid,
-            password,
-        };
+        // const inputLogin: LoginDto = {
+        //     userid,
+        //     password,
+        // };
+
         const loginAccess = await db
             .select()
             .from(users)
