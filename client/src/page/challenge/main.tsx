@@ -60,25 +60,36 @@ function Main() {
             {dailymission.map((challenge: DailyMission) => {
                 return (
                     <Link to={`/challengeInProgress/${challenge.mission_id}`}>
-                        <ListComponent1 challenge={challenge} />
+                        <ListComponent1 key={challenge.mission_id} challenge={challenge} />
                     </Link>
                 );
             })}
-
             <h1>진행중인 챌린지</h1>
-
-            {challengeInProgress.map((challenge: Challenge) => {
-                return (
-                    <Link to={`/challengeInProgress/${challenge.challenge_id}`}>
-                        <ListComponent1 challenge={challenge} />
+            {challengeInProgress.length == 0 ? (
+                <div className="p-3 text-gray-700">
+                    진행중인 챌린지가 없습니다. <br />
+                    챌린지를 직접 생성하거나 다른 사람이 만든 챌린지에 참여해보세요
+                    <Link to="/challengeList" className=" text-gray-400 no-underline">
+                        <div className=" ">챌린지 보러가기</div>
                     </Link>
-                );
-            })}
-
+                </div>
+            ) : (
+                challengeInProgress.map((challenge: Challenge) => {
+                    return (
+                        <>
+                            <Link to={`/challengeInProgress/${challenge.challenge_id}`}>
+                                <ListComponent1 key={challenge.challenge_id} challenge={challenge} />
+                            </Link>
+                        </>
+                    );
+                })
+            )}
             <h1>지금 인기있는 주제</h1>
             <HotChallenge />
-
-            <div className="text-right p-3">
+            <Link to="/challengeList" className="text-center text-gray-400 no-underline">
+                <div>전체 챌린지 보러가기</div>
+            </Link>
+            <div className="text-center p-3">
                 <Link to="/challengeCreate">
                     <Button>챌린지 생성</Button>
                 </Link>

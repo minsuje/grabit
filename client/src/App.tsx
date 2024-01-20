@@ -13,6 +13,7 @@ import ChallengeImage from './page/challenge/ChallengeImage';
 import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
 import ChallengeDetail from './page/challenge/ChallengeDetail';
+import '@/App.css';
 
 function App() {
     return (
@@ -26,7 +27,7 @@ function App() {
 
                     <Route path="/main" element={<Main />} />
                     <Route path="/challengeInProgress/:challenge_num" element={<ChallengeInProgress />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register/normal" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
                     <Route path="/challengresult" element={<ChallengeResult />} />
                     <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />

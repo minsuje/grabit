@@ -7,10 +7,10 @@ export function ListComponent1({ challenge }) {
         <div>
             <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                 <div className="flex justify-between">
-                    <p>{challenge.challengeName}</p>
-                    <p>{challenge.day} 일 후 종료</p>
+                    <p>{challenge.challenge_name}</p>
+                    <p>{challenge.deadline}</p>
                 </div>
-                <p>{challenge.price} 원</p>
+                <p>{challenge.goal_money}원</p>
             </div>
         </div>
     );
@@ -21,11 +21,11 @@ export function ListComponent2({ challenge }) {
         <>
             <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
                 <div className="">
-                    <div className="text-black font-bold">{challenge.challengeName}</div>
-                    <div className="text-black mt-2">{challenge.price} 원</div>
+                    <div className="text-black font-bold">{challenge.challenge_name}</div>
+                    <div className="text-black mt-2">{challenge.goal_money} 원</div>
                 </div>
                 <div className="">
-                    <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
+                    <div className="text-gray-400 ">{challenge.deadline}</div>
                     <div className="mt-2 text-end">승 </div>
                 </div>
             </div>

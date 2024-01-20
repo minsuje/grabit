@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { users } from './schema';
 import { db } from 'db/db';
+import { eq, sql } from 'drizzle-orm';
 
 @Injectable()
 export class UserService {
-    createNewUser(createUserDto: CreateUserDto) {
-        const { login_type, userid, social_userid, password, name, nickname, profile_img, score_num, money } =
-            createUserDto;
+    createNewUser = async (login_type: any, createUserDto: CreateUserDto) => {
+        const { userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
+
         const userInfo: CreateUserDto = {
             login_type: login_type,
             userid: userid,
@@ -19,7 +20,26 @@ export class UserService {
             score_num: score_num,
             money: money,
         };
-        // return db.insert(users).values(userInfo);
-        return userInfo;
-    }
+        return await db.insert(users).values(userInfo);
+        // return userInfo;
+    };
+
+    loginUser = async (loginDto: LoginDto) => {
+        const { userid, password } = loginDto;
+        let isLogin = false;
+
+        const inputLogin: LoginDto = {
+            userid,
+            password,
+        };
+        const loginAccess = await db
+            .select()
+            .from(users)
+            .where(sql`${users.userid} = ${userid} and ${users.password} = ${password}`);
+
+        if (loginAccess) {
+            isLogin = true;
+            return loginAccess;
+        } else return isLogin;
+    };
 }

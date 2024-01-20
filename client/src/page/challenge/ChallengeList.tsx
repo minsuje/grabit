@@ -1,6 +1,4 @@
-import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
-import { Button } from '@/components/ui/button';
 import ChallengeData from '../../data/ChallengeData';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
