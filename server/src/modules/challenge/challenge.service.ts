@@ -3,6 +3,7 @@ import { ChallengeDto } from './dto/challenge.dto';
 import { challenge } from './schema';
 import { db } from '../../../db/db';
 import { eq, not } from 'drizzle-orm';
+import { isBefore, isAfter } from 'date-fns';
 
 @Injectable()
 export class ChallengeService {
@@ -21,7 +22,6 @@ export class ChallengeService {
       authentication_end_time,
     } = body;
 
-    console.log(goal_money);
     return await db.insert(challenge).values({
       challenge_name,
       is_public,
@@ -47,8 +47,22 @@ export class ChallengeService {
         myChallenge.push(challengeAll[i]);
     }
     // 참여중인 챌린지
-    console.log(new Date().getFullYear());
+    let ingMyChallenge = [];
+    for (let i = 0; i < myChallenge.length; i++) {
+      if (
+        isAfter(myChallenge[i].authentication_start_date, new Date()) &&
+        isBefore(myChallenge[i].authentication_end_date, new Date())
+      ) {
+        ingMyChallenge.push(myChallenge[i]);
+      }
+    }
     // 참가 예정 챌린지
+    let preMyChallenge = [];
+    for (let i = 0; i < myChallenge.length; i++) {
+      if (isAfter(myChallenge[i].authentication_start_date, new Date())) {
+        preMyChallenge.push(myChallenge[i]);
+      }
+    }
 
     // 열려있는 챌린지
     const publicChallengeAll = await db
@@ -61,7 +75,7 @@ export class ChallengeService {
         // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
         publicChallenge.push(publicChallengeAll[i]);
     }
-    return publicChallenge;
+    return { ingMyChallenge, preMyChallenge, publicChallenge };
   };
 
   // 챌린지 상세 정보 보기
