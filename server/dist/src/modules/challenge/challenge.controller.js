@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChallengeCreateController = void 0;
+exports.ChallengeListController = exports.ChallengeCreateController = void 0;
 const common_1 = require("@nestjs/common");
 const challenge_create_dto_1 = require("./dto/challenge-create.dto");
 const challenge_service_1 = require("./challenge.service");
@@ -36,4 +36,23 @@ exports.ChallengeCreateController = ChallengeCreateController = __decorate([
     (0, common_1.Controller)('/challengeCreate'),
     __metadata("design:paramtypes", [challenge_service_1.ChallengeCreateService])
 ], ChallengeCreateController);
+let ChallengeListController = class ChallengeListController {
+    constructor(ChallengeListService) {
+        this.ChallengeListService = ChallengeListService;
+    }
+    getChallengeList() {
+        return this.ChallengeListService.challengeList();
+    }
+};
+exports.ChallengeListController = ChallengeListController;
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Object)
+], ChallengeListController.prototype, "getChallengeList", null);
+exports.ChallengeListController = ChallengeListController = __decorate([
+    (0, common_1.Controller)('/challengeList'),
+    __metadata("design:paramtypes", [challenge_service_1.ChallengeListService])
+], ChallengeListController);
 //# sourceMappingURL=challenge.controller.js.map

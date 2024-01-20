@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChallengeCreateService = void 0;
+exports.ChallengeListService = exports.ChallengeCreateService = void 0;
 const common_1 = require("@nestjs/common");
 const schema_1 = require("./schema");
 const db_1 = require("../../../db/db");
@@ -31,4 +31,15 @@ exports.ChallengeCreateService = ChallengeCreateService;
 exports.ChallengeCreateService = ChallengeCreateService = __decorate([
     (0, common_1.Injectable)()
 ], ChallengeCreateService);
+let ChallengeListService = class ChallengeListService {
+    constructor() {
+        this.challengeList = async () => {
+            return await db_1.db.select().from(schema_1.challenge);
+        };
+    }
+};
+exports.ChallengeListService = ChallengeListService;
+exports.ChallengeListService = ChallengeListService = __decorate([
+    (0, common_1.Injectable)()
+], ChallengeListService);
 //# sourceMappingURL=challenge.service.js.map
