@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ChallengeController } from './challenge.controller';
 import { ChallengeService } from './challenge.service';
-import { ChallengeCreateDto } from './dto/challenge-create.dto';
+import { ChallengeDto } from './dto/challenge.dto';
 
 @Module({
   controllers: [ChallengeController],
@@ -10,5 +10,5 @@ import { ChallengeCreateDto } from './dto/challenge-create.dto';
 export class ChallengeModule {}
 
 export interface Challenge {
-  body: ChallengeCreateDto;
+  body: ChallengeDto;
 }
