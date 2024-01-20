@@ -14,7 +14,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
           DOCKER_PASSWORD: ${{secrets.DOCKERHUB_PASSWORD}}
-        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_PASSWORD
 
       - name: Build the Docker image
         env:
@@ -27,3 +27,4 @@ jobs:
         run: docker tag seejnn/grabit minsuje/grabit
       - name: Push to Dockerhub
         run: docker push seejnn/grabit
+
