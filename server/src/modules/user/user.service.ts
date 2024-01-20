@@ -26,7 +26,7 @@ export class UserService {
 
     loginUser = async (loginDto: LoginDto) => {
         const { userid, password } = loginDto;
-        let isLogin = false;
+        let isLogin = 'false';
 
         const inputLogin: LoginDto = {
             userid,
@@ -36,10 +36,14 @@ export class UserService {
             .select()
             .from(users)
             .where(eq(users.userid, userid) && eq(users.password, password));
+        console.log('loginAccess', loginAccess)
 
         if (loginAccess) {
-            isLogin = true;
+            isLogin = 'true';
             return loginAccess;
-        } else return isLogin;
+        } else {
+            console.log("isLogin", isLogin);
+            return isLogin;
+        }
     };
 }
