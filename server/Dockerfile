@@ -15,6 +15,7 @@ COPY package*.json ./
 
 # Install app dependencies
 RUN bun install
+RUN bun add @nestjs/jwt
 
 # Bundle app source
 COPY . .
