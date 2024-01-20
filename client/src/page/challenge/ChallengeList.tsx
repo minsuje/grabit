@@ -12,18 +12,18 @@ function ChallengeList() {
             axios
                 .get('http://43.201.22.60:3000/challengeList')
                 .then((response) => {
-                    console.log(response);
-                    setChallengeInProgress(response);
+                    console.log(response.data);
+                    setChallengeInProgress(response.data);
                 })
                 .catch((error) => {
                     console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
                 });
         }
-    }, []);
+    });
     return (
         <div className="container">
             <h1>참여중인 챌린지</h1>
-            {challengeInProgress.map((challenge: any) => {
+            {ChallengeData.map((challenge: any) => {
                 return (
                     <Link to={`/challengeInProgress/${challenge.challenge_id}`} className=" text-black no-underline">
                         <ListComponent1 key={challenge.challenge_id} challenge={challenge} />
@@ -42,7 +42,7 @@ function ChallengeList() {
             })}
 
             <h1>열려있는 챌린지</h1>
-            {ChallengeData.map((challenge) => {
+            {challengeInProgress.map((challenge: any) => {
                 return (
                     <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
                         <ListComponent1 key={challenge.challenge_id} challenge={challenge} />
