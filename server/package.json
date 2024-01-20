@@ -36,7 +36,6 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-magic-login": "^1.2.2",
-
     "pg": "^8.11.3",
     "postgres": "^3.4.3",
     "reflect-metadata": "^0.1.13",
