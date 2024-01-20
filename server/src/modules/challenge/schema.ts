@@ -15,6 +15,7 @@ export const challenge = pgTable('challenge', {
     onUpdate: 'cascade',
   }),
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
+  is_public: varchar('is_public', { length: 10 }).notNull(),
   topic: varchar('topic', { length: 50 }).notNull(),
   challenger_userid_num: integer('challenger_userid_num').array().notNull(),
   goal_money: integer('goal_money').notNull(),
