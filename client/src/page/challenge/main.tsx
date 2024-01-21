@@ -1,24 +1,11 @@
 import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
-// import ChallengeData from '../../data/ChallengeData';
+import { Challenge } from '@/types/types';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-interface Challenge {
-    challenge_id: number;
-    userid_num: number;
-    challenge_name: string;
-    topic: string;
-    challenger_userid_num: number[] | null;
-    goal_money: number;
-    deadline: string;
-    winner_userid_num: number | null;
-    authentication_term: number;
-    authentication_time: string;
 
-    // 수정
-}
 interface DailyMission {
     mission_id: number;
     mission_content: string;

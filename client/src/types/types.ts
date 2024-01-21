@@ -7,8 +7,10 @@ export interface Challenge {
     goal_money: number;
     deadline: string;
     winner_userid_num: number | null;
-    authentication_term: number;
-    authentication_time: string;
+    authentication_start_date: string;
+    authentication_end_date: string;
+    authentication_start_time: string;
+    authentication_end_time: string;
 }
 
 export interface dailyMission {

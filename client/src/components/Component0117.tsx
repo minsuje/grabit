@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { users } from '@/types/types';
 
 function CreateChallenge() {
     return (
@@ -106,27 +107,45 @@ function HotChallenge() {
 }
 
 function Ranking() {
+    const [ranking, setRanking] = useState<users[]>([]);
+    useEffect(() => {
+        {
+            axios
+                .get('http://43.201.22.60:3000/Ranking')
+                .then((response) => {
+                    console.log('ranking axios response', response);
+                    setRanking(response.data);
+                })
+                .catch((error) => {
+                    console.error('ranking component에서 axios 에러', error);
+                });
+        }
+    });
     return (
         <div className="flex flex-col gap-3 p-2 font-bold ">
-            <div> 1위 알아서뭐해 3000점</div>
-            <div> 2위 망고가얼망고 2000점</div>
-            <div> 3위 요씨 1000점</div>
-            <div>.</div>
-            <div>.</div>
-            <div> 339위 나 1점</div>
+            {ranking.map((rank: users, idx) => {
+                return (
+                    <div key={idx}>
+                        <div>{idx + 1}위 </div>
+                        <div>{rank.nickname}</div>
+                        <div>{rank.score_num}</div>
+                    </div>
+                );
+            })}
         </div>
     );
 }
 
 function ListComponentWithButton({ challenge }: any) {
     const navigate = useNavigate();
+
     return (
         <div>
             <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                 <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
                     <div className="flex justify-between">
                         <p>{challenge.challenge_name}</p>
-                        <p>{challenge.deadline}</p>
+                        <p></p>
                     </div>
                     <p>{challenge.goal_money}원</p>
                 </Link>
@@ -155,4 +174,22 @@ function ListComponentWithButton({ challenge }: any) {
         </div>
     );
 }
-export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithButton };
+
+function ListComponentWithPeriod({ challenge }: any) {
+    return (
+        <div>
+            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+                <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
+                    <div className="flex justify-between">
+                        <p>{challenge.challenge_name}</p>
+                        <p>
+                            {challenge.authentication_start_date}~{challenge.authentication_end_date}
+                        </p>
+                    </div>
+                    <p>{challenge.goal_money}원</p>
+                </Link>
+            </div>
+        </div>
+    );
+}
+export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithButton, ListComponentWithPeriod };
