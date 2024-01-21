@@ -1,14 +1,16 @@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { formatDistanceToNow } from 'date-fns';
 
 export function ListComponent1({ challenge }: any) {
     return (
         <div>
-            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+            <div key={challenge.challenge_id} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                 <div className="flex justify-between">
                     <p>{challenge.challenge_name}</p>
-                    <p>{challenge.deadline}</p>
+
+                    <p>{challenge.authentication_end_date}</p>
                 </div>
                 <p>{challenge.goal_money}원</p>
             </div>
