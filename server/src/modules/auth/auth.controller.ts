@@ -8,19 +8,23 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 
 @Controller('/')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService) {}
 
     @Post('login')
     @UseGuards(localGuard)
-    LoginDto(@Body() loginDto: LoginDto): any {
-        const user = this.authService.loginUser(loginDto);
-        return user;
+    LoginDto(@Req() req: Request) {
+        return req.user;
     }
+    // LoginDto(@Body() loginDto: LoginDto): any {
+    //     // const user = this.authService.loginUser(loginDto);
+    //     // return user;
+    // }
 
     @Get('/main')
     @UseGuards(JwtAuthGuard)
     status(@Req() req: Request) {
         console.log('Inside AuthController status method');
         console.log(req.user);
+        return req.user;
     }
 }
