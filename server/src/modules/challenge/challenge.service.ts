@@ -9,7 +9,7 @@ import { isBefore, isAfter } from 'date-fns';
 export class ChallengeService {
   // 챌린지 생성
   newChallenge = async (body: ChallengeDto) => {
-    const {
+    let {
       challenge_name,
       is_public,
       topic,
@@ -94,12 +94,12 @@ export class ChallengeService {
   };
 
   // 챌린지 수정 페이지 보기
-  getChallengeEdit = async (challenge_id: number) => {
-    return await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.challenge_id, challenge_id));
-  };
+  // getChallengeEdit = async (challenge_id: number) => {
+  //   return await db
+  //     .select()
+  //     .from(challenge)
+  //     .where(eq(challenge.challenge_id, challenge_id));
+  // };
 
   // 챌린지 수정하기
   patchChallengeEdit = async (body: ChallengeDto, challenge_id: number) => {
@@ -125,6 +125,13 @@ export class ChallengeService {
         authentication_start_time: authentication_start_time,
         authentication_end_time: authentication_end_time,
       })
+      .where(eq(challenge.challenge_id, challenge_id));
+  };
+
+  // 챌린지 삭제하기
+  deleteChallengeEdit = async (challenge_id: number) => {
+    return await db
+      .delete(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
   };
 }
