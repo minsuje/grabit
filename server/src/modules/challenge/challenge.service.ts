@@ -86,7 +86,7 @@ export class ChallengeService {
 
   // 챌린지 상세 정보 보기
   challengeDetail = async (challenge_id: any) => {
-    console.log('service', challenge_id);
+    // console.log('service', challenge_id);
     return await db
       .select()
       .from(challenge)
