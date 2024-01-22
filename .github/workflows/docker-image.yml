@@ -20,7 +20,7 @@ jobs:
             - name: Build the Docker image
               env:
                   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
               run: |
                   docker build \
                     --build-arg DATABASE_URL=${DATABASE_URL} \
