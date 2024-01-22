@@ -3,20 +3,21 @@ export interface Challenge {
     userid_num: number;
     challenge_name: string;
     topic: string;
-    challenger_userid_num: number[] | null;
+    challenger_userid_num: number[];
     goal_money: number;
-    deadline: string;
+    is_public: string;
+    term: number;
     winner_userid_num: number | null;
     authentication_start_date: string;
     authentication_end_date: string;
-    authentication_start_time: string;
-    authentication_end_time: string;
+    authentication_start_time: number;
+    authentication_end_time: number;
 }
 
 export interface dailyMission {
     mission_id: number;
     mission_content: string;
-    success_userid_num: string[];
+    success_userid_num: number[];
 }
 export interface authentication {
     authentication_id: number;

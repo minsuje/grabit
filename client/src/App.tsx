@@ -13,6 +13,7 @@ import ChallengeImage from './page/challenge/ChallengeImage';
 import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
 import ChallengeDetail from './page/challenge/ChallengeDetail';
+import ChallengeDaily from './page/challenge/ChallengeDaily';
 import '@/App.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
                     <Route path="/challengeList" element={<ChallengeList />} />
                     <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
                     <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
+                    <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
 
                     {/* 
                     <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
