@@ -20,29 +20,34 @@
 #     - name: Run Docker Container
 #       run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
 
-
-
-
-
-
 name: CD Pipeline
 
 on:
-  workflow_run:
-    workflows: ["Docker Image CI"]
-    types:
-      - completed
+    workflow_run:
+        workflows: ['Docker Image CI']
+        types:
+            - completed
 
 jobs:
-  deploy:  # 작업 이름을 'deploy'로 변경
-    runs-on: self-hosted
+    deploy: # 작업 이름을 'deploy'로 변경
+        runs-on: self-hosted
 
-    steps:
-    - name: Pull Docker image
-      run: sudo docker pull seejnn/grabit:latest
+        steps:
+            - name: Pull Docker image
+              run: sudo docker pull seejnn/grabit:latest
 
-    - name: Delete Old Docker container
-      run: sudo docker rm -f server || echo "No existing container to remove."
+            - name: Delete Old Docker container
+              run: sudo docker rm -f server || echo "No existing container to remove."
 
-    - name: Run Docker Container
-      run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
+            # - name: Run Docker Container
+            #   run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
+
+            - name: Run Docker Container
+              run: |
+                  sudo docker run -d -p 3000:3000 \
+                  -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+                  -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+                  --name server seejnn/grabit
+
+            - name: Remove Docker image
+              run: sudo docker rmi seejnn/grabit:latest || echo "No existing image to remove."
