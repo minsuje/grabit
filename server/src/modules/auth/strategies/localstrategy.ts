@@ -2,16 +2,20 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginDto } from '../dto/create-auth-dto';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private authService: AuthService) {
-        super();
+        super({
+            usernameField: 'userid',
+            passwordField: 'password',
+        });
     }
 
-    validate(loginDto: LoginDto) {
-        const user = this.authService.loginUser(loginDto);
+    async validate(userid: string, password: string) {
+        const user = await this.authService.loginUser({ userid, password });
+        // console.log('localSt 에서 확인하는 userid', userid);
+        // console.log('지금 localStategy에서 출력중 >>>>>', user);
         if (!user) throw new UnauthorizedException();
         return user;
     }
