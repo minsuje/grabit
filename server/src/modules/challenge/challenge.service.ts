@@ -85,11 +85,46 @@ export class ChallengeService {
   };
 
   // 챌린지 상세 정보 보기
-  challengeDetail = async (challenge_id: any) => {
+  challengeDetail = async (challenge_id: number) => {
     // console.log('service', challenge_id);
     return await db
       .select()
       .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+  };
+
+  // 챌린지 수정 페이지 보기
+  getChallengeEdit = async (challenge_id: number) => {
+    return await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+  };
+
+  // 챌린지 수정하기
+  patchChallengeEdit = async (body: ChallengeDto, challenge_id: number) => {
+    const {
+      challenge_name,
+      topic,
+      goal_money,
+      term,
+      authentication_start_date,
+      authentication_end_date,
+      authentication_start_time,
+      authentication_end_time,
+    } = body;
+    return await db
+      .update(challenge)
+      .set({
+        challenge_name: challenge_name,
+        topic: topic,
+        goal_money: goal_money,
+        term: term,
+        authentication_start_date: authentication_start_date,
+        authentication_end_date: authentication_end_date,
+        authentication_start_time: authentication_start_time,
+        authentication_end_time: authentication_end_time,
+      })
       .where(eq(challenge.challenge_id, challenge_id));
   };
 }
