@@ -7,11 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   await app.listen(3000);
-  getUsers();
+  // getUsers();
 }
 bootstrap();
 
-async function getUsers() {
-  const user = await db.select().from(users);
-  console.log(user);
-}
+// async function getUsers() {
+//   const user = await db.select().from(users);
+//   console.log(user);
+// }
