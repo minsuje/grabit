@@ -12,18 +12,12 @@ export class AuthService {
     loginUser = async ({ userid, password }: LoginDto) => {
         let isLogin = 'false';
 
-        // const inputLogin: LoginDto = {
-        //     userid,
-        //     password,
-        // };
         const loginAccess = await db
             .select()
             .from(users)
             .where(eq(users.userid, userid) && eq(users.password, password));
 
-        // const check = await db.select().from(users);
-        // console.log(check);
-        // console.log('loginAccess clear>>>>>>>>', loginAccess);
+        console.log('islogin >>>>>>>>', loginAccess);
 
         if (loginAccess.length != 0) {
             isLogin = 'true';
