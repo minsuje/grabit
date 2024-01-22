@@ -6,7 +6,7 @@ export class ChallengeDto {
   topic: string;
   challenger_userid_num: number[];
   goal_money: number;
-  deadline: string;
+  term: number;
   winner_userid_num?: number[];
   authentication_start_date: string;
   authentication_end_date: string;

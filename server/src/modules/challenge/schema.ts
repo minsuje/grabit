@@ -20,7 +20,7 @@ export const challenge = pgTable('challenge', {
   topic: varchar('topic', { length: 50 }).notNull(),
   challenger_userid_num: integer('challenger_userid_num').array().notNull(),
   goal_money: integer('goal_money').notNull(),
-  deadline: varchar('deadline', { length: 20 }).notNull(),
+  term: integer('term').notNull(),
   winner_userid_num: integer('winner_userid_num').array(),
   authentication_start_date: date('authentication_start_date').notNull(),
   authentication_end_date: date('authentication_end_date').notNull(),
