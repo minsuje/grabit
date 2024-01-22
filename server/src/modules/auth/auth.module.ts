@@ -9,7 +9,7 @@ import { LocalStrategy } from './strategies/localstrategy';
     imports: [
         PassportModule,
         JwtModule.register({
-            secret: 'ewreaereh24hmaeTtseb',
+            secret: 'eweraereh24hmaeTtseb',
             signOptions: { expiresIn: '24h' },
         }),
     ],
