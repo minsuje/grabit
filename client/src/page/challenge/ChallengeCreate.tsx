@@ -20,8 +20,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import axios from 'axios';
+import { challenge } from '../../../../server/src/modules/challenge/schema';
 
 function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
+    const [challengeName, setChallengeName] = useState<string>('');
+    const [goalMoney, setGoalMoney] = useState<number>(0);
     const [date, setDate] = useState<DateRange | undefined>({
         from: new Date(2022, 0, 20),
         to: addDays(new Date(2022, 0, 20), 20),
@@ -106,12 +109,12 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
             method: 'POST',
             url: 'http://43.201.22.60:3000/challengeCreate',
             data: {
-                challenge_name: '물 안마시기',
+                challenge_name: challengeName,
                 is_public: isPublic,
                 topic,
                 challenger_userid_num: [1, 2],
-                goal_money: 10000,
-                deadline: '2022-01-20',
+                goal_money: goalMoney,
+                term: authTerm,
                 authentication_start_date: '2022-01-20',
                 authentication_end_date: '2022-01-23',
                 authentication_start_time: 23,
@@ -121,19 +124,16 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
         console.log(result);
     }
 
-    function handlePublic() {
-        console.log('isPublic');
-    }
-
     return (
         <div className="container ">
             <h1 className="text-3xl font-bold py-4">챌린지 생성</h1>
-
             <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
-
+            <h2 className="text-xl font-bold py-4">챌린지 이름</h2>
+            <Input onChange={(e) => setChallengeName(e.target.value)} />
             <h2 className="text-xl font-bold py-4">주제</h2>
             <Input onChange={(e) => setTopic(e.target.value)} />
-
+            <h2 className="text-xl font-bold py-4">목표 금액</h2>
+            <Input onChange={(e) => setGoalMoney(e.target.value)} />
             <h2 className="text-xl font-bold py-4">기간</h2>
             <div className={cn('grid gap-2', className)}>
                 <Popover>
@@ -174,7 +174,6 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </PopoverContent>
                 </Popover>
             </div>
-
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
             <Select onValueChange={(value) => setAuthTerm(value)}>
                 <SelectTrigger className="w-[180px]">
@@ -186,7 +185,6 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     <SelectItem value="every">매일</SelectItem>
                 </SelectContent>
             </Select>
-
             <h2 className="text-xl font-bold py-4">인증 시간</h2>
             <Select onValueChange={(value) => setAuthTime(value)}>
                 <SelectTrigger className="w-[180px]">
