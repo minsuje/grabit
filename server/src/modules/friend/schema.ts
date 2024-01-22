@@ -21,8 +21,8 @@ export const friend = pgTable('friend', {
       onDelete: 'cascade',
     }),
   is_friend: integer('is_friend').notNull(),
-  created_at: timestamp('created_at').defaultNow(),
-  updated_at: timestamp('updated_at').defaultNow(),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });
 
 export const friendRelations = relations(users, ({ many }) => ({
