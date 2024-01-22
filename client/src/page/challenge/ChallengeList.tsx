@@ -14,6 +14,7 @@ function ChallengeList() {
             axios
                 .get('http://43.201.22.60:3000/challengeList')
                 .then((response) => {
+                    console.log(response.data);
                     setIngMyChallenge(response.data.ingMyChallenge);
                     setPreMyChallenge(response.data.preMyChallenge);
                     setPublicChallenge(response.data.prePublicChallenge);

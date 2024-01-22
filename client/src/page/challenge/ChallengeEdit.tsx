@@ -17,6 +17,28 @@ import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { Challenge } from '@/types/types';
+import ChallengeDetail from './ChallengeDetail';
+
+async function patchChallenge(challenge_id: string | undefined) {
+    const result = await axios({
+        method: 'PATCH',
+        url: `http://43.201.22.60:3000/challengeEdit/${challenge_id}`,
+        data: ChallengeDetail,
+    });
+    console.log(result);
+}
+
+async function deleteChallenge(challenge_id: string | undefined) {
+    const result = await axios({
+        method: 'DELETE',
+        url: `http://43.201.22.60:3000/challengeEdit/${challenge_id}`,
+    });
+    console.log(result);
+}
 
 function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = React.useState<DateRange | undefined>({
@@ -24,78 +46,68 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         to: addDays(new Date(2022, 0, 20), 20),
     });
 
-    const tab1content = (
-        <div>
-            <div className="user-list flex">
-                <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
-                <div className="flex w-fit items-center space-x-2">
-                    <Switch id="public" />
-                    <Label htmlFor="public" className="w-8">
-                        공개
-                    </Label>
-                </div>
-            </div>
+    const { challenge_id } = useParams();
 
-            <div className="user-list flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <Button>추가하기</Button>
-            </div>
-        </div>
-    );
+    const [challengeDetail, setChallengeDetail] = useState<Challenge>({
+        challenge_id: 1,
+        userid_num: 1,
+        challenge_name: '물마시기',
+        topic: '건강',
+        challenger_userid_num: [1, 2],
+        goal_money: 1000,
+        is_public: 'true',
+        term: 3,
+        winner_userid_num: null,
+        authentication_start_date: '2024-01-24',
+        authentication_end_date: '2024-02-01',
+        authentication_start_time: 4,
+        authentication_end_time: 5,
+    });
 
-    const tab2content = (
-        <div>
-            <div className="user-list flex">
-                <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
-                <div className="flex w-fit items-center space-x-2">
-                    <Switch id="public" />
-                    <Label htmlFor="public" className="w-8">
-                        공개
-                    </Label>
-                </div>
-            </div>
-
-            <div className="user-list flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/kwonkuwhi.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/seejnn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <span>홍길동</span>
-                </div>
-                <Button>추가하기</Button>
-            </div>
-        </div>
-    );
+    useEffect(() => {
+        {
+            axios
+                .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
+                .then((response) => {
+                    console.log(response.data);
+                    setChallengeDetail(response.data[0]);
+                })
+                .catch((error) => {
+                    console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
+                });
+        }
+    }, []);
 
     return (
         <div className="container ">
             <h1 className="text-3xl font-bold py-4">챌린지 수정</h1>
+            <div>
+                <div className="user-list flex">
+                    <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
+                    <div className="flex w-fit items-center space-x-2">
+                        <Label className="w-8">공개</Label>
+                    </div>
+                </div>
 
-            <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
-
+                <div className="user-list flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                        <Avatar>
+                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <span>홍길동</span>
+                    </div>
+                </div>
+            </div>
             <h2 className="text-xl font-bold py-4">주제</h2>
-            <Input />
+            <Input
+                value={challengeDetail.topic}
+                onChange={(e) => {
+                    setChallengeDetail((challengeDetail) => {
+                        return { ...challengeDetail, topic: e.target.value };
+                    });
+                }}
+            />
 
             <h2 className="text-xl font-bold py-4">기간</h2>
             <div className={cn('grid gap-2', className)}>
@@ -137,32 +149,77 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </PopoverContent>
                 </Popover>
             </div>
-
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
-            <Select>
+            <Select
+                onValueChange={(value) => {
+                    setChallengeDetail((challengeDetail) => {
+                        return { ...challengeDetail, term: Number(value) };
+                    });
+                }}
+            >
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="인증 주기" />
+                    {challengeDetail.term != 7 ? (
+                        <SelectValue placeholder={'주 ' + challengeDetail.term + '일'} />
+                    ) : (
+                        <SelectValue placeholder="매일" />
+                    )}
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="3">주 3회</SelectItem>
-                    <SelectItem value="7">주 5회</SelectItem>
-                    <SelectItem value="every">매일</SelectItem>
+                    <SelectItem value="5">주 5회</SelectItem>
+                    <SelectItem value="7">매일</SelectItem>
                 </SelectContent>
             </Select>
+            <div className="grid grid-cols-2">
+                <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
+                <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
+                <Select
+                    onValueChange={(value) => {
+                        setChallengeDetail((challengeDetail) => {
+                            return { ...challengeDetail, authentication_start_time: Number(value) };
+                        });
+                    }}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder={challengeDetail.authentication_start_time + ':00'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="1">1:00</SelectItem>
+                        <SelectItem value="2">2:00</SelectItem>
+                        <SelectItem value="3">3:00</SelectItem>
+                        <SelectItem value="4">4:00</SelectItem>
+                        <SelectItem value="5">5:00</SelectItem>
+                        <SelectItem value="6">6:00</SelectItem>
+                        <SelectItem value="7">7:00</SelectItem>
+                        <SelectItem value="8">8:00</SelectItem>
+                    </SelectContent>
+                </Select>
 
-            <h2 className="text-xl font-bold py-4">인증 시간</h2>
-            <Select>
-                <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="인증 시간" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="3">오전 7시</SelectItem>
-                    <SelectItem value="7">주 5회</SelectItem>
-                    <SelectItem value="every">매일</SelectItem>
-                </SelectContent>
-            </Select>
-            <Button>삭제</Button>
-            <Button>수정</Button>
+                <Select
+                    onValueChange={(value) => {
+                        setChallengeDetail((challengeDetail) => {
+                            return { ...challengeDetail, authentication_end_time: Number(value) };
+                        });
+                    }}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder={challengeDetail.authentication_end_time + ':00'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="1">1:00</SelectItem>
+                        <SelectItem value="2">2:00</SelectItem>
+                        <SelectItem value="3">3:00</SelectItem>
+                        <SelectItem value="4">4:00</SelectItem>
+                        <SelectItem value="5">5:00</SelectItem>
+                        <SelectItem value="6">6:00</SelectItem>
+                        <SelectItem value="7">7:00</SelectItem>
+                        <SelectItem value="8">8:00</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <Button onClick={() => deleteChallenge(challenge_id)}>삭제</Button>
+            <Button onClick={() => patchChallenge(challenge_id)}>수정</Button>
         </div>
     );
 }
