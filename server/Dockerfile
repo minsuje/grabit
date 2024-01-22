@@ -7,8 +7,6 @@ ARG DATABASE_URL
 # Set the environment variable
 ENV DATABASE_URL=$DATABASE_URL
 ENV JWT_SECRET_KEY=$JWT_SECRET_KEY
-ENV AWS_S3_ACCESS_KEY=$AWS_S3_ACCESS_KEY
-ENV AWS_S3_SECRET_KEY=$AWS_S3_SECRET_KEY
 
 # Create app directory in server folder
 WORKDIR /usr/src/app/server
