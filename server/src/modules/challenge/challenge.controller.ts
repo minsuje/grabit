@@ -20,8 +20,23 @@ export class ChallengeController {
 
   // 챌린지 상세 정보 보기
   @Get('/challengeDetail/:challenge_id')
-  getChallengeDetail(@Param('challenge_id') challenge_id: any): any {
+  getChallengeDetail(@Param('challenge_id') challenge_id: number): any {
     console.log('controller', challenge_id);
     return this.ChallengeService.challengeDetail(challenge_id);
+  }
+
+  // 챌린지 수정 페이지 보기
+  @Get('/challengeEdit/:challenge_id')
+  getChallengeEdit(@Param('challenge_id') challenge_id: number): any {
+    return this.ChallengeService.getChallengeEdit(challenge_id);
+  }
+
+  // 챌린지 수정하기
+  @Patch('/challengeEdit/:challenge_id')
+  patchChallengeEdit(
+    @Param('challenge_id') challenge_id: number,
+    @Body() body: ChallengeDto,
+  ): any {
+    return this.ChallengeService.patchChallengeEdit(body, challenge_id);
   }
 }
