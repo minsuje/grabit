@@ -107,7 +107,7 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
         const result = await axios({
             method: 'POST',
-            url: 'http://43.201.22.60:3000/challengeCreate',
+            url: 'http://localhost:3000/challengeCreate',
             data: {
                 challenge_name: challengeName,
                 is_public: isPublic,
@@ -115,8 +115,8 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 challenger_userid_num: [1, 2],
                 goal_money: goalMoney,
                 term: authTerm,
-                authentication_start_date: '2022-01-20',
-                authentication_end_date: '2022-01-23',
+                authentication_start_date: date?.from,
+                authentication_end_date: date?.to,
                 authentication_start_time: 23,
                 authentication_end_time: 457,
             },
