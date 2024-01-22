@@ -70,34 +70,33 @@ function Record() {
 }
 
 function HotChallenge() {
-    const [hotChallenge, setHotChallenge] = useState<string[]>([]);
+    const [hotTopic, setHotTopic] = useState<string[]>([]);
     useEffect(() => {
-        setHotChallenge(['물마시기', '걷기', '공부']);
-        console.log(hotChallenge);
-        //     {
-        //         /* axios.post('/HotChallenge')
-        //         .then(response => {
-        //             console.log(response);
-        //             setHotchallenge(response)
-        //         })
-        //         .catch(error)=>{
-        //             console.error('HotChallenge Component에서 오류발생 :',error)
-        //         } */
-        //     }
-    }, []);
+        setHotTopic(['물마시기', '걷기', '공부']);
 
-    // const hotChallenge = ['물마시기', '걷기', '공부'];
+        // {
+        //     axios
+        //         .get('/hotTopic')
+        //         .then((response) => {
+        //             console.log('HotTopicData', response.data);
+        //             setHotTopic(response.data);
+        //         })
+        //         .catch((error) => {
+        //             console.error('HotChallenge Component에서 오류발생 :', error);
+        //         });
+        // }
+    }, []);
 
     return (
         <>
             <div className="flex gap-2 text-center">
-                {hotChallenge.map((value, idx) => {
+                {hotTopic.map((topic, idx) => {
                     return (
                         <div
                             key={idx}
                             className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2"
                         >
-                            {value}
+                            {topic}
                         </div>
                     );
                 })}
