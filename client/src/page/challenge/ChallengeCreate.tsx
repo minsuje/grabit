@@ -124,7 +124,7 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
         const result = await axios({
             method: 'POST',
-            url: 'http://43.201.22.60:3000/challengeCreate',
+            url: 'http://localhost:3000/challengeCreate',
             data: {
                 challenge_name: challengeName,
                 is_public: isPublic,

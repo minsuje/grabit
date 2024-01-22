@@ -7,22 +7,17 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+
     constructor(private jwtService: JwtService) {}
     loginUser = async ({ userid, password }: LoginDto) => {
         let isLogin = 'false';
 
-        // const inputLogin: LoginDto = {
-        //     userid,
-        //     password,
-        // };
         const loginAccess = await db
             .select()
             .from(users)
             .where(eq(users.userid, userid) && eq(users.password, password));
 
-        // const check = await db.select().from(users);
-        // console.log(check);
-        // console.log('loginAccess clear>>>>>>>>', loginAccess);
+        console.log('islogin >>>>>>>>', loginAccess);
 
         if (loginAccess.length != 0) {
             isLogin = 'true';
@@ -35,4 +30,18 @@ export class AuthService {
         //     return isLogin; // "false"
         // }
     };
+    const loginAccess = await db
+      .select()
+      .from(users)
+      .where(eq(users.userid, userid) && eq(users.password, password));
+
+    if (loginAccess.length != 0) {
+      isLogin = 'true';
+      loginAccess; // user 정보
+      return this.jwtService.sign({ userid }); // jwt토큰 생성
+    } else {
+      console.log('isLogin else', isLogin);
+      return isLogin; // "false"
+    }
+  };
 }

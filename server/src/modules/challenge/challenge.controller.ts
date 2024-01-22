@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
 import { Challenge } from './challenge.module';
@@ -26,10 +34,10 @@ export class ChallengeController {
   }
 
   // 챌린지 수정 페이지 보기
-  @Get('/challengeEdit/:challenge_id')
-  getChallengeEdit(@Param('challenge_id') challenge_id: number): any {
-    return this.ChallengeService.getChallengeEdit(challenge_id);
-  }
+  // @Get('/challengeEdit/:challenge_id')
+  // getChallengeEdit(@Param('challenge_id') challenge_id: number): any {
+  //   return this.ChallengeService.getChallengeEdit(challenge_id);
+  // }
 
   // 챌린지 수정하기
   @Patch('/challengeEdit/:challenge_id')
@@ -38,5 +46,11 @@ export class ChallengeController {
     @Body() body: ChallengeDto,
   ): any {
     return this.ChallengeService.patchChallengeEdit(body, challenge_id);
+  }
+
+  // 챌린지 삭제하기
+  @Delete('/challengeEdit/:challenge_id')
+  deleteChallengeEdit(@Param('challenge_id') challenge_id: number): any {
+    return this.ChallengeService.deleteChallengeEdit(challenge_id);
   }
 }
