@@ -14,6 +14,9 @@ import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
 import ChallengeDetail from './page/challenge/ChallengeDetail';
 import ChallengeDaily from './page/challenge/ChallengeDaily';
+
+import { MyPageEdit } from '@/page/myPage/MyPageEdit';
+import { MyPage } from './page/myPage/myPage';
 import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
@@ -32,7 +35,7 @@ function App() {
                     <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
                     <Route path="/register/normal" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
-                    <Route path="/challengresult" element={<ChallengeResult />} />
+                    <Route path="/challengeresult" element={<ChallengeResult />} />
                     <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
                     <Route path="/challengeList" element={<ChallengeList />} />
                     <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
@@ -48,6 +51,8 @@ function App() {
 
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
+                    <Route path="/mypage/" element={<MyPage />} />
+                    <Route path="/mypage/:mypageedit" element={<MyPageEdit />} />
                 </Routes>
             </BrowserRouter>
         </div>
