@@ -3,144 +3,92 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useState, ChangeEvent } from 'react';
+const schema = yup.object({
+    name: yup.string()
+    .required('* 이름은 필수입니다.')
+    .min(2, '이름은 2글자 이상 8글자 이내여야 합니다.')
+    .max(8, '이름은 2글자 이상 8글자 이내여야 합니다.')
+    .matches(/^[가-힣]+$/, '* 이름은 한글로만 입력해야 합니다.'),
+
+    userid: yup.string()
+    .required('* 아이디는 필수입니다.')
+    .min(6, '아이디는 6자 이내여야 합니다')
+    .max(12, '아이디는 12자 이내여야 합니다.')
+    .matches(
+    /^[A-Za-z][A-Za-z0-9_]{6,12}$/,
+    "아이디는 숫자, 영문으로 작성 가능합니다."
+    ),
+
+    nickname: yup.string()
+    .required('* 닉네임은 필수입니다.')
+    .min(4, '닉네임은 4자 이하 이내여야 합니다.')
+    .max(10, '닉네임은 12자 이하 이내여야 합니다.')
+    .matches(
+        /^[A-Za-z0-9가-힣]{4,12}$/,
+        "닉네임은 영어, 한글, 숫자만 가능합니다."
+    ),
+
+    password: yup.string()
+    .required('* 비밀번호는 필수입니다.')
+    .min(8, "최소 8자 이상 작성해야 합니다.")
+    .max(16, "최대 16자까지 작성 가능합니다.")
+    .matches(
+    /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()])[a-zA-Z0-9!@#$%^&*()]{8,16}$/,
+    "비밀번호는 영어, 숫자, 특수문자만 가능합니다."),
+    
+    confirmPassword:yup.string()
+    .required('* 비밀번호는 필수입니다.')
+    .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다')
+}).required();
 
 export function Register() {
-    const { type } = useParams();
-    const [name, setName] = useState<string>(''); // 이름
-    const [userid, setUserid] = useState<string>(''); // 아이디
-    const [nickname, setNickname] = useState<string>(''); // 닉네임
-    const [password, setPassword] = useState<string>(''); // 패스워드
-    const [confirmPassword, setConfirmPassword] = useState<string>(''); // 패스워드 확인
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    });
+    const navigate = useNavigate();
 
-    const [passwordError, setPasswordError] = useState(''); // 비밀번호 유효성 검사 값 저장
-
-    const navigate = useNavigate(); //useNavigate 훅을 사용하여 navigate 함수를 가져옴
-
-
-    
-    // 비밀번호 유효성 검사
-    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newPassword = e.target.value;
-        setPassword(newPassword);
-        validatePassword(newPassword, confirmPassword);
-    };
-
-    const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const newConfirmPassword = e.target.value;
-        setConfirmPassword(newConfirmPassword);
-        validatePassword(password, newConfirmPassword);
-    };
-
-    const validatePassword = (newPassword: string, newConfirmPassword: string) => {
-        if (newPassword.length < 8) {
-            setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
-        } else if (newPassword !== newConfirmPassword) {
-            setPasswordError('비밀번호가 일치하지 않습니다.');
-        } else {
-            setPasswordError('');
-        }
-    };
-    const register = async () => {
-        if (passwordError) {
-            window.alert('비밀번호를 확인하세요.');
-            return;
-        }
-
+    const onSubmit = async (data) => {
         try {
-            const res = await axios.post('http://43.201.22.60:3000/register/normal', {
-                name,
-                userid,
-                nickname,
-                password,
-            });
-            console.log('회원가입 성공:', res);
+            const response = await axios.post('http://43.201.22.60:3000/register/normal', data);
+            console.log('회원가입 성공:', response);
             navigate('/login');
         } catch (err) {
             console.error('회원가입 실패:', err);
-            // 여기서 사용자에게 오류 메시지를 표시할 수 있습니다.
         }
     };
 
-    console.log(`이름 : ${name}`);
-    console.log(`아이디 : ${userid}`);
-    console.log(`닉네임 : ${nickname}`);
-    console.log(`password: ${password}`);
-    console.log(`비밀번호확인: ${confirmPassword}`);
-
     return (
-        <>
-            <div className="flex flex-col h-screen justify-center items-center ">
-                <div className="border-solid border-2 border-gray-100 p-20">
-                    <div className="grid w-full max-w-sm items-center gap-1.5">
-                        <Label htmlFor="name">이름</Label>
-                        <Input
-                            type="text"
-                            value={name}
-                            id="name"
-                            placeholder="이름"
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="userid">아이디</Label>
-                        <Input
-                            type="text"
-                            value={userid}
-                            id="userid"
-                            placeholder="아이디"
-                            onChange={(e) => setUserid(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="nickname">닉네임</Label>
-                        <Input
-                            type="text"
-                            value={nickname}
-                            id="nickname"
-                            placeholder="닉네임"
-                            onChange={(e) => setNickname(e.target.value)}
-                        />
-                    </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="profilePic">프로필 사진</Label>
-                        <Input type="file" id="profilePic" placeholder="프로필 사진" />
-                    </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="password">비밀번호</Label>
-                        <Input
-                            type="password"
-                            value={password}
-                            id="password"
-                            placeholder="비밀번호"
-                            onChange={handlePasswordChange}
-                        />
-                        {passwordError && <p className="text-red-500 text-xs">{passwordError}</p>}
-                    </div>
-                    <div className="grid w-full max-w-sm items-center gap-1.5  mt-10">
-                        <Label htmlFor="confirmPassword">비밀번호 확인</Label>
-                        <Input
-                            type="password"
-                            id="confirmPassword"
-                            placeholder="비밀번호 확인"
-                            onChange={handleConfirmPasswordChange}
-                        />
-                        {passwordError && <p className="text-red-500 text-xs">{passwordError}</p>}
-                    </div>
-                    <div className=" flex justify-center items-center">
-                        <Button
-                            variant="default"
-                            className="mt-20 "
-                            onClick={() => {
-                                register();
-                            }}
-                        >
-                            회원가입
-                        </Button>
-                    </div>
-                </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+                <Label htmlFor="name">이름</Label>
+                <Input id="name" {...register('name')} />
+                {errors.name && <p className='text-red-500 text-xs'>{errors.name.message}</p>}
             </div>
-        </>
+            <div>
+                <Label htmlFor="userid">아이디</Label>
+                <Input id="userid" {...register('userid')} />
+                {errors.userid && <p className='text-red-500 text-xs'>{errors.userid.message}</p>}
+            </div>
+            <div>
+                <Label htmlFor="nickname">닉네임</Label>
+                <Input id="nickname" {...register('nickname')} />
+                {errors.nickname && <p className='text-red-500 text-xs'>{errors.nickname.message}</p>}
+            </div>
+            <div>
+                <Label htmlFor="password">비밀번호</Label>
+                <Input type="password" id="password" {...register('password')} />
+                {errors.password && <p className='text-red-500 text-xs'>{errors.password.message}</p>}
+            </div>
+            <div>
+                <Label htmlFor="confirmPassword">비밀번호 확인</Label>
+                <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
+                {errors.confirmPassword && <p className='text-red-500 text-xs'>{errors.confirmPassword.message}</p>}
+            </div>
+            <Button type="submit">회원가입</Button>
+        </form>
     );
 }
