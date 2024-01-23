@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 
 import * as React from 'react';
-import { addDays, format, differenceInDays, parseISO } from 'date-fns';
+import { addDays, format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
 import { kr, ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
@@ -19,11 +19,25 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
 
-async function patchChallenge(challenge_id: string | undefined, challengeDetail: Challenge) {
+async function patchChallenge(
+    challenge_id: string | undefined,
+    challengeDetail: Challenge,
+    startDay: Date | undefined,
+    period: number,
+) {
+    startDay && addHours(startDay, 9);
+    const challengeData = {
+        ...challengeDetail,
+        authentication_start_date: startDay && startDay,
+        authentication_end_date: startDay && addDays(startDay, period),
+    };
+    console.log(startDay);
+
+    console.log('period', period);
     const result = await axios({
         method: 'PATCH',
         url: `http://43.201.22.60:3000/challengeEdit/${challenge_id}`,
-        data: { challengeDetail },
+        data: challengeData,
     });
     console.log(result);
 }
@@ -38,6 +52,7 @@ async function deleteChallenge(challenge_id: string | undefined) {
 
 function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
     const { challenge_id } = useParams();
+    const [date, setDate] = useState<Date | undefined>();
 
     const [challengeDetail, setChallengeDetail] = useState<Challenge>({
         challenge_id: 1,
@@ -73,7 +88,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     setChallengeDetail(response.data[0]);
                 })
                 .catch((error) => {
-                    console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
+                    console.error('ChallengeEdit에서 오류발생 :', error);
                 });
         }
     }, []);
@@ -121,6 +136,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
             />
             <h2 className="text-xl font-bold py-4">기간</h2>
             <Select
+                value={period.toString()}
                 onValueChange={(value) => {
                     periodChanged = Number(value);
 
@@ -154,28 +170,19 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                         )}
                     >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {challengeDetail.authentication_start_date ? (
-                            format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })
+                        {date ? (
+                            format(date, 'PPP EEE', { locale: ko })
                         ) : (
-                            <span>{format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })} </span>
+                            <span>{format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}</span>
                         )}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                     <Calendar
                         mode="single"
-                        selected={challengeDetail.authentication_start_date}
-                        onSelect={(value) => {
-                            setChallengeDetail((challengeDetail) => {
-                                return {
-                                    ...challengeDetail,
-                                    authentication_start_date: value,
-                                    authentication_end_date: addDays(
-                                        challengeDetail.authentication_start_date,
-                                        periodChanged,
-                                    ),
-                                };
-                            });
+                        selected={date}
+                        onSelect={() => {
+                            setDate(date);
                         }}
                         initialFocus
                     />
@@ -195,7 +202,11 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     >
                         <CalendarIcon className="mr-2 h-4 w-4" />
 
-                        <span>{format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })} </span>
+                        {date ? (
+                            format(addDays(date, period), 'PPP EEE', { locale: ko })
+                        ) : (
+                            <span>{format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}</span>
+                        )}
                     </Button>
                 </PopoverTrigger>
             </Popover>
@@ -225,6 +236,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 <div className="startTime flex flex-col">
                     <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
                     <Select
+                        value={challengeDetail.authentication_start_time.toString()}
                         onValueChange={(value) => {
                             setChallengeDetail((challengeDetail) => {
                                 return { ...challengeDetail, authentication_start_time: Number(value) };
@@ -248,6 +260,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 <div className="endTime flex flex-col">
                     <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
                     <Select
+                        value={challengeDetail.authentication_end_time.toString()}
                         onValueChange={(value) => {
                             if (Number(value) <= challengeDetail.authentication_start_time) {
                             } else {
@@ -279,7 +292,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 >
                     삭제
                 </Button>
-                <Button onClick={() => patchChallenge(challenge_id, challengeDetail)}>수정</Button>
+                <Button onClick={() => patchChallenge(challenge_id, challengeDetail, date, period)}>수정</Button>
             </div>
         </div>
     );
