@@ -49,5 +49,9 @@ jobs:
                   -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
                   --name server seejnn/grabit
 
-            - name: Remove Docker image
-              run: sudo docker rmi seejnn/grabit:latest || echo "No existing image to remove."
+            # - name: Remove Docker image
+            #   run: sudo docker rmi seejnn/grabit:latest || echo "No existing image to remove."
+
+            - name: Remove old Docker images
+              run: |
+                  docker images | grep 'seejnn/grabit' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi
