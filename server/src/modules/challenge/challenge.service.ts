@@ -30,8 +30,8 @@ export class ChallengeService {
       challenger_userid_num,
       goal_money,
       term,
-      authentication_start_date,
-      authentication_end_date,
+      authentication_start_date: new Date(authentication_start_date),
+      authentication_end_date: new Date(authentication_end_date),
       authentication_start_time,
       authentication_end_time,
     });
@@ -69,7 +69,7 @@ export class ChallengeService {
     const publicChallengeAll = await db
       .select()
       .from(challenge)
-      .where(eq(challenge.is_public, 'true'));
+      .where(eq(challenge.is_public, true));
     let publicChallenge = [];
     for (let i = 0; i < publicChallengeAll.length; i++) {
       if (!publicChallengeAll[i].challenger_userid_num.includes(3))
@@ -140,10 +140,15 @@ export class ChallengeService {
   newChallengeAuth = async (challenge_id: number, file: string) => {
     console.log('service', file);
 
+    let fileName: any = file.split('?')[0].split('.com/')[1];
+
+    // console.log(file);
+
     await db.insert(authentication).values({
       challenge_id: challenge_id,
       userid_num: 3, // JWT 토큰에서 찾아야 하는 값
-      authentication_img: file,
+      authentication_img: fileName,
     });
+    return file;
   };
 }
