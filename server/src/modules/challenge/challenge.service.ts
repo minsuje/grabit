@@ -139,6 +139,7 @@ export class ChallengeService {
         authentication_end_date: new Date(authentication_end_date),
         authentication_start_time: authentication_start_time,
         authentication_end_time: authentication_end_time,
+        updated_at: new Date(),
       })
       .where(eq(challenge.challenge_id, challenge_id));
   };
