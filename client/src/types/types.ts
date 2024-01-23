@@ -5,7 +5,7 @@ export interface Challenge {
     topic: string;
     challenger_userid_num: number[];
     goal_money: number;
-    is_public: string;
+    is_public: boolean;
     term: number;
     winner_userid_num: number | null;
     authentication_start_date: Date;
