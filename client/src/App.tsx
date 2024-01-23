@@ -15,6 +15,8 @@ import ChallengeEdit from './page/challenge/ChallengeEdit';
 import ChallengeDetail from './page/challenge/ChallengeDetail';
 import ChallengeDaily from './page/challenge/ChallengeDaily';
 import '@/App.css';
+import Alarm from './page/home/Alarm';
+import ChallengeAccept from './page/challenge/ChallengeAccept';
 
 function App() {
     return (
@@ -36,6 +38,8 @@ function App() {
                     <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
                     <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
                     <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
+                    <Route path="/alarm" element={<Alarm />} />
+                    <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
 
                     {/* 
                     <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
