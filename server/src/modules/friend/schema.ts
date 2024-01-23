@@ -4,6 +4,7 @@ import {
   integer,
   pgTable,
   serial,
+  boolean,
   varchar,
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/schema';
@@ -20,7 +21,7 @@ export const friend = pgTable('friend', {
     .references(() => users.userid_num, {
       onDelete: 'cascade',
     }),
-  is_friend: integer('is_friend').notNull(),
+  is_friend: boolean('is_friend').notNull().default(false),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });

@@ -1,5 +1,3 @@
-import { Tab } from '@/components/Component0117';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,10 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 
 import * as React from 'react';
-import { addDays, format } from 'date-fns';
+import { addDays, format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
 import { kr, ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -21,13 +18,26 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
-import ChallengeDetail from './ChallengeDetail';
 
-async function patchChallenge(challenge_id: string | undefined) {
+async function patchChallenge(
+    challenge_id: string | undefined,
+    challengeDetail: Challenge,
+    startDay: Date | undefined,
+    period: number,
+) {
+    startDay && addHours(startDay, 9);
+    const challengeData = {
+        ...challengeDetail,
+        authentication_start_date: startDay && startDay,
+        authentication_end_date: startDay && addDays(startDay, period),
+    };
+    console.log(startDay);
+
+    console.log('period', period);
     const result = await axios({
         method: 'PATCH',
         url: `http://43.201.22.60:3000/challengeEdit/${challenge_id}`,
-        data: ChallengeDetail,
+        data: challengeData,
     });
     console.log(result);
 }
@@ -41,28 +51,33 @@ async function deleteChallenge(challenge_id: string | undefined) {
 }
 
 function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
-    const [date, setDate] = React.useState<DateRange | undefined>({
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
-    });
-
     const { challenge_id } = useParams();
+    const [date, setDate] = useState<Date | undefined>();
 
     const [challengeDetail, setChallengeDetail] = useState<Challenge>({
         challenge_id: 1,
         userid_num: 1,
-        challenge_name: '물마시기',
-        topic: '건강',
+        challenge_name: '',
+        topic: '',
         challenger_userid_num: [1, 2],
         goal_money: 1000,
-        is_public: 'true',
-        term: 3,
+        is_public: '',
+        term: 14,
         winner_userid_num: null,
-        authentication_start_date: '2024-01-24',
-        authentication_end_date: '2024-02-01',
+        authentication_start_date: new Date('2024-02-01'),
+        authentication_end_date: new Date('2024-02-08'),
         authentication_start_time: 4,
         authentication_end_time: 5,
     });
+
+    let period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+    let periodChanged = period;
+    console.log(periodChanged);
+
+    const hours: number[] = [];
+    for (let i = 0; i < 24; i++) {
+        hours.push(i);
+    }
 
     useEffect(() => {
         {
@@ -73,7 +88,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     setChallengeDetail(response.data[0]);
                 })
                 .catch((error) => {
-                    console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
+                    console.error('ChallengeEdit에서 오류발생 :', error);
                 });
         }
     }, []);
@@ -99,6 +114,17 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </div>
                 </div>
             </div>
+
+            <h2 className="text-xl font-bold py-4">챌린지명</h2>
+            <Input
+                value={challengeDetail.challenge_name}
+                onChange={(e) => {
+                    setChallengeDetail((challengeDetail) => {
+                        return { ...challengeDetail, challenge_name: e.target.value };
+                    });
+                }}
+            />
+
             <h2 className="text-xl font-bold py-4">주제</h2>
             <Input
                 value={challengeDetail.topic}
@@ -108,47 +134,83 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     });
                 }}
             />
-
             <h2 className="text-xl font-bold py-4">기간</h2>
-            <div className={cn('grid gap-2', className)}>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            id="date"
-                            variant={'outline'}
-                            className={cn(
-                                'w-[300px] justify-start text-left font-normal',
-                                !date && 'text-muted-foreground',
-                            )}
-                        >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {date?.from ? (
-                                date.to ? (
-                                    <>
-                                        {format(date.from, 'LLL dd, y', { locale: ko })} -{' '}
-                                        {format(date.to, 'LLL dd, y', { locale: ko })}
-                                    </>
-                                ) : (
-                                    format(date.from, 'LLL dd, y', { locale: ko })
-                                )
-                            ) : (
-                                <span>날짜를 선택하세요</span>
-                            )}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            initialFocus
-                            mode="range"
-                            defaultMonth={date?.from}
-                            selected={date}
-                            onSelect={setDate}
-                            numberOfMonths={2}
-                            locale={ko}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </div>
+            <Select
+                value={period.toString()}
+                onValueChange={(value) => {
+                    periodChanged = Number(value);
+
+                    setChallengeDetail((challengeDetail) => {
+                        return {
+                            ...challengeDetail,
+                            authentication_end_date: addDays(challengeDetail.authentication_start_date, periodChanged),
+                        };
+                    });
+                }}
+            >
+                <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder={period != 3 ? period / 7 + '주' : period + '일'} />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="3">3일</SelectItem>
+                    <SelectItem value="7">1주</SelectItem>
+                    <SelectItem value="14">2주</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <h2 className="text-xl font-bold py-4">시작 날짜</h2>
+
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant={'outline'}
+                        className={cn(
+                            'w-[280px] justify-start text-left font-normal',
+                            !challengeDetail.authentication_start_date && 'text-muted-foreground',
+                        )}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? (
+                            format(date, 'PPP EEE', { locale: ko })
+                        ) : (
+                            <span>{format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}</span>
+                        )}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                    <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={() => {
+                            setDate(date);
+                        }}
+                        initialFocus
+                    />
+                </PopoverContent>
+            </Popover>
+
+            <h2 className="text-xl font-bold py-4">끝 날짜</h2>
+
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant={'outline'}
+                        className={cn(
+                            'w-[280px] justify-start text-left font-normal',
+                            !challengeDetail.authentication_end_date && 'text-muted-foreground',
+                        )}
+                    >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+
+                        {date ? (
+                            format(addDays(date, period), 'PPP EEE', { locale: ko })
+                        ) : (
+                            <span>{format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}</span>
+                        )}
+                    </Button>
+                </PopoverTrigger>
+            </Popover>
+
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
             <Select
                 onValueChange={(value) => {
@@ -170,56 +232,68 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     <SelectItem value="7">매일</SelectItem>
                 </SelectContent>
             </Select>
-            <div className="grid grid-cols-2">
-                <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
-                <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
-                <Select
-                    onValueChange={(value) => {
-                        setChallengeDetail((challengeDetail) => {
-                            return { ...challengeDetail, authentication_start_time: Number(value) };
-                        });
-                    }}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder={challengeDetail.authentication_start_time + ':00'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="1">1:00</SelectItem>
-                        <SelectItem value="2">2:00</SelectItem>
-                        <SelectItem value="3">3:00</SelectItem>
-                        <SelectItem value="4">4:00</SelectItem>
-                        <SelectItem value="5">5:00</SelectItem>
-                        <SelectItem value="6">6:00</SelectItem>
-                        <SelectItem value="7">7:00</SelectItem>
-                        <SelectItem value="8">8:00</SelectItem>
-                    </SelectContent>
-                </Select>
-
-                <Select
-                    onValueChange={(value) => {
-                        setChallengeDetail((challengeDetail) => {
-                            return { ...challengeDetail, authentication_end_time: Number(value) };
-                        });
-                    }}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder={challengeDetail.authentication_end_time + ':00'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="1">1:00</SelectItem>
-                        <SelectItem value="2">2:00</SelectItem>
-                        <SelectItem value="3">3:00</SelectItem>
-                        <SelectItem value="4">4:00</SelectItem>
-                        <SelectItem value="5">5:00</SelectItem>
-                        <SelectItem value="6">6:00</SelectItem>
-                        <SelectItem value="7">7:00</SelectItem>
-                        <SelectItem value="8">8:00</SelectItem>
-                    </SelectContent>
-                </Select>
+            <div className="authTime flex gap-8">
+                <div className="startTime flex flex-col">
+                    <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
+                    <Select
+                        value={challengeDetail.authentication_start_time.toString()}
+                        onValueChange={(value) => {
+                            setChallengeDetail((challengeDetail) => {
+                                return { ...challengeDetail, authentication_start_time: Number(value) };
+                            });
+                        }}
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder={challengeDetail.authentication_start_time + '시'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {hours.map((hour, i) => {
+                                return (
+                                    <SelectItem key={i} value={hour.toString()}>
+                                        {hour}시
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="endTime flex flex-col">
+                    <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
+                    <Select
+                        value={challengeDetail.authentication_end_time.toString()}
+                        onValueChange={(value) => {
+                            if (Number(value) <= challengeDetail.authentication_start_time) {
+                            } else {
+                                setChallengeDetail((challengeDetail) => {
+                                    return { ...challengeDetail, authentication_end_time: Number(value) };
+                                });
+                            }
+                        }}
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder={challengeDetail.authentication_end_time + '시'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {hours.map((hour, i) => {
+                                return (
+                                    <SelectItem key={i} value={hour.toString()}>
+                                        {hour}시
+                                    </SelectItem>
+                                );
+                            })}
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
-
-            <Button onClick={() => deleteChallenge(challenge_id)}>삭제</Button>
-            <Button onClick={() => patchChallenge(challenge_id)}>수정</Button>
+            <div className="flex flex-col mt-3 gap-3">
+                <Button
+                    className="bg-slate-100 text-black hover:bg-slate-200"
+                    onClick={() => deleteChallenge(challenge_id)}
+                >
+                    삭제
+                </Button>
+                <Button onClick={() => patchChallenge(challenge_id, challengeDetail, date, period)}>수정</Button>
+            </div>
         </div>
     );
 }

@@ -7,10 +7,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
-import { ko } from 'date-fns/locale';
-import { addDays, format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
 
-function ChallengeDetail() {
+function ChallengeAccept() {
     const { challenge_id } = useParams();
     const [challengeDetail, setChallengeDetail] = useState<Challenge>();
 
@@ -49,32 +47,21 @@ function ChallengeDetail() {
                     </div>
                 </div>
             </div>
-            <h2 className="text-xl font-bold py-4">챌린지명</h2>
-            <div>{challengeDetail != undefined && challengeDetail.challenge_name}</div>
+
             <h2 className="text-xl font-bold py-4">주제</h2>
             <div>{challengeDetail != undefined && challengeDetail.topic}</div>
 
-            <h2 className="text-xl font-bold py-4">시작날짜</h2>
-            <div>
-                {challengeDetail != undefined &&
-                    format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}
-            </div>
-            <h2 className="text-xl font-bold py-4">끝날짜</h2>
-            <div>
-                {challengeDetail != undefined &&
-                    format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}
-            </div>
+            <h2 className="text-xl font-bold py-4">기간</h2>
+            <div>{challengeDetail != undefined && challengeDetail.term}</div>
 
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
-            <div>주 {challengeDetail != undefined && challengeDetail.term}일</div>
+            <div>{challengeDetail != undefined && challengeDetail.term}</div>
+            <div>{challengeDetail != undefined && challengeDetail.authentication_start_date}</div>
 
             <h2 className="text-xl font-bold py-4">인증 시간</h2>
             <div>
                 {challengeDetail != undefined &&
-                    challengeDetail.authentication_start_time +
-                        '시 ~ ' +
-                        challengeDetail.authentication_end_time +
-                        '시 '}
+                    challengeDetail.authentication_start_time + '-' + challengeDetail.authentication_end_time}
             </div>
 
             <div className="user-list flex flex-col gap-4 pt-4">
@@ -84,4 +71,4 @@ function ChallengeDetail() {
     );
 }
 
-export default ChallengeDetail;
+export default ChallengeAccept;
