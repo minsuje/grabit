@@ -25,6 +25,7 @@ jobs:
                   docker build \
                     --build-arg DATABASE_URL=${DATABASE_URL} \
                     --build-arg JWT_SECRET_KEY=${JWT_SECRET_KEY} \
+                    --build-arg TZ=Asia/Seoul \
                     -t seejnn/grabit -f server/Dockerfile server
 
             - name: Tagging
