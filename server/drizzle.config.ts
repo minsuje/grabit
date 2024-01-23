@@ -9,6 +9,7 @@ export default {
     './src/modules/challenge/schema.ts',
     './src/modules/alarm/schema.ts',
     './src/modules/daily_mission/schema.ts',
+    './src/modules/friend/schema.ts',
   ],
   out: './migration',
   driver: 'pg',

@@ -8,8 +8,8 @@ import { isBefore, isAfter } from 'date-fns';
 
 @Injectable()
 export class FriendService {
-  async findUserFriends(body: CreateFriendDto) {
-    const { userid_num } = body;
+  async findUserFriends(userid: number) {
+    const userid_num = userid;
     return db.select().from(friend).where(eq(friend.userid_num, userid_num));
   }
 
