@@ -8,8 +8,8 @@ export interface Challenge {
     is_public: string;
     term: number;
     winner_userid_num: number | null;
-    authentication_start_date: string;
-    authentication_end_date: string;
+    authentication_start_date: Date;
+    authentication_end_date: Date;
     authentication_start_time: number;
     authentication_end_time: number;
 }

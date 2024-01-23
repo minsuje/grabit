@@ -18,7 +18,7 @@ function ChallengeDetail() {
             .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
             .then((response): void => {
                 console.log('response', response.data);
-                setChallengeDetail(response.data);
+                setChallengeDetail(response.data[0]);
             })
             .catch((error): void => {
                 console.error('ChallengeDetail에서 axios 오류:', error);
@@ -56,6 +56,7 @@ function ChallengeDetail() {
 
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
             <div>{challengeDetail != undefined && challengeDetail.term}</div>
+            <div>{challengeDetail != undefined && challengeDetail.authentication_start_date}</div>
 
             <h2 className="text-xl font-bold py-4">인증 시간</h2>
             <div>
