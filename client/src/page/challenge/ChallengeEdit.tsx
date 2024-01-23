@@ -32,6 +32,7 @@ async function patchChallenge(
         authentication_end_date: startDay && addDays(startDay, period),
     };
     console.log(startDay);
+    console.log(typeof startDay);
 
     console.log('period', period);
     const result = await axios({
@@ -61,8 +62,8 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         topic: '',
         challenger_userid_num: [1, 2],
         goal_money: 1000,
-        is_public: '',
-        term: 14,
+        is_public: true,
+        term: 3,
         winner_userid_num: null,
         authentication_start_date: new Date('2024-02-01'),
         authentication_end_date: new Date('2024-02-08'),
@@ -72,26 +73,33 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
     let period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
     let periodChanged = period;
-    console.log(periodChanged);
+
+    const handleStartDate = (date: Date) => {
+        setDate(date);
+        if (date < new Date()) {
+            alert('오늘 이전 날짜는 선택할 수 없습니다.');
+            setDate(new Date());
+        }
+    };
 
     const hours: number[] = [];
     for (let i = 0; i < 24; i++) {
         hours.push(i);
     }
 
-    useEffect(() => {
-        {
-            axios
-                .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
-                .then((response) => {
-                    console.log(response.data);
-                    setChallengeDetail(response.data[0]);
-                })
-                .catch((error) => {
-                    console.error('ChallengeEdit에서 오류발생 :', error);
-                });
-        }
-    }, []);
+    // useEffect(() => {
+    //     {
+    //         axios
+    //             .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
+    //             .then((response) => {
+    //                 console.log(response.data);
+    //                 setChallengeDetail(response.data[0]);
+    //             })
+    //             .catch((error) => {
+    //                 console.error('ChallengeEdit에서 오류발생 :', error);
+    //             });
+    //     }
+    // }, []);
 
     return (
         <div className="container ">
@@ -178,7 +186,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+                    <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
                 </PopoverContent>
             </Popover>
 
@@ -231,9 +239,19 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     <Select
                         value={challengeDetail.authentication_start_time.toString()}
                         onValueChange={(value) => {
-                            setChallengeDetail((challengeDetail) => {
-                                return { ...challengeDetail, authentication_start_time: Number(value) };
-                            });
+                            if (Number(value) >= challengeDetail.authentication_end_time) {
+                                alert('인증 마감 시간보다 빠르게 설정할 수 없습니다.');
+                                setChallengeDetail((challengeDetail) => {
+                                    return {
+                                        ...challengeDetail,
+                                        authentication_start_time: challengeDetail.authentication_end_time - 1,
+                                    };
+                                });
+                            } else {
+                                setChallengeDetail((challengeDetail) => {
+                                    return { ...challengeDetail, authentication_start_time: Number(value) };
+                                });
+                            }
                         }}
                     >
                         <SelectTrigger className="w-[180px]">
@@ -256,6 +274,13 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                         value={challengeDetail.authentication_end_time.toString()}
                         onValueChange={(value) => {
                             if (Number(value) <= challengeDetail.authentication_start_time) {
+                                alert('인증 시작 시간보다 늦게 설정할 수 없습니다.');
+                                setChallengeDetail((challengeDetail) => {
+                                    return {
+                                        ...challengeDetail,
+                                        authentication_end_time: challengeDetail.authentication_start_time + 1,
+                                    };
+                                });
                             } else {
                                 setChallengeDetail((challengeDetail) => {
                                     return { ...challengeDetail, authentication_end_time: Number(value) };
