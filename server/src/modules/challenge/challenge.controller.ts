@@ -29,7 +29,7 @@ export class ChallengeController {
   // 챌린지 상세 정보 보기
   @Get('/challengeDetail/:challenge_id')
   getChallengeDetail(@Param('challenge_id') challenge_id: number): any {
-    console.log('controller', challenge_id);
+    // console.log('controller', challenge_id);
     return this.ChallengeService.challengeDetail(challenge_id);
   }
 
@@ -52,5 +52,17 @@ export class ChallengeController {
   @Delete('/challengeEdit/:challenge_id')
   deleteChallengeEdit(@Param('challenge_id') challenge_id: number): any {
     return this.ChallengeService.deleteChallengeEdit(challenge_id);
+  }
+
+  // 챌린지 인증하기
+  @Post('/challengeAuth')
+  newChallengeAuth(
+    @Body() body: any,
+    @Param('challenge_id') challenge_id: number,
+  ): any {
+    console.log('------');
+    console.log(body);
+    return 'dd';
+    //return this.ChallengeService.newChallengeAuth(body, challenge_id);
   }
 }
