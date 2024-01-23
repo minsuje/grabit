@@ -4,6 +4,7 @@ import {
   serial,
   varchar,
   timestamp,
+  boolean,
   date,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
@@ -16,7 +17,7 @@ export const challenge = pgTable('challenge', {
     onUpdate: 'cascade',
   }),
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
-  is_public: varchar('is_public', { length: 10 }).notNull(),
+  is_public: boolean('is_public').notNull().default(false),
   topic: varchar('topic', { length: 50 }).notNull(),
   challenger_userid_num: integer('challenger_userid_num').array().notNull(),
   goal_money: integer('goal_money').notNull(),
