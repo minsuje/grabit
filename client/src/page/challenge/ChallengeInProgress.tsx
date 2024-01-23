@@ -3,13 +3,6 @@ import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
 import ChallengeData from '../../data/ChallengeData';
 import { Button } from '@/components/ui/button';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Link, useParams } from 'react-router-dom';
 
 function ChallengeInProgress() {
@@ -107,16 +100,7 @@ function ChallengeInProgress() {
             <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 
             <div className="text-center p-2 mt-5">
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <span className=" bg-black text-white  p-3">인증하기</span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem> 사진 촬영</DropdownMenuItem>
-                        <DropdownMenuItem>사진 앨범</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Button>인증하기</Button>
             </div>
         </div>
     );
