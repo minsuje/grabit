@@ -15,10 +15,10 @@ export function Login() {
             // 서버의 로그인 엔드포인트에 요청을 보냅니다. 이 부분을 수정하세요.
             const response = await axios.post('http://43.201.22.60:3000/login', { userid, password });
             console.log('로그인 성공:>>>>>>>>>>>>>>>', response);
-            const user = response.data.find(u => u.userid === userid);
+            // const user = response.data.find(u => u.userid === userid);
 
 
-            if (user) {
+            if (response.status === 201) {
                 console.log('로그인 성공:', response.data.userid);
                 navigate('/main');
             } else {
