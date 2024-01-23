@@ -4,6 +4,7 @@ import { challenge } from './schema';
 import { db } from '../../../db/db';
 import { eq, not } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
+import { s3Middleware } from 'src/middleware/s3.middleware';
 
 @Injectable()
 export class ChallengeService {
@@ -133,5 +134,12 @@ export class ChallengeService {
     return await db
       .delete(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
+  };
+
+  // 챌린지 인증하기
+  newChallengeAuth = async (body: any, challenge_id: number) => {
+    const { filename, type } = body;
+
+    return;
   };
 }
