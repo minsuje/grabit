@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { challenge, authentication } from './schema';
+import { users } from '../user/schema';
 import { db } from '../../../db/db';
 import { eq, not } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
@@ -87,11 +88,24 @@ export class ChallengeService {
 
   // 챌린지 상세 정보 보기
   challengeDetail = async (challenge_id: number) => {
-    // console.log('service', challenge_id);
-    return await db
+    const challengeDetail = await db
       .select()
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
+
+    let challengers = [];
+    for (let i = 0; i < challengeDetail[0].challenger_userid_num.length; i++) {
+      let challenger = await db
+        .select()
+        .from(users)
+        .where(
+          eq(users.userid_num, challengeDetail[0].challenger_userid_num[i]),
+        );
+
+      await challengers.push(challenger[0]);
+    }
+
+    return { challengeDetail, challengers };
   };
 
   // 챌린지 수정 페이지 보기
