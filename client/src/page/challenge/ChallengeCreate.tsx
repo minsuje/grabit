@@ -115,16 +115,26 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
     );
 
     async function handleSubmit() {
-        console.log(date);
-        console.log(topic);
-        console.log(isPublic);
-        console.log(authTerm);
-        console.log(authTime);
-        console.log(date);
+        console.log('🚀 ~ handleSubmit ~ authEnd:', typeof authEnd);
+        console.log('🚀 ~ handleSubmit ~ authStart:', typeof authStart);
+        console.log('🚀 ~ handleSubmit ~ date:', typeof date);
+        console.log('🚀 ~ handleSubmit ~ authTerm:', typeof authTerm);
+        console.log('🚀 ~ handleSubmit ~ goalMoney:', typeof goalMoney);
+        console.log('🚀 ~ handleSubmit ~ topic:', typeof topic);
+        console.log('🚀 ~ handleSubmit ~ isPublic:', typeof isPublic);
+        console.log('🚀 ~ handleSubmit ~ challengeName:', typeof challengeName);
+        console.log('🚀 ~ handleSubmit ~ authEnd:', authEnd);
+        console.log('🚀 ~ handleSubmit ~ authStart:', authStart);
+        console.log('🚀 ~ handleSubmit ~ date:', date);
+        console.log('🚀 ~ handleSubmit ~ authTerm:', authTerm);
+        console.log('🚀 ~ handleSubmit ~ goalMoney:', goalMoney);
+        console.log('🚀 ~ handleSubmit ~ topic:', topic);
+        console.log('🚀 ~ handleSubmit ~ isPublic:', isPublic);
+        console.log('🚀 ~ handleSubmit ~ challengeName:', challengeName);
 
         const result = await axios({
             method: 'POST',
-            url: 'http://localhost:3000/challengeCreate',
+            url: 'http://43.201.22.60:3000/challengeCreate',
             data: {
                 challenge_name: challengeName,
                 is_public: isPublic,
@@ -132,8 +142,8 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 challenger_userid_num: [1, 2],
                 goal_money: goalMoney,
                 term: authTerm,
-                authentication_start_date: date ? addHours(date, 9) : null,
-                authentication_end_date: date ? addDays(addHours(date, 9), term) : null,
+                authentication_start_date: date ? date : null,
+                authentication_end_date: date ? addDays(date, term) : null,
                 authentication_start_time: authStart,
                 authentication_end_time: authEnd,
             },
