@@ -76,7 +76,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
     const handleStartDate = (date: Date) => {
         setDate(date);
-        if (date < new Date()) {
+        if (addDays(date, 1) < new Date()) {
             alert('오늘 이전 날짜는 선택할 수 없습니다.');
             setDate(new Date());
         }
@@ -87,19 +87,19 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         hours.push(i);
     }
 
-    // useEffect(() => {
-    //     {
-    //         axios
-    //             .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
-    //             .then((response) => {
-    //                 console.log(response.data);
-    //                 setChallengeDetail(response.data[0]);
-    //             })
-    //             .catch((error) => {
-    //                 console.error('ChallengeEdit에서 오류발생 :', error);
-    //             });
-    //     }
-    // }, []);
+    useEffect(() => {
+        {
+            axios
+                .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
+                .then((response) => {
+                    console.log(response.data);
+                    setChallengeDetail(response.data[0]);
+                })
+                .catch((error) => {
+                    console.error('ChallengeEdit에서 오류발생 :', error);
+                });
+        }
+    }, []);
 
     return (
         <div className="container ">
