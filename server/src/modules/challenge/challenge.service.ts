@@ -135,8 +135,8 @@ export class ChallengeService {
         topic: topic,
         goal_money: goal_money,
         term: term,
-        authentication_start_date: authentication_start_date,
-        authentication_end_date: authentication_end_date,
+        authentication_start_date: new Date(authentication_start_date),
+        authentication_end_date: new Date(authentication_end_date),
         authentication_start_time: authentication_start_time,
         authentication_end_time: authentication_end_time,
       })
