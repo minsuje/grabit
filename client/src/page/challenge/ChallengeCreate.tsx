@@ -1,15 +1,12 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tab } from '@/components/Component0117';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { ListComponent1 } from '../../components/ComponentSeong';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import * as React from 'react';
 import { useState } from 'react';
-import { addDays, addHours, format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
@@ -19,9 +16,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import axios from 'axios';
-import { challenge } from '../../../../server/src/modules/challenge/schema';
 
-function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
+function ChallengeCreate() {
     const [challengeName, setChallengeName] = useState<string>('');
     const [goalMoney, setGoalMoney] = useState<number>(0);
     const [date, setDate] = useState<Date>();
@@ -30,7 +26,6 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
     const [isPublic, setIsPublic] = useState<boolean>(false);
     const [topic, setTopic] = useState<string>('');
     const [authTerm, setAuthTerm] = useState<string>('');
-    const [authTime, setAuthTime] = useState<string>('');
     const [authStart, setAuthStart] = useState<string>('');
     const [authEnd, setAuthEnd] = useState<string>('');
 
@@ -160,7 +155,7 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
             <h2 className="text-xl font-bold py-4">주제</h2>
             <Input onChange={(e) => setTopic(e.target.value)} />
             <h2 className="text-xl font-bold py-4">목표 금액</h2>
-            <Input type="number" onChange={(e) => setGoalMoney(e.target.value)} />
+            <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
             <h2 className="text-xl font-bold py-4">시작 날짜</h2>
 
             <Popover>
@@ -182,15 +177,15 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
             </Popover>
 
             <h2 className="text-xl font-bold py-4">기간</h2>
-            <Select onValueChange={(value) => setTerm(value)}>
+            <Select onValueChange={(value) => setTerm(Number(value))}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="인증 주기" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value={2}>2일</SelectItem>
-                    <SelectItem value={3}>3일</SelectItem>
-                    <SelectItem value={5}>5일</SelectItem>
-                    <SelectItem value={7}>일주일</SelectItem>
+                    <SelectItem value="1">2일</SelectItem>
+                    <SelectItem value="2">3일</SelectItem>
+                    <SelectItem value="4">5일</SelectItem>
+                    <SelectItem value="6">일주일</SelectItem>
                 </SelectContent>
             </Select>
 
@@ -200,9 +195,9 @@ function ChallengeCreate({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     <SelectValue placeholder="인증 주기" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value={3}>주 3회</SelectItem>
-                    <SelectItem value={5}>주 5회</SelectItem>
-                    <SelectItem value={7}>매일</SelectItem>
+                    <SelectItem value="3">주 3회</SelectItem>
+                    <SelectItem value="5">주 5회</SelectItem>
+                    <SelectItem value="7">매일</SelectItem>
                 </SelectContent>
             </Select>
             <div className="authTime flex gap-8">
