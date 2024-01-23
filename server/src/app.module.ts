@@ -9,8 +9,15 @@ import { FriendModule } from './modules/friend/friend.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-    imports: [UserModule, DailyMissionModule, ChallengeModule, AlarmModule, FriendModule, AuthModule],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    UserModule,
+    DailyMissionModule,
+    ChallengeModule,
+    AlarmModule,
+    FriendModule,
+    AuthModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
