@@ -42,7 +42,7 @@ export class AuthService {
                 isLogin = 'true';
                 validate = 'true';
                 return this.jwtService.sign({ loginAccess }); // jwt토큰 생성
-            } else if (!checkPassword) {
+            } else {
                 console.log('비밀번호가 틀렸습니다.');
                 return (validate = 'noPassword');
             }
