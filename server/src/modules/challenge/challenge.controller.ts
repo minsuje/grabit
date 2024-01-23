@@ -6,10 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
 import { Challenge } from './challenge.module';
+import { s3Middleware } from 'src/middleware/s3.middleware';
 
 @Controller('/')
 export class ChallengeController {
@@ -55,14 +57,13 @@ export class ChallengeController {
   }
 
   // 챌린지 인증하기
-  @Post('/challengeAuth')
+  @Post('/challengeAuth/:challenge_id')
   newChallengeAuth(
     @Body() body: any,
     @Param('challenge_id') challenge_id: number,
+    @Req() req,
   ): any {
-    console.log('------');
-    console.log(body);
-    return 'dd';
-    //return this.ChallengeService.newChallengeAuth(body, challenge_id);
+    const file = req.file; // 미들웨어에서 받아온 req
+    return this.ChallengeService.newChallengeAuth(challenge_id, file);
   }
 }

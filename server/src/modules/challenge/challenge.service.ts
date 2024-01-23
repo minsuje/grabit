@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
-import { challenge } from './schema';
+import { challenge, authentication } from './schema';
 import { db } from '../../../db/db';
 import { eq, not } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
@@ -137,9 +137,13 @@ export class ChallengeService {
   };
 
   // 챌린지 인증하기
-  newChallengeAuth = async (body: any, challenge_id: number) => {
-    const { filename, type } = body;
+  newChallengeAuth = async (challenge_id: number, file: string) => {
+    console.log('service', file);
 
-    return;
+    await db.insert(authentication).values({
+      challenge_id: challenge_id,
+      userid_num: 3, // JWT 토큰에서 찾아야 하는 값
+      authentication_img: file,
+    });
   };
 }
