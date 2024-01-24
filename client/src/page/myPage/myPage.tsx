@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
-export function MyPage() {
+export default function MyPage() {
     return (
         <>
             <h1>마이페이지</h1>

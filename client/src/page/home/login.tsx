@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 // import { Cookies } from 'react-cookie';
 
-export function Login() {
+export default function Login() {
     // const cookies = new Cookies();
     const [userid, setUserid] = useState<string>('');
     const [password, setPassword] = useState<string>('');

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Challenge, dailyMission } from '@/types/types';
 
-function Main() {
+export default function Main() {
     const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
     const [dailymission, setDailymission] = useState<dailyMission>({
         mission_id: 1,
@@ -92,4 +92,3 @@ function Main() {
         </div>
     );
 }
-export default Main;
