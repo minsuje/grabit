@@ -48,6 +48,7 @@
     "drizzle-orm": "^0.29.3",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
     "passport-magic-login": "^1.2.2",
     "pg": "^8.11.3",

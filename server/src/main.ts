@@ -6,6 +6,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: ['http://43.201.22.60:5173', 'http://localhost:5173'],
