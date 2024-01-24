@@ -4,8 +4,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Challenge } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 
+interface ChallengeProp {
+    challenge: Challenge;
+}
+
 // ~~~일 후 종료
-export function ListComponent1({ challenge }: any) {
+export function ListComponent1({ challenge }: ChallengeProp) {
+    console.log('chal', challenge);
+    // const challenge = challengeProp.challenge;
     const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
     return (
         <div>
@@ -21,7 +27,7 @@ export function ListComponent1({ challenge }: any) {
     );
 }
 
-export function ListComponent2({ challenge }) {
+export function ListComponent2({ challenge }: ChallengeProp) {
     return (
         <>
             <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
@@ -30,7 +36,7 @@ export function ListComponent2({ challenge }) {
                     <div className="text-black mt-2">{challenge.goal_money} 원</div>
                 </div>
                 <div className="">
-                    <div className="text-gray-400 ">{challenge.deadline}</div>
+                    <div className="text-gray-400 ">{challenge.authentication_end_date.toString()}</div>
                     <div className="mt-2 text-end">승 </div>
                 </div>
             </div>
@@ -65,8 +71,13 @@ export function ListComponent3() {
         </>
     );
 }
+interface ProgressProp {
+    ProgressName: string;
+    total: number;
+    value: number;
+}
 
-export function ProgressComponent({ ProgressName, total, value }: any) {
+export function ProgressComponent({ ProgressName, total, value }: ProgressProp) {
     return (
         <>
             <div className="flex justify-between mr-3">

@@ -162,7 +162,7 @@ function ListComponentWithButton({ challenge }: any) {
                             axios
                                 .delete(`http://43.201.22.60:3000/challengeEdit/${challenge.challenge_id}`)
                                 .then((response) => {
-                                    console.log('challengeEdit에서 chal');
+                                    console.log('challengeEdit에서 chal', response.data);
                                 });
                         }}
                     >

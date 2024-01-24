@@ -215,7 +215,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
+                    <Calendar mode="single" selected={date} onSelect={() => handleStartDate} initialFocus />
                 </PopoverContent>
             </Popover>
 
