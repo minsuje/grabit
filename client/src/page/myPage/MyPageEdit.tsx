@@ -42,7 +42,7 @@ const schema = yup
     })
     .required();
 
-export function MyPageEdit() {
+export default function MyPageEdit() {
     const Navigate = useNavigate();
 
     const {

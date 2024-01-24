@@ -56,7 +56,7 @@ const schema = yup
     })
     .required();
 
-export function Register() {
+export default function Register() {
     const {
         register,
         handleSubmit,

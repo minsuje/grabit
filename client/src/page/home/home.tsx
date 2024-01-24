@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button';
 import Lottie from 'lottie-react';
 import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
-import EmojiCursorExample from './Test';
+// import EmojiCursorExample from './Test';
 
-export function Home() {
+export default function Home() {
     const Rabbit = () => {
         return <Lottie animationData={rabbit} width={0} height={0} />;
     };
@@ -14,7 +14,6 @@ export function Home() {
 
             <div className="max-w-md max-h-md">
                 <Rabbit />
-                <EmojiCursorExample />
             </div>
 
             <div className="flex flex-col">
