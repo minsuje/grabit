@@ -45,4 +45,10 @@ export class AuthService {
             }
         }
     };
+    // async getJWT(kakaoId: number) {
+    //     const user = await this.kakaoValidateUser(kakaoId); // 카카오 정보 검증 및 회원가입 로직
+    //     const accessToken = this.generateAccessToken(user); // AccessToken 생성
+    //     const refreshToken = await this.generateRefreshToken(user); // refreshToken 생성
+    //     return { accessToken, refreshToken };
+    // }
 }

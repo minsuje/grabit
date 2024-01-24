@@ -26,14 +26,21 @@ export class AuthController {
         res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
 
         return res.send({
-            message: 'success',
+            token,
         });
     }
 
-    @Get('kakao')
-    @UseGuards(AuthGuard('kakao'))
-    @HttpCode(301)
-    async kakaoLogin(@Req() req: Request, @Res() res: Response) {}
+    // @Get('kakao')
+    // @UseGuards(AuthGuard('kakao'))
+    // @HttpCode(301)
+    // async kakaoLogin(@Req() req: Request, @Res() res: Response) {
+    //     const { accessToken, refreshToken } = await this.authService.getJWT(req.user.kakaoId);
+
+    //     res.cookie('accessToken', accessToken, { httpOnly: true });
+    //     res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    //     res.cookie('isLoggedIn', true, { httpOnly: false });
+    //     return res.redirect(this.configService.get('CLIENT_URL'));
+    // }
 
     @Get('/main')
     @UseGuards(JwtAuthGuard)
