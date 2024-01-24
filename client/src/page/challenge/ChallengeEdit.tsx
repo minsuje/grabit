@@ -144,7 +144,7 @@ function ChallengeEdit() {
                                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
-                                    <span>닉네임</span>
+                                    <span>{challenger.nickname}</span>
                                 </div>
                             );
                         })}
