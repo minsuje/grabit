@@ -22,9 +22,10 @@ export class AuthController {
         // return res.json(jwt);
         let token = req.user;
         await res.setHeader('Authorization', 'Bearer ' + token);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
+
         return res.send({
-            message: 'success',
+            message: 'asdfasdfads',
         });
     }
 
