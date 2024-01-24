@@ -53,7 +53,7 @@ export function Login() {
             } else {
                 setErrorMessage('로그인에 성공했습니다.');
                 // // sessionStorage.setItem('sessionToken', token); // 세션 스토리지에 저장
-                // navigate('/main');
+                navigate('/main');
             }
         } catch (error) {
             console.error('로그인 실패:', error);
