@@ -17,7 +17,6 @@ export function Login() {
             console.log('로그인 성공:>>>>>>>>>>>>>>>', response);
             // const user = response.data.find(u => u.userid === userid);
 
-
             if (response.status === 201) {
                 console.log('로그인 성공:', response.data.userid);
                 navigate('/main');

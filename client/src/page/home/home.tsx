@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import Lottie from 'lottie-react';
 import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
-import EmojiCursorExample from './test';
+import EmojiCursorExample from './Test';
 
 export function Home() {
     const Rabbit = () => {

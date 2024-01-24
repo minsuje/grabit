@@ -2,13 +2,13 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
-import { Home } from './page/home/home';
+import { Home } from './page/home/Home';
 import { Register } from './page/home/Register';
 import { Login } from '@/page/home/Login';
 import ChallengeNotice from './page/challenge/ChallengeNotice';
 import ChallengeCreate from './page/challenge/ChallengeCreate';
 // import { motion } from 'framer-motion';
-import { ChallengeResult } from '@/page/challenge/challengeResult';
+import { ChallengeResult } from '@/page/challenge/ChallengeResult';
 import ChallengeImage from './page/challenge/ChallengeImage';
 import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
@@ -16,11 +16,12 @@ import ChallengeDetail from './page/challenge/ChallengeDetail';
 import ChallengeDaily from './page/challenge/ChallengeDaily';
 
 import { MyPageEdit } from '@/page/myPage/MyPageEdit';
-import { MyPage } from './page/myPage/myPage';
+import { MyPage } from './page/myPage/MyPage';
 import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
 import FileUploadTest from './page/FileUploadTest';
+import FriendSelect from './page/myPage/FriendSelect';
 
 function App() {
     return (
@@ -45,6 +46,7 @@ function App() {
                     <Route path="/alarm" element={<Alarm />} />
                     <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
                     <Route path="/fileupload" element={<FileUploadTest />} />
+                    <Route path="/friendSelect" element={<FriendSelect />} />
 
                     {/* 
                     <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}

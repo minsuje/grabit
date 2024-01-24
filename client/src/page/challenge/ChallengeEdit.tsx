@@ -5,9 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 
-import * as React from 'react';
-import { addDays, format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
-import { kr, ko } from 'date-fns/locale';
+import { addDays, format, differenceInDays, addHours } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -51,7 +50,7 @@ async function deleteChallenge(challenge_id: string | undefined) {
     console.log(result);
 }
 
-function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
+function ChallengeEdit() {
     const { challenge_id } = useParams();
     const [date, setDate] = useState<Date | undefined>();
 
@@ -71,7 +70,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         authentication_end_time: 5,
     });
 
-    let period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+    const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
     let periodChanged = period;
 
     const handleStartDate = (date: Date) => {
@@ -99,7 +98,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     console.error('ChallengeEdit에서 오류발생 :', error);
                 });
         }
-    }, []);
+    });
 
     return (
         <div className="container ">
@@ -186,7 +185,7 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                    <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
+                    <Calendar mode="single" selected={date} onSelect={() => handleStartDate} initialFocus />
                 </PopoverContent>
             </Popover>
 
