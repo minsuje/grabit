@@ -13,38 +13,22 @@ export default function Main() {
         mission_content: '물마시기',
         success_userid_num: [1, 2],
     });
-
     useEffect(() => {
-        {
-            axios
-                .get('http://43.201.22.60:3000/challengeList')
-                .then((response) => {
-                    console.log(response.data);
-                    setIngMyChallenge(response.data.ingMyChallenge);
-                })
-                .catch((error) => {
-                    console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
-                });
-            axios
-                .post('/dailymission')
-                .then((response) => {
-                    console.log(response);
-                    setDailymission(response.data);
-                })
-                .catch((error) => {
-                    console.error('ChallengeInProgress에서 일일미션 오류발생 :', error);
-                });
+        const queryCode = new URL(window.location.href).searchParams.get('code');
+        if (queryCode) {
+            sendAuthCodeToServer(queryCode);
+            console.log('카카오 인가코드',queryCode);
         }
     }, []);
-
-    axios
-        .get('http://localhost:3000/main', { withCredentials: true })
-        .then((response) => {
-            console.log('test', response.data);
-        })
-        .catch((error) => {
-            console.error('test :', error);
-        });
+    const sendAuthCodeToServer = async (code) => {
+        try {
+            const response = await axios.post('http://localhost:3000/auth/kakao', { code });
+            // 서버 응답 처리
+            console.log(response.data);
+        } catch (error) {
+            console.error('서버 요청 실패:', error);
+        }
+    };
 
     return (
         <div className="container">
@@ -52,7 +36,6 @@ export default function Main() {
 
             <Ranking />
             <div>
-                <div>{username ? `${username}님 환영합니다!` : '환영합니다!'}</div>
                 <button>로그아웃</button>
             </div>
             <h1>오늘의 미션</h1>
