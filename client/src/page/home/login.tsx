@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 
 export function Login() {
+
+    const cookies = new Cookies();
     const [userid, setUserid] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -36,7 +38,9 @@ export function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://43.201.22.60:3000/login', { userid, password });
+            const response = await axios.post('http://localhost:3000/login',  { userid, password }, 
+            {headers:{ 'Content-Type':'application/json'},
+            withCredentials: true});
             console.log('로그인 성공:>>>>>', response);
             console.log('로그인 성공:>>>>>', response.data);
 
