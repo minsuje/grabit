@@ -76,9 +76,21 @@ export class ChallengeController {
     );
   }
 
+  // 테스트 (s3 이미지 post 요청)
+  // 챌린지 인증사진 올리기
+  @Post('/challengeAuth/:challenge_id')
+  newChallengeAuth(
+    @Body() body: any,
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ): any {
+    const file = req.file;
+    return this.ChallengeService.newChallengeAuth(challenge_id, file);
+  }
+
   // 챌린지 인증사진에 대한 이모티콘 요청
   @Post('/challengeAuth/:challenge_id/:authentication_id')
-  newChallengeAuth(
+  newChallengeAuthEmoticon(
     @Body() body: any,
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
