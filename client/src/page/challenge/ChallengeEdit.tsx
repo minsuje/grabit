@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
 
 import * as React from 'react';
-import { addDays, format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
-import { kr, ko } from 'date-fns/locale';
+import { addDays, format, differenceInDays, addHours } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -36,12 +36,12 @@ async function patchChallenge(
         };
     }
 
-    console.log('시작날짜:', startDay);
-    console.log('시작날짜 type:', typeof startDay);
-    console.log('끝날짜 type:', typeof challengeData.authentication_end_date);
-    console.log('challengeData', challengeData);
+    // console.log('시작날짜:', startDay);
+    // console.log('시작날짜 type:', typeof startDay);
+    // console.log('끝날짜 type:', typeof challengeData.authentication_end_date);
+    // console.log('challengeData', challengeData);
 
-    console.log('period', period);
+    // console.log('period', period);
     const result = await axios({
         method: 'PATCH',
         url: `http://43.201.22.60:3000/challengeEdit/${challenge_id}`,
@@ -137,15 +137,15 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
                 <div className="user-list flex flex-col gap-4">
                     <div className="flex items-center gap-2">
-                        {challengers.map((challenger: users) => {
+                        {challengers.map((challenger: users, idx) => {
                             return (
-                                <>
+                                <div className="flex items-center gap-2 " key={idx}>
                                     <Avatar>
                                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
-                                    <span>닉네임으로 수정/ </span>
-                                </>
+                                    <span>닉네임</span>
+                                </div>
                             );
                         })}
                     </div>

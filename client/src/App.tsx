@@ -26,8 +26,6 @@ import { FollowList } from './page/myPage/followList';
 import FileUploadTest from './page/FileUploadTest';
 import Camera from '@/page/challenge/Camera';
 
-
-
 function App() {
     return (
         <div className="App">
@@ -35,9 +33,7 @@ function App() {
                 <Routes>
                     {/* 첫 화면 */}
                     <Route path="/" element={<Home />} />
-
                     <Route path="/login" element={<Login />} />
-
                     <Route path="/main" element={<Main />} />
                     <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
                     <Route path="/register/normal" element={<Register />} />
@@ -57,7 +53,6 @@ function App() {
                     {/* <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
 
                     <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
-
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
                     <Route path="/mypage/" element={<MyPage />} />

@@ -1,16 +1,19 @@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatDistanceToNow } from 'date-fns';
+import { Challenge } from '@/types/types';
+import { differenceInCalendarDays } from 'date-fns';
 
+// ~~~일 후 종료
 export function ListComponent1({ challenge }: any) {
+    const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
     return (
         <div>
             <div key={challenge.challenge_id} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                 <div className="flex justify-between">
                     <p>{challenge.challenge_name}</p>
 
-                    <p>{challenge.authentication_end_date}</p>
+                    <p>{dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}</p>
                 </div>
                 <p>{challenge.goal_money}원</p>
             </div>
@@ -63,14 +66,16 @@ export function ListComponent3() {
     );
 }
 
-export function ProgressComponent() {
+export function ProgressComponent({ ProgressName, total, value }: any) {
     return (
         <>
             <div className="flex justify-between mr-3">
-                <div>진행률</div>
-                <div className="mt-3">4/5</div>
+                <p className="mt-3 font-bold">{ProgressName}</p>
+                <p className="mt-3">
+                    {value}/{total}
+                </p>
             </div>
-            <Progress value={75} />
+            <Progress value={(value / total) * 100} />
         </>
     );
 }
