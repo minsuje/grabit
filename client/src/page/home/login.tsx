@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 
 export function Login() {
-
     const cookies = new Cookies();
     const [userid, setUserid] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -38,9 +37,11 @@ export function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://http://43.201.22.60:3000/login',  { userid, password }, 
-            {headers:{ 'Content-Type':'application/json'},
-            withCredentials: true});
+            const response = await axios.post(
+                'http://localhost:3000/login',
+                { userid, password },
+                { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
+            );
             console.log('로그인 성공:>>>>>', response);
             console.log('로그인 성공:>>>>>', response.data);
 
