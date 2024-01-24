@@ -6,6 +6,7 @@ import { localGuard } from './guards/local.guard';
 import { Request, Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/')
 export class AuthController {
@@ -16,6 +17,7 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(localGuard)
+    @UseGuards(AuthGuard('kakao'))
     async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
         // const jwt = await this.authService.loginUser(loginDto);
         // res.setHeader('Authorization', 'Bearer ' + jwt);
@@ -25,7 +27,7 @@ export class AuthController {
         res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
 
         return res.send({
-            message: 'asdfasdfads',
+            message: 'success',
         });
     }
 
