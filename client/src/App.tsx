@@ -47,9 +47,11 @@ function App() {
                     <Route path="/alarm" element={<Alarm />} />
                     <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
                     <Route path="/fileupload" element={<FileUploadTest />} />
-                    <Route path="/camera/:challenge_id" element={<Camera />} />
-                    {/* 
-    <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
+                    <Route path='/camera/:challenge_id' element={<Camera/>} />
+
+                    
+                    {/* <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
+
                     <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
