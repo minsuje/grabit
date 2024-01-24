@@ -1,5 +1,3 @@
-import { ProgressComponent } from '@/components/ComponentSeong';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,7 +34,6 @@ function ChallengeDaily() {
             <div className="text-center font-extrabold text-5xl p-3">데일리 미션</div>
             <h1>{dailyMission != undefined && dailyMission.mission_content}</h1>
 
-            <ProgressComponent />
             <br />
 
             <div className="text-center p-2 mt-5">
