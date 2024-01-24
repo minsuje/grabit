@@ -147,7 +147,7 @@ function ChallengeInProgress() {
 
             <ProgressComponent ProgressName={'기간'} total={10} value={5} />
             <br />
-            <ListComponent1 challenge={challengeDetail} />
+            <ListComponent1 challengeProp={challengeDetail} />
 
             <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 

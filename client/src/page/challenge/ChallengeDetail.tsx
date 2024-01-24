@@ -8,7 +8,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
+
 import { format } from 'date-fns';
+
 
 function ChallengeDetail() {
     const { challenge_id } = useParams();
