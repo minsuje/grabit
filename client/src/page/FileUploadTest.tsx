@@ -73,7 +73,7 @@ function FileUploadTest() {
         await axios({
             method: 'delete',
             url: 'http://localhost:3000/challengeAuth/1/50',
-        }).then((res) => {
+        }).then(() => {
             alert('삭제 완료!');
         });
     }

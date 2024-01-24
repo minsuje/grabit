@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
+interface FormData {
+    nickname: string;
+    password: string;
+    confirmPassword: string;
+}
 
 const schema = yup
     .object({
@@ -32,22 +38,22 @@ const schema = yup
         confirmPassword: yup
             .string()
             .required('* 비밀번호는 필수입니다.')
-            .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다'),
+            .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다'),
     })
     .required();
 
-export function MyPageEdit() {
+export default function MyPageEdit() {
     const Navigate = useNavigate();
 
     const {
         register,
         handleSubmit,
         formState: { errors }, // 버전 6라면 errors라고 작성함.
-    } = useForm({
+    } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: FormData) => {
         try {
             const response = await axios.post('http://43.201.22.60:3000/Mypage', data);
             console.log('회원가입 성공:', response);

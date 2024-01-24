@@ -1,18 +1,18 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
 
-export function Login() {
-    const cookies = new Cookies();
+export default function Login() {
+    // const cookies = new Cookies();
     const [userid, setUserid] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // const handleLogin = async () => {
     //     try {
@@ -47,7 +47,7 @@ export function Login() {
             console.log('로그인 성공:>>>>>', response.data);
 
             // JWT 토큰 response.data 저장
-            const token = response.data;
+            // const token = response.data;
             if (response.data === 'noPassword' || response.data === 'none') {
                 setErrorMessage('유효하지 않은 사용자 정보입니다.');
             } else {
