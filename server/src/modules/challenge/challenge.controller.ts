@@ -30,9 +30,13 @@ export class ChallengeController {
 
   // 챌린지 상세 정보 보기
   @Get('/challengeDetail/:challenge_id')
-  getChallengeDetail(@Param('challenge_id') challenge_id: number): any {
+  getChallengeDetail(
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ): any {
     // console.log('controller', challenge_id);
-    return this.ChallengeService.challengeDetail(challenge_id);
+    console.log('controller challengeDetail req > ', req.file);
+    return this.ChallengeService.challengeDetail(challenge_id, req.file);
   }
 
   // 챌린지 수정 페이지 보기
@@ -56,18 +60,8 @@ export class ChallengeController {
     return this.ChallengeService.deleteChallengeEdit(challenge_id);
   }
 
-  // 챌린지 인증하기
-  @Post('/challengeAuth/:challenge_id')
-  newChallengeAuth(
-    @Body() body: any,
-    @Param('challenge_id') challenge_id: number,
-    @Req() req,
-  ): any {
-    const file = req.file; // 미들웨어에서 받아온 req
-    return this.ChallengeService.newChallengeAuth(challenge_id, file);
-  }
-
-  // 테스트
+  // 테스트 (s3 이미지 get 요청)
+  // 챌린지 인증사진 상세 보기
   @Get('/challengeAuth/:challenge_id/:authentication_id')
   getChallengeAuth(
     @Param('challenge_id') challenge_id: number,
@@ -82,6 +76,38 @@ export class ChallengeController {
     );
   }
 
+  // 챌린지 인증사진에 대한 이모티콘 요청
+  @Post('/challengeAuth/:challenge_id/:authentication_id')
+  newChallengeAuth(
+    @Body() body: any,
+    @Param('challenge_id') challenge_id: number,
+    @Param('authentication_id') authentication_id: number,
+  ): any {
+    return this.ChallengeService.newChallengeAuthEmoticon(
+      body,
+      challenge_id,
+      authentication_id,
+    );
+  }
+
+  // 챌린지 인증사진에 대한 이모티콘 취소 요청
+  @Delete(
+    '/challengeAuth/:challenge_id/:authentication_id/:authentication_img_emoticon_id',
+  )
+  deleteChallengeAuthEmoticon(
+    @Param('challenge_id') challenge_id: number,
+    @Param('authentication_id') authentication_id: number,
+    @Param('authentication_img_emoticon_id')
+    authentication_img_emoticon_id: number,
+  ): any {
+    return this.ChallengeService.deleteChallengeAuthEmoticon(
+      challenge_id,
+      authentication_id,
+      authentication_img_emoticon_id,
+    );
+  }
+
+  // 테스트 (s3 이미지 patch 요청)
   @Patch('/challengeAuth/:challenge_id/:authentication_id')
   patchChallengeAuth(
     @Body() body: any,
@@ -97,6 +123,7 @@ export class ChallengeController {
     );
   }
 
+  // 테스트 (s3 이미지 delete 요청)
   @Delete('/challengeAuth/:challenge_id/:authentication_id')
   deleteChallengeAuth(
     @Param('challenge_id') challenge_id: number,

@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
-import { challenge, authentication } from './schema';
+import {
+  challenge,
+  authentication,
+  authentication_img_emoticon,
+} from './schema';
 import { users } from '../user/schema';
 import { db } from '../../../db/db';
-import { eq, not } from 'drizzle-orm';
+import { eq, not, and } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
 import { s3Middleware } from 'src/middleware/s3.middleware';
 
@@ -87,7 +91,7 @@ export class ChallengeService {
   };
 
   // 챌린지 상세 정보 보기
-  challengeDetail = async (challenge_id: number) => {
+  challengeDetail = async (challenge_id: number, urls: any) => {
     const challengeDetail = await db
       .select()
       .from(challenge)
@@ -105,7 +109,7 @@ export class ChallengeService {
       await challengers.push(challenger[0]);
     }
 
-    return { challengeDetail, challengers };
+    return { challengeDetail, challengers, urls };
   };
 
   // 챌린지 수정 페이지 보기
@@ -163,15 +167,56 @@ export class ChallengeService {
     return file;
   };
 
-  // 테스트
+  // 테스트 (s3 이미지 get 요청)
+  // 챌린지 인증사진 상세 보기
   getChallengeAuth = async (
     challenge_id: number,
     authentication_id: number,
     fileUrl: any,
   ) => {
-    return fileUrl;
+    const emoticon = await db
+      .select()
+      .from(authentication_img_emoticon)
+      .where(
+        and(
+          eq(authentication_img_emoticon.authentication_id, authentication_id),
+          eq(
+            authentication_img_emoticon.authentication_img_comment_userid_num,
+            3, // JWT 토큰에서 찾아올 유저 정보
+          ),
+        ),
+      );
+    return { fileUrl, emoticon };
   };
 
+  // 챌린지 인증사진에 대한 이모티콘 취소 요청
+
+  deleteChallengeAuthEmoticon = async (
+    challenge_id,
+    authentication_id,
+    authentication_img_emoticon_id,
+  ) => {
+    return await db
+      .delete(authentication_img_emoticon)
+      .where(
+        eq(
+          authentication_img_emoticon.authentication_img_emoticon_id,
+          authentication_img_emoticon_id,
+        ),
+      );
+  };
+
+  // 챌린지 인증사진에 대한 이모티콘 요청
+  newChallengeAuthEmoticon = async (body, challenge_id, authentication_id) => {
+    const { authentication_img_comment_emoticon } = body;
+    return await db.insert(authentication_img_emoticon).values({
+      authentication_id,
+      authentication_img_comment_userid_num: 3, // JWT 토큰에서 찾아야 하는 값
+      authentication_img_comment_emoticon,
+    });
+  };
+
+  // 테스트 (s3 이미지 patch 요청)
   patchChallengeAuth = async (
     challenge_id: number,
     authentication_id: number,
@@ -188,6 +233,7 @@ export class ChallengeService {
     return file;
   };
 
+  // 테스트 (s3 이미지 delete 요청)
   deleteChallengeAuth = async (
     challenge_id: number,
     authentication_id: number,
