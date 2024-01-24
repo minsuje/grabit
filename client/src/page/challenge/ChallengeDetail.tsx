@@ -6,13 +6,27 @@ import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Challenge } from '@/types/types';
+import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
 
 function ChallengeDetail() {
     const { challenge_id } = useParams();
     const [challengeDetail, setChallengeDetail] = useState<Challenge>();
+    const [challengers, setChallengers] = useState<users[]>([
+        {
+            userid_num: 1,
+            login_type: 'normal',
+            userid: 'userid',
+            social_userid: 'userid',
+            password: 'password',
+            name: 'name',
+            nickname: 'nickname',
+            profile_img: null,
+            score_num: 30,
+            money: 1000,
+        },
+    ]);
 
     useEffect(() => {
         console.log(challenge_id);
@@ -20,7 +34,8 @@ function ChallengeDetail() {
             .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
             .then((response): void => {
                 console.log('response', response.data);
-                setChallengeDetail(response.data[0]);
+                setChallengeDetail(response.data.challengeDetail[0]);
+                setChallengers(response.data.challengers);
             })
             .catch((error): void => {
                 console.error('ChallengeDetail에서 axios 오류:', error);
@@ -41,11 +56,17 @@ function ChallengeDetail() {
 
                 <div className="user-list flex flex-col gap-4">
                     <div className="flex items-center gap-2">
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <span>홍길동</span>
+                        {challengers.map((challenger: users, idx) => {
+                            return (
+                                <div className="flex items-center gap-2 " key={idx}>
+                                    <Avatar>
+                                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                    <span>닉네임</span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -79,6 +100,7 @@ function ChallengeDetail() {
 
             <div className="user-list flex flex-col gap-4 pt-4">
                 <Button>참가하기</Button>
+                <Button>확인</Button>
             </div>
         </div>
     );

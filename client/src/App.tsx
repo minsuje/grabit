@@ -20,8 +20,10 @@ import { MyPage } from './page/myPage/MyPage';
 import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
+
+import { FollowList } from './page/myPage/followList';
+
 import FileUploadTest from './page/FileUploadTest';
-import FriendSelect from './page/myPage/FriendSelect';
 
 function App() {
     return (
@@ -30,9 +32,7 @@ function App() {
                 <Routes>
                     {/* 첫 화면 */}
                     <Route path="/" element={<Home />} />
-
                     <Route path="/login" element={<Login />} />
-
                     <Route path="/main" element={<Main />} />
                     <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
                     <Route path="/register/normal" element={<Register />} />
@@ -46,17 +46,16 @@ function App() {
                     <Route path="/alarm" element={<Alarm />} />
                     <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
                     <Route path="/fileupload" element={<FileUploadTest />} />
-                    <Route path="/friendSelect" element={<FriendSelect />} />
 
                     {/* 
                     <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
 
                     <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
-
                     <Route path="/challengeNotice" element={<ChallengeNotice />} />
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
                     <Route path="/mypage/" element={<MyPage />} />
                     <Route path="/mypage/:mypageedit" element={<MyPageEdit />} />
+                    <Route path="/followlist" element={<FollowList />} />
                 </Routes>
             </BrowserRouter>
         </div>
