@@ -5,7 +5,7 @@ import { Challenge } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 
 // ~~~일 후 종료
-export function ListComponent1({ challenge }: any) {
+export function ListComponent1({ challenge }: Challenge) {
     const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
     return (
         <div>
