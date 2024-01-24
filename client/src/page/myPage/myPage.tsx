@@ -64,13 +64,18 @@ export function MyPage() {
                 </div>
                 <div>
                     <h1>히스토리</h1>
-                    <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
-                        <div className="flex justify-between">
-                            <p>챌린지 이름</p>
+                    <Link to=" " className="text-black no-underline">
+                        <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+                            <div className="flex justify-between">
+                                <p>챌린지 이름</p>
 
-                            <p>일 후 종료</p>
+                                <p>일 후 종료</p>
+                            </div>
+                            <p>3000원</p>
                         </div>
-                        <p>3000원</p>
+                    </Link>
+                    <div className="flex justify-center">
+                        <button>전체보기</button>
                     </div>
                 </div>
             </div>

@@ -7,29 +7,29 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 export function Login() {
-    const [userid, setUserid] = useState('');
-    const [password, setPassword] = useState('');
+    const [userid, setUserid] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
     const navigate = useNavigate();
     const handleLogin = async () => {
         try {
-            // 서버의 로그인 엔드포인트에 요청을 보냅니다. 이 부분을 수정하세요.
             const response = await axios.post('http://43.201.22.60:3000/login', { userid, password });
-            console.log('로그인 성공:>>>>>>>>>>>>>>>', response);
-            // const user = response.data.find(u => u.userid === userid);
+            console.log('로그인 성공:>>>>>', response);
 
-
-            if (response.status === 201) {
-                console.log('로그인 성공:', response.data.userid);
-                navigate('/main');
+            // JWT 토큰 response.data 저장
+            const token = response.data;
+            if (response.data === 'noPassword' || response.data === 'none') {
+                setErrorMessage('유효하지 않은 사용자 정보입니다.');
             } else {
-                // 로그인 실패 처리
-                console.error('로그인 실패: 유효하지 않은 사용자 정보');
+                // 다른 로그인 실패 조건 처리
+                setErrorMessage('로그인에 실패했습니다.');
+                sessionStorage.setItem('sessionToken', token); // 세션 스토리지에 저장
+                navigate('/main');
             }
-
-            // 로그인 성공 후 메인 페이지로 이동
         } catch (error) {
             console.error('로그인 실패:', error);
-            // 오류 처리 로직을 여기에 작성하세요.
+            setErrorMessage('로그인 시스템에 오류가 발생했습니다.');
         }
     };
     return (
@@ -53,6 +53,7 @@ export function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                {errorMessage && <p className="text-red-500 text-xs">{errorMessage}</p>}
             </div>
 
             <Button variant="default" className="w-full" onClick={handleLogin} disabled={!userid || !password}>
