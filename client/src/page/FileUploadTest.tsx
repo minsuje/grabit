@@ -1,14 +1,18 @@
 import axios from 'axios';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 
 function FileUploadTest() {
     const [file, setFile] = useState<File>();
+    const [profile, setProfile] = useState<string>('');
+
+    useEffect(() => {
+        handleGet();
+    });
 
     async function handleUpload() {
         console.log('axios', file);
 
-        const result = await axios({
+        await axios({
             method: 'post',
             url: 'http://localhost:3000/challengeAuth/1',
             data: {
@@ -21,30 +25,54 @@ function FileUploadTest() {
                 url: res.data,
                 data: file,
                 headers: {
-                    "Content-Type": file?.type,
-                  },
-    
-            })
-            .then((res) => {
+                    'Content-Type': file?.type,
+                },
+            }).then((res) => {
                 console.log(res);
-            })
-        })
-
-
-        
-
+            });
+        });
     }
 
-
-
-    function handleChange(e: any) {
-        console.log(e.target.files[0]);
-        setFile(e.target.files[0]);
+    async function handleUpdate() {
+        await axios({
+            method: 'patch',
+            url: 'http://localhost:3000/challengeAuth/1',
+            data: {
+                filename: file?.name,
+                type: file?.type,
+            },
+        });
     }
+
+    async function handleGet() {
+        await axios({
+            method: 'get',
+            url: 'http://localhost:3000/challengeAuth/1',
+        }).then((res) => {
+            setProfile(res.data.profile_img);
+        });
+    }
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        console.log(e.target.files![0]);
+        setFile(e.target.files![0]);
+    }
+
     return (
         <div>
+            <img src={profile} width={400} />
             <input type="file" onChange={handleChange} />
-            <button onClick={handleUpload}>업로드</button>
+            <br />
+            <br />
+            <div className="flex gap-2">
+                <button onClick={handleUpload} className="p-3 bg-blue-500 text-white rounded-md">
+                    업로드
+                </button>
+                <br />
+                <button onClick={handleUpdate} className="p-3 bg-blue-500 text-white rounded-md">
+                    업데이트
+                </button>
+            </div>
         </div>
     );
 }
