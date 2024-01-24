@@ -29,59 +29,100 @@ export class s3Middleware implements NestMiddleware {
 
     let { filename, type } = body;
 
+    // console.log('middleware body', body);
+    // console.log(req.method);
+    // if (req.url.split('/')[2] === undefined) {
+    //   console.log('req.url', req.url.split('/')[2]);
+    // }
+
     if (req.method === 'POST') {
-      filename = uuid() + '.' + filename.split('.')[1];
-      const command = new PutObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET,
-        Key: filename,
-        ContentType: type,
-      });
-
-      const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-      //  https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIASXWMWIHFRIO5NU3B%2F20240123%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20240123T011109Z&X-Amz-Expires=900&X-Amz-Signature=dd763b4858cb3c4b3c80d034b3378ad61b32764e02fb8f9c5e729b13cdf4919d&X-Amz-SignedHeaders=host&x-id=PutObject
-      // 여기서 필요로 하는 값은 https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png
-      // 여기서 필요한 db에 저장하는 값은 abc.png
-
-      // 컨트롤러로 req 값 전달하기
-      req['file'] = url;
-    } else {
-      let file = await db
-        .select()
-        .from(authentication)
-        .where(
-          eq(authentication.authentication_id, Number(req.url.split('/')[2])),
-        );
-      let key = file[0].authentication_img;
-
-      if (req.method === 'DELETE' || req.method === 'PATCH') {
-        const params = {
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: key,
-        };
-        let command = new DeleteObjectCommand(params);
-        await client.send(command);
-      }
-      if (req.method === 'PATCH') {
+      if (filename) {
         filename = uuid() + '.' + filename.split('.')[1];
-        let command = new PutObjectCommand({
+        const command = new PutObjectCommand({
           Bucket: process.env.AWS_S3_BUCKET,
           Key: filename,
           ContentType: type,
         });
 
         const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+        //  https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIASXWMWIHFRIO5NU3B%2F20240123%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20240123T011109Z&X-Amz-Expires=900&X-Amz-Signature=dd763b4858cb3c4b3c80d034b3378ad61b32764e02fb8f9c5e729b13cdf4919d&X-Amz-SignedHeaders=host&x-id=PutObject
+        // 여기서 필요로 하는 값은 https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png
+        // 여기서 필요한 db에 저장하는 값은 abc.png
 
+        // 컨트롤러로 req 값 전달하기
         req['file'] = url;
       }
+    } else {
+      // console.log('s3 middleware else');
+      let key;
+
+      if (req.url.split('/')[2] !== undefined) {
+        let file = await db
+          .select()
+          .from(authentication)
+          .where(
+            eq(authentication.authentication_id, Number(req.url.split('/')[2])),
+          );
+
+        key = file[0].authentication_img;
+
+        if (req.method === 'DELETE' || req.method === 'PATCH') {
+          const params = {
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          };
+          let command = new DeleteObjectCommand(params);
+          await client.send(command);
+        }
+        if (req.method === 'PATCH') {
+          filename = uuid() + '.' + filename.split('.')[1];
+          let command = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: filename,
+            ContentType: type,
+          });
+
+          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+          req['file'] = url;
+        }
+      }
       if (req.method === 'GET') {
-        const command = new GetObjectCommand({
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: key,
-        });
+        if (req.url.split('/')[2] === undefined) {
+          // console.log('s3 middleware get!!', Number(req.url.split('/')[1]));
+          let files = await db
+            .select({ authentication_img: authentication.authentication_img })
+            .from(authentication)
+            .where(
+              eq(authentication.challenge_id, Number(req.url.split('/')[1])),
+            );
 
-        const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          // console.log('s3 middleware detail files > ', files);
+          let urls = [];
+          for (let i = 0; i < files.length; i++) {
+            //
+            key = files[i].authentication_img;
+            const command = new GetObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: key,
+            });
 
-        req['file'] = url;
+            let url = await getSignedUrl(client, command, { expiresIn: 3600 });
+            urls.push(url);
+            // console.log('s3 middleware detail urls > ', urls);
+
+            req['file'] = urls;
+          }
+        } else {
+          const command = new GetObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          });
+
+          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+          req['file'] = url;
+        }
       }
     }
     next();
