@@ -8,7 +8,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
-import { format, differenceInDays, parseISO, addHours, isAfter } from 'date-fns';
+
+import { format } from 'date-fns';
+
 
 function ChallengeDetail() {
     const { challenge_id } = useParams();
@@ -40,7 +42,7 @@ function ChallengeDetail() {
             .catch((error): void => {
                 console.error('ChallengeDetail에서 axios 오류:', error);
             });
-    }, []);
+    });
 
     return (
         <div className="container ">
@@ -63,7 +65,7 @@ function ChallengeDetail() {
                                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
-                                    <span>닉네임</span>
+                                    <span>{challenger.nickname}</span>
                                 </div>
                             );
                         })}

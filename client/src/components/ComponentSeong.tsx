@@ -9,9 +9,11 @@ interface ChallengeProp {
 }
 
 // ~~~일 후 종료
+
 export function ListComponent1({ challenge }: ChallengeProp) {
     console.log('chal', challenge);
     // const challenge = challengeProp.challenge;
+
     const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
     return (
         <div>

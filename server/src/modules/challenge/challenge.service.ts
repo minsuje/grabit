@@ -153,11 +153,7 @@ export class ChallengeService {
 
   // 챌린지 인증하기
   newChallengeAuth = async (challenge_id: number, file: string) => {
-    console.log('service', file);
-
     let fileName: any = file.split('?')[0].split('.com/')[1];
-
-    // console.log(file);
 
     await db.insert(authentication).values({
       challenge_id: challenge_id,
@@ -165,5 +161,39 @@ export class ChallengeService {
       authentication_img: fileName,
     });
     return file;
+  };
+
+  // 테스트
+  getChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+    fileUrl: any,
+  ) => {
+    return fileUrl;
+  };
+
+  patchChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+    file: string,
+  ) => {
+    let fileName: any = file.split('?')[0].split('.com/')[1];
+
+    const updateImg = await db
+      .update(authentication)
+      .set({
+        authentication_img: fileName,
+      })
+      .where(eq(authentication.authentication_id, authentication_id));
+    return file;
+  };
+
+  deleteChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+  ) => {
+    return await db
+      .delete(authentication)
+      .where(eq(authentication.authentication_id, authentication_id));
   };
 }

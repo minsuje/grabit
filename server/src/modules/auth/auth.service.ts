@@ -5,7 +5,6 @@ import { db } from 'db/db';
 import { eq, sql, and } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { check } from 'drizzle-orm/mysql-core';
 
 @Injectable()
 export class AuthService {
@@ -35,22 +34,15 @@ export class AuthService {
                     .from(users)
                     .where(and(eq(users.userid, userid), eq(users.password, field)));
 
-                // if (loginAccess.length != 0) {
-                //     isLogin = 'true';
-                //     loginAccess; // user 정보
-                // }
                 isLogin = 'true';
                 validate = 'true';
-                return this.jwtService.sign({ loginAccess }); // jwt토큰 생성
+                // return { accessToken: this.jwtService.sign({ loginAccess }) }; // jwt토큰 생성}
+                return this.jwtService.sign({ loginAccess });
             } else {
                 console.log('비밀번호가 틀렸습니다.');
-                return (validate = 'noPassword');
+                validate = 'noPassword';
+                return false;
             }
         }
-
-        // } else {
-        //     console.log('isLogin else', isLogin);
-        //     return isLogin; // "false"
-        // }
     };
 }
