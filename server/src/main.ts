@@ -8,7 +8,13 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://3.34.122.205:5173', 'http://localhost:5173'],
+    origin: [
+      'http://3.34.122.205:5173',
+      'http://localhost:5173',
+      'https://accounts.kakao.com',
+      'https://accounts.kakao.com/login',
+      'http://localhost:3000/auth/kakao',
+    ],
     preflightContinue: false,
     credentials: true,
   });
