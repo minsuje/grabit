@@ -66,4 +66,45 @@ export class ChallengeController {
     const file = req.file; // 미들웨어에서 받아온 req
     return this.ChallengeService.newChallengeAuth(challenge_id, file);
   }
+
+  // 테스트
+  @Get('/challengeAuth/:challenge_id/:authentication_id')
+  getChallengeAuth(
+    @Param('challenge_id') challenge_id: number,
+    @Param('authentication_id') authentication_id: number,
+    @Req() req,
+  ): any {
+    const file = req.file;
+    return this.ChallengeService.getChallengeAuth(
+      challenge_id,
+      authentication_id,
+      file,
+    );
+  }
+
+  @Patch('/challengeAuth/:challenge_id/:authentication_id')
+  patchChallengeAuth(
+    @Body() body: any,
+    @Param('challenge_id') challenge_id: number,
+    @Param('authentication_id') authentication_id: number,
+    @Req() req,
+  ): any {
+    const file = req.file;
+    return this.ChallengeService.patchChallengeAuth(
+      challenge_id,
+      authentication_id,
+      file,
+    );
+  }
+
+  @Delete('/challengeAuth/:challenge_id/:authentication_id')
+  deleteChallengeAuth(
+    @Param('challenge_id') challenge_id: number,
+    @Param('authentication_id') authentication_id: number,
+  ): any {
+    return this.ChallengeService.deleteChallengeAuth(
+      challenge_id,
+      authentication_id,
+    );
+  }
 }
