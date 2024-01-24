@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/create-auth-dto';
@@ -17,7 +17,6 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(localGuard)
-    @UseGuards(AuthGuard('kakao'))
     async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
         // const jwt = await this.authService.loginUser(loginDto);
         // res.setHeader('Authorization', 'Bearer ' + jwt);
@@ -30,6 +29,11 @@ export class AuthController {
             message: 'success',
         });
     }
+
+    @Get('kakao')
+    @UseGuards(AuthGuard('kakao'))
+    @HttpCode(301)
+    async kakaoLogin(@Req() req: Request, @Res() res: Response) {}
 
     @Get('/main')
     @UseGuards(JwtAuthGuard)

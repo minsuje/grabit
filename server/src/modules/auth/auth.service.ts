@@ -40,7 +40,8 @@ export class AuthService {
                 return this.jwtService.sign({ loginAccess });
             } else {
                 console.log('비밀번호가 틀렸습니다.');
-                return (validate = 'noPassword');
+                validate = 'noPassword';
+                return false;
             }
         }
     };
