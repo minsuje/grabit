@@ -1,6 +1,6 @@
 import FriendList from '@/components/FriendList';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { friendSlice } from '@/store/store';
 
@@ -27,22 +27,11 @@ function FriendSelect() {
     const data = useSelector((state) => state);
     console.log(data);
 
-    const [selectFriend, setSelectFriend] = useState(new Set());
+    const [selectFriend] = useState(new Set());
 
     // useEffect(() => {
     //     setSelectFriend(data);
     // }, [data]);
-
-    const checkItemHandler = (id: number, isChecked: boolean) => {
-        if (isChecked) {
-            selectFriend.add(id);
-            setSelectFriend(selectFriend);
-            console.log(selectFriend);
-        } else if (!isChecked) {
-            selectFriend.delete(id);
-            setSelectFriend(selectFriend);
-        }
-    };
 
     function handleSelect() {
         console.log('선택된 친구 목록', selectFriend);

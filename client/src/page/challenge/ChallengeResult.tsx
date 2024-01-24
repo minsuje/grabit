@@ -1,7 +1,7 @@
-import { ProgressComponent } from '@/components/ComponentSeong';
+// import { ProgressComponent } from '@/components/ComponentSeong';
 import ReactCanvasConfetti from '@/components/ReactCanvasConfetti';
 import { Button } from '@/components/ui/button';
-import { ListComponent2 } from '@/components/ComponentSeong';
+// import { ListComponent2 } from '@/components/ComponentSeong';
 import ChallengeData from '@/data/ChallengeData';
 import { Link } from 'react-router-dom';
 import '@/App.css';
@@ -47,12 +47,12 @@ export function ChallengeResult() {
                 </div>
                 <br />
                 <br />
-                나 :<ProgressComponent />
+                {/* 나 :<ProgressComponent /> */}
                 <br />
-                상대 :<ProgressComponent />
+                {/* 상대 :<ProgressComponent /> */}
                 <br />
                 <br />
-                <ListComponent2 challenge={ChallengeData[0]} />
+                {/* <ListComponent2 challenge={ChallengeData[0]} /> */}
                 <div className="text-center ">
                     <Link to="/main">
                         <Button className="mt-10 mb-10">확인</Button>

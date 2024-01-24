@@ -56,7 +56,7 @@ function ChallengeAccept() {
 
             <h2 className="text-xl font-bold py-4">인증 주기</h2>
             <div>{challengeDetail != undefined && challengeDetail.term}</div>
-            <div>{challengeDetail != undefined && challengeDetail.authentication_start_date}</div>
+            <div>{challengeDetail != undefined && challengeDetail.authentication_start_date.toString()}</div>
 
             <h2 className="text-xl font-bold py-4">인증 시간</h2>
             <div>
