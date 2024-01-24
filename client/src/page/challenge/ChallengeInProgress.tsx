@@ -42,9 +42,9 @@ function ChallengeInProgress() {
   ]);
   useEffect(() => {
     axios
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
+      .get(`http://localhost:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
-        console.log('response', response.data);
+        console.log('response', response.data.urls);
         console.log('this Challenge ', response.data.challengeDetail[0]);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
