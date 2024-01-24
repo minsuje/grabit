@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Challenge } from '@/types/types';
+import { Challenge, users } from '@/types/types';
 
 async function patchChallenge(
     challenge_id: string | undefined,
@@ -26,13 +26,20 @@ async function patchChallenge(
     period: number,
 ) {
     startDay && addHours(startDay, 9);
-    const challengeData = {
-        ...challengeDetail,
-        authentication_start_date: startDay && startDay,
-        authentication_end_date: startDay && addDays(startDay, period),
-    };
-    console.log(startDay);
-    console.log(typeof startDay);
+
+    let challengeData = challengeDetail;
+    if (startDay != undefined) {
+        challengeData = {
+            ...challengeDetail,
+            authentication_start_date: startDay,
+            authentication_end_date: addDays(startDay, period),
+        };
+    }
+
+    console.log('시작날짜:', startDay);
+    console.log('시작날짜 type:', typeof startDay);
+    console.log('끝날짜 type:', typeof challengeData.authentication_end_date);
+    console.log('challengeData', challengeData);
 
     console.log('period', period);
     const result = await axios({
@@ -70,9 +77,24 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
         authentication_start_time: 4,
         authentication_end_time: 5,
     });
+    const [challengers, setChallengers] = useState<users[]>([
+        {
+            userid_num: 1,
+            login_type: 'normal',
+            userid: 'userid',
+            social_userid: 'userid',
+            password: 'password',
+            name: 'name',
+            nickname: 'nickname',
+            profile_img: null,
+            score_num: 30,
+            money: 1000,
+        },
+    ]);
 
     let period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
     let periodChanged = period;
+    console.log('period', period);
 
     const handleStartDate = (date: Date) => {
         setDate(date);
@@ -93,7 +115,8 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
                 .then((response) => {
                     console.log(response.data);
-                    setChallengeDetail(response.data[0]);
+                    setChallengeDetail(response.data.challengeDetail[0]);
+                    setChallengers(response.data.challengers);
                 })
                 .catch((error) => {
                     console.error('ChallengeEdit에서 오류발생 :', error);
@@ -114,11 +137,17 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
 
                 <div className="user-list flex flex-col gap-4">
                     <div className="flex items-center gap-2">
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <span>홍길동</span>
+                        {challengers.map((challenger: users) => {
+                            return (
+                                <>
+                                    <Avatar>
+                                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                    <span>닉네임으로 수정/ </span>
+                                </>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -157,12 +186,12 @@ function ChallengeEdit({ className }: React.HTMLAttributes<HTMLDivElement>) {
                 }}
             >
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={period != 3 ? period / 7 + '주' : period + '일'} />
+                    <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="3">3일</SelectItem>
-                    <SelectItem value="7">1주</SelectItem>
-                    <SelectItem value="14">2주</SelectItem>
+                    <SelectItem value="2">3일</SelectItem>
+                    <SelectItem value="6">1주</SelectItem>
+                    <SelectItem value="13">2주</SelectItem>
                 </SelectContent>
             </Select>
 

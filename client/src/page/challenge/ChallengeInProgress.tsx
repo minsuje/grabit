@@ -3,9 +3,10 @@ import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
 import ChallengeData from '../../data/ChallengeData';
 import { Button } from '@/components/ui/button';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 function ChallengeInProgress() {
+    const navigate = useNavigate();
     const { challenge_id } = useParams();
     const myImage = (
         <div className="grid grid-cols-2">
@@ -100,7 +101,13 @@ function ChallengeInProgress() {
             <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 
             <div className="text-center p-2 mt-5">
-                <Button>인증하기</Button>
+                <Button
+                    onClick={() => {
+                        navigate(`/camera/${challenge_id}`);
+                    }}
+                >
+                    인증하기
+                </Button>
             </div>
         </div>
     );
