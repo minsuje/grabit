@@ -6,6 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+
+interface RegisterForm {
+    name: string;
+    userid: string;
+    nickname: string;
+    password: string;
+    confirmPassword: string;
+    profilePic?: FileList;
+}
+
 const schema = yup
     .object({
         name: yup
@@ -42,7 +52,7 @@ const schema = yup
         confirmPassword: yup
             .string()
             .required('* 비밀번호는 필수입니다.')
-            .oneOf([yup.ref('password'), null], '비밀번호가 일치하지 않습니다'),
+            .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다'),
     })
     .required();
 
@@ -51,10 +61,10 @@ export function Register() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({ resolver: yupResolver(schema) });
+    } = useForm<RegisterForm>({ resolver: yupResolver(schema) });
     const navigate = useNavigate();
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data: RegisterForm) => {
         try {
             const response = await axios.post('http://43.201.22.60:3000/register/normal', data);
             console.log('회원가입 성공:', response);

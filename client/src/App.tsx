@@ -21,7 +21,7 @@ import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
 
-import { FollowList } from './page/myPage/followList';
+import { FollowList } from './page/myPage/FollowList';
 
 import FileUploadTest from './page/FileUploadTest';
 
