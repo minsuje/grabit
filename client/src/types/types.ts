@@ -82,3 +82,9 @@ export interface alarm {
     is_confirm: string;
     created_at: string;
 }
+
+export type Friend = {
+    id: number;
+    name: string;
+    profile_img: string;
+};

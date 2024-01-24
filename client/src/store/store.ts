@@ -1,18 +1,11 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import friendReducer from './friendSlice';
 
-export const friendSlice = createSlice({
-    name: 'friend',
-    initialState: [],
-    reducers: {
-        updateFriend(state, action) {
-            const { data } = action.payload;
-            state = { ...state, ...data };
-        },
-    },
+export const store = configureStore({
+  reducer: {
+    friend: friendReducer,
+  },
 });
 
-const store = configureStore({
-    reducer: friendSlice.reducer,
-});
-
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
