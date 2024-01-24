@@ -4,7 +4,10 @@ import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
 import EmojiCursorExample from './test';
 
-export function Home() {
+export default function Home() {
+    const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+
     const Rabbit = () => {
         return <Lottie animationData={rabbit} width={0} height={0} />;
     };
@@ -27,6 +30,11 @@ export function Home() {
                     <Button variant="default" className="w-[100%]">
                         회원가입
                     </Button>
+                </Link>
+                <Link
+                    to={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
+                >
+                    카카오회원가입
                 </Link>
             </div>
         </div>

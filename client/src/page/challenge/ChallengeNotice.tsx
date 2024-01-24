@@ -5,6 +5,10 @@ import { useState } from 'react';
 function ChallengeNotice() {
     const [confirm, setConfirm] = useState<boolean>(false);
 
+    function handleCheckboxChange(checked: boolean) {
+        setConfirm(checked);
+    }
+
     function handleSubmit() {
         if (confirm) {
             console.log('챌린지 참여');
@@ -23,7 +27,7 @@ function ChallengeNotice() {
 
             <div className="bottom fixed bottom-0 p-4 left-0 right-0">
                 <div className="check flex gap-2">
-                    <Checkbox id="terms" checked={confirm} onCheckedChange={setConfirm} />
+                    <Checkbox id="terms" checked={confirm} onCheckedChange={handleCheckboxChange} />
                     <label
                         htmlFor="terms"
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -32,15 +36,9 @@ function ChallengeNotice() {
                     </label>
                 </div>
                 <br />
-                {confirm ? (
-                    <Button className="w-full" onClick={handleSubmit}>
-                        챌린지 참여
-                    </Button>
-                ) : (
-                    <Button className="w-full" onClick={handleSubmit} disabled>
-                        챌린지 참여
-                    </Button>
-                )}
+                <Button className="w-full" onClick={handleSubmit} disabled={!confirm}>
+                    챌린지 참여
+                </Button>
             </div>
         </div>
     );
