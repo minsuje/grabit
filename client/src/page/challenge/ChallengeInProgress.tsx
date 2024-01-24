@@ -42,7 +42,7 @@ function ChallengeInProgress() {
     ]);
     useEffect(() => {
         axios
-            .get(`http://43.201.22.60:3000/challengeDetail/${challenge_id}`)
+            .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
             .then((response): void => {
                 console.log('response', response.data);
                 console.log('this Challenge ', response.data.challengeDetail[0]);
