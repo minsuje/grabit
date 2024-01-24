@@ -76,6 +76,11 @@ export function Register() {
                 <Input id="userid" {...register('userid')} />
                 {errors.userid && <p className="text-red-500 text-xs">{errors.userid.message}</p>}
             </div>
+
+            <div>
+                <Label htmlFor="profilePic">프로필 사진</Label>
+                <Input type="file" id="profilePic" {...register('profilePic')} />
+            </div>
             <div>
                 <Label htmlFor="nickname">닉네임</Label>
                 <Input id="nickname" {...register('nickname')} />

@@ -20,7 +20,11 @@ import { MyPage } from './page/myPage/myPage';
 import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
+
+import { FollowList } from './page/myPage/followList';
+
 import FileUploadTest from './page/FileUploadTest';
+
 
 function App() {
     return (
@@ -55,6 +59,7 @@ function App() {
                     <Route path="/challengeCreate" element={<ChallengeCreate />} />
                     <Route path="/mypage/" element={<MyPage />} />
                     <Route path="/mypage/:mypageedit" element={<MyPageEdit />} />
+                    <Route path="/followlist" element={<FollowList />} />
                 </Routes>
             </BrowserRouter>
         </div>
