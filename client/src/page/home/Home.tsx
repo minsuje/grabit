@@ -4,7 +4,7 @@ import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
 import EmojiCursorExample from './test';
 
-export function Home() {
+export default function Home() {
     const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
     const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 

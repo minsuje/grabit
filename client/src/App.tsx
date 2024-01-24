@@ -24,6 +24,7 @@ import ChallengeAccept from './page/challenge/ChallengeAccept';
 import { FollowList } from './page/myPage/FollowList';
 
 import FileUploadTest from './page/FileUploadTest';
+import FriendSelect from './page/myPage/FriendSelect';
 
 function App() {
     return (
@@ -46,6 +47,7 @@ function App() {
                     <Route path="/alarm" element={<Alarm />} />
                     <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
                     <Route path="/fileupload" element={<FileUploadTest />} />
+                    <Route path="/friendSelect" element={<FriendSelect />} />
 
                     {/* 
                     <Route path="/challengeTear/:challenge_id" element={<ChallengeTear />} /> */}
