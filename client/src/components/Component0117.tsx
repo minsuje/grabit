@@ -6,6 +6,9 @@ import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { users } from '@/types/types';
+// import { Challenge } from '@/types/types';
+
+// import { ListComponent1 } from './ComponentSeong';
 
 function CreateChallenge() {
   return (
@@ -71,6 +74,7 @@ function Record() {
 
 function HotChallenge() {
   const [hotTopic, setHotTopic] = useState<string[]>([]);
+  // const [hotTopicList, setHotTopicList] = useState<Challenge[]>([]);
   useEffect(() => {
     setHotTopic(['물마시기', '걷기', '공부']);
 
@@ -87,17 +91,48 @@ function HotChallenge() {
     // }
   }, []);
 
+  function showHotChallengeList(topic: string) {
+    const data = topic;
+    console.log(data);
+    // {
+    //   axios
+    //     .get(`/hotTopicList/${topic}`)
+    //     .then((response) => {
+    //       console.log('HotTopicList', response.data);
+    //       setHotTopicList(response.data);
+    //     })
+    //     .catch((error) => {
+    //       console.error('HotChallenge Component에서 오류발생 :', error);
+    //     });
+    // }
+  }
+
   return (
     <>
       <div className="flex gap-2 text-center">
         {hotTopic.map((topic, idx) => {
           return (
-            <div key={idx} className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2">
+            <div
+              onClick={() => {
+                showHotChallengeList(topic);
+              }}
+              key={idx}
+              className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2"
+            >
               {topic}
             </div>
           );
         })}
       </div>
+      {/* {hotTopicList.length != 0
+        ? hotTopicList.map((challenge: Challenge) => {
+            return (
+              <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
+                <ListComponent1 challenge={challenge}></ListComponent1>
+              </Link>
+            );
+          })
+        : null} */}
     </>
   );
 }
