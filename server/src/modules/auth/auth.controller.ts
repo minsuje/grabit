@@ -36,14 +36,23 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
-    console.log('req user1 >>>>>>> ', req.user);
-    return req.user;
-    // const { accessToken, refreshToken } = await this.authService.getJWT(req.user.kakaoId);
-    // res.cookie('accessToken', accessToken, { httpOnly: true });
-    // res.cookie('refreshToken', refreshToken, { httpOnly: true });
-    // res.cookie('isLoggedIn', true, { httpOnly: false });
-    // return res.redirect(this.configService.get('CLIENT_URL'));
+    console.log('req user1 >>>>>>> ', typeof req.user);
+    const user = JSON.stringify(req.user);
+    const users = JSON.parse(user);
+
+    console.log('req users >>>>>>> ', users);
+    // console.log('res user1 >>>>>>> ', res);
+    const { accessToken, refreshToken, username, profile_image, id } = users;
+
+    // searchUser service 값 보내기
+    this.authService.searchUser(id, profile_image, username);
+
+    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('isLoggedIn', true, { httpOnly: false });
+    return res.redirect('https://localhost:5173');
   }
+
   @Post('/test')
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
