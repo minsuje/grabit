@@ -17,7 +17,7 @@ function Header() {
     dispatch(setIsLoggedIn(false));
     dispatch(setUsername(''));
     dispatch(setUserId(0));
-    navigate('/main');
+    navigate('/');
   }
 
   function handleLogin() {
@@ -25,13 +25,14 @@ function Header() {
     dispatch(setIsLoggedIn(true));
     dispatch(setUsername('홍길동'));
     dispatch(setUserId(1));
+    navigate('/main');
   }
 
   return (
-    <header className="flex justify-between">
+    <header className="flex justify-between py-3 px-4">
       <h1>GRABIT</h1>
       {isLoggedIn ? (
-        <div className="flex">
+        <div className="flex items-center gap-3 ">
           <span>{username}님</span>
           <Button onClick={handleLogout}>로그아웃</Button>
         </div>
