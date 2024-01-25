@@ -89,7 +89,7 @@ function ChallengeCreate() {
   const tab1content = (
     <div>
       <div className="user-list flex">
-        <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
+        <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
         <div className="flex w-fit items-center space-x-2">
           <Switch id="public" checked={isPublic} onCheckedChange={setIsPublic} />
           <Label htmlFor="public" className="w-8">
@@ -99,7 +99,7 @@ function ChallengeCreate() {
       </div>
 
       {friendList.map((friend) => (
-        <div key={friend.id} className="user-list flex gap-2 items-center">
+        <div key={friend.id} className="user-list flex items-center gap-2">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -116,7 +116,7 @@ function ChallengeCreate() {
   const tab2content = (
     <div>
       <div className="user-list flex">
-        <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
+        <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
         <div className="flex w-fit items-center space-x-2">
           <Switch id="public" checked={isPublic} onCheckedChange={setIsPublic} />
           <Label htmlFor="public" className="w-8">
@@ -126,7 +126,7 @@ function ChallengeCreate() {
       </div>
 
       {friendList.map((friend) => (
-        <div key={friend.id} className="user-list flex gap-2 items-center">
+        <div key={friend.id} className="user-list flex items-center gap-2">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -181,17 +181,17 @@ function ChallengeCreate() {
   }
 
   return (
-    <div className="container ">
-      <h1 className="text-3xl font-bold py-4">챌린지 생성</h1>
+    <div className="">
+      <h1 className="py-4 text-3xl font-bold">챌린지 생성</h1>
       <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
-      <h2 className="text-xl font-bold py-4">챌린지 이름</h2>
+      <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
       {/* <Input onChange={(e) => setChallengeName(e.target.value)} /> */}
       <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} />
-      <h2 className="text-xl font-bold py-4">주제</h2>
+      <h2 className="py-4 text-xl font-bold">주제</h2>
       <Input onChange={(e) => setTopic(e.target.value)} />
-      <h2 className="text-xl font-bold py-4">목표 금액</h2>
+      <h2 className="py-4 text-xl font-bold">목표 금액</h2>
       <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
-      <h2 className="text-xl font-bold py-4">시작 날짜</h2>
+      <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
 
       <Popover>
         <PopoverTrigger asChild>
@@ -208,7 +208,7 @@ function ChallengeCreate() {
         </PopoverContent>
       </Popover>
 
-      <h2 className="text-xl font-bold py-4">기간</h2>
+      <h2 className="py-4 text-xl font-bold">기간</h2>
       <Select onValueChange={(value) => setTerm(Number(value))}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="인증 주기" />
@@ -220,7 +220,7 @@ function ChallengeCreate() {
         </SelectContent>
       </Select>
 
-      <h2 className="text-xl font-bold py-4">인증 주기</h2>
+      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
       <Select onValueChange={(value) => setAuthTerm(value)}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="인증 주기" />
@@ -233,7 +233,7 @@ function ChallengeCreate() {
       </Select>
       <div className="authTime flex gap-8">
         <div className="startTime flex flex-col">
-          <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
+          <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
           <Select onValueChange={(value) => setAuthStart(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="인증 시간" />
@@ -250,7 +250,7 @@ function ChallengeCreate() {
           </Select>
         </div>
         <div className="endTime flex flex-col">
-          <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
+          <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
           <Select onValueChange={(value) => setAuthEnd(value)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="인증 시간" />
@@ -267,7 +267,7 @@ function ChallengeCreate() {
           </Select>
         </div>
       </div>
-      <Button onClick={handleSubmit} className="w-full mt-12 mb-8">
+      <Button onClick={handleSubmit} className="mb-8 mt-12 w-full">
         생성하기
       </Button>
     </div>

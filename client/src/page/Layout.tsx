@@ -9,7 +9,7 @@ function Layout() {
   return isLoggedIn ? (
     <div>
       <Header />
-      <div className="p-4">
+      <div className="container py-4">
         <Outlet />
       </div>
     </div>

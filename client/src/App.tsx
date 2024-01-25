@@ -58,9 +58,9 @@ function App() {
             <Route path="/mypage/" element={<MyPage />} />
             <Route path="/mypage/:mypageedit" element={<MyPageEdit />} />
             <Route path="/followlist" element={<FollowList />} />
-            
+
             {/* 테스트 용 */}
-                    <Route path="/test" element={<Test />} />
+            <Route path="/test" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>
