@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
+import Main2 from './page/challenge/Main2';
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import Home from './page/home/Home';
 import Register from './page/home/Register';
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/main" element={<Main />} />
+                    <Route path="/main2" element={<Main2 />} />
                     <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
                     <Route path="/register/normal" element={<Register />} />
                     {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
