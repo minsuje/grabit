@@ -8,10 +8,9 @@ import {
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { and } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { authentication } from '../modules/challenge/schema';
 import { db } from '../../db/db';
-import { eq } from 'drizzle-orm';
 import { v1 as uuid } from 'uuid';
 
 @Injectable()
@@ -28,14 +27,58 @@ export class s3Middleware implements NestMiddleware {
     const body: any = req.body;
 
     let { filename, type } = body;
+    let key;
 
     // console.log('middleware body', body);
     // console.log(req.method);
     // if (req.url.split('/')[2] === undefined) {
     //   console.log('req.url', req.url.split('/')[2]);
     // }
+    if (req.method === 'GET') {
+      if (req.url.split('/')[2] === undefined) {
+        // console.log('s3 middleware get!!', Number(req.url.split('/')[1]));
+        let files = await db
+          .select({ authentication_img: authentication.authentication_img })
+          .from(authentication)
+          .where(eq(authentication.challenge_id, Number(req.url.split('/')[1])))
+          .orderBy(desc(authentication.created_at))
+          .limit(4);
 
-    if (req.method === 'POST') {
+        // console.log('s3 middleware detail files > ', files);
+        let urls = [];
+        for (let i = 0; i < files.length; i++) {
+          //
+          key = files[i].authentication_img;
+          const command = new GetObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          });
+
+          let url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          urls.push(url);
+          // console.log('s3 middleware detail urls > ', urls);
+
+          req['file'] = urls;
+        }
+      } else {
+        let file = await db
+          .select()
+          .from(authentication)
+          .where(
+            eq(authentication.authentication_id, Number(req.url.split('/')[2])),
+          );
+
+        key = file[0].authentication_img;
+        const command = new GetObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: key,
+        });
+
+        const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+        req['file'] = url;
+      }
+    } else if (req.method === 'POST') {
       if (filename) {
         filename = uuid() + '.' + filename.split('.')[1];
         const command = new PutObjectCommand({
@@ -53,76 +96,34 @@ export class s3Middleware implements NestMiddleware {
         req['file'] = url;
       }
     } else {
-      // console.log('s3 middleware else');
-      let key;
+      let file = await db
+        .select()
+        .from(authentication)
+        .where(
+          eq(authentication.authentication_id, Number(req.url.split('/')[2])),
+        );
 
-      if (req.url.split('/')[2] !== undefined) {
-        let file = await db
-          .select()
-          .from(authentication)
-          .where(
-            eq(authentication.authentication_id, Number(req.url.split('/')[2])),
-          );
+      key = file[0].authentication_img;
 
-        key = file[0].authentication_img;
-
-        if (req.method === 'DELETE' || req.method === 'PATCH') {
-          const params = {
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: key,
-          };
-          let command = new DeleteObjectCommand(params);
-          await client.send(command);
-        }
-        if (req.method === 'PATCH') {
-          filename = uuid() + '.' + filename.split('.')[1];
-          let command = new PutObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: filename,
-            ContentType: type,
-          });
-
-          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-
-          req['file'] = url;
-        }
+      if (req.method === 'DELETE' || req.method === 'PATCH') {
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: key,
+        };
+        let command = new DeleteObjectCommand(params);
+        await client.send(command);
       }
-      if (req.method === 'GET') {
-        if (req.url.split('/')[2] === undefined) {
-          // console.log('s3 middleware get!!', Number(req.url.split('/')[1]));
-          let files = await db
-            .select({ authentication_img: authentication.authentication_img })
-            .from(authentication)
-            .where(
-              eq(authentication.challenge_id, Number(req.url.split('/')[1])),
-            );
+      if (req.method === 'PATCH') {
+        filename = uuid() + '.' + filename.split('.')[1];
+        let command = new PutObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: filename,
+          ContentType: type,
+        });
 
-          // console.log('s3 middleware detail files > ', files);
-          let urls = [];
-          for (let i = 0; i < files.length; i++) {
-            //
-            key = files[i].authentication_img;
-            const command = new GetObjectCommand({
-              Bucket: process.env.AWS_S3_BUCKET,
-              Key: key,
-            });
+        const url = await getSignedUrl(client, command, { expiresIn: 3600 });
 
-            let url = await getSignedUrl(client, command, { expiresIn: 3600 });
-            urls.push(url);
-            // console.log('s3 middleware detail urls > ', urls);
-
-            req['file'] = urls;
-          }
-        } else {
-          const command = new GetObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: key,
-          });
-
-          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-
-          req['file'] = url;
-        }
+        req['file'] = url;
       }
     }
     next();

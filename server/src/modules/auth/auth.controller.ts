@@ -7,59 +7,78 @@ import { Request, Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+// import { ConfigService } from '@nestjs/config';
+import { KakaoStrategy } from './strategies/kakao.strategy';
 
 @Controller('/')
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private jwtService: JwtService,
-    ) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+    // private configService: ConfigService,
+  ) {}
 
-    @Post('login')
-    @UseGuards(localGuard)
-    async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
-        // const jwt = await this.authService.loginUser(loginDto);
-        // res.setHeader('Authorization', 'Bearer ' + jwt);
-        // return res.json(jwt);
-        let token = req.user;
-        await res.setHeader('Authorization', 'Bearer ' + token);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
+  @Post('login')
+  @UseGuards(localGuard)
+  async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
+    // const jwt = await this.authService.loginUser(loginDto);
+    let token = req.user;
+    await res.setHeader('Authorization', 'Bearer ' + token);
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
+    console.log(token);
 
-        return res.send({
-            token,
-        });
-    }
+    return res.send({
+      token,
+    });
+  }
 
-    // @Get('kakao')
-    // @UseGuards(AuthGuard('kakao'))
-    // @HttpCode(301)
-    // async kakaoLogin(@Req() req: Request, @Res() res: Response) {
-    //     const { accessToken, refreshToken } = await this.authService.getJWT(req.user.kakaoId);
+  @Get('/test')
+  @UseGuards(AuthGuard('kakao'))
+  @HttpCode(301)
+  async kakaoLogin(@Req() req: Request, @Res() res: Response) {
+    console.log('req user1 >>>>>>> ', typeof req.user);
+    const user = JSON.stringify(req.user);
+    const users = JSON.parse(user);
 
-    //     res.cookie('accessToken', accessToken, { httpOnly: true });
-    //     res.cookie('refreshToken', refreshToken, { httpOnly: true });
-    //     res.cookie('isLoggedIn', true, { httpOnly: false });
-    //     return res.redirect(this.configService.get('CLIENT_URL'));
-    // }
+    console.log('req users >>>>>>> ', users);
+    // console.log('res user1 >>>>>>> ', res);
+    const { accessToken, refreshToken, username, profile_image, id } = users;
 
-    @Get('/main')
-    @UseGuards(JwtAuthGuard)
-    status(@Req() req: Request) {
-        console.log('Inside AuthController status method');
-        console.log(req.user);
-        return req.user;
-    }
+    // searchUser service 값 보내기
+    this.authService.searchUser(id, profile_image, username);
 
-    // @Get('/cookies')
-    // getCookies(@Req() req: Request, @Res() res: Response) {
-    //     console.log(req.cookies);
-    //     const jwt = req.cookies['jwt'];
-    //     return res.send(jwt);
-    // }
+    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('isLoggedIn', true, { httpOnly: false });
+    return res.redirect('https://localhost:5173');
+  }
 
-    @Post('/logout')
-    logout(@Res() res: Response, @Req() req: Request) {
-        res.cookie('jwt', '', { maxAge: 0 });
-        return res.send({ message: 'success' });
-    }
+  @Post('/test')
+  @UseGuards(AuthGuard('kakao'))
+  @HttpCode(301)
+  async kakaoLogin2(@Req() req: Request, @Res() res: Response) {
+    console.log('req user2 >>>>>>> ', req);
+    return req.user;
+  }
+
+  @Get('/main')
+  @UseGuards(JwtAuthGuard)
+  status(@Req() req: Request) {
+    console.log('Inside AuthController status method');
+    console.log(req.user);
+    return req.user;
+  }
+
+  // @Get('/cookies')
+  // getCookies(@Req() req: Request, @Res() res: Response) {
+  //     console.log(req.cookies);
+  //     const jwt = req.cookies['jwt'];
+  //     return res.send(jwt);
+  // }
+
+  @Post('/logout')
+  logout(@Res() res: Response, @Req() req: Request) {
+    res.cookie('jwt', '', { maxAge: 0 });
+    return res.send({ message: 'success' });
+  }
 }

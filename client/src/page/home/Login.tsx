@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // import { Cookies } from 'react-cookie';
 
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
     const [userid, setUserid] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // const handleLogin = async () => {
     //     try {

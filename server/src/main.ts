@@ -4,11 +4,26 @@ import { db } from '../db/db';
 import { users } from '../src/modules/user/schema';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import * as fs from 'fs';
+import * as https from 'https';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync('./private-key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+  };
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
+
   app.enableCors({
-    origin: ['http://3.34.122.205:5173', 'http://localhost:5173'],
+    origin: [
+      'http://3.34.122.205:5173',
+      'http://localhost:5173',
+      'https://accounts.kakao.com',
+      'https://accounts.kakao.com/login',
+      'http://localhost:3000/auth/kakao',
+    ],
     preflightContinue: false,
     credentials: true,
   });
