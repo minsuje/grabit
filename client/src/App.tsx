@@ -27,6 +27,8 @@ import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
 import Test from './page/challenge/Test';
 
+
+
 import Layout from './page/Layout';
 
 function App() {
@@ -62,6 +64,7 @@ function App() {
             {/* 테스트 용 */}
             <Route path="/test" element={<Test />} />
           </Route>
+
         </Routes>
       </BrowserRouter>
     </div>
