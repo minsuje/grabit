@@ -27,11 +27,11 @@ function ChallengeAccept() {
 
   return (
     <div className="container ">
-      <h1 className="text-3xl font-bold py-4">챌린지 정보</h1>
+      <h1 className="py-4 text-3xl font-bold ">챌린지 정보</h1>
 
       <div>
         <div className="user-list flex">
-          <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
+          <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
             <Label className="w-8">공개</Label>
           </div>
@@ -48,17 +48,17 @@ function ChallengeAccept() {
         </div>
       </div>
 
-      <h2 className="text-xl font-bold py-4">주제</h2>
+      <h2 className="py-4 text-xl font-bold">주제</h2>
       <div>{challengeDetail != undefined && challengeDetail.topic}</div>
 
-      <h2 className="text-xl font-bold py-4">기간</h2>
+      <h2 className="py-4 text-xl font-bold">기간</h2>
       <div>{challengeDetail != undefined && challengeDetail.term}</div>
 
-      <h2 className="text-xl font-bold py-4">인증 주기</h2>
+      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
       <div>{challengeDetail != undefined && challengeDetail.term}</div>
       <div>{challengeDetail != undefined && challengeDetail.authentication_start_date.toString()}</div>
 
-      <h2 className="text-xl font-bold py-4">인증 시간</h2>
+      <h2 className="py-4 text-xl font-bold">인증 시간</h2>
       <div>
         {challengeDetail != undefined &&
           challengeDetail.authentication_start_time + '-' + challengeDetail.authentication_end_time}
