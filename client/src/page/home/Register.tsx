@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
+import { useEffect } from 'react';
+import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
   name: string;
@@ -28,16 +32,16 @@ const schema = yup
     userid: yup
       .string()
       .required('* 아이디는 필수입니다.')
-      .min(5, '아이디는 6글자 이상 12글자 이하로 작성해주세요')
-      .max(12, '아이디는 12글자 이상 12글자 이하로 작성해주세요.')
+      .min(5, '아이디는 5글자 이상 12글자 이하로 작성해주세요')
+      .max(12, '아이디는 5글자 이상 12글자 이하로 작성해주세요.')
       .matches(/^[A-Za-z0-9_]{5,12}$/, '아이디는 숫자, 영문으로만 작성 가능합니다.'),
 
     nickname: yup
       .string()
       .required('* 닉네임은 필수입니다.')
-      .min(4, '닉네임은 4글자 이상 10글자 이하로 작성해주세요.')
-      .max(10, '닉네임은 4글자 이상 10글자 이하로 작성해주세요.')
-      .matches(/^[A-Za-z0-9가-힣]{4,12}$/, '닉네임은 영어, 한글, 포함하여 작성해주세요.'),
+      .min(2, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
+      .max(10, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
+      .matches(/^[A-Za-z0-9가-힣]{2,12}$/, '닉네임은 영어, 한글, 포함하여 작성해주세요.'),
 
     password: yup
       .string()
@@ -63,6 +67,11 @@ export default function Register() {
     formState: { errors },
   } = useForm<RegisterForm>({ resolver: yupResolver(schema) });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '회원가입', backPath: '/' }));
+  }, [dispatch]);
 
   const onSubmit = async (data: RegisterForm) => {
     try {
@@ -75,38 +84,44 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <Label htmlFor="name">이름</Label>
-        <Input id="name" {...register('name')} />
-        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
-      </div>
-      <div>
-        <Label htmlFor="userid">아이디</Label>
-        <Input id="userid" {...register('userid')} />
-        {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
-      </div>
-
-      <div>
-        <Label htmlFor="profilePic">프로필 사진</Label>
-        <Input type="file" id="profilePic" {...register('profilePic')} />
-      </div>
-      <div>
-        <Label htmlFor="nickname">닉네임</Label>
-        <Input id="nickname" {...register('nickname')} />
-        {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
-      </div>
-      <div>
-        <Label htmlFor="password">비밀번호</Label>
-        <Input type="password" id="password" {...register('password')} />
-        {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
-      </div>
-      <div>
-        <Label htmlFor="confirmPassword">비밀번호 확인</Label>
-        <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
-        {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
-      </div>
-      <Button type="submit">회원가입</Button>
-    </form>
+    <div className="container flex justify-center">
+      <HeaderTitle />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="mt-20 flex max-w-sm flex-col items-center justify-center gap-4"
+      >
+        <h1>회원가입</h1>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="name">이름</Label>
+          <Input id="name" {...register('name')} />
+          {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="userid">아이디</Label>
+          <Input id="userid" {...register('userid')} />
+          {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="profilePic">프로필 사진</Label>
+          <Input type="file" id="profilePic" {...register('profilePic')} />
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="nickname">닉네임</Label>
+          <Input id="nickname" {...register('nickname')} />
+          {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="password">비밀번호</Label>
+          <Input type="password" id="password" {...register('password')} />
+          {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="confirmPassword">비밀번호 확인</Label>
+          <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
+          {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
+        </div>
+        <Button type="submit">회원가입</Button>
+      </form>
+    </div>
   );
 }

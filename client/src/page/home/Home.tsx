@@ -26,8 +26,10 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col">
-      <Rabbit />
+    <div className="container flex flex-col justify-center gap-4 text-center">
+      <div className="flex w-40">
+        <Rabbit />
+      </div>
       <Link to="/login" className="mb-[5%]">
         <Button variant="default" className="w-[100%]">
           로그인

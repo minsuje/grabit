@@ -7,10 +7,18 @@ import { useEffect, useState } from 'react';
 
 import axios from 'axios';
 import { Challenge, users } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeInProgress() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
+  }, [dispatch]);
+
   const [challengeDetail, setChallengeDetail] = useState<Challenge>({
     challenge_id: 1,
     userid_num: 1,
@@ -54,11 +62,11 @@ function ChallengeInProgress() {
       });
   }, []);
   const myImage = (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-2 gap-2">
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -67,7 +75,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -75,7 +83,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -83,7 +91,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto mt-3  h-[180px] w-[65%] rounded-lg"
+            className=" aspect-square w-full rounded-lg object-cover"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -91,11 +99,11 @@ function ChallengeInProgress() {
     </div>
   );
   const otherImage = (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-2 gap-2">
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -104,7 +112,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -112,7 +120,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -120,7 +128,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
+            className="aspect-square w-full rounded-lg object-cover"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -129,12 +137,12 @@ function ChallengeInProgress() {
   );
 
   return (
-    <div className="container">
+    <div className="mt-12 flex flex-col gap-4">
       <div className="p-3 text-center text-4xl font-extrabold">
         총 {challengeDetail.goal_money * challengers.length}원
       </div>
 
-      <div className="m-10 grid grid-cols-2 gap-4 p-1 text-center">
+      <div className="m-10 grid grid-cols-2 gap-2 gap-4 p-1 text-center">
         <div className="text-xl font-black">나</div>
         <div className="text-xl font-black">{challengers.length > 1 ? challengers[1]?.nickname : ' ...'}</div>
         <div className=" text-l">3회 성공</div>

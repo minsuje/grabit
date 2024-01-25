@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
+import HeaderTitle from '@/components/HeaderTitle';
 // import { Cookies } from 'react-cookie';
 
 export default function Login() {
@@ -62,33 +63,43 @@ export default function Login() {
   };
 
   return (
-    <>
-      <div className="mt-10 grid w-full max-w-sm items-center  gap-1.5">
-        <Label htmlFor="username">아이디</Label>
-        <Input
-          type="text"
-          id="username"
-          placeholder="아이디"
-          value={userid}
-          onChange={(e) => setUserid(e.target.value)}
-        />
+    <div className="container flex justify-center">
+      <HeaderTitle />
+      <div className="container mt-20 flex flex-col items-center justify-center">
+        <h1>로그인</h1>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2 ">
+          <Label className="flex" htmlFor="username">
+            아이디
+          </Label>
+          <Input
+            type="text"
+            id="username"
+            placeholder="아이디"
+            className="flex"
+            value={userid}
+            onChange={(e) => setUserid(e.target.value)}
+          />
+        </div>
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+          <Label className="flex" htmlFor="password">
+            비밀번호
+          </Label>
+          <Input
+            type="password"
+            id="password"
+            placeholder="비밀번호"
+            className="flex"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
+        </div>
+        <br />
+        <Button variant="default" className="w-full max-w-sm" onClick={handleLogin} disabled={!userid || !password}>
+          로그인
+        </Button>
+        <Link to="/main" className="mb-[5%]"></Link>
       </div>
-      <div className="mt-10 grid w-full max-w-sm items-center  gap-1.5">
-        <Label htmlFor="password">비밀번호</Label>
-        <Input
-          type="password"
-          id="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
-      </div>
-
-      <Button variant="default" className="w-full" onClick={handleLogin} disabled={!userid || !password}>
-        로그인
-      </Button>
-      <Link to="/main" className="mb-[5%]"></Link>
-    </>
+    </div>
   );
 }
