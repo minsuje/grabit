@@ -17,17 +17,17 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { Friend } from '@/types/types';
-import {
-  setChallengeName,
-  setGoalMoney,
-  setDate,
-  setTerm,
-  setIsPublic,
-  setTopic,
-  setAuthTerm,
-  setAuthStart,
-  setAuthEnd,
-} from '@/store/challengeSlice';
+// import {
+//   setChallengeName,
+//   setGoalMoney,
+//   setDate,
+//   setTerm,
+//   setIsPublic,
+//   setTopic,
+//   setAuthTerm,
+//   setAuthStart,
+//   setAuthEnd,
+// } from '@/store/challengeSlice';
 
 function ChallengeCreate() {
   const dispatch = useDispatch();
