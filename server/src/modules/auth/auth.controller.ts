@@ -7,7 +7,6 @@ import { Request, Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-// import { ConfigService } from '@nestjs/config';
 import { KakaoStrategy } from './strategies/kakao.strategy';
 
 @Controller('/')
@@ -15,7 +14,6 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private jwtService: JwtService,
-    // private configService: ConfigService,
   ) {}
 
   @Post('login')
@@ -23,6 +21,7 @@ export class AuthController {
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
     // const jwt = await this.authService.loginUser(loginDto);
     let token = req.user;
+    console.log("login controller >>>>>>>>>.",req.user)
     await res.setHeader('Authorization', 'Bearer ' + token);
     res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
     console.log(token);

@@ -36,8 +36,6 @@ export default function Login() {
   // };
 
 
-  git reset --hard b142bf0108d65b9c73ddcc5821e9ffee51cbcdc6
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(
