@@ -54,7 +54,7 @@ export default function Main() {
 
       <Link to={`/challengeDaily/${dailymission.mission_id}`} className="text-black no-underline">
         <div>
-          <div key={dailymission.mission_id} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+          <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
               <p>{dailymission.mission_content}</p>
 
@@ -90,12 +90,15 @@ export default function Main() {
       <Link to="/challengeList" className="text-center text-gray-400 no-underline">
         <div>전체 챌린지 보러가기</div>
       </Link>
-      <div className="text-center p-3">
+      <div className="p-3 text-center">
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
         <Link to="/challengeInProgress/4">
-          <Button>이동</Button>
+          <Button>진행중인 챌린지</Button>
+        </Link>
+        <Link to="/fileUpload">
+          <Button>파일 업로드 테스트</Button>
         </Link>
       </div>
     </div>

@@ -58,7 +58,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -67,7 +67,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -75,7 +75,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -83,7 +83,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/1">
         <div>
           <img
-            className="m-auto rounded-lg  w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3  h-[180px] w-[65%] rounded-lg"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -95,7 +95,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -104,7 +104,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -112,7 +112,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
           ></img>
         </div>
@@ -120,7 +120,7 @@ function ChallengeInProgress() {
       <Link to="/challengeImage/2">
         <div>
           <img
-            className="m-auto rounded-lg w-[65%] h-[180px] mt-3"
+            className="m-auto mt-3 h-[180px] w-[65%] rounded-lg"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
           ></img>
         </div>
@@ -130,13 +130,13 @@ function ChallengeInProgress() {
 
   return (
     <div className="container">
-      <div className="text-center font-extrabold text-4xl p-3">
+      <div className="p-3 text-center text-4xl font-extrabold">
         총 {challengeDetail.goal_money * challengers.length}원
       </div>
 
-      <div className="grid grid-cols-2 gap-4 text-center p-1 m-10">
-        <div className="font-black text-xl">나</div>
-        <div className="font-black text-xl">{challengers.length > 1 ? challengers[1].nickname : ' ...'}</div>
+      <div className="m-10 grid grid-cols-2 gap-4 p-1 text-center">
+        <div className="text-xl font-black">나</div>
+        <div className="text-xl font-black">{challengers.length > 1 ? challengers[1]?.nickname : ' ...'}</div>
         <div className=" text-l">3회 성공</div>
         <div className="text-l">5회 성공</div>
       </div>
@@ -151,7 +151,7 @@ function ChallengeInProgress() {
 
       <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
 
-      <div className="text-center p-2 mt-5">
+      <div className="mt-5 p-2 text-center">
         <Button
           onClick={() => {
             navigate(`/camera/${challenge_id}`);

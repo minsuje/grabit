@@ -36,7 +36,7 @@ function FileUploadTest() {
   async function handleUpdate() {
     await axios({
       method: 'patch',
-      url: 'http://localhost:3000/challengeAuth/1/52',
+      url: 'http://localhost:3000/challengeAuth/1/77',
       data: {
         filename: file?.name,
         type: file?.type,
@@ -57,7 +57,7 @@ function FileUploadTest() {
   async function handleGet() {
     await axios({
       method: 'get',
-      url: 'http://localhost:3000/challengeAuth/1/52',
+      url: 'http://localhost:3000/challengeAuth/1/77',
     }).then((res) => {
       console.log(res.data);
       setProfile(res.data.fileUrl);
@@ -72,7 +72,7 @@ function FileUploadTest() {
   async function handleDelete() {
     await axios({
       method: 'delete',
-      url: 'http://localhost:3000/challengeAuth/1/52',
+      url: 'http://localhost:3000/challengeAuth/1/77',
     }).then(() => {
       alert('삭제 완료!');
     });
@@ -85,15 +85,15 @@ function FileUploadTest() {
       <br />
       <br />
       <div className="flex gap-2">
-        <button onClick={handleUpload} className="p-3 bg-blue-500 text-white rounded-md">
+        <button onClick={handleUpload} className="rounded-md bg-blue-500 p-3 text-white">
           업로드
         </button>
         <br />
-        <button onClick={handleUpdate} className="p-3 bg-blue-500 text-white rounded-md">
+        <button onClick={handleUpdate} className="rounded-md bg-blue-500 p-3 text-white">
           업데이트
         </button>
         <br />
-        <button onClick={handleDelete} className="p-3 bg-blue-500 text-white rounded-md">
+        <button onClick={handleDelete} className="rounded-md bg-blue-500 p-3 text-white">
           삭제
         </button>
       </div>
