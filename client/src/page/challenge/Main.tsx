@@ -94,6 +94,9 @@ export default function Main() {
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
+        <Link to="/challengeInProgress/4">
+          <Button>이동</Button>
+        </Link>
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ import Test from './page/challenge/Test';
 
 import Layout from './page/Layout';
 import MypageWithdraw from './page/myPage/MypageWithdraw';
+import Camera from './page/challenge/Camera';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
             <Route path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+            <Route path="/camera/:challenge_id" element={<Camera />} />
 
             {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
             <Route path="/challengeresult" element={<ChallengeResult />} />
