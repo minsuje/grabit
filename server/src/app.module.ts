@@ -8,6 +8,7 @@ import { AlarmModule } from './modules/alarm/alarm.module';
 import { FriendModule } from './modules/friend/friend.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { s3Middleware } from './middleware/s3.middleware';
+import { profileImgMiddleware } from './middleware/profileImg.middleware';
 import { ChallengeController } from './modules/challenge/challenge.controller';
 
 @Module({
@@ -25,6 +26,6 @@ import { ChallengeController } from './modules/challenge/challenge.controller';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(s3Middleware).forRoutes('challengeAuth', 'challengeDetail');
-    // consumer.apply(s3Middleware).forRoutes(ChallengeController);
+    consumer.apply(profileImgMiddleware).forRoutes('myPage');
   }
 }
