@@ -7,9 +7,10 @@ import {
 } from './schema';
 import { users } from '../user/schema';
 import { db } from '../../../db/db';
-import { eq, not, and } from 'drizzle-orm';
+import { eq, not, and, desc } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
 import { s3Middleware } from 'src/middleware/s3.middleware';
+import { read } from 'fs';
 
 @Injectable()
 export class ChallengeService {
@@ -88,6 +89,59 @@ export class ChallengeService {
       }
     }
     return { ingMyChallenge, preMyChallenge, prePublicChallenge };
+  };
+
+  // 인기 있는 챌린지 주제
+  getPopularChallenge = async () => {
+    const topics = await db.select({ topic: challenge.topic }).from(challenge);
+
+    let topicCounts = [
+      { name: '운동', count: 0 },
+      { name: '셀프케어', count: 0 },
+      { name: '독서', count: 0 },
+      { name: '학습', count: 0 },
+      { name: '취미', count: 0 },
+      { name: '생활습관', count: 0 },
+      { name: '저축', count: 0 },
+    ];
+
+    for (let i = 0; i < topics.length; i++) {
+      if (topics[i].topic === '운동') topicCounts[0].count++;
+      else if (topics[i].topic === '셀프케어') topicCounts[1].count++;
+      else if (topics[i].topic === '독서') topicCounts[2].count++;
+      else if (topics[i].topic === '학습') topicCounts[3].count++;
+      else if (topics[i].topic === '취미') topicCounts[4].count++;
+      else if (topics[i].topic === '생활습관') topicCounts[5].count++;
+      else if (topics[i].topic === '저축') topicCounts[6].count++;
+    }
+
+    // count 기준으로 내림차순 정렬
+    topicCounts.sort((a, b) => b.count - a.count);
+
+    const popularTopic = topicCounts.slice(0, 3);
+    const popularTopics = popularTopic.map((topic) => topic.name);
+    console.log('s3middleware service popularTopics', popularTopics);
+
+    const top1 = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.topic, popularTopics[0]))
+      .orderBy(desc(challenge.created_at))
+      .limit(3);
+    const top2 = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.topic, popularTopics[1]))
+      .orderBy(desc(challenge.created_at))
+      .limit(3);
+    const top3 = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.topic, popularTopics[2]))
+      .orderBy(desc(challenge.created_at))
+      .limit(3);
+
+    return { popularTopics, top1, top2, top3 };
   };
 
   // 챌린지 상세 정보 보기
