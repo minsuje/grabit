@@ -27,8 +27,6 @@ import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
 import Test from './page/challenge/Test';
 
-
-
 import Layout from './page/Layout';
 
 function App() {
@@ -38,11 +36,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register/normal" element={<Register />} />
           <Route path="/" element={<Layout />}>
             <Route path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
-            <Route path="/register/normal" element={<Register />} />
+
             {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
             <Route path="/challengeresult" element={<ChallengeResult />} />
             <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
@@ -64,7 +63,6 @@ function App() {
             {/* 테스트 용 */}
             <Route path="/test" element={<Test />} />
           </Route>
-
         </Routes>
       </BrowserRouter>
     </div>
