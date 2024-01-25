@@ -26,6 +26,7 @@ import { FollowList } from './page/myPage/FollowList';
 
 import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
+import Test from './page/challenge/Test';
 
 import Layout from './page/Layout';
 
@@ -59,6 +60,9 @@ function App() {
             <Route path="/mypage/" element={<MyPage />} />
             <Route path="/mypage/:mypageedit" element={<MyPageEdit />} />
             <Route path="/followlist" element={<FollowList />} />
+            
+            {/* 테스트 용 */}
+                    <Route path="/test" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>
