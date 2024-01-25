@@ -1,8 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import MyPageData from '@/data/myPageData';
+import ChallengeData from '@/data/ChallengeData';
+import axios from 'axios';
 
 export default function MyPage() {
+    console.log(ChallengeData);
+
+
     return (
         <>
             <h1>마이페이지</h1>
@@ -10,7 +16,7 @@ export default function MyPage() {
             <div className="flex justify-between">
                 <Avatar>
                     <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback></AvatarFallback>
                 </Avatar>
                 <Link to="mypageedit">
                     <Button type="submit" variant="outline">
@@ -27,51 +33,59 @@ export default function MyPage() {
                 <div className="flex items-center gap-2">
                     <Avatar>
                         <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <span>홍길동</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Avatar>
                         <AvatarImage src="https://github.com/kwonkuwhi.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <span>홍길동</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <Avatar>
                         <AvatarImage src="https://github.com/seejnn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <span>홍길동</span>
                 </div>
-                <Button>전체보기</Button>
+                <Link to="">
+                    <Button>전체보기</Button>
+                </Link>
             </div>
 
             <div className="flex flex-col gap-1 ">
                 <div className="flex justify-between">
                     <span>금액</span>
-                    <span>출금하기</span>
+                    <Link to="/mypage/MyPageWithdraw">
+                        <span>출금하기</span>
+                    </Link>
                 </div>
                 <div className="flex justify-between">
                     <button className="text-gray-400 text-xs">내역보기</button>
-                    <span>충전하기</span>
+                    <Link to="">
+                        <span>충전하기</span>
+                    </Link>
                 </div>
 
                 <div className="flex justify-between ">
                     <p>전적</p>
-                    <p>승 패 무</p>
+                    <p>
+                        {MyPageData[0].win}승 {MyPageData[0].lose}패 {MyPageData[0].draw}무
+                    </p>
                 </div>
                 <div>
                     <h1>히스토리</h1>
                     <Link to=" " className="text-black no-underline">
                         <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                             <div className="flex justify-between">
-                                <p>챌린지 이름</p>
+                                <p>{ChallengeData[0].challenge_name}</p>
 
-                                <p>일 후 종료</p>
+                                <p>{ChallengeData[0].authentication_term}일 후 종료</p>
                             </div>
-                            <p>3000원</p>
+                            <p>{ChallengeData[0].goal_money}</p>
                         </div>
                     </Link>
                     <div className="flex justify-center">

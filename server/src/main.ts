@@ -30,17 +30,27 @@ async function bootstrap() {
   });
   app.use(cookieParser());
 
-  // getUsers();
 
-  const options = new DocumentBuilder()
-    .setTitle('grabit API')
-    .setDescription('API 문서를 위한 NestJS와 Swagger 예제')
-    .setVersion('1.0')
-    .build();
+            'https://accounts.kakao.com',
+            'https://accounts.kakao.com/login',
+            'http://localhost:3000/auth/kakao',
+        ],
+        preflightContinue: false,
+        credentials: true,
+    });
+    app.use(cookieParser());
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
-  await app.listen(3000);
+    // getUsers();
+
+    const options = new DocumentBuilder()
+        .setTitle('grabit API')
+        .setDescription('API 문서를 위한 NestJS와 Swagger 예제')
+        .setVersion('1.0')
+        .build();
+
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup('api', app, document);
+    await app.listen(3000);
 }
 bootstrap();
 

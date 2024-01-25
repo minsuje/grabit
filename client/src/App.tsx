@@ -28,8 +28,10 @@ import FriendSelect from './page/myPage/FriendSelect';
 import Test from './page/challenge/Test';
 
 import Layout from './page/Layout';
+import MypageWithdraw from './page/myPage/MypageWithdraw';
 
 function App() {
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -67,6 +69,7 @@ function App() {
       </BrowserRouter>
     </div>
   );
+
 }
 
 export default App;
