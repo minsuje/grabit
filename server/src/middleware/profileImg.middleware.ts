@@ -32,14 +32,17 @@ export class profileImgMiddleware implements NestMiddleware {
       // kakao 로그인일 때 이미지 파일명 이렇게 그대로 사용해도 되는지?
       // http://k.kakaocdn.net/dn/bhAmrx/btsca01IIpQ/mAfvKKmyoqpLgrdr1P7W81/img_640x640.jpg
 
-      const command = new GetObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET,
-        Key: key,
-      });
+      console.log('middleware profileImg key > ', key);
 
-      const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+      // if (key) console.log('key');
+      // const command = new GetObjectCommand({
+      //   Bucket: process.env.AWS_S3_BUCKET,
+      //   Key: key,
+      // });
 
-      req['file'] = url;
+      // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+      // req['file'] = url;
     }
     next();
   }
