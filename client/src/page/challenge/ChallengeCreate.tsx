@@ -28,6 +28,7 @@ import {
   setAuthStart,
   setAuthEnd,
 } from '@/store/challengeSlice';
+import Header from '@/components/Header';
 
 function ChallengeCreate() {
   const dispatch = useDispatch();
