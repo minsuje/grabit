@@ -24,7 +24,7 @@ function Camera() {
         {cardImage && (
           <div className="text-center">
             <h2>미리보기</h2>
-            <img className="w-full h-auto" src={cardImage && URL.createObjectURL(cardImage)} />
+            {/* <img className="absolute w-[50%] h-auto" src={cardImage && URL.createObjectURL(cardImage)} /> */}
           </div>
         )}
         <div className="fixed bottom-0 right-0 left-0 flex justify-center align-middle">
