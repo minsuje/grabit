@@ -42,7 +42,6 @@ export class AuthService {
         })
         const inputLogoinReToken = await db.update(users).set({refreshToken: loginRefreshToken })
 
-
         const loginToken = this.jwtService.sign({ loginAccess });
         isLogin = 'true';
         validate = 'true';
