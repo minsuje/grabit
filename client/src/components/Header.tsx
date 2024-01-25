@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { Button } from './ui/button';
 import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
+import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 
 function Header() {
