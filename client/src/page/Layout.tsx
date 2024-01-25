@@ -1,12 +1,18 @@
 import Header from '@/components/Header';
-import { Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { Outlet, Navigate } from 'react-router-dom';
 
 function Layout() {
-  return (
+  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+
+  return isLoggedIn ? (
     <div>
       <Header />
       <Outlet />
     </div>
+  ) : (
+    <Navigate to="/" />
   );
 }
 

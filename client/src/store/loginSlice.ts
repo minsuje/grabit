@@ -7,9 +7,9 @@ interface LoginState {
 }
 
 const initialState: LoginState = {
-  isLoggedIn: true,
-  username: '홍길동',
-  userId: 1,
+  isLoggedIn: false,
+  username: '',
+  userId: 0,
 };
 
 export const loginSlice = createSlice({
