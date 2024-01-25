@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, username, userId } = useSelector((state: RootState) => state.login);
+  const { isLoggedIn, username } = useSelector((state: RootState) => state.login);
 
   console.log(isLoggedIn);
   console.log(useSelector((state: RootState) => state.login));
@@ -17,7 +17,7 @@ function Header() {
     dispatch(setIsLoggedIn(false));
     dispatch(setUsername(''));
     dispatch(setUserId(0));
-    // navigate('/main');
+    navigate('/main');
   }
 
   function handleLogin() {
