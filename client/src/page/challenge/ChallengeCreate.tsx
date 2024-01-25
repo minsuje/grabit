@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
 import { Friend } from '@/types/types';
 // import {
@@ -36,6 +37,10 @@ function ChallengeCreate() {
   useEffect(() => {
     setChallengeName(challengeState.challengeName);
   }, [challengeState]);
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '챌린지 생성', backPath: '/main' }));
+  }, [dispatch]);
 
   // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   dispatch(setChallengeName(e.target.value));
@@ -209,10 +214,9 @@ function ChallengeCreate() {
           <SelectValue placeholder="인증 주기" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="1">2일</SelectItem>
           <SelectItem value="2">3일</SelectItem>
-          <SelectItem value="4">5일</SelectItem>
           <SelectItem value="6">일주일</SelectItem>
+          <SelectItem value="13">2주일</SelectItem>
         </SelectContent>
       </Select>
 

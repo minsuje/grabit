@@ -8,8 +8,7 @@ import Register from './page/home/Register';
 import Login from './page/home/Login';
 import ChallengeNotice from './page/challenge/ChallengeNotice';
 import ChallengeCreate from './page/challenge/ChallengeCreate';
-// import { motion } from 'framer-motion';
-import { ChallengeResult } from './page/challenge/ChallengeResult';
+import ChallengeResult from './page/challenge/ChallengeResult';
 import ChallengeImage from './page/challenge/ChallengeImage';
 import ChallengeList from './page/challenge/ChallengeList';
 import ChallengeEdit from './page/challenge/ChallengeEdit';
@@ -22,7 +21,7 @@ import '@/App.css';
 import Alarm from './page/home/Alarm';
 import ChallengeAccept from './page/challenge/ChallengeAccept';
 
-import { FollowList } from './page/myPage/FollowList';
+import FollowList from './page/myPage/FollowList';
 
 import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
@@ -35,10 +34,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {/* 첫 화면 */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />

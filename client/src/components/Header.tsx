@@ -3,11 +3,13 @@ import { RootState } from '@/store/store';
 import { Button } from './ui/button';
 import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
 import { useNavigate } from 'react-router-dom';
+import { LuChevronLeft } from 'react-icons/lu';
 
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, username } = useSelector((state: RootState) => state.login);
+  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  const { title, backPath } = useSelector((state: RootState) => state.header);
 
   console.log(isLoggedIn);
   console.log(useSelector((state: RootState) => state.login));
@@ -29,11 +31,15 @@ function Header() {
   }
 
   return (
-    <header className="flex justify-between py-3 px-4">
-      <h1>GRABIT</h1>
+    <header className="flex justify-between items-center py-3 px-4">
+      <div onClick={() => navigate(backPath)} className="flex p-4">
+        <LuChevronLeft size={28} />
+      </div>
+
+      <h1>{title}</h1>
+
       {isLoggedIn ? (
         <div className="flex items-center gap-3 ">
-          <span>{username}님</span>
           <Button onClick={handleLogout}>로그아웃</Button>
         </div>
       ) : (
