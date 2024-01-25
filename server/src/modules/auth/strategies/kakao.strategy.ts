@@ -13,25 +13,26 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
     });
   }
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
+    console.log('kakao strategy profile >>>>>', profile);
     return profile;
   }
-  // async validate(
+  //   async validate(
   //     accessToken: string,
   //     refreshToken: string,
   //     profile: Profile,
   //     done: (err: any, user?: any, info?: any) => void,
-  // ) {
+  //   ) {
   //     try {
-  //         console.log('kakao strategy profile >>', profile);
-  //         console.log('kakao strategy accessToken >>', accessToken);
-  //         console.log('kakao strategy refreshToken >>', refreshToken);
-  //         const { _json } = profile;
-  //         const user = {
-  //             kakaoId: _json.id,
-  //         };
-  //         done(null, user);
+  //       console.log('kakao strategy profile >>', profile);
+  //       console.log('kakao strategy accessToken >>', accessToken);
+  //       console.log('kakao strategy refreshToken >>', refreshToken);
+  //       const { _json } = profile;
+  //       const user = {
+  //         kakaoId: _json.id,
+  //       };
+  //       done(null, user);
   //     } catch (error) {
-  //         done(error);
+  //       done(error);
   //     }
-  // }
+  //   }
 }

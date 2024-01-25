@@ -21,9 +21,10 @@ export default function Main() {
         }
     }, []);
     const sendAuthCodeToServer = async (code) => {
+        console.log('sendAuthCodeToServer  >>> ', code)
         try {
-            const response = await axios.post('http://localhost:3000/auth/kakao', { code });
-            // 서버 응답 처리
+            const response = await axios.post('http://localhost:3000/auth/kakao',code );
+            
             console.log(response.data);
         } catch (error) {
             console.error('서버 요청 실패:', error);

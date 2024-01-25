@@ -48,7 +48,7 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin2(@Req() req: Request, @Res() res: Response) {
-    console.log('req user >>>>>>> ', req.user);
+    console.log('req user >>>>>>> ', req);
     return req.user;
   }
 
