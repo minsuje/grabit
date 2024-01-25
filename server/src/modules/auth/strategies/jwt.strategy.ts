@@ -20,6 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // }
     async validate(userid: string, password: string) {
         const user = await this.authService.loginUser({ userid, password });
+        console.log('jwt strategy >>>> ', user)
         if (!user) throw new UnauthorizedException();
         return user;
     }

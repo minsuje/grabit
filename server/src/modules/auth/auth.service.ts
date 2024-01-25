@@ -15,12 +15,14 @@ export class AuthService {
 
     // 입력된 아이디에 대한 db에서 password만 가져옴
     const findPassword = await db.select({ field: users.password }).from(users).where(eq(users.userid, userid));
-    console.log('findPassword >>>>', findPassword);
 
+    // 해당하는 비멀번호를 가지고 있지 않을 시
     if (!findPassword.length) {
       console.log('존재하지 않는 계정입니다.');
       return (validate = 'none');
     } else {
+        // 비밀번호가 존재한다면 
+
       const { field } = findPassword[0];
 
       // 비밀번호 비교
@@ -34,10 +36,17 @@ export class AuthService {
           .from(users)
           .where(and(eq(users.userid, userid), eq(users.password, field)));
 
-        // const loginRefreshToken = 
+        const loginRefreshToken = this.jwtService.sign({loginAccess},{
+            secret: process.env.JWT_REFRESH_SECRET,
+            expiresIn: '7d',
+        })
+        const inputLogoinReToken = await db.update(users).set({refreshToken: loginRefreshToken })
+
+
+        const loginToken = this.jwtService.sign({ loginAccess });
         isLogin = 'true';
         validate = 'true';
-        return this.jwtService.sign({ loginAccess });
+        return {loginToken, loginRefreshToken}
       } else {
         console.log('비밀번호가 틀렸습니다.');
         validate = 'noPassword';
