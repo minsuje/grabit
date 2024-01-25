@@ -47,7 +47,7 @@ export default function Main() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
       <Ranking />
       <h1>오늘의 미션</h1>
@@ -90,7 +90,7 @@ export default function Main() {
       <Link to="/challengeList" className="text-center text-gray-400 no-underline">
         <div>전체 챌린지 보러가기</div>
       </Link>
-      <div className="p-3 text-center">
+      <div className="flex flex-col gap-3 p-3 text-center">
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>

@@ -10,10 +10,17 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { dailyMission } from '@/types/types';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeDaily() {
+  const dispatch = useDispatch();
   const { mission_id } = useParams();
   const [dailyMission, setDailyMission] = useState<dailyMission>();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '오늘의 미션', backPath: '/main' }));
+  }, [dispatch]);
 
   useEffect(() => {
     {
@@ -30,16 +37,16 @@ function ChallengeDaily() {
   }, []);
 
   return (
-    <div className="container">
-      <div className="text-center font-extrabold text-5xl p-3">데일리 미션</div>
+    <div className="">
+      <div className="p-3 text-center text-5xl font-extrabold">데일리 미션</div>
       <h1>{dailyMission != undefined && dailyMission.mission_content}</h1>
 
       <br />
 
-      <div className="text-center p-2 mt-5">
+      <div className="mt-5 p-2 text-center">
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <span className=" bg-black text-white  p-3">인증하기</span>
+            <span className=" bg-black p-3  text-white">인증하기</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuSeparator />

@@ -4,8 +4,16 @@ import { ListComponentWithButton, ListComponentWithPeriod } from '@/components/C
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Challenge } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '챌린지 목록', backPath: '/main' }));
+  }, [dispatch]);
+
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [preMyChallenge, setPreMyChallenge] = useState<Challenge[]>([]);
   const [publicChallenge, setPublicChallenge] = useState<Challenge[]>([]);
@@ -25,7 +33,7 @@ function ChallengeList() {
     }
   }, []);
   return (
-    <div className="container">
+    <div className="mt-8 flex flex-col gap-12">
       <h1>참여중인 챌린지</h1>
       {ingMyChallenge.map((challenge: Challenge) => {
         return (

@@ -7,10 +7,17 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeAccept() {
+  const dispatch = useDispatch();
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '챌린지 수락', backPath: '/main' }));
+  }, [dispatch]);
 
   useEffect(() => {
     console.log(challenge_id);

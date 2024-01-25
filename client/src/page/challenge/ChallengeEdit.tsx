@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 async function patchChallenge(
   challenge_id: string | undefined,
@@ -58,8 +60,13 @@ async function deleteChallenge(challenge_id: string | undefined) {
 }
 
 function ChallengeEdit() {
+  const dispatch = useDispatch();
   const { challenge_id } = useParams();
   const [date, setDate] = useState<Date | undefined>();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '챌린지 수정', backPath: -1 }));
+  }, [dispatch]);
 
   const [challengeDetail, setChallengeDetail] = useState<Challenge>({
     challenge_id: 1,
@@ -125,11 +132,11 @@ function ChallengeEdit() {
   });
 
   return (
-    <div className="container ">
-      <h1 className="text-3xl font-bold py-4">챌린지 수정</h1>
+    <div className="flex flex-col gap-8">
+      <h1 className="py-4 text-3xl font-bold">챌린지 수정</h1>
       <div>
         <div className="user-list flex">
-          <h2 className="flex w-full text-xl font-bold py-4">참여자</h2>
+          <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
             <Label className="w-8">공개</Label>
           </div>
@@ -152,7 +159,7 @@ function ChallengeEdit() {
         </div>
       </div>
 
-      <h2 className="text-xl font-bold py-4">챌린지명</h2>
+      <h2 className="py-4 text-xl font-bold">챌린지명</h2>
       <Input
         value={challengeDetail.challenge_name}
         onChange={(e) => {
@@ -162,7 +169,7 @@ function ChallengeEdit() {
         }}
       />
 
-      <h2 className="text-xl font-bold py-4">주제</h2>
+      <h2 className="py-4 text-xl font-bold">주제</h2>
       <Input
         value={challengeDetail.topic}
         onChange={(e) => {
@@ -171,7 +178,7 @@ function ChallengeEdit() {
           });
         }}
       />
-      <h2 className="text-xl font-bold py-4">기간</h2>
+      <h2 className="py-4 text-xl font-bold">기간</h2>
       <Select
         value={period.toString()}
         onValueChange={(value) => {
@@ -195,7 +202,7 @@ function ChallengeEdit() {
         </SelectContent>
       </Select>
 
-      <h2 className="text-xl font-bold py-4">시작 날짜</h2>
+      <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
 
       <Popover>
         <PopoverTrigger asChild>
@@ -219,7 +226,7 @@ function ChallengeEdit() {
         </PopoverContent>
       </Popover>
 
-      <h2 className="text-xl font-bold py-4">끝 날짜</h2>
+      <h2 className="py-4 text-xl font-bold">끝 날짜</h2>
 
       <Popover>
         <PopoverTrigger asChild>
@@ -241,7 +248,7 @@ function ChallengeEdit() {
         </PopoverTrigger>
       </Popover>
 
-      <h2 className="text-xl font-bold py-4">인증 주기</h2>
+      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
       <Select
         onValueChange={(value) => {
           setChallengeDetail((challengeDetail) => {
@@ -264,7 +271,7 @@ function ChallengeEdit() {
       </Select>
       <div className="authTime flex gap-8">
         <div className="startTime flex flex-col">
-          <h2 className="text-xl font-bold py-4">인증 시작 시간</h2>
+          <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
           <Select
             value={challengeDetail.authentication_start_time.toString()}
             onValueChange={(value) => {
@@ -298,7 +305,7 @@ function ChallengeEdit() {
           </Select>
         </div>
         <div className="endTime flex flex-col">
-          <h2 className="text-xl font-bold py-4">인증 마감 시간</h2>
+          <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
           <Select
             value={challengeDetail.authentication_end_time.toString()}
             onValueChange={(value) => {
@@ -332,7 +339,7 @@ function ChallengeEdit() {
           </Select>
         </div>
       </div>
-      <div className="flex flex-col mt-3 gap-3">
+      <div className="mt-3 flex flex-col gap-3">
         <Button className="bg-slate-100 text-black hover:bg-slate-200" onClick={() => deleteChallenge(challenge_id)}>
           삭제
         </Button>

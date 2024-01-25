@@ -11,7 +11,7 @@ export default function FollowList() {
         <Input placeholder="검색"></Input>
       </div>
       <Link to=" " className="text-black no-underline">
-        <div className="bg-gray-200 p-6 rounded-lg shadow-md w-[100%] flex  mb-[5%]">
+        <div className="mb-[5%] flex w-[100%] rounded-lg bg-gray-200 p-6  shadow-md">
           <div className="w-[100%]">
             <p>아이디</p>
             <p>티어점수</p>
