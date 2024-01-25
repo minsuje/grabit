@@ -31,6 +31,7 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
     container.width,
     container.height,
   );
+  console.log('offsets', offsets);
 
   if (mediaStream && videoRef.current && !videoRef.current.srcObject) {
     videoRef.current.srcObject = mediaStream;
@@ -73,20 +74,21 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
       if (context) {
         context.drawImage(
           videoRef.current, //그릴 이미지(비디오)의 원본
-          offsets.x, //그릴 이미지의 시작 좌표(x축)
-          offsets.y, //그릴 이미지의 시작 좌표(y축)
-          container.width, //그릴 이미지의 원본 폭
-          container.height, //그릴 이미지의 원본 높이
+          0, //그릴 이미지의 시작 좌표(x축)
+          0, //그릴 이미지의 시작 좌표(y축)
+          2000, //그릴 이미지의 원본 폭
+          2000, //그릴 이미지의 원본 높이
           0, //그릴 이미지를 그릴 캔버스의 x축에서의 시작 위치
           0, //그릴 이미지를 그릴 캔버스의 y축에서의 시작 위치
-          container.width, //그릴 이미지를 그릴 캔버스의 폭
-          container.height, //그릴 이미지를 그릴 캔버스의 높이
+          500, //그릴 이미지를 그릴 캔버스의 폭
+          500, //그릴 이미지를 그릴 캔버스의 높이
         );
       }
 
       console.log('context', context);
       console.log('videoRef.current', videoRef.current);
       console.log('canvasRef.current', canvasRef.current);
+      console.log('container.width', container.width);
 
       canvasRef.current.toBlob(
         (blob) => {
@@ -120,53 +122,52 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
   }
 
   return (
-    <Measure bounds onResize={handleResize}>
-      {({ measureRef }) => (
-        <div className="flex-col  w-full">
-          {' '}
-          {/**Wrapper */}
-          <div
-            className="relative w-full"
-            ref={measureRef}
-            style={{
-              height: `${container.height}px`,
-            }}
-          >
-            {/**Container*/}
-            <video
-              className=""
-              ref={videoRef}
-              hidden={!isVideoPlaying}
-              onCanPlay={handleCanPlay}
-              autoPlay
-              playsInline
-              muted
-              style={{
-                top: `-${offsets.y}px`,
-                left: `-${offsets.x}px`,
-              }}
-            />
+    // <Measure bounds onResize={handleResize}>
+    //   {({ measureRef }) => (
+    <div className="flex-col  w-full">
+      {' '}
+      {/**Wrapper */}
+      <div
+        className="relative w-full"
+        style={{
+          height: `${container.height}px`,
+        }}
+      >
+        {/**Container*/}
+        <video
+          className=""
+          ref={videoRef}
+          hidden={!isVideoPlaying}
+          onCanPlay={handleCanPlay}
+          autoPlay
+          playsInline
+          muted
+          style={{
+            top: `-${offsets.y}px`,
+            left: `-${offsets.x}px`,
+          }}
+        />
 
-            <div className="" hidden={!isVideoPlaying} />
+        <div className="" hidden={!isVideoPlaying} />
 
-            <canvas
-              className="absolute top-0 left-0 bottom-0 right-0"
-              ref={canvasRef}
-              style={{
-                top: `0px`,
-                left: `0px`,
-              }}
-            />
+        <canvas
+          className=" top-0 left-0 bottom-0 right-0"
+          ref={canvasRef}
+          style={{
+            top: `0px`,
+            left: `0px`,
+          }}
+        />
 
-            {/* <div flash={isFlashing} onAnimationEnd={() => setIsFlashing(false)} /> */}
-          </div>
-          {isVideoPlaying && (
-            <Button className="absolute" onClick={isCanvasEmpty ? handleCapture : handleClear}>
-              {isCanvasEmpty ? 'Take a picture' : 'Take another picture'}
-            </Button>
-          )}
-        </div>
+        {/* <div flash={isFlashing} onAnimationEnd={() => setIsFlashing(false)} /> */}
+      </div>
+      {isVideoPlaying && (
+        <Button className="absolute" onClick={isCanvasEmpty ? handleCapture : handleClear}>
+          {isCanvasEmpty ? 'Take a picture' : 'Take another picture'}
+        </Button>
       )}
-    </Measure>
+    </div>
+    //   )}
+    // </Measure>
   );
 }
