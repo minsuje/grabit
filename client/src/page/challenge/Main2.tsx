@@ -13,22 +13,6 @@ export default function Main() {
         mission_content: '물마시기',
         success_userid_num: [1, 2],
     });
-    useEffect(() => {
-        const queryCode = new URL(window.location.href).searchParams.get('code');
-        if (queryCode) {
-            sendAuthCodeToServer(queryCode);
-            console.log('카카오 인가코드',queryCode);
-        }
-    }, []);
-    const sendAuthCodeToServer = async (code) => {
-        try {
-            const response = await axios.post('http://localhost:3000/auth/kakao', { code });
-            // 서버 응답 처리
-            console.log(response.data);
-        } catch (error) {
-            console.error('서버 요청 실패:', error);
-        }
-    };
 
     return (
         <div className="container">

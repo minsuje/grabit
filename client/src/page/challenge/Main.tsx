@@ -6,7 +6,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Challenge, dailyMission } from '@/types/types';
 
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
+
 export default function Main() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
+  }, [dispatch]);
+
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<dailyMission>({
     mission_id: 1,
@@ -84,6 +93,9 @@ export default function Main() {
       <div className="text-center p-3">
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
+        </Link>
+        <Link to="/challengeInProgress/4">
+          <Button>이동</Button>
         </Link>
       </div>
     </div>
