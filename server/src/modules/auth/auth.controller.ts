@@ -32,11 +32,11 @@ export class AuthController {
     });
   }
 
-  @Get('/main2')
+  @Get('/test')
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
-    console.log('req user >>>>>>> ', req.user);
+    console.log('req user1 >>>>>>> ', req.user);
     return req.user;
     // const { accessToken, refreshToken } = await this.authService.getJWT(req.user.kakaoId);
     // res.cookie('accessToken', accessToken, { httpOnly: true });
@@ -44,11 +44,11 @@ export class AuthController {
     // res.cookie('isLoggedIn', true, { httpOnly: false });
     // return res.redirect(this.configService.get('CLIENT_URL'));
   }
-  @Post('/auth/kakao')
+  @Post('/test')
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin2(@Req() req: Request, @Res() res: Response) {
-    console.log('req user >>>>>>> ', req);
+    console.log('req user2 >>>>>>> ', req);
     return req.user;
   }
 

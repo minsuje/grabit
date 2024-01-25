@@ -11,6 +11,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
       clientSecret: process.env.KKT_CLIENT_SECRET,
       callbackURL: process.env.REDIRECT_URI,
     });
+    console.log('kakao strategy >>>>> 지금 여기');
   }
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
     console.log('kakao strategy profile >>>>>', profile);
