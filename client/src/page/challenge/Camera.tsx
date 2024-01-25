@@ -27,7 +27,7 @@ function Camera() {
             {/* <img className="absolute w-[50%] h-auto" src={cardImage && URL.createObjectURL(cardImage)} /> */}
           </div>
         )}
-        <div className="fixed bottom-0 right-0 left-0 flex justify-center align-middle">
+        <div className="fixed bottom-0 left-0 right-0 flex justify-center align-middle">
           <Button onClick={() => setIsCameraOpen(true)}>Open Camera</Button>
           <Button
             onClick={() => {
