@@ -27,4 +27,9 @@ export class UserService {
         return await db.insert(users).values(userInfo);
         // return userInfo;
     };
+
+    getMyPage = async (userid_num: number) => {
+        const userInfo = await db.select({nickname: users.nickname, score_num: users.score_num, money: users.money}).from(users).where(eq(users.userid_num, userid_num));
+        return {userInfo}
+    }
 }
