@@ -21,10 +21,26 @@ jobs:
               env:
                   DATABASE_URL: ${{ secrets.DATABASE_URL }}
                   JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+                  REST_API_KEY: ${{ secrets.REST_API_KEY }}
+                  KKT_SECRET_KEY: ${{ secrets.KKT_SECRET_KEY }}
+                  KKT_CLIENT_SECRET: ${{ secrets.KKT_CLIENT_SECRET }}
+                  REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+                  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+                  AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
+                  AWS_S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
+                  AWS_REGION: ${{ secrets.AWS_REGION }}
               run: |
                   docker build \
                     --build-arg DATABASE_URL=${DATABASE_URL} \
                     --build-arg JWT_SECRET_KEY=${JWT_SECRET_KEY} \
+                    --build-arg REST_API_KEY=${REST_API_KEY} \
+                    --build-arg KKT_SECRET_KEY=${KKT_SECRET_KEY} \
+                    --build-arg KKT_CLIENT_SECRET=${KKT_CLIENT_SECRET} \
+                    --build-arg REDIRECT_URI=${REDIRECT_URI} \
+                    --build-arg AWS_S3_BUCKET=${AWS_S3_BUCKET} \
+                    --build-arg AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY} \
+                    --build-arg AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} \
+                    --build-arg AWS_REGION=${AWS_REGION} \
                     --build-arg TZ=Asia/Seoul \
                     -t seejnn/grabit -f server/Dockerfile server
 
