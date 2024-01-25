@@ -9,8 +9,8 @@ import * as https from 'https';
 
 async function bootstrap() {
   const httpsOptions = {
-    key: fs.readFileSync('./private-key.pem'),
-    cert: fs.readFileSync('./cert.pem'),
+    key: fs.readFileSync('./server-key.pem'),
+    cert: fs.readFileSync('./server.pem'),
   };
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
@@ -20,6 +20,7 @@ async function bootstrap() {
     origin: [
       'http://3.34.122.205:5173',
       'http://localhost:5173',
+      'https://localhost:5173',
       'https://accounts.kakao.com',
       'https://accounts.kakao.com/login',
       'http://localhost:3000/auth/kakao',

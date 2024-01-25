@@ -66,7 +66,7 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterForm) => {
     try {
-      const response = await axios.post('http://3.34.122.205:3000/register/normal', data);
+      const response = await axios.post('https://localhost:3000/register/normal', data);
       console.log('회원가입 성공:', response);
       navigate('/login');
     } catch (err) {
@@ -79,12 +79,12 @@ export default function Register() {
       <div>
         <Label htmlFor="name">이름</Label>
         <Input id="name" {...register('name')} />
-        {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
+        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
       </div>
       <div>
         <Label htmlFor="userid">아이디</Label>
         <Input id="userid" {...register('userid')} />
-        {errors.userid && <p className="text-red-500 text-xs">{errors.userid.message}</p>}
+        {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
       </div>
 
       <div>
@@ -94,17 +94,17 @@ export default function Register() {
       <div>
         <Label htmlFor="nickname">닉네임</Label>
         <Input id="nickname" {...register('nickname')} />
-        {errors.nickname && <p className="text-red-500 text-xs">{errors.nickname.message}</p>}
+        {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
       </div>
       <div>
         <Label htmlFor="password">비밀번호</Label>
         <Input type="password" id="password" {...register('password')} />
-        {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
+        {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
       </div>
       <div>
         <Label htmlFor="confirmPassword">비밀번호 확인</Label>
         <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
-        {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>}
+        {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
       </div>
       <Button type="submit">회원가입</Button>
     </form>
