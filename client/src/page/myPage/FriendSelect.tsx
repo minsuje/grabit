@@ -1,10 +1,12 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addFriend, removeFriend } from '@/store/friendSlice';
 import type { Friend } from '@/types/types';
 import FriendList from '@/components/FriendList';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import {} from 'react-redux';
+import { RootState } from '@/store/store';
 
 const friends: Friend[] = [
   {
@@ -25,6 +27,7 @@ const friends: Friend[] = [
 ];
 
 function FriendSelect() {
+  const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
   const dispatch = useDispatch();
 
   const handleCheckboxChange = (friend: Friend, isChecked: boolean) => {
@@ -43,6 +46,7 @@ function FriendSelect() {
           <div key={friend.id} className="friendItem flex gap-2 items-center">
             <Checkbox
               id={'FriendItem' + friend.id}
+              checked={selectedFriends.some((selected) => selected.id === friend.id)}
               onCheckedChange={(isChecked: boolean) => handleCheckboxChange(friend, isChecked)}
             />
             <label htmlFor={'FriendItem' + friend.id}>
