@@ -14,7 +14,10 @@ export const friendSlice = createSlice({
   initialState,
   reducers: {
     addFriend: (state, action: PayloadAction<Friend>) => {
-      state.selectedFriends.push(action.payload);
+      const friendExists = state.selectedFriends.some((friend) => friend.id === action.payload.id);
+      if (!friendExists) {
+        state.selectedFriends.push(action.payload);
+      }
     },
     removeFriend: (state, action: PayloadAction<Friend>) => {
       state.selectedFriends = state.selectedFriends.filter((friend) => friend.id !== action.payload.id);

@@ -4,23 +4,45 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { Friend } from '@/types/types';
+import {
+  setChallengeName,
+  setGoalMoney,
+  setDate,
+  setTerm,
+  setIsPublic,
+  setTopic,
+  setAuthTerm,
+  setAuthStart,
+  setAuthEnd,
+} from '@/store/challengeSlice';
 
 function ChallengeCreate() {
+  const dispatch = useDispatch();
+  const challengeState = useSelector((state: RootState) => state.challenge);
+
+  useEffect(() => {
+    setChallengeName(challengeState.challengeName);
+  }, [challengeState]);
+
+  // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   dispatch(setChallengeName(e.target.value));
+  // };
+
+  const [friendList, setFriendList] = useState<Friend[]>([]);
+
   const [challengeName, setChallengeName] = useState<string>('');
   const [goalMoney, setGoalMoney] = useState<number>(0);
   const [date, setDate] = useState<Date>();
@@ -32,14 +54,19 @@ function ChallengeCreate() {
   const [authStart, setAuthStart] = useState<string>('');
   const [authEnd, setAuthEnd] = useState<string>('');
 
-  const dispatch = useDispatch();
+  const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
+
+  useEffect(() => {
+    setFriendList(selectedFriends);
+  }, [selectedFriends]);
+
+  useEffect(() => {}, [challengeState]);
 
   const hours: number[] = [];
   for (let i = 0; i < 24; i++) {
     hours.push(i);
   }
 
-  // hours를 오전 오후로 나눠서 배열에 저장. 오전 12시 ~ 오후 12시까지 모든 시간을 저장
   const amHours: number[] = [];
   const pmHours: number[] = [];
   hours.forEach((hour) => {
@@ -49,6 +76,10 @@ function ChallengeCreate() {
       pmHours.push(hour);
     }
   });
+
+  const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setChallengeName(e.target.value));
+  };
 
   const tab1content = (
     <div>
@@ -62,18 +93,18 @@ function ChallengeCreate() {
         </div>
       </div>
 
-      <div className="user-list flex flex-col gap-4">
-        <div className="flex items-center gap-2">
+      {friendList.map((friend) => (
+        <div key={friend.id} className="user-list flex gap-2 items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span>홍길동</span>
+          <span>{friend.name}</span>
         </div>
-        <Link to={'/friendSelect'}>
-          <Button className="w-full">추가하기</Button>
-        </Link>
-      </div>
+      ))}
+      <Link to={'/friendSelect'}>
+        <Button>추가하기</Button>
+      </Link>
     </div>
   );
 
@@ -89,30 +120,18 @@ function ChallengeCreate() {
         </div>
       </div>
 
-      <div className="user-list flex flex-col gap-4">
-        <div className="flex items-center gap-2">
+      {friendList.map((friend) => (
+        <div key={friend.id} className="user-list flex gap-2 items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <span>홍길동</span>
+          <span>{friend.name}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/kwonkuwhi.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <span>홍길동</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/seejnn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <span>홍길동</span>
-        </div>
+      ))}
+      <Link to={'/friendSelect'}>
         <Button>추가하기</Button>
-      </div>
+      </Link>
     </div>
   );
 
@@ -133,6 +152,9 @@ function ChallengeCreate() {
     console.log('🚀 ~ handleSubmit ~ topic:', topic);
     console.log('🚀 ~ handleSubmit ~ isPublic:', isPublic);
     console.log('🚀 ~ handleSubmit ~ challengeName:', challengeName);
+    console.log('🚀 ~ handleSubmit ~ friendList:', friendList);
+
+    const friendId: number[] = selectedFriends.map((friend) => friend.id);
 
     const result = await axios({
       method: 'POST',
@@ -141,7 +163,7 @@ function ChallengeCreate() {
         challenge_name: challengeName,
         is_public: isPublic,
         topic,
-        challenger_userid_num: [1, 2],
+        challenger_userid_num: friendId,
         goal_money: goalMoney,
         term: authTerm,
         authentication_start_date: date ? date : null,
@@ -158,7 +180,8 @@ function ChallengeCreate() {
       <h1 className="text-3xl font-bold py-4">챌린지 생성</h1>
       <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
       <h2 className="text-xl font-bold py-4">챌린지 이름</h2>
-      <Input onChange={(e) => setChallengeName(e.target.value)} />
+      {/* <Input onChange={(e) => setChallengeName(e.target.value)} /> */}
+      <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} />
       <h2 className="text-xl font-bold py-4">주제</h2>
       <Input onChange={(e) => setTopic(e.target.value)} />
       <h2 className="text-xl font-bold py-4">목표 금액</h2>
