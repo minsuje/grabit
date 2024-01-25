@@ -34,9 +34,9 @@ export class AuthService {
           .from(users)
           .where(and(eq(users.userid, userid), eq(users.password, field)));
 
+        // const loginRefreshToken = 
         isLogin = 'true';
         validate = 'true';
-        // return { accessToken: this.jwtService.sign({ loginAccess }) }; // jwt토큰 생성}
         return this.jwtService.sign({ loginAccess });
       } else {
         console.log('비밀번호가 틀렸습니다.');
