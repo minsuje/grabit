@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
@@ -61,7 +61,6 @@ const schema = yup
   .required();
 
 export default function Register() {
-
   const [profilePic, setProfilePic] = useState<File>();
   let fileUrl = '';
   let fileName = '';
