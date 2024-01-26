@@ -73,7 +73,7 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to="followlist">
+        <Link to="friend">
           <Button>전체보기</Button>
         </Link>
       </div>
