@@ -15,6 +15,7 @@ export class UserController {
   postProfileUpload(@Param('type') login_type: string, @Body() createUserDto: CreateUserDto, @Req() req): any {
     console.log('register controller body', createUserDto);
     console.log('controller postProfileUpload', req.file);
+    const file = req.file;
     return this.userService.postProfileUpload(login_type, createUserDto, file);
   }
 
