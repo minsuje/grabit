@@ -48,7 +48,7 @@ export default function Login() {
 
       // JWT 토큰 response.data 저장
       // const token = response.data;
-      if (response.data === 'noPassword' || response.data === 'none') {
+      if (response.data === 'false' || response.data === 'none') {
         setErrorMessage('유효하지 않은 사용자 정보입니다.');
       } else {
         setErrorMessage('로그인에 성공했습니다.');
@@ -57,7 +57,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error('로그인 실패:', error);
-      setErrorMessage('로그인 시스템에 오류가 발생했습니다.');
+      setErrorMessage('유효하지 않은 사용자 정보입니다.');
     }
   };
 
