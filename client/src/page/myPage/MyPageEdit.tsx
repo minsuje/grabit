@@ -28,11 +28,11 @@ const schema = yup
     password: yup
       .string()
       .required('* 비밀번호는 필수입니다.')
-      .min(8, '최소 8자 이상 작성해야 합니다.')
-      .max(16, '최대 16자까지 작성 가능합니다.')
+      .min(8, '최소 8자 이상 16자 이하로 작성해주세요.')
+      .max(16, '최소 8자 이상 16자 이하로 작성해주세요.')
       .matches(
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()])[a-zA-Z0-9!@#$%^&*()]{8,16}$/,
-        '비밀번호는 영어, 숫자, 특수문자만 가능합니다.',
+        '비밀번호는 영어, 숫자, 특수문자 혼합하여 사용해주세요.',
       ),
 
     confirmPassword: yup
@@ -55,16 +55,16 @@ export default function MyPageEdit() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.patch('http://3.34.122.205:3000/Mypage', data);
-      console.log('회원가입 성공:', response);
+      const response = await axios.patch('', data);
+      console.log('프로필 수정 성공:', response);
       Navigate('/mypage');
     } catch (err) {
-      console.error('회원가입 실패:', err);
+      console.error('프로필 수정 실패:', err);
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h1>마이페이지</h1>
         <div className="flex justify-between">
           <Avatar>
@@ -90,7 +90,7 @@ export default function MyPageEdit() {
           <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
           {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

@@ -4,9 +4,16 @@ import { Link, Outlet } from 'react-router-dom';
 import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
+import { useEffect } from 'react';
 
 export default function MyPage() {
   console.log(ChallengeData);
+
+  useEffect(() => {
+    axios.get('url').then((response) => {
+      console.log(response.data);
+    });
+  }, []);
 
   return (
     <>
@@ -24,7 +31,6 @@ export default function MyPage() {
         </Link>
       </div>
 
-      <Outlet></Outlet>
       <br />
       <br />
       <br />
