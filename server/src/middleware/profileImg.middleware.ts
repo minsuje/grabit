@@ -7,6 +7,8 @@ import { and, desc, eq } from 'drizzle-orm';
 import { users } from '../modules/user/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class profileImgMiddleware implements NestMiddleware {
