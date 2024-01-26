@@ -9,28 +9,26 @@ import { users } from '../user/schema';
 
 @Injectable()
 export class FriendService {
-  async findOne(userid: number) {
-    const userid_num = userid;
-    const result = await db
-      .select({ friends: friend.other_userid_num })
-      .from(friend)
-      .where(eq(friend.userid_num, userid_num));
+  async findOne(userid: number, friends_info: any) {
+    // const userid_num = userid;
+    // const result = await db
+    //   .select({ friends: friend.other_userid_num })
+    //   .from(friend)
+    //   .where(eq(friend.userid_num, userid_num));
 
-    let friends = [];
+    // let friends = [];
 
+    // for (let i = 0; i < result.length; i++) {
+    //   const res = await db
+    //     .select({ user: users.userid })
+    //     .from(users)
+    //     .where(eq(users.userid_num, result[i].friends));
+    //   friends.push(res[0].user);
+    // }
     if (result.length < 1) {
       return { msg: '친구가 없습니다' };
     }
-
-    for (let i = 0; i < result.length; i++) {
-      const res = await db
-        .select({ user: users.userid })
-        .from(users)
-        .where(eq(users.userid_num, result[i].friends));
-      friends.push(res[0].user);
-    }
-
-    return friends;
+    return { friends_info };
   }
 
   async create(createFriendDto: CreateFriendDto, userid: number) {

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { FriendService } from './friend.service';
 import { CreateFriendDto } from './dto/create-friend.dto';
@@ -16,8 +17,10 @@ export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
   @Get(':userid')
-  findOne(@Param('userid') userid: number) {
-    return this.friendService.findOne(userid);
+  findOne(@Param('userid') userid: number, @Req() req) {
+    console.log('controller friend > ', req.file);
+    let friends_info = req.file;
+    return this.friendService.findOne(userid, friends_info);
   }
 
   @Post(':userid')
