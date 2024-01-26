@@ -1,5 +1,11 @@
 import { relations } from 'drizzle-orm';
-import { timestamp, integer, pgTable, serial, varchar,text } from 'drizzle-orm/pg-core';
+import {
+  timestamp,
+  integer,
+  pgTable,
+  serial,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { alarm } from '../alarm/schema';
 
 export const users = pgTable('users', {
@@ -14,7 +20,7 @@ export const users = pgTable('users', {
   money: integer('money').default(0),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-  refreshToken: text('refreshToken'),
+  refreshToken: varchar('refreshToken', { length: 200 }),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
