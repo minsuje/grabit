@@ -25,9 +25,9 @@ export class FriendService {
     //     .where(eq(users.userid_num, result[i].friends));
     //   friends.push(res[0].user);
     // }
-    if (result.length < 1) {
-      return { msg: '친구가 없습니다' };
-    }
+    // if (result.length < 1) {
+    //   return { msg: '친구가 없습니다' };
+    // }
     return { friends_info };
   }
 
