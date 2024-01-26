@@ -1,17 +1,14 @@
 import { Injectable, NestMiddleware, Request, Next } from '@nestjs/common';
 import { Response } from 'express';
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-  GetObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq } from 'drizzle-orm';
 import { authentication } from '../modules/challenge/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class s3Middleware implements NestMiddleware {
@@ -64,9 +61,7 @@ export class s3Middleware implements NestMiddleware {
         let file = await db
           .select()
           .from(authentication)
-          .where(
-            eq(authentication.authentication_id, Number(req.url.split('/')[2])),
-          );
+          .where(eq(authentication.authentication_id, Number(req.url.split('/')[2])));
 
         key = file[0].authentication_img;
         const command = new GetObjectCommand({
@@ -99,9 +94,7 @@ export class s3Middleware implements NestMiddleware {
       let file = await db
         .select()
         .from(authentication)
-        .where(
-          eq(authentication.authentication_id, Number(req.url.split('/')[2])),
-        );
+        .where(eq(authentication.authentication_id, Number(req.url.split('/')[2])));
 
       key = file[0].authentication_img;
 
