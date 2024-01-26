@@ -57,7 +57,7 @@ export default function MyPageEdit() {
     try {
       const response = await axios.patch('http://3.34.122.205:3000/Mypage', data);
       console.log('회원가입 성공:', response);
-      Navigate('');
+      Navigate('/mypage');
     } catch (err) {
       console.error('회원가입 실패:', err);
     }
