@@ -12,20 +12,13 @@ import { profileImgMiddleware } from './middleware/profileImg.middleware';
 import { ChallengeController } from './modules/challenge/challenge.controller';
 
 @Module({
-  imports: [
-    UserModule,
-    DailyMissionModule,
-    ChallengeModule,
-    AlarmModule,
-    FriendModule,
-    AuthModule,
-  ],
+  imports: [UserModule, DailyMissionModule, ChallengeModule, AlarmModule, FriendModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(s3Middleware).forRoutes('challengeAuth', 'challengeDetail');
-    consumer.apply(profileImgMiddleware).forRoutes('myPage');
+    consumer.apply(profileImgMiddleware).forRoutes('myPage', 'profileUpload');
   }
 }
