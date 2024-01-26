@@ -26,6 +26,8 @@ function Camera() {
             {/* <h2>미리보기</h2> */}
             <img className="absolute" src={cardImage && URL.createObjectURL(cardImage)} />
             <div className="absolute">
+         
+           
               <Button
                 onClick={() => {
                   setIsCameraOpen(true);
@@ -33,6 +35,9 @@ function Camera() {
                 }}
               >
                 다시 찍기
+              </Button>
+              <Button>
+                업로드
               </Button>
             </div>
           </div>
