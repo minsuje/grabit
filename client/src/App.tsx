@@ -32,7 +32,7 @@ import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
 import Test from './page/challenge/Test';
 
-// import Layout from './page/Layout';
+import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
 import ChallengeTier  from './page/challenge/ChallengeTier';
@@ -45,7 +45,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          {/* <Route path="/" element={<Layout />}> */}
+          <Route path="/" element={<Layout />}>
           <Route path="/main" element={<Main />} />
           <Route path="/main2" element={<Main2 />} />
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
@@ -77,7 +77,7 @@ function App() {
 
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
-          {/* </Route> */}
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -94,7 +94,8 @@ export default function Main() {
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
-        <Link to="/challengeInProgress/4">
+        <Link to="/challengeInProgress/1
+        ">
           <Button>진행중인 챌린지</Button>
         </Link>
         <Link to="/fileUpload">

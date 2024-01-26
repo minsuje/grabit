@@ -1,9 +1,10 @@
 import { useState, useRef, RefObject } from 'react';
-import Measure from 'react-measure';
+// import Measure from 'react-measure';
 import { useUserMedia } from '@/hooks/use-user-media';
-import { useCardRatio } from '@/hooks/use-card-ratio';
+// import { useCardRatio } from '@/hooks/use-card-ratio';
 import { useOffsets } from '@/hooks/use-offsets';
 import { Button } from '@/components/ui/button';
+
 
 const CAPTURE_OPTIONS = {
   audio: false,
@@ -18,13 +19,14 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
   const canvasRef: RefObject<HTMLCanvasElement> | null = useRef(null);
   const videoRef: RefObject<HTMLVideoElement> | null = useRef(null);
 
-  const [container, setContainer] = useState({ width: 0, height: 0 });
+  // const [container, setContainer] = useState({ width: 0, height: 0 });
+  const container = { width: 0, height: 0 }
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
   //   const [isFlashing, setIsFlashing] = useState(false);
 
   const mediaStream = useUserMedia(CAPTURE_OPTIONS);
-  const [aspectRatio, calculateRatio] = useCardRatio(1.586);
+  // const [aspectRatio, calculateRatio] = useCardRatio(1.586);
   const offsets = useOffsets(
     videoRef.current && videoRef.current.videoWidth,
     videoRef.current && videoRef.current.videoHeight,
@@ -37,23 +39,23 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
     videoRef.current.srcObject = mediaStream;
   }
 
-  interface contentRect {
-    bounds: {
-      bottom: number;
-      height: number;
-      left: number;
-      right: number;
-      top: number;
-      width: number;
-    };
-    entry: Object;
-  }
-  function handleResize(contentRect: contentRect) {
-    setContainer({
-      width: contentRect.bounds.width,
-      height: Math.round(contentRect.bounds.width / 1.586),
-    });
-  }
+  // interface contentRect {
+  //   bounds: {
+  //     bottom: number;
+  //     height: number;
+  //     left: number;
+  //     right: number;
+  //     top: number;
+  //     width: number;
+  //   };
+  //   entry: Object;
+  // }
+  // function handleResize(contentRect: contentRect) {
+  //   setContainer({
+  //     width: contentRect.bounds.width,
+  //     height: Math.round(contentRect.bounds.width / 1.586),
+  //   });
+  // }
 
   function handleCanPlay() {
     if (videoRef && videoRef.current) {
@@ -80,7 +82,7 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
             onCapture(blob);
           }
         },
-        'image/jpeg',
+        'image/png',
         1,
       );
     }

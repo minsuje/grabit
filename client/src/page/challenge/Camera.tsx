@@ -1,10 +1,40 @@
 import { useState } from 'react';
 import { CameraAction } from '../../camera/camera';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function Camera() {
   const [isCameraOpen, setIsCameraOpen] = useState<Boolean>(false);
   const [cardImage, setCardImage] = useState<Blob>();
+  const [file, setFile] = useState<File>();
+
+  const {challenge_id}=useParams();
+
+
+  async function upload() {
+  
+
+    await axios({
+      method: 'post',
+      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
+      data: {
+        filename: file?.name,
+        type: file?.type,
+      },
+    }).then((res) => {
+      axios({
+        method: 'put',
+        url: res.data,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      }).then((res) => {
+        console.log(res);
+      });
+    });
+  }
 
   return (
     <>
@@ -15,6 +45,7 @@ function Camera() {
               onCapture={(blob: Blob) => {
                 setCardImage(blob);
                 console.log('blob', blob);
+                setFile(new File([blob], 'image.png', { type: blob.type }));
               }}
               onClear={() => setCardImage(undefined)}
             />
@@ -24,8 +55,12 @@ function Camera() {
         {cardImage && (
           <div className="m-auto">
             {/* <h2>미리보기</h2> */}
+
             <img className="absolute" src={cardImage && URL.createObjectURL(cardImage)} />
+
             <div className="absolute">
+         
+           
               <Button
                 onClick={() => {
                   setIsCameraOpen(true);
@@ -33,6 +68,9 @@ function Camera() {
                 }}
               >
                 다시 찍기
+              </Button>
+              <Button onClick={upload}>
+                업로드
               </Button>
             </div>
           </div>

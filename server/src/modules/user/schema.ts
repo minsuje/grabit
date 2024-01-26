@@ -1,5 +1,12 @@
 import { relations } from 'drizzle-orm';
-import { timestamp, integer, pgTable, serial, varchar,text } from 'drizzle-orm/pg-core';
+import {
+  timestamp,
+  integer,
+  pgTable,
+  serial,
+  varchar,
+  text,
+} from 'drizzle-orm/pg-core';
 import { alarm } from '../alarm/schema';
 
 export const users = pgTable('users', {
