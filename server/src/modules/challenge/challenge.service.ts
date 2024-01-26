@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
-import { challenge, authentication, authentication_img_emoticon } from './schema';
+import {
+  challenge,
+  authentication,
+  authentication_img_emoticon,
+} from './schema';
 import { users } from '../user/schema';
 import { db } from '../../../db/db';
 import { eq, not, and, desc } from 'drizzle-orm';
@@ -68,7 +72,10 @@ export class ChallengeService {
     }
 
     // 열려있는 챌린지
-    const publicChallengeAll = await db.select().from(challenge).where(eq(challenge.is_public, true));
+    const publicChallengeAll = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.is_public, true));
     let publicChallenge = [];
     for (let i = 0; i < publicChallengeAll.length; i++) {
       if (!publicChallengeAll[i].challenger_userid_num.includes(3))
@@ -139,19 +146,30 @@ export class ChallengeService {
 
   // 챌린지 상세 정보 보기
   challengeDetail = async (challenge_id: number, urls: any) => {
-    const challengeDetail = await db.select().from(challenge).where(eq(challenge.challenge_id, challenge_id));
+    const challengeDetail = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
 
-    let challengers = [];
-    for (let i = 0; i < challengeDetail[0].challenger_userid_num.length; i++) {
-      let challenger = await db
-        .select()
-        .from(users)
-        .where(eq(users.userid_num, challengeDetail[0].challenger_userid_num[i]));
+    if (challengeDetail.length !== 0) {
+      let challengers = [];
+      for (
+        let i = 0;
+        i < challengeDetail[0].challenger_userid_num.length;
+        i++
+      ) {
+        let challenger = await db
+          .select()
+          .from(users)
+          .where(
+            eq(users.userid_num, challengeDetail[0].challenger_userid_num[i]),
+          );
 
-      await challengers.push(challenger[0]);
-    }
+        await challengers.push(challenger[0]);
+      }
 
-    return { challengeDetail, challengers, urls };
+      return { challengeDetail, challengers, urls };
+    } else return { msg: '존재하지 않는 챌린지입니다.' };
   };
 
   // 챌린지 수정 페이지 보기
@@ -192,7 +210,9 @@ export class ChallengeService {
 
   // 챌린지 삭제하기
   deleteChallengeEdit = async (challenge_id: number) => {
-    return await db.delete(challenge).where(eq(challenge.challenge_id, challenge_id));
+    return await db
+      .delete(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
   };
 
   // 챌린지 인증하기
@@ -209,7 +229,11 @@ export class ChallengeService {
 
   // 테스트 (s3 이미지 get 요청)
   // 챌린지 인증사진 상세 보기
-  getChallengeAuth = async (challenge_id: number, authentication_id: number, fileUrl: any) => {
+  getChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+    fileUrl: any,
+  ) => {
     const emoticon = await db
       .select()
       .from(authentication_img_emoticon)
@@ -227,10 +251,19 @@ export class ChallengeService {
 
   // 챌린지 인증사진에 대한 이모티콘 취소 요청
 
-  deleteChallengeAuthEmoticon = async (challenge_id, authentication_id, authentication_img_emoticon_id) => {
+  deleteChallengeAuthEmoticon = async (
+    challenge_id,
+    authentication_id,
+    authentication_img_emoticon_id,
+  ) => {
     return await db
       .delete(authentication_img_emoticon)
-      .where(eq(authentication_img_emoticon.authentication_img_emoticon_id, authentication_img_emoticon_id));
+      .where(
+        eq(
+          authentication_img_emoticon.authentication_img_emoticon_id,
+          authentication_img_emoticon_id,
+        ),
+      );
   };
 
   // 챌린지 인증사진에 대한 이모티콘 요청
@@ -244,7 +277,11 @@ export class ChallengeService {
   };
 
   // 테스트 (s3 이미지 patch 요청)
-  patchChallengeAuth = async (challenge_id: number, authentication_id: number, file: string) => {
+  patchChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+    file: string,
+  ) => {
     let fileName: any = file.split('?')[0].split('.com/')[1];
 
     const updateImg = await db
@@ -257,7 +294,12 @@ export class ChallengeService {
   };
 
   // 테스트 (s3 이미지 delete 요청)
-  deleteChallengeAuth = async (challenge_id: number, authentication_id: number) => {
-    return await db.delete(authentication).where(eq(authentication.authentication_id, authentication_id));
+  deleteChallengeAuth = async (
+    challenge_id: number,
+    authentication_id: number,
+  ) => {
+    return await db
+      .delete(authentication)
+      .where(eq(authentication.authentication_id, authentication_id));
   };
 }
