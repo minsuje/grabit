@@ -71,7 +71,6 @@ export class UserService {
       .select({
         score_num: users.score_num,
       })
-      .from(users)
-      .where(eq(users.userid, userid));
+      .from(users);
   }
 }
