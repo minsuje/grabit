@@ -1,12 +1,5 @@
 import { is, relations } from 'drizzle-orm';
-import {
-  timestamp,
-  integer,
-  pgTable,
-  serial,
-  boolean,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { timestamp, integer, pgTable, serial, boolean, varchar } from 'drizzle-orm/pg-core';
 import { users } from '../user/schema';
 
 export const friend = pgTable('friend', {
@@ -16,7 +9,7 @@ export const friend = pgTable('friend', {
     .references(() => users.userid_num, {
       onDelete: 'cascade',
     }),
-  other_userid_num: integer('friend_userid_num')
+  other_userid_num: integer('other_userid_num')
     .notNull()
     .references(() => users.userid_num, {
       onDelete: 'cascade',

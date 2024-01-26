@@ -8,14 +8,18 @@ export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
   @Get(':userid')
-  findUserFriends(@Param('userid') userid: number) {
-    console.log(userid);
-    return this.friendService.findUserFriends(userid);
+  findOne(@Param('userid') userid: number) {
+    return this.friendService.findOne(userid);
   }
 
-  @Post()
-  create(@Body() createFriendDto: CreateFriendDto) {
-    return this.friendService.create(createFriendDto);
+  @Post(':userid')
+  create(@Body() createFriendDto: CreateFriendDto, @Param('userid') userid: number) {
+    return this.friendService.create(createFriendDto, userid);
+  }
+
+  @Delete(':userid')
+  remove(@Body() createFriendDto: CreateFriendDto, @Param('userid') userid: number) {
+    return this.friendService.remove(createFriendDto, userid);
   }
 
   // @Get()
