@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/create-auth-dto';
 import { users } from '../user/schema';
 import { db } from 'db/db';
-import { eq, sql, and, isNull } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
@@ -15,7 +15,10 @@ export class AuthService {
     let validate: string = 'none';
 
     // 입력된 아이디에 대한 db에서 password만 가져옴
-    const findPassword = await db.select({ field: users.password }).from(users).where(eq(users.userid, userid));
+    const findPassword = await db
+      .select({ field: users.password })
+      .from(users)
+      .where(eq(users.userid, userid));
 
     // 해당하는 비멀번호를 가지고 있지 않을 시
     if (!findPassword.length) {
@@ -43,7 +46,6 @@ export class AuthService {
           .select()
           .from(users)
           .where(and(eq(users.userid, userid), eq(users.password, field)));
-        console.log('DB에 넣기전 login Access Token >>>> ', loginAccess);
 
         // 1. Jwt 토큰 생성
         const loginToken = this.jwtService.sign({ loginAccess });
@@ -73,15 +75,29 @@ export class AuthService {
     }
   };
 
-  searchUser = async (kakaoId: number, profile_img: string, username: string) => {
+  //카카오
+  searchUser = async (
+    kakaoId: number,
+    profile_img: string,
+    username: string,
+  ) => {
     console.log('Auth Service search', String(kakaoId));
     // DB에서 카카오 로그인 유저 찾기
     const findUser = await db
       .select()
       .from(users)
+
       .where(eq(users.userid, String(kakaoId)));
 
-    console.log('find User >>>>> ', findUser);
+    const clearToken = await db
+      .update(users)
+      .set({ refreshToken: null })
+      .where(eq(users.userid, String(kakaoId)));
+
+    const isClear = await db
+      .select()
+      .from(users)
+      .where(eq(users.userid, String(kakaoId)));
 
     // 유저가 없다면 DB에 유저 추가
     if (findUser.length == 0) {
@@ -94,35 +110,22 @@ export class AuthService {
       });
     }
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
-    const clearToken = await db
-      .update(users)
-      .set({ refreshToken: null })
-      .where(eq(users.userid, String(kakaoId)));
-
-    const isClear = await db
-      .select({ refreshToken: users.refreshToken })
-      .from(users)
-      .where(eq(users.userid, String(kakaoId)));
-
-    console.log('isClear >>>> ', isClear);
-
     // DB에 유저가 있다면 토큰 생성
-    const loginToken = this.jwtService.sign({ findUser });
+    const Token = await this.jwtService.sign({ isClear });
 
     // refresh Token 만들기
-    const refreshToken = this.jwtService.sign(
-      { findUser },
+    const refreshToken = await this.jwtService.sign(
+      { isClear },
       {
         secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '7d',
       },
     );
-    console.log('refreshToken >>>> ', refreshToken);
     // db에 넣기
     const inputRefreshToken = await db
       .update(users)
       .set({ refreshToken: refreshToken })
       .where(eq(users.userid, String(kakaoId)));
-    return { refreshToken, loginToken };
+    return { Token };
   };
 }
