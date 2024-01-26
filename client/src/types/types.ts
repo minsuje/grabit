@@ -74,8 +74,8 @@ export interface friend {
   is_friend: string;
 }
 
-export interface alarm {
-  alarm_id: number;
+export interface notification {
+  notification_id: number;
   userid_num: number;
   reference_id: number;
   type: string;

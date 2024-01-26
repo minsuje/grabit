@@ -25,7 +25,9 @@ export class FriendService {
     //     .where(eq(users.userid_num, result[i].friends));
     //   friends.push(res[0].user);
     // }
-
+    if (result.length < 1) {
+      return { msg: '친구가 없습니다' };
+    }
     return { friends_info };
   }
 
@@ -44,8 +46,6 @@ export class FriendService {
         ),
       );
 
-    console.log(result.length);
-
     if (result.length < 1) {
       return await db.insert(friend).values({
         userid_num: userid,
@@ -62,7 +62,19 @@ export class FriendService {
   }
 
   update(id: number, updateFriendDto: UpdateFriendDto) {
-    return;
+    console.log(id, updateFriendDto);
+
+    const { is_friend, other_userid_num } = updateFriendDto;
+    const result = db
+      .update(friend)
+      .set({ is_friend: true })
+      .where(
+        and(
+          eq(friend.userid_num, id),
+          eq(friend.other_userid_num, other_userid_num),
+        ),
+      );
+    return result;
   }
 
   async remove(createFriendDto: CreateFriendDto, userid: number) {

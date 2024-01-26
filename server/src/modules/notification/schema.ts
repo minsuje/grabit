@@ -7,8 +7,8 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/schema';
 
-export const alarm = pgTable('alarm', {
-  alarm_id: serial('alarm_id').notNull(),
+export const notification = pgTable('notification', {
+  notification_id: serial('notification_id').notNull(),
   userid_num: integer('userid_num')
     .notNull()
     .references(() => users.userid_num, { onDelete: 'cascade' }),
@@ -16,6 +16,6 @@ export const alarm = pgTable('alarm', {
   type: varchar('type', { length: 20 }).notNull(),
   is_confirm: varchar('is_confirm', { length: 10 }).notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
+    .default(new Date())
     .notNull(),
 });

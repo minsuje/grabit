@@ -31,6 +31,14 @@ export class FriendController {
     return this.friendService.create(createFriendDto, userid);
   }
 
+  @Patch(':userid')
+  update(
+    @Body() updateFriendDto: UpdateFriendDto,
+    @Param('userid') userid: number,
+  ) {
+    return this.friendService.update(userid, updateFriendDto);
+  }
+
   @Delete(':userid')
   remove(
     @Body() createFriendDto: CreateFriendDto,
