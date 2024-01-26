@@ -1,16 +1,16 @@
 export class CreateUserDto {
-    login_type: string;
-    userid?: string;
-    social_userid?: string;
-    password?: string;
-    name?: string;
-    nickname?: string;
-    profile_img?: string;
-    score_num: number;
-    money: number;
+  login_type: string;
+  userid?: string;
+  social_userid?: string;
+  password?: string;
+  name?: string;
+  nickname?: string;
+  profile_img?: string;
+  score_num: number;
+  money: number;
 }
 
 export class LoginDto {
-    userid: string;
-    password: string;
+  userid: string;
+  password: string;
 }

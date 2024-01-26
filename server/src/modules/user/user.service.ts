@@ -8,7 +8,16 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   createNewUser = async (login_type: any, createUserDto: CreateUserDto) => {
-    const { userid, social_userid, password, name, nickname, profile_img, score_num, money } = createUserDto;
+    const {
+      userid,
+      social_userid,
+      password,
+      name,
+      nickname,
+      profile_img,
+      score_num,
+      money,
+    } = createUserDto;
 
     const hash: string = await bcrypt.hash(password, 10);
 
@@ -23,7 +32,10 @@ export class UserService {
       score_num: score_num,
       money: money,
     };
-    const checkUser = await db.select().from(users).where(eq(users.userid, userid));
+    const checkUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.userid, userid));
     if (checkUser.length == 0) {
       return await db.insert(users).values(userInfo);
     } else {
@@ -33,17 +45,32 @@ export class UserService {
 
     // return userInfo;
   };
-  
-  postProfileUpload = async (login_type: string, createUserDto: CreateUserDto, file: string) => {
+
+  postProfileUpload = async (
+    login_type: string,
+    createUserDto: CreateUserDto,
+    file: string,
+  ) => {
     return file;
   };
 
-
   getMyPage = async (userid_num: number) => {
     const userInfo = await db
-      .select({ nickname: users.nickname, score_num: users.score_num, money: users.money })
+      .select({
+        nickname: users.nickname,
+        score_num: users.score_num,
+        money: users.money,
+      })
       .from(users)
       .where(eq(users.userid_num, userid_num));
     return { userInfo };
   };
+
+  async getScore(userid: number) {
+    return await db
+      .select({
+        score_num: users.score_num,
+      })
+      .from(users);
+  }
 }

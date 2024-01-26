@@ -5,6 +5,8 @@ import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
 import { useEffect } from 'react';
+import tearImg from '../../../public/tear.png';
+import '../../../../client/src/App.css'; // 스타일 시트 임포트
 
 export default function MyPage() {
   console.log(ChallengeData);
@@ -16,7 +18,7 @@ export default function MyPage() {
   }, []);
 
   return (
-    <>
+    <div className="p-10">
       <h1>마이페이지</h1>
 
       <div className="flex justify-between">
@@ -31,9 +33,22 @@ export default function MyPage() {
         </Link>
       </div>
 
-      <br />
-      <br />
-      <br />
+      <div>
+        <p>라마</p>
+      </div>
+
+      <div className=" flex content-center mt-10">
+        <div className="w-[100%]  flex flex-col justify-center ">
+          <p>티어점수</p>
+        </div>
+        <div className="w-[10%] mr-5 text-end">
+          <p>티어</p>
+          <p className="text-xs text-neutral-300">순위</p>
+        </div>
+        <div className=" flex flex-col content-center justify-center">
+          <img src={tearImg} alt="tearImg" className="w-12 glowing-image " />
+        </div>
+      </div>
       <br />
       <br />
       <div className="user-list flex flex-col rgap-4">
@@ -58,7 +73,7 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to="followlist">
+        <Link to="friend">
           <Button>전체보기</Button>
         </Link>
       </div>
@@ -102,6 +117,6 @@ export default function MyPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

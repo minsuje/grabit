@@ -7,7 +7,7 @@ import {
   varchar,
   text,
 } from 'drizzle-orm/pg-core';
-import { alarm } from '../alarm/schema';
+import { notification } from '../notification/schema';
 
 export const users = pgTable('users', {
   userid_num: serial('userid_num').primaryKey(),
@@ -50,8 +50,8 @@ export const account = pgTable('account', {
 //     }),
 // }));
 
-export const userWithalarmRelations = relations(users, ({ many }) => ({
-  posts: many(alarm),
+export const userWithNotificationRelations = relations(users, ({ many }) => ({
+  posts: many(notification),
 }));
 
 export const score = pgTable('score', {
@@ -69,10 +69,3 @@ export const score = pgTable('score', {
 export const scoreRelations = relations(users, ({ one }) => ({
   score: one(score),
 }));
-
-export const tier = pgTable('tier', {
-  tier_id: serial('tier_id').primaryKey(),
-  tier_name: varchar('tier_name', { length: 30 }),
-  tier_score: integer('tier_score'),
-  tier_img: varchar('tier_img', { length: 200 }),
-});
