@@ -7,43 +7,86 @@ import { and, desc, eq } from 'drizzle-orm';
 import { users } from '../modules/user/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class profileImgMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: (error?: any) => void) {
-    const client = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-      },
-    });
-    let key;
+    if (req.url.split('/')[1] === 'normal') {
+      const body: any = req.body;
+      console.log('profileImg middleware body > ', body);
+      let { filename, type } = body;
 
-    if (req.method === 'GET') {
-      console.log('profileImg middleware url > ', Number(req.url.split('/')[1]));
-      let file = await db
-        .select()
-        .from(users)
-        .where(eq(users.userid_num, Number(req.url.split('/')[1])));
+      const client = new S3Client({
+        region: process.env.AWS_REGION,
+        credentials: {
+          accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+          secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+        },
+      });
+      let key;
 
-      if (file[0].login_type === 'normal') key = file[0].profile_img;
-      else if (file[0].login_type === 'kakao') key = file[0].profile_img;
-      // kakao 로그인일 때 이미지 파일명 이렇게 그대로 사용해도 되는지?
-      // http://k.kakaocdn.net/dn/bhAmrx/btsca01IIpQ/mAfvKKmyoqpLgrdr1P7W81/img_640x640.jpg
+      if (req.method === 'GET') {
+        console.log('profileImg middleware url > ', Number(req.url.split('/')[1]));
 
-      console.log('middleware profileImg key > ', key);
+        let file = await db
+          .select()
+          .from(users)
+          .where(eq(users.userid_num, Number(req.url.split('/')[1])));
 
-      // if (key) console.log('key');
-      // const command = new GetObjectCommand({
-      //   Bucket: process.env.AWS_S3_BUCKET,
-      //   Key: key,
-      // });
+        key = file[0].profile_img;
 
-      // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+        console.log('middleware profileImg key > ', key);
 
-      // req['file'] = url;
+        const command = new GetObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: key,
+        });
+
+        const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+        req['file'] = url;
+      } else if (req.method === 'POST') {
+        if (filename) {
+          key = uuid() + '.' + filename.split('.')[1];
+          const command = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+            ContentType: type,
+          });
+          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          req['file'] = url;
+        }
+      } else {
+        let file = await db
+          .select()
+          .from(users)
+          .where(eq(users.userid_num, Number(req.url.split('/')[1])));
+
+        key = file[0].profile_img;
+        if (req.method === 'DELETE' || req.method === 'PATCH') {
+          const params = {
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          };
+          let command = new DeleteObjectCommand(params);
+          await client.send(command);
+          if (req.method === 'PATCH') {
+            filename = uuid() + '.' + filename.split('.')[1];
+            let command = new PutObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: filename,
+              ContentType: type,
+            });
+
+            const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+            req['file'] = url;
+          }
+        }
+      }
+      next();
     }
-    next();
   }
 }
