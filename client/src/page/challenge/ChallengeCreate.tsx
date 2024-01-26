@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
 import { Friend } from '@/types/types';
+import Cta from '@/components/Cta';
+import { text } from 'drizzle-orm/pg-core';
 // import {
 //   setChallengeName,
 //   setGoalMoney,
@@ -98,17 +100,19 @@ function ChallengeCreate() {
         </div>
       </div>
 
-      {friendList.map((friend) => (
-        <div key={friend.id} className="user-list flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <span>{friend.name}</span>
-        </div>
-      ))}
+      <div className="flex flex-col gap-3 pb-4">
+        {friendList.map((friend) => (
+          <div key={friend.id} className="user-list flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <span>{friend.name}</span>
+          </div>
+        ))}
+      </div>
       <Link to={'/friendSelect'}>
-        <Button>추가하기</Button>
+        <Button className="w-full">추가하기</Button>
       </Link>
     </div>
   );
@@ -135,7 +139,7 @@ function ChallengeCreate() {
         </div>
       ))}
       <Link to={'/friendSelect'}>
-        <Button>추가하기</Button>
+        <Button className="w-full">추가하기</Button>
       </Link>
     </div>
   );
@@ -181,95 +185,112 @@ function ChallengeCreate() {
   }
 
   return (
-    <div className="">
+    <div className="flex flex-col gap-6">
       <h1 className="py-4 text-3xl font-bold">챌린지 생성</h1>
       <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
-      <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
-      {/* <Input onChange={(e) => setChallengeName(e.target.value)} /> */}
-      <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} />
-      <h2 className="py-4 text-xl font-bold">주제</h2>
-      <Input onChange={(e) => setTopic(e.target.value)} />
-      <h2 className="py-4 text-xl font-bold">목표 금액</h2>
-      <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
-      <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={'outline'}
-            className={cn('w-[280px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, 'PPP EEE', { locale: ko }) : <span>날짜를 선택하세요</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-        </PopoverContent>
-      </Popover>
+      <div className="challengeName flex flex-col">
+        <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
+        {/* <Input onChange={(e) => setChallengeName(e.target.value)} /> */}
+        <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} />
+      </div>
 
-      <h2 className="py-4 text-xl font-bold">기간</h2>
-      <Select onValueChange={(value) => setTerm(Number(value))}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="인증 주기" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="2">3일</SelectItem>
-          <SelectItem value="6">일주일</SelectItem>
-          <SelectItem value="13">2주일</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="challengeTopic flex flex-col">
+        <h2 className="py-4 text-xl font-bold">주제</h2>
+        <Input onChange={(e) => setTopic(e.target.value)} />
+      </div>
 
-      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
-      <Select onValueChange={(value) => setAuthTerm(value)}>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="인증 주기" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="3">주 3회</SelectItem>
-          <SelectItem value="5">주 5회</SelectItem>
-          <SelectItem value="7">매일</SelectItem>
-        </SelectContent>
-      </Select>
-      <div className="authTime flex gap-8">
-        <div className="startTime flex flex-col">
-          <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
-          <Select onValueChange={(value) => setAuthStart(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="인증 시간" />
-            </SelectTrigger>
-            <SelectContent>
-              {hours.map((hour, i) => {
-                return (
-                  <SelectItem key={i} value={hour.toString()}>
-                    {hour}시
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="endTime flex flex-col">
-          <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
-          <Select onValueChange={(value) => setAuthEnd(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="인증 시간" />
-            </SelectTrigger>
-            <SelectContent>
-              {hours.map((hour, i) => {
-                return (
-                  <SelectItem key={i} value={hour.toString()}>
-                    {hour}시
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+      <div className="challengeMoney flex flex-col">
+        <h2 className="py-4 text-xl font-bold">목표 금액</h2>
+        <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
+      </div>
+
+      <div className="challengeStartDate flex flex-col">
+        <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={'outline'}
+              className={cn('w-full justify-start rounded-md text-left font-normal', !date && 'text-muted-foreground')}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, 'PPP EEE요일', { locale: ko }) : <span>날짜를 선택하세요</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="challengeTerm flex flex-col">
+        <h2 className="py-4 text-xl font-bold">기간</h2>
+        <Select onValueChange={(value) => setTerm(Number(value))}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="인증 주기" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="2">3일</SelectItem>
+            <SelectItem value="6">일주일</SelectItem>
+            <SelectItem value="13">2주일</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="challengeAuthTerm flex flex-col">
+        <h2 className="py-4 text-xl font-bold">인증 주기</h2>
+        <Select onValueChange={(value) => setAuthTerm(value)}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="인증 주기" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="3">주 3회</SelectItem>
+            <SelectItem value="5">주 5회</SelectItem>
+            <SelectItem value="7">매일</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="challengeAuthStart flex flex-col">
+        <div className="authTime flex w-full gap-4">
+          <div className="startTime flex w-full flex-col">
+            <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
+            <Select onValueChange={(value) => setAuthStart(value)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="인증 시간" />
+              </SelectTrigger>
+              <SelectContent>
+                {hours.map((hour, i) => {
+                  return (
+                    <SelectItem key={i} value={hour.toString()}>
+                      {hour}시
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="endTime flex w-full flex-col">
+            <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
+            <Select onValueChange={(value) => setAuthEnd(value)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="인증 시간" />
+              </SelectTrigger>
+              <SelectContent>
+                {hours.map((hour, i) => {
+                  return (
+                    <SelectItem key={i} value={hour.toString()}>
+                      {hour}시
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
-      <Button onClick={handleSubmit} className="mb-8 mt-12 w-full">
-        생성하기
-      </Button>
+
+      <Cta text="생성하기" onclick={handleSubmit} />
     </div>
   );
 }
