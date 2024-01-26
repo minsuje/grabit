@@ -26,7 +26,7 @@ export default function Home() {
   }
 
   return (
-    <div className="container flex flex-col justify-center gap-4 text-center">
+    <div className="container flex max-w-sm flex-col justify-center gap-4 text-center">
       <div className="flex w-40">
         <Rabbit />
       </div>

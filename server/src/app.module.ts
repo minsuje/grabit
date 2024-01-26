@@ -26,6 +26,8 @@ import { ChallengeController } from './modules/challenge/challenge.controller';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(s3Middleware).forRoutes('challengeAuth', 'challengeDetail');
-    consumer.apply(profileImgMiddleware).forRoutes('myPage');
+    consumer
+      .apply(profileImgMiddleware)
+      .forRoutes('myPage', 'profileUpload', 'friend');
   }
 }

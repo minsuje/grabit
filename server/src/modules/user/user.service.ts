@@ -33,6 +33,11 @@ export class UserService {
 
     // return userInfo;
   };
+  
+  postProfileUpload = async (login_type: string, createUserDto: CreateUserDto, file: string) => {
+    return file;
+  };
+
 
   getMyPage = async (userid_num: number) => {
     const userInfo = await db

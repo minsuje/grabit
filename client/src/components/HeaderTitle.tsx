@@ -16,13 +16,11 @@ function HeaderTitle() {
     window.addEventListener('scroll', updateScroll);
   });
 
-  console.log(useSelector((state: RootState) => state.login));
-
   return (
     <header
       className={
         scrollPosition > 50
-          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between border-b-2 bg-white px-4 py-3 transition-all'
+          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white/50 px-4 py-3 backdrop-blur-md transition-all'
           : 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white px-4 py-3 transition-all'
       }
     >

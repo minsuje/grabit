@@ -10,7 +10,7 @@ function Camera() {
     <>
       <div className="flex-col align-middle">
         <div>
-          {isCameraOpen && (
+          {!cardImage && isCameraOpen && (
             <CameraAction
               onCapture={(blob: Blob) => {
                 setCardImage(blob);
@@ -22,9 +22,19 @@ function Camera() {
         </div>
 
         {cardImage && (
-          <div className="text-center">
-            <h2>미리보기</h2>
-            {/* <img className="absolute w-[50%] h-auto" src={cardImage && URL.createObjectURL(cardImage)} /> */}
+          <div className="m-auto">
+            {/* <h2>미리보기</h2> */}
+            <img className="absolute" src={cardImage && URL.createObjectURL(cardImage)} />
+            <div className="absolute">
+              <Button
+                onClick={() => {
+                  setIsCameraOpen(true);
+                  setCardImage(undefined);
+                }}
+              >
+                다시 찍기
+              </Button>
+            </div>
           </div>
         )}
         <div className="fixed bottom-0 left-0 right-0 flex justify-center align-middle">
