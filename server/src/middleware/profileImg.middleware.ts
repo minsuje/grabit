@@ -13,7 +13,7 @@ export class profileImgMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: (error?: any) => void) {
     if (req.url.split('/')[1] === 'normal') {
       const body: any = req.body;
-      console.log('profileImg middleware body > ', body);
+      console.log('profileImg middleware body > ', req.body);
       let { filename, type } = body;
 
       const client = new S3Client({

@@ -62,6 +62,8 @@ const schema = yup
 
 export default function Register() {
   const [profilePic, setProfilePic] = useState<File>();
+  let fileUrl = '';
+  let fileName = '';
 
   const {
     register,
@@ -80,7 +82,7 @@ export default function Register() {
     setProfilePic(e.target.files![0]);
   }
 
-  const onSubmit = async (data: RegisterForm) => {
+  const onSubmit = async (form: RegisterForm) => {
     await axios({
       method: 'post',
       url: 'http://localhost:3000/profileUpload/normal',
@@ -89,6 +91,20 @@ export default function Register() {
         type: profilePic?.type,
       },
     }).then((res) => {
+      console.log(res.data);
+      fileUrl = res.data;
+
+      const regex = /\/([^\/?#]+)[^\/]*$/;
+      const match = fileUrl.match(regex);
+
+      // 추출된 파일 이름 출력
+      if (match && match[1]) {
+        fileName = match[1];
+        console.log(fileName);
+      } else {
+        console.log('파일 이름을 찾을 수 없습니다.');
+      }
+
       axios({
         method: 'put',
         url: res.data,
@@ -96,10 +112,21 @@ export default function Register() {
         headers: {
           'Content-Type': profilePic?.type,
         },
-      }).then(() => {
+      }).then((res) => {
+        console.log('fileUrl', fileUrl);
         try {
-          const response = axios.post('http://localhost:3000/register/normal', data);
-          console.log('회원가입 성공:', response);
+          axios({
+            method: 'post',
+            url: 'http://localhost:3000/register/normal',
+            data: {
+              name: form.name,
+              userid: form.userid,
+              nickname: form.nickname,
+              password: form.password,
+              profile_img: fileName,
+            },
+          });
+          console.log('회원가입 성공');
           navigate('/login');
         } catch (err) {
           console.error('회원가입 실패:', err);
@@ -128,7 +155,7 @@ export default function Register() {
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
           <Label htmlFor="profile_img">프로필 사진</Label>
-          <Input type="file" id="profile_img" onChange={handleFile} {...register('profile_img')} />
+          <Input type="file" id="profile_img" onChange={handleFile} />
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
           <Label htmlFor="nickname">닉네임</Label>
