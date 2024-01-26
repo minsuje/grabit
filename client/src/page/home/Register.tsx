@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
@@ -17,7 +17,7 @@ interface RegisterForm {
   nickname: string;
   password: string;
   confirmPassword: string;
-  profilePic?: FileList;
+  profile_img?: File;
 }
 
 const schema = yup
@@ -61,6 +61,8 @@ const schema = yup
   .required();
 
 export default function Register() {
+  const [profilePic, setProfilePic] = useState<File>();
+
   const {
     register,
     handleSubmit,
@@ -73,14 +75,37 @@ export default function Register() {
     dispatch(setHeaderInfo({ title: '회원가입', backPath: '/' }));
   }, [dispatch]);
 
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.files);
+    setProfilePic(e.target.files![0]);
+  }
+
   const onSubmit = async (data: RegisterForm) => {
-    try {
-      const response = await axios.post('http://localhost:3000/register/normal', data);
-      console.log('회원가입 성공:', response);
-      navigate('/login');
-    } catch (err) {
-      console.error('회원가입 실패:', err);
-    }
+    await axios({
+      method: 'post',
+      url: 'http://localhost:3000/profileUpload/normal',
+      data: {
+        filename: profilePic?.name,
+        type: profilePic?.type,
+      },
+    }).then((res) => {
+      axios({
+        method: 'put',
+        url: res.data,
+        data: profilePic,
+        headers: {
+          'Content-Type': profilePic?.type,
+        },
+      }).then(() => {
+        try {
+          const response = axios.post('http://localhost:3000/register/normal', data);
+          console.log('회원가입 성공:', response);
+          navigate('/login');
+        } catch (err) {
+          console.error('회원가입 실패:', err);
+        }
+      });
+    });
   };
 
   return (
@@ -102,8 +127,8 @@ export default function Register() {
           {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
-          <Label htmlFor="profilePic">프로필 사진</Label>
-          <Input type="file" id="profilePic" {...register('profilePic')} />
+          <Label htmlFor="profile_img">프로필 사진</Label>
+          <Input type="file" id="profile_img" onChange={handleFile} {...register('profile_img')} />
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
           <Label htmlFor="nickname">닉네임</Label>
