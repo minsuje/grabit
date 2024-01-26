@@ -5,168 +5,168 @@ import { Challenge } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 
 interface ChallengeProp {
-    challenge: Challenge;
+  challenge: Challenge;
 }
 
 // ~~~일 후 종료
 
 export function ListComponent1({ challenge }: ChallengeProp) {
-    console.log('chal', challenge);
-    // const challenge = challengeProp.challenge;
+  console.log('chal', challenge);
+  // const challenge = challengeProp.challenge;
 
-    const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
-    return (
-        <div>
-            <div key={challenge.challenge_id} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
-                <div className="flex justify-between">
-                    <p>{challenge.challenge_name}</p>
+  const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
+  return (
+    <div>
+      <div key={challenge.challenge_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+        <div className="flex justify-between">
+          <p>{challenge.challenge_name}</p>
 
-                    <p>{dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}</p>
-                </div>
-                <p>{challenge.goal_money}원</p>
-            </div>
+          <p>{dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}</p>
         </div>
-    );
+        <p>{challenge.goal_money}원</p>
+      </div>
+    </div>
+  );
 }
 
 export function ListComponent2({ challenge }: ChallengeProp) {
-    return (
-        <>
-            <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
-                <div className="">
-                    <div className="text-black font-bold">{challenge.challenge_name}</div>
-                    <div className="text-black mt-2">{challenge.goal_money} 원</div>
-                </div>
-                <div className="">
-                    <div className="text-gray-400 ">{challenge.authentication_end_date.toString()}</div>
-                    <div className="mt-2 text-end">승 </div>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="justify-content flex justify-between rounded-lg bg-gray-200 p-6 shadow-md">
+        <div className="">
+          <div className="font-bold text-black">{challenge.challenge_name}</div>
+          <div className="mt-2 text-black">{challenge.goal_money} 원</div>
+        </div>
+        <div className="">
+          <div className="text-gray-400 ">{challenge.authentication_end_date.toString()}</div>
+          <div className="mt-2 text-end">승 </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export function ListComponent3() {
-    return (
-        <>
-            <div className="bg-gray-200 p-6 rounded-lg  shadow-md w-100">
-                <div className="flex justify-between">
-                    <div className="text-black font-bold">물마시기</div>
-                    <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
-                </div>
-                <div className="flex">
-                    <div className="text-black mt-2 mr-3">15,000</div>
-                    <div className="text-black mt-2">
-                        <Badge variant="default">+1000원</Badge>
-                    </div>
-                </div>
-                <div className="flex">
-                    <div className="text-black mt-2 mr-3">1000P</div>
-                    <div className="text-black mt-2">
-                        <Badge variant="default">+100P</Badge>
-                    </div>
-                    <div className="flex justify-end w-[100%]">
-                        <div className="text-black mt-2 ">승</div>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
+        <div className="flex justify-between">
+          <div className="font-bold text-black">물마시기</div>
+          <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
+        </div>
+        <div className="flex">
+          <div className="mr-3 mt-2 text-black">15,000</div>
+          <div className="mt-2 text-black">
+            <Badge variant="default">+1000원</Badge>
+          </div>
+        </div>
+        <div className="flex">
+          <div className="mr-3 mt-2 text-black">1000P</div>
+          <div className="mt-2 text-black">
+            <Badge variant="default">+100P</Badge>
+          </div>
+          <div className="flex w-[100%] justify-end">
+            <div className="mt-2 text-black ">승</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 interface ProgressProp {
-    ProgressName: string;
-    total: number;
-    value: number;
+  ProgressName: string;
+  total: number;
+  value: number;
 }
 
 export function ProgressComponent({ ProgressName, total, value }: ProgressProp) {
-    return (
-        <>
-            <div className="flex justify-between mr-3">
-                <p className="mt-3 font-bold">{ProgressName}</p>
-                <p className="mt-3">
-                    {value}/{total}
-                </p>
-            </div>
-            <Progress value={(value / total) * 100} />
-        </>
-    );
+  return (
+    <>
+      <div className="mr-3 flex justify-between">
+        <p className="mt-3 font-bold">{ProgressName}</p>
+        <p className="mt-3">
+          {value}/{total}
+        </p>
+      </div>
+      <Progress value={(value / total) * 100} />
+    </>
+  );
 }
 
 export function SelectComponent() {
-    return (
-        <>
-            <Select>
-                <div className="text-xl font-bold">주제</div>
-                <div className="flex mt-3">
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="건강" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="light">건강</SelectItem>
-                        <SelectItem value="dark">취미</SelectItem>
-                        <SelectItem value="system">학습</SelectItem>
-                    </SelectContent>
-                    <input type="text" className="border-solid border-2" />
-                </div>
-            </Select>
-        </>
-    );
+  return (
+    <>
+      <Select>
+        <div className="text-xl font-bold">주제</div>
+        <div className="mt-3 flex">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="건강" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="light">건강</SelectItem>
+            <SelectItem value="dark">취미</SelectItem>
+            <SelectItem value="system">학습</SelectItem>
+          </SelectContent>
+          <input type="text" className="border-2 border-solid" />
+        </div>
+      </Select>
+    </>
+  );
 }
 
 export function SelectComponent2() {
-    return (
-        <>
-            <Select>
-                <div className="">
-                    <div className="flex justify-between items-center">
-                        <div className="flex justify-center align-center text-xl font-bold">기간</div>
-                        <div>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="3일" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="light">3일</SelectItem>
-                                <SelectItem value="dark">5일</SelectItem>
-                                <SelectItem value="system">7일</SelectItem>
-                            </SelectContent>
-                        </div>
-                    </div>
-                    <div className="flex mt-3">
-                        <div className="mr-10">시작</div>
-                        <div className="text-gray-400">2024년 1월 22일</div>
-                    </div>
-                    <div className="flex mt-3 ">
-                        <div className="mr-10">종료</div>
-                        <div className=" text-gray-400">2024년 1월 25일</div>
-                    </div>
-                </div>
-            </Select>
-        </>
-    );
+  return (
+    <>
+      <Select>
+        <div className="">
+          <div className="flex items-center justify-between">
+            <div className="align-center flex justify-center text-xl font-bold">기간</div>
+            <div>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="3일" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">3일</SelectItem>
+                <SelectItem value="dark">5일</SelectItem>
+                <SelectItem value="system">7일</SelectItem>
+              </SelectContent>
+            </div>
+          </div>
+          <div className="mt-3 flex">
+            <div className="mr-10">시작</div>
+            <div className="text-gray-400">2024년 1월 22일</div>
+          </div>
+          <div className="mt-3 flex ">
+            <div className="mr-10">종료</div>
+            <div className=" text-gray-400">2024년 1월 25일</div>
+          </div>
+        </div>
+      </Select>
+    </>
+  );
 }
 
 export function CashComponent() {
-    return (
-        <>
-            <div className="flex justify-between">
-                <div>금액</div>
-                <div className="text-gray-400">5000원</div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="flex justify-between">
+        <div>금액</div>
+        <div className="text-gray-400">5000원</div>
+      </div>
+    </>
+  );
 }
 export function TimeComponent() {
-    return (
-        <>
-            <div>인증시간</div>
-            <div className="mt-3 flex justify-between">
-                <span>오전7시</span>
-                <span>~</span>
-                <span>오전8시</span>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div>인증시간</div>
+      <div className="mt-3 flex justify-between">
+        <span>오전7시</span>
+        <span>~</span>
+        <span>오전8시</span>
+      </div>
+    </>
+  );
 }
 
 // <div className="text-black flex mt-2">15000</div>
