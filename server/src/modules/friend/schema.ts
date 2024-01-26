@@ -1,5 +1,12 @@
 import { is, relations } from 'drizzle-orm';
-import { timestamp, integer, pgTable, serial, boolean, varchar } from 'drizzle-orm/pg-core';
+import {
+  timestamp,
+  integer,
+  pgTable,
+  serial,
+  boolean,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { users } from '../user/schema';
 
 export const friend = pgTable('friend', {
