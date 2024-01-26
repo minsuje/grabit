@@ -46,10 +46,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
           <Route path="/" element={<Layout />}>
-          <Route path="/main" element={<Main />} />
-          <Route path="/main2" element={<Main2 />} />
-          <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
-          <Route path="/camera/:challenge_id" element={<Camera />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/main2" element={<Main2 />} />
+            <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+            <Route path="/camera/:challenge_id" element={<Camera />} />
 
           {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
           <Route path="/challengeresult" element={<ChallengeResult />} />
@@ -75,8 +75,9 @@ function App() {
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
 
-          {/* 테스트 용 */}
-          <Route path="/test" element={<Test />} />
+
+            {/* 테스트 용 */}
+            <Route path="/test" element={<Test />} />
           </Route>
         </Routes>
       </BrowserRouter>
