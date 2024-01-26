@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FriendService } from './friend.service';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
@@ -13,12 +21,18 @@ export class FriendController {
   }
 
   @Post(':userid')
-  create(@Body() createFriendDto: CreateFriendDto, @Param('userid') userid: number) {
+  create(
+    @Body() createFriendDto: CreateFriendDto,
+    @Param('userid') userid: number,
+  ) {
     return this.friendService.create(createFriendDto, userid);
   }
 
   @Delete(':userid')
-  remove(@Body() createFriendDto: CreateFriendDto, @Param('userid') userid: number) {
+  remove(
+    @Body() createFriendDto: CreateFriendDto,
+    @Param('userid') userid: number,
+  ) {
     return this.friendService.remove(createFriendDto, userid);
   }
 
