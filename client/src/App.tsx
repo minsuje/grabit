@@ -35,6 +35,7 @@ import Test from './page/challenge/Test';
 import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
+import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
 
 function App() {
@@ -65,6 +66,9 @@ function App() {
           <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
           <Route path="/challengeNotice" element={<ChallengeNotice />} />
           <Route path="/challengeCreate" element={<ChallengeCreate />} />
+
+          <Route path="/refresh" element={<Refresh />}/>
+
           <Route path="/challengetier" element={<ChallengeTier />} />
 
           <Route path="/mypage/" element={<MyPage />} />
@@ -74,6 +78,7 @@ function App() {
           <Route path="/mypage/friend" element={<Friend />} />
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+
 
 
             {/* 테스트 용 */}
