@@ -35,6 +35,7 @@ import Test from './page/challenge/Test';
 import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
+import Refresh from './page/home/Refresh';
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
             <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
           </Route>
+          <Route path="/refresh" element={<Refresh />}/>
 
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
