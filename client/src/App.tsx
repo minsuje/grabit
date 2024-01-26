@@ -32,7 +32,6 @@ import MypageWithdraw from './page/myPage/MypageWithdraw';
 import Camera from './page/challenge/Camera';
 
 function App() {
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -71,7 +70,6 @@ function App() {
       </BrowserRouter>
     </div>
   );
-
 }
 
 export default App;
