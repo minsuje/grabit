@@ -18,24 +18,16 @@ export class FriendService {
 
     let friends = [];
 
-    // async function handleFriend() {
-    //   result.map(async (friend) => {
-    //     const result = await db.select({ user: users.userid }).from(users).where(eq(users.userid_num, friend.friends));
-    //     console.log(result[0].user);
-    //     console.log(friends);
-    //     friends.push(result[0].user);
-    //   });
-    // }
-
     console.log(result);
     for (let i = 0; i < result.length; i++) {
-      const res = await db.select({ user: users.userid }).from(users).where(eq(users.userid_num, result[i].friends));
+      const res = await db
+        .select({ user: users.userid })
+        .from(users)
+        .where(eq(users.userid_num, result[i].friends));
       console.log(res[0].user);
       friends.push(res[0].user);
     }
-    // handleFriend();
 
-    console.log('return 바로전', friends);
     return friends;
   }
 
@@ -62,6 +54,11 @@ export class FriendService {
     const { other_userid_num } = createFriendDto;
     return await db
       .delete(friend)
-      .where(and(eq(friend.userid_num, userid), eq(friend.other_userid_num, other_userid_num)));
+      .where(
+        and(
+          eq(friend.userid_num, userid),
+          eq(friend.other_userid_num, other_userid_num),
+        ),
+      );
   }
 }
