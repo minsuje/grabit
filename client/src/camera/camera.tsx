@@ -18,7 +18,7 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
   const canvasRef: RefObject<HTMLCanvasElement> | null = useRef(null);
   const videoRef: RefObject<HTMLVideoElement> | null = useRef(null);
 
-  const [container, setContainer] = useState({ width: 10, height: 10 });
+  const [container, setContainer] = useState({ width: 0, height: 0 });
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isCanvasEmpty, setIsCanvasEmpty] = useState(true);
   //   const [isFlashing, setIsFlashing] = useState(false);
@@ -49,7 +49,6 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
     entry: Object;
   }
   function handleResize(contentRect: contentRect) {
-    console.log('handleResize 실행', contentRect);
     setContainer({
       width: contentRect.bounds.width,
       height: Math.round(contentRect.bounds.width / 1.586),
@@ -58,43 +57,27 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
 
   function handleCanPlay() {
     if (videoRef && videoRef.current) {
-      console.log('videoRef.current.videoHeight', videoRef.current.videoHeight);
-      calculateRatio(videoRef.current.videoHeight, videoRef.current.videoWidth);
-      console.log('aspectRatio', aspectRatio);
       videoRef.current.play();
       setIsVideoPlaying(true);
-      console.log(isVideoPlaying);
     }
   }
 
   function handleCapture() {
     if (canvasRef && canvasRef.current && videoRef && videoRef.current) {
       const context = canvasRef.current.getContext('2d');
-      console.log('context', context);
       if (context) {
-        context.drawImage(
-          videoRef.current, //그릴 이미지(비디오)의 원본
-          0, //그릴 이미지의 시작 좌표(x축)
-          0, //그릴 이미지의 시작 좌표(y축)
-          2000, //그릴 이미지의 원본 폭
-          2000, //그릴 이미지의 원본 높이
-          0, //그릴 이미지를 그릴 캔버스의 x축에서의 시작 위치
-          0, //그릴 이미지를 그릴 캔버스의 y축에서의 시작 위치
-          500, //그릴 이미지를 그릴 캔버스의 폭
-          500, //그릴 이미지를 그릴 캔버스의 높이
-        );
-      }
+        // 비디오의 크기에 맞게 캔버스의 크기 설정
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
 
-      console.log('context', context);
-      console.log('videoRef.current', videoRef.current);
-      console.log('canvasRef.current', canvasRef.current);
-      console.log('container.width', container.width);
+        // 비디오 프레임을 캔버스에 그림
+        context.drawImage(videoRef.current, 0, 0, videoRef.current.videoWidth, videoRef.current.videoHeight);
+      }
 
       canvasRef.current.toBlob(
         (blob) => {
           if (blob) {
             onCapture(blob);
-            console.log('blob', blob);
           }
         },
         'image/jpeg',
@@ -103,7 +86,6 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
     }
 
     setIsCanvasEmpty(false);
-    // setIsFlashing(true);
   }
 
   function handleClear() {
@@ -128,42 +110,44 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
       {' '}
       {/**Wrapper */}
       <div
-        className="relative w-full"
+        className=" w-full"
         style={{
           height: `${container.height}px`,
         }}
       >
         {/**Container*/}
-        <video
-          className=""
-          ref={videoRef}
-          hidden={!isVideoPlaying}
-          onCanPlay={handleCanPlay}
-          autoPlay
-          playsInline
-          muted
-          style={{
-            top: `-${offsets.y}px`,
-            left: `-${offsets.x}px`,
-          }}
-        />
+        <div className="mx-auto">
+          <video
+            className="block"
+            ref={videoRef}
+            hidden={!isVideoPlaying || !isCanvasEmpty}
+            onCanPlay={handleCanPlay}
+            autoPlay
+            playsInline
+            muted
+            style={{
+              top: `-${offsets.y}px`,
+              left: `-${offsets.x}px`,
+            }}
+          />
+        </div>
 
         <div className="" hidden={!isVideoPlaying} />
 
         <canvas
-          className=" top-0 left-0 bottom-0 right-0"
+          className="absolute top-24 left-0 bottom-0 right-0 mx-6"
           ref={canvasRef}
           style={{
-            top: `0px`,
-            left: `0px`,
+            width: `0px`,
+            height: `0px`,
           }}
         />
 
         {/* <div flash={isFlashing} onAnimationEnd={() => setIsFlashing(false)} /> */}
       </div>
       {isVideoPlaying && (
-        <Button className="absolute" onClick={isCanvasEmpty ? handleCapture : handleClear}>
-          {isCanvasEmpty ? 'Take a picture' : 'Take another picture'}
+        <Button className="relative" onClick={isCanvasEmpty ? handleCapture : handleClear}>
+          {isCanvasEmpty ? '찰칵' : '다시 찍기'}
         </Button>
       )}
     </div>
