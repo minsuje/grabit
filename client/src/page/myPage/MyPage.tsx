@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
@@ -23,12 +23,14 @@ export default function MyPage() {
           </Button>
         </Link>
       </div>
+
+      <Outlet></Outlet>
       <br />
       <br />
       <br />
       <br />
       <br />
-      <div className="user-list flex flex-col gap-4">
+      <div className="user-list flex flex-col rgap-4">
         <div className="flex items-center gap-2">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -50,7 +52,7 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to="">
+        <Link to="followlist">
           <Button>전체보기</Button>
         </Link>
       </div>
@@ -58,13 +60,13 @@ export default function MyPage() {
       <div className="flex flex-col gap-1 ">
         <div className="flex justify-between">
           <span>금액</span>
-          <Link to="/mypage/MyPageWithdraw">
+          <Link to="mypagewithdraw">
             <span>출금하기</span>
           </Link>
         </div>
         <div className="flex justify-between">
           <button className="text-xs text-gray-400">내역보기</button>
-          <Link to="">
+          <Link to="MypageCharge">
             <span>충전하기</span>
           </Link>
         </div>
@@ -88,7 +90,9 @@ export default function MyPage() {
             </div>
           </Link>
           <div className="flex justify-center">
-            <button>전체보기</button>
+            <Link to="mypagehistorydetail">
+              <button>전체보기</button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,12 +1,19 @@
 import { Injectable, NestMiddleware, Request, Next } from '@nestjs/common';
 import { Response } from 'express';
-import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq } from 'drizzle-orm';
 import { users } from '../modules/user/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class profileImgMiddleware implements NestMiddleware {
@@ -26,7 +33,10 @@ export class profileImgMiddleware implements NestMiddleware {
       let key;
 
       if (req.method === 'GET') {
-        console.log('profileImg middleware url > ', Number(req.url.split('/')[1]));
+        console.log(
+          'profileImg middleware url > ',
+          Number(req.url.split('/')[1]),
+        );
 
         let file = await db
           .select()
@@ -78,7 +88,9 @@ export class profileImgMiddleware implements NestMiddleware {
               ContentType: type,
             });
 
-            const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+            const url = await getSignedUrl(client, command, {
+              expiresIn: 3600,
+            });
 
             req['file'] = url;
           }

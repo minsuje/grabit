@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderTitle from '@/components/HeaderTitle';
-// import { Cookies } from 'react-cookie';
 
 export default function Login() {
   // const cookies = new Cookies();
@@ -98,7 +97,6 @@ export default function Login() {
         <Button variant="default" className="w-full max-w-sm" onClick={handleLogin} disabled={!userid || !password}>
           로그인
         </Button>
-        <Link to="/main" className="mb-[5%]"></Link>
       </div>
     </div>
   );
