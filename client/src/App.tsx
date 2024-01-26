@@ -22,7 +22,7 @@ import ChallengeAccept from './page/challenge/ChallengeAccept';
 // MyPage
 import MyPage from './page/myPage/MyPage';
 import MyPageEdit from './page/myPage/MyPageEdit';
-import FollowList from './page/myPage/FollowList';
+import Friend from './page/myPage/Friend';
 import MypageWithdraw from './page/myPage/MyPageWithdraw';
 import MypageCharge from './page/myPage/MyPageCharge';
 import MyPageHistory from './page/myPage/MyPageHistory';
@@ -35,7 +35,7 @@ import Test from './page/challenge/Test';
 // import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
-import ChallengeTier  from './page/challenge/ChallengeTier';
+import ChallengeTier from './page/challenge/ChallengeTier';
 
 function App() {
   return (
@@ -71,7 +71,7 @@ function App() {
           <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
           <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
           <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-          <Route path="/mypage/followlist" element={<FollowList />} />
+          <Route path="/mypage/friend" element={<Friend />} />
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
 
