@@ -61,6 +61,11 @@ const schema = yup
   .required();
 
 export default function Register() {
+
+  const [profilePic, setProfilePic] = useState<File>();
+  let fileUrl = '';
+  let fileName = '';
+
   const {
     register,
     handleSubmit,
@@ -73,14 +78,62 @@ export default function Register() {
     dispatch(setHeaderInfo({ title: '회원가입', backPath: '/' }));
   }, [dispatch]);
 
-  const onSubmit = async (data: RegisterForm) => {
-    try {
-      const response = await axios.post('http://localhost:3000/register/normal', data);
-      console.log('회원가입 성공:', response);
-      navigate('/login');
-    } catch (err) {
-      console.error('회원가입 실패:', err);
-    }
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.files);
+    setProfilePic(e.target.files![0]);
+  }
+
+  const onSubmit = async (form: RegisterForm) => {
+    await axios({
+      method: 'post',
+      url: 'http://localhost:3000/profileUpload/normal',
+      data: {
+        filename: profilePic?.name,
+        type: profilePic?.type,
+      },
+    }).then((res) => {
+      console.log(res.data);
+      fileUrl = res.data;
+
+      const regex = /\/([^\/?#]+)[^\/]*$/;
+      const match = fileUrl.match(regex);
+
+      // 추출된 파일 이름 출력
+      if (match && match[1]) {
+        fileName = match[1];
+        console.log(fileName);
+      } else {
+        console.log('파일 이름을 찾을 수 없습니다.');
+      }
+
+      axios({
+        method: 'put',
+        url: res.data,
+        data: profilePic,
+        headers: {
+          'Content-Type': profilePic?.type,
+        },
+      }).then((res) => {
+        console.log('fileUrl', fileUrl);
+        try {
+          axios({
+            method: 'post',
+            url: 'http://localhost:3000/register/normal',
+            data: {
+              name: form.name,
+              userid: form.userid,
+              nickname: form.nickname,
+              password: form.password,
+              profile_img: fileName,
+            },
+          });
+          console.log('회원가입 성공');
+          navigate('/login');
+        } catch (err) {
+          console.error('회원가입 실패:', err);
+        }
+      });
+    });
   };
 
   return (
@@ -102,8 +155,8 @@ export default function Register() {
           {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
-          <Label htmlFor="profilePic">프로필 사진</Label>
-          <Input type="file" id="profilePic" {...register('profilePic')} />
+          <Label htmlFor="profile_img">프로필 사진</Label>
+          <Input type="file" id="profile_img" onChange={handleFile} />
         </div>
         <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
           <Label htmlFor="nickname">닉네임</Label>

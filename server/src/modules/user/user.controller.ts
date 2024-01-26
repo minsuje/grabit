@@ -12,15 +12,16 @@ export class UserController {
   }
 
   @Post('/profileUpload/:type')
-  postProfileUpload(@Param('type') login_type: string, @Body() createUserDto: CreateUserDto, @Req() req): any {
-    console.log('register controller body', createUserDto);
+  postProfileUpload(@Param('type') login_type: string, @Body() body: any, @Req() req): any {
+    console.log('profileUpload controller body', body);
     console.log('controller postProfileUpload', req.file);
     const file = req.file;
-    return this.userService.postProfileUpload(login_type, createUserDto, file);
+    return this.userService.postProfileUpload(login_type, body, file);
   }
 
   @Get('/myPage/:userid_num')
-  getMyPage(@Param('userid_num') userid_num: number) {
+  getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
+    console.log('myPage controller req.file > ', req.file);
     return this.userService.getMyPage(userid_num);
   }
 }
