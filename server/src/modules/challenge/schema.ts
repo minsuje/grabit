@@ -4,6 +4,8 @@ import {
   serial,
   varchar,
   timestamp,
+  boolean,
+  date,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { users } from '../user/schema';
@@ -15,15 +17,26 @@ export const challenge = pgTable('challenge', {
     onUpdate: 'cascade',
   }),
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
+  is_public: boolean('is_public').notNull().default(false),
   topic: varchar('topic', { length: 50 }).notNull(),
   challenger_userid_num: integer('challenger_userid_num').array().notNull(),
   goal_money: integer('goal_money').notNull(),
-  deadline: varchar('deadline', { length: 20 }).notNull(),
+  term: integer('term').notNull(),
   winner_userid_num: integer('winner_userid_num').array(),
-  authentication_term: integer('authentication_term').notNull(),
-  authentication_time: varchar('authentication_time', {
-    length: 100,
+  authentication_start_date: timestamp('authentication_start_date', {
+    withTimezone: true,
   }).notNull(),
+  authentication_end_date: timestamp('authentication_end_date', {
+    withTimezone: true,
+  }).notNull(),
+  authentication_start_time: integer('authentication_start_time').notNull(),
+  authentication_end_time: integer('authentication_end_time').notNull(),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const challengeRelations = relations(users, ({ many }) => ({
@@ -36,7 +49,12 @@ export const authentication = pgTable('authentication', {
     () => challenge.challenge_id,
     { onDelete: 'cascade', onUpdate: 'cascade' },
   ),
-  created_at: timestamp('created_at').defaultNow().notNull(),
+  created_at: timestamp('created_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updated_at: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull(),
   userid_num: integer('userid_num').notNull(),
   authentication_img: varchar('authentication_img', {
     length: 200,
@@ -63,6 +81,12 @@ export const authentication_img_emoticon = pgTable(
     authentication_img_comment_emoticon: integer(
       'authentication_img_comment_emoticon',
     ).notNull(),
+    created_at: timestamp('created_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updated_at: timestamp('updated_at', { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
 );
 

@@ -1,41 +1,64 @@
-import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
-import { Button } from '@/components/ui/button';
-import ChallengeData from '../../data/ChallengeData';
 import { Link } from 'react-router-dom';
+import { ListComponentWithButton, ListComponentWithPeriod } from '@/components/Component0117';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Challenge } from '@/types/types';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
-    return (
-        <div className="container">
-            <h1>참여중인 챌린지</h1>
-            {ChallengeData.map((challenge) => {
-                return (
-                    <Link to={`/challengeInProgress/${challenge.challenge_num}`}>
-                        <ListComponent1 challenge={challenge} />
-                    </Link>
-                );
-            })}
+  const dispatch = useDispatch();
 
-            <h1>참가 예정 챌린지</h1>
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '챌린지 목록', backPath: '/main' }));
+  }, [dispatch]);
 
-            {ChallengeData.map((challenge) => {
-                return (
-                    <Link to={`/challengeDetail/${challenge.challenge_num}`}>
-                        <ListComponent1 challenge={challenge} />
-                    </Link>
-                );
-            })}
+  const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
+  const [preMyChallenge, setPreMyChallenge] = useState<Challenge[]>([]);
+  const [publicChallenge, setPublicChallenge] = useState<Challenge[]>([]);
+  useEffect(() => {
+    {
+      axios
+        .get('http://3.34.122.205:3000/challengeList')
+        .then((response) => {
+          console.log(response.data);
+          setIngMyChallenge(response.data.ingMyChallenge);
+          setPreMyChallenge(response.data.preMyChallenge);
+          setPublicChallenge(response.data.prePublicChallenge);
+        })
+        .catch((error) => {
+          console.error('ChallengeList에서  오류발생 :', error);
+        });
+    }
+  }, []);
+  return (
+    <div className="mt-8 flex flex-col gap-12">
+      <h1>참여중인 챌린지</h1>
+      {ingMyChallenge.map((challenge: Challenge) => {
+        return (
+          <Link to={`/challengeInProgress/${challenge.challenge_id}`} className=" text-black no-underline">
+            <ListComponent1 challenge={challenge} />
+          </Link>
+        );
+      })}
 
-            <h1>열려있는 챌린지</h1>
-            {ChallengeData.map((challenge) => {
-                return (
-                    <Link to={`/challengeDetail/${challenge.challenge_num}`}>
-                        <ListComponent1 challenge={challenge} />
-                    </Link>
-                );
-            })}
-        </div>
-    );
+      <h1>참가 예정 챌린지</h1>
+
+      {preMyChallenge.map((challenge: Challenge) => {
+        return (
+          <>
+            <ListComponentWithButton challenge={challenge} />
+          </>
+        );
+      })}
+
+      <h1>열려있는 챌린지</h1>
+
+      {publicChallenge.map((challenge: Challenge) => {
+        return <ListComponentWithPeriod challenge={challenge} />;
+      })}
+    </div>
+  );
 }
 export default ChallengeList;

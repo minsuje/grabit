@@ -1,4 +1,6 @@
 node_modules
 .DS_store
 .env
-migration
+server/migration
+server/dist
+bun.lockb

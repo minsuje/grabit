@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
+import { db } from '../../../db/db';
+import { friend } from './schema';
+import { eq, not } from 'drizzle-orm';
+import { isBefore, isAfter } from 'date-fns';
 
 @Injectable()
 export class FriendService {
+  async findUserFriends(userid: number) {
+    const userid_num = userid;
+    return db.select().from(friend).where(eq(friend.userid_num, userid_num));
+  }
+
   create(createFriendDto: CreateFriendDto) {
     return 'This action adds a new friend';
   }

@@ -1,31 +1,44 @@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Challenge } from '@/types/types';
+import { differenceInCalendarDays } from 'date-fns';
 
-export function ListComponent1({ challenge }) {
+interface ChallengeProp {
+    challenge: Challenge;
+}
+
+// ~~~일 후 종료
+
+export function ListComponent1({ challenge }: ChallengeProp) {
+    console.log('chal', challenge);
+    // const challenge = challengeProp.challenge;
+
+    const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
     return (
         <div>
-            <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+            <div key={challenge.challenge_id} className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
                 <div className="flex justify-between">
-                    <p>{challenge.challengeName}</p>
-                    <p>{challenge.day} 일 후 종료</p>
+                    <p>{challenge.challenge_name}</p>
+
+                    <p>{dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}</p>
                 </div>
-                <p>{challenge.price} 원</p>
+                <p>{challenge.goal_money}원</p>
             </div>
         </div>
     );
 }
 
-export function ListComponent2({ challenge }) {
+export function ListComponent2({ challenge }: ChallengeProp) {
     return (
         <>
             <div className="bg-gray-200 p-6 rounded-lg justify-between shadow-md flex justify-content">
                 <div className="">
-                    <div className="text-black font-bold">{challenge.challengeName}</div>
-                    <div className="text-black mt-2">{challenge.price} 원</div>
+                    <div className="text-black font-bold">{challenge.challenge_name}</div>
+                    <div className="text-black mt-2">{challenge.goal_money} 원</div>
                 </div>
                 <div className="">
-                    <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
+                    <div className="text-gray-400 ">{challenge.authentication_end_date.toString()}</div>
                     <div className="mt-2 text-end">승 </div>
                 </div>
             </div>
@@ -60,15 +73,22 @@ export function ListComponent3() {
         </>
     );
 }
+interface ProgressProp {
+    ProgressName: string;
+    total: number;
+    value: number;
+}
 
-export function ProgressComponent() {
+export function ProgressComponent({ ProgressName, total, value }: ProgressProp) {
     return (
         <>
             <div className="flex justify-between mr-3">
-                <div>진행률</div>
-                <div className="mt-3">4/5</div>
+                <p className="mt-3 font-bold">{ProgressName}</p>
+                <p className="mt-3">
+                    {value}/{total}
+                </p>
             </div>
-            <Progress value={75} />
+            <Progress value={(value / total) * 100} />
         </>
     );
 }
