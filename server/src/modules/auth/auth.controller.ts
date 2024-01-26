@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { KakaoStrategy } from './strategies/kakao.strategy';
+import { stringify } from 'querystring';
 
 @Controller('/')
 export class AuthController {
@@ -19,15 +20,28 @@ export class AuthController {
   @Post('login')
   @UseGuards(localGuard)
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
-    // const jwt = await this.authService.loginUser(loginDto);
-    let token = req.user;
-    console.log('login controller >>>>>>>>>.', req.user);
-    await res.setHeader('Authorization', 'Bearer ' + token);
-    res.cookie('jwt', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
-    console.log(token);
+    const token = JSON.stringify(req.user);
+    const tokens = JSON.parse(token);
+    const { loginToken, loginRefreshToken } = tokens;
+
+    // console.log('login controller >>>>>>>>>.', req.user);
+    await res.setHeader('Authorization', 'Bearer ' + [loginToken, loginRefreshToken]);
+
+    // cookie set
+    res.cookie('jwt', loginToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
+    res.cookie('refreshToken', loginRefreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: 'none',
+    });
+
+    console.log(loginToken);
+    console.log(loginRefreshToken);
 
     return res.send({
-      token,
+      loginToken,
+      loginRefreshToken,
     });
   }
 
@@ -35,16 +49,15 @@ export class AuthController {
   @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
-    console.log('req user1 >>>>>>> ', typeof req.user);
     const user = JSON.stringify(req.user);
     const users = JSON.parse(user);
 
-    console.log('req users >>>>>>> ', users);
-    // console.log('res user1 >>>>>>> ', res);
     const { accessToken, refreshToken, username, profile_image, id } = users;
 
     // searchUser service 값 보내기
-    this.authService.searchUser(id, profile_image, username);
+    let searchUser = await this.authService.searchUser(id, profile_image, username);
+
+    console.log('controller searchUser > ', searchUser);
 
     res.cookie('accessToken', accessToken, { httpOnly: true });
     res.cookie('refreshToken', refreshToken, { httpOnly: true });
@@ -52,13 +65,13 @@ export class AuthController {
     return res.redirect('http://localhost:5173');
   }
 
-  @Post('/test')
-  @UseGuards(AuthGuard('kakao'))
-  @HttpCode(301)
-  async kakaoLogin2(@Req() req: Request, @Res() res: Response) {
-    console.log('req user2 >>>>>>> ', req);
-    return req.user;
-  }
+  // @Post('/test')
+  // @UseGuards(AuthGuard('kakao'))
+  // @HttpCode(301)
+  // async kakaoLogin2(@Req() req: Request, @Res() res: Response) {
+  //   console.log('req user2 >>>>>>> ', req);
+  //   return req.user;
+  // }
 
   @Get('/main')
   @UseGuards(JwtAuthGuard)

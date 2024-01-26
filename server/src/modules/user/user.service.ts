@@ -23,14 +23,21 @@ export class UserService {
       score_num: score_num,
       money: money,
     };
+    const checkUser = await db.select().from(users).where(eq(users.userid, userid));
+    if (checkUser.length == 0) {
+      return await db.insert(users).values(userInfo);
+    } else {
+      const isLogins = false;
+      return isLogins;
+    }
 
-    return await db.insert(users).values(userInfo);
     // return userInfo;
   };
-
+  
   postProfileUpload = async (login_type: string, createUserDto: CreateUserDto, file: string) => {
     return file;
   };
+
 
   getMyPage = async (userid_num: number) => {
     const userInfo = await db
