@@ -10,6 +10,7 @@ import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
+
 function ChallengeInProgress() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,101 +49,61 @@ function ChallengeInProgress() {
       money: 1000,
     },
   ]);
+  const [urls,setUrls]=useState<string[]>([])
   useEffect(() => {
+    console.log('challenge_id', challenge_id)
     axios
-      .get(`http://localhost:3000/challengeDetail/${challenge_id}`)
+      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
-        console.log('response', response.data.urls);
+        console.log('response', response);
         console.log('this Challenge ', response.data.challengeDetail[0]);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
+        setUrls(response.data.urls)
       })
       .catch((error): void => {
-        console.error('ChallengeDetail에서 axios 오류:', error);
+        console.error('Challengeinprogress에서 axios 오류:', error);
       });
   }, []);
   const myImage = (
     <div className="grid grid-cols-2 gap-2">
-      <Link to="/challengeImage/1">
-        <div>
+      {urls.map((url,index)=>{
+        return(
+          <Link to="/challengeImage/1">
+        <div key={index}>
           <img
             className="aspect-square w-full rounded-lg object-cover"
-            src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
+            src={url}
           ></img>
         </div>
       </Link>
-
-      <Link to="/challengeImage/1">
-        <div>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
-          ></img>
-        </div>
-      </Link>
-      <Link to="/challengeImage/1">
-        <div>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
-          ></img>
-        </div>
-      </Link>
-      <Link to="/challengeImage/1">
-        <div>
-          <img
-            className=" aspect-square w-full rounded-lg object-cover"
-            src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
-          ></img>
-        </div>
-      </Link>
+        )
+      })}
     </div>
   );
   const otherImage = (
     <div className="grid grid-cols-2 gap-2">
-      <Link to="/challengeImage/2">
-        <div>
+      {urls.map((url,index)=>{
+        return(
+          <Link to="/challengeImage/1">
+        <div key={index}>
           <img
             className="aspect-square w-full rounded-lg object-cover"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
+            src={url}
           ></img>
         </div>
       </Link>
-
-      <Link to="/challengeImage/2">
-        <div>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
-          ></img>
-        </div>
-      </Link>
-      <Link to="/challengeImage/2">
-        <div>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg"
-          ></img>
-        </div>
-      </Link>
-      <Link to="/challengeImage/2">
-        <div>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUYPdBcfX3qZIo067ZVvB21yz8l4iWExVJGg&usqp=CAU"
-          ></img>
-        </div>
-      </Link>
+        )
+      })}
     </div>
   );
-
   return (
     <div className="mt-12 flex flex-col gap-4">
       <div className="p-3 text-center text-4xl font-extrabold">
         총 {challengeDetail.goal_money * challengers.length}원
       </div>
 
-      <div className="m-10 grid grid-cols-2 gap-2 gap-4 p-1 text-center">
+      <div className="m-10 grid grid-cols-2 gap-4 p-1 text-center">
         <div className="text-xl font-black">나</div>
         <div className="text-xl font-black">{challengers.length > 1 ? challengers[1]?.nickname : ' ...'}</div>
         <div className=" text-l">3회 성공</div>

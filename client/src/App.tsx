@@ -35,6 +35,7 @@ import Test from './page/challenge/Test';
 import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
+import ChallengeTier  from './page/challenge/ChallengeTier';
 
 function App() {
   return (
@@ -50,29 +51,30 @@ function App() {
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
             <Route path="/camera/:challenge_id" element={<Camera />} />
 
-            {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
-            <Route path="/challengeresult" element={<ChallengeResult />} />
-            <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
-            <Route path="/challengeList" element={<ChallengeList />} />
-            <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
-            <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
-            <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
-            <Route path="/alarm" element={<Alarm />} />
-            <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
-            <Route path="/fileupload" element={<FileUploadTest />} />
-            <Route path="/friendSelect" element={<FriendSelect />} />
-            <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
-            <Route path="/challengeNotice" element={<ChallengeNotice />} />
-            <Route path="/challengeCreate" element={<ChallengeCreate />} />
-            <Route>
-              <Route path="/mypage/" element={<MyPage />} />
-              <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
-              <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
-              <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-              <Route path="/mypage/followlist" element={<FollowList />} />
-              <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-              <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
-            </Route>
+          {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
+          <Route path="/challengeresult" element={<ChallengeResult />} />
+          <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+          <Route path="/challengeList" element={<ChallengeList />} />
+          <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
+          <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
+          <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
+          <Route path="/alarm" element={<Alarm />} />
+          <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
+          <Route path="/fileupload" element={<FileUploadTest />} />
+          <Route path="/friendSelect" element={<FriendSelect />} />
+          <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
+          <Route path="/challengeNotice" element={<ChallengeNotice />} />
+          <Route path="/challengeCreate" element={<ChallengeCreate />} />
+          <Route path="/challengetier" element={<ChallengeTier />} />
+
+          <Route path="/mypage/" element={<MyPage />} />
+          <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
+          <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
+          <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
+          <Route path="/mypage/followlist" element={<FollowList />} />
+          <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
+          <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+
 
             {/* 테스트 용 */}
             <Route path="/test" element={<Test />} />

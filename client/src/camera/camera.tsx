@@ -82,7 +82,7 @@ export function CameraAction({ onCapture, onClear }: VoidFunction) {
             onCapture(blob);
           }
         },
-        'image/jpeg',
+        'image/png',
         1,
       );
     }
