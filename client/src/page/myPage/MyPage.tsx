@@ -5,7 +5,7 @@ import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
 import { useEffect } from 'react';
-import tearImg from '../../../public/tear.png';
+import tearImg from '../../../public/challengerTear.png';
 import '../../../../client/src/App.css'; // 스타일 시트 임포트
 
 export default function MyPage() {

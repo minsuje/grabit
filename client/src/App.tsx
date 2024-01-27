@@ -37,6 +37,7 @@ import Layout from './page/Layout';
 import Camera from './page/challenge/Camera';
 import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
+import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 
 import axios, { AxiosInstance } from 'axios';
 import { useSelector } from 'react-redux';
@@ -70,42 +71,44 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          <Route path="/" element={<Layout />}>
-            <Route path="/main" element={<Main />} />
-            <Route path="/main2" element={<Main2 />} />
-            <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
-            <Route path="/camera/:challenge_id" element={<Camera />} />
+          {<Route path="/" element={<Layout />} />}
+          <Route path="/main" element={<Main />} />
+          <Route path="/main2" element={<Main2 />} />
+          <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+          <Route path="/camera/:challenge_id" element={<Camera />} />
 
-            {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
-            <Route path="/challengeresult" element={<ChallengeResult />} />
-            <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
-            <Route path="/challengeList" element={<ChallengeList />} />
-            <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
-            <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
-            <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
-            <Route path="/alarm" element={<Alarm />} />
-            <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
-            <Route path="/fileupload" element={<FileUploadTest />} />
-            <Route path="/friendSelect" element={<FriendSelect />} />
-            <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
-            <Route path="/challengeNotice" element={<ChallengeNotice />} />
-            <Route path="/challengeCreate" element={<ChallengeCreate />} />
+          {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
+          <Route path="/challengeresult" element={<ChallengeResult />} />
+          <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+          <Route path="/challengeList" element={<ChallengeList />} />
+          <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
+          <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
+          <Route path="/challengeDaily/:mission_id" element={<ChallengeDaily />} />
+          <Route path="/alarm" element={<Alarm />} />
+          <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
+          <Route path="/fileupload" element={<FileUploadTest />} />
+          <Route path="/friendSelect" element={<FriendSelect />} />
+          <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
+          <Route path="/challengeNotice" element={<ChallengeNotice />} />
+          <Route path="/challengeCreate" element={<ChallengeCreate />} />
 
-            <Route path="/refresh" element={<Refresh />} />
+          <Route path="/refresh" element={<Refresh />} />
 
-            <Route path="/challengetier" element={<ChallengeTier />} />
+          <Route path="/challengetier" element={<ChallengeTier />} />
 
-            <Route path="/mypage/" element={<MyPage />} />
-            <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
-            <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
-            <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-            <Route path="/mypage/friend" element={<Friend />} />
-            <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-            <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+          <Route path="/mypage/" element={<MyPage />} />
+          <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
+          <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
+          <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
+          <Route path="/mypage/friend" element={<Friend />} />
+          <Route path="/friend/:id" element={<MyPageFriendDetail />} />
+          <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
+          <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
+          <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+          {/*  */}
+          {/* 테스트 용 */}
+          <Route path="/test" element={<Test />} />
 
-            {/* 테스트 용 */}
-            <Route path="/test" element={<Test />} />
-          </Route>
         </Routes>
       </BrowserRouter>
     </div>

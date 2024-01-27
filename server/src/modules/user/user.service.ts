@@ -36,13 +36,18 @@ export class UserService {
       .select()
       .from(users)
       .where(eq(users.userid, userid));
-    if (checkUser.length == 0) {
-      return await db.insert(users).values(userInfo);
-    } else {
-      const isLogins = false;
-      return isLogins;
-    }
 
+    let isLogins = false;
+    if (checkUser.length !== 0) {
+      console.log('user.service >>>>> check user 밖에서');
+      const isLogins = false;
+      console.log(isLogins);
+      return isLogins;
+    } else {
+      console.log('user.service >>>>> check user 안에서');
+      const CUser = await db.insert(users).values(userInfo);
+      return (isLogins = true);
+    }
     // return userInfo;
   };
 
