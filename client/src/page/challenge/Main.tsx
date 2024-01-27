@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function Main() {
+  const LoginId:number =3;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function Main() {
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<dailyMission>({
     mission_id: 1,
-    mission_content: '물마시기',
+    mission_content: '임시 데이터',
     success_userid_num: [1, 2],
   });
 
@@ -41,7 +42,7 @@ export default function Main() {
           setDailymission(response.data);
         })
         .catch((error) => {
-          console.error('mission에서 일일미션 오류발생 :', error);
+          console.error('main에서 일일미션 오류발생 :', error);
         });
     }
   }, []);
@@ -52,18 +53,30 @@ export default function Main() {
       <Ranking />
       <h1>오늘의 미션</h1>
 
-      <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
-        <div>
-          <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-            <div className="flex justify-between">
-              <p>{dailymission.mission_content}</p>
 
-              <p>N시간 남음</p>
-            </div>
-            <p>100P</p>
-          </div>
+      {!dailymission.success_userid_num.includes(LoginId) ? (
+  <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
+    <div>
+      <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+        <div className="flex justify-between">
+          <p>{dailymission.mission_content}</p>
+          <p>N시간 남음</p>
         </div>
-      </Link>
+        <p>100P</p>
+      </div>
+    </div>
+  </Link>
+):(
+  <div>
+      <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+        <div className="flex justify-between">
+          <p>{dailymission.mission_content}</p>
+          <p>오늘 미션 완료!!</p>
+        </div>
+        <p>100P</p>
+      </div>
+    </div>
+)}
 
       <h1>진행중인 챌린지</h1>
       {ingMyChallenge.length == 0 ? (
