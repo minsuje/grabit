@@ -71,7 +71,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          {<Route path="/" element={<Layout />} />}
+          <Route path="/" element={<Layout />}>
           <Route path="/main" element={<Main />} />
           <Route path="/main2" element={<Main2 />} />
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
@@ -105,6 +105,7 @@ function App() {
           <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+          </Route>
           {/*  */}
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
