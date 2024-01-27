@@ -21,7 +21,7 @@ export const users = pgTable('users', {
   money: integer('money').default(0),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
-  refreshToken: text('refreshToken').array(),
+  refreshToken: text('refreshToken'),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
