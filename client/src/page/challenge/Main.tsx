@@ -49,7 +49,7 @@ export default function Main() {
   return (
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
-      <Ranking />
+      {/* <Ranking /> */}
       <h1>오늘의 미션</h1>
 
       <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
@@ -94,8 +94,10 @@ export default function Main() {
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
-        <Link to="/challengeInProgress/1
-        ">
+        <Link
+          to="/challengeInProgress/1
+        "
+        >
           <Button>진행중인 챌린지</Button>
         </Link>
         <Link to="/fileUpload">

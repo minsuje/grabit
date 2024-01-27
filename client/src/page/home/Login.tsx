@@ -8,7 +8,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import HeaderTitle from '@/components/HeaderTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
+import { setIsLoggedIn, setUsername, setUserId, setLoginToken, setRefreshToken } from '@/store/loginSlice';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 export default function Login() {
   // const cookies = new Cookies();
@@ -52,11 +55,13 @@ export default function Login() {
       );
 
       console.log('로그인 성공:>>>>>', response);
-      console.log('로그인 성공:>>>>>', response.data);
 
       dispatch(setIsLoggedIn(true));
       dispatch(setUsername('홍길동'));
       dispatch(setUserId(1));
+      dispatch(setLoginToken(response.data.loginToken));
+      dispatch(setRefreshToken(response.data.loginRefreshToken));
+
       navigate('/main');
 
       // JWT 토큰 response.data 저장
