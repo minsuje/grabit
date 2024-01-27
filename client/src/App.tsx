@@ -42,6 +42,8 @@ import FriendAddition from './page/myPage/FriendAddition';
 
 import axios from 'axios';
 
+import { useAppSelector } from '@/store/hooks';
+
 // const SERVER_ADDRESS: string = 'http://localhost:3000';
 
 // const customAxios: AxiosInstance = axios.create({
