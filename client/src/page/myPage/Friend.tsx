@@ -21,6 +21,7 @@ export default function Friend() {
       .get(`http://3.34.122.205:3000/friend/${userid}`)
       .then((response) => {
         setFriends(response.data.friends_info);
+        console.log(response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);

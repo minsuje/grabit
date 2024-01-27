@@ -96,8 +96,8 @@ function App() {
 
           <Route path="/challengetier" element={<ChallengeTier />} />
 
-          <Route path="/mypage/" element={<MyPage />} />
-          <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
+          <Route path="/mypage/:id" element={<MyPage />} />
+          <Route path="/:id/mypageedit" element={<MyPageEdit />} />
           <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
           <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
           <Route path="/mypage/friend" element={<Friend />} />
