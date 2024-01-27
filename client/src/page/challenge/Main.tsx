@@ -41,7 +41,7 @@ export default function Main() {
           setDailymission(response.data);
         })
         .catch((error) => {
-          console.error('ChallengeInProgress에서 일일미션 오류발생 :', error);
+          console.error('mission에서 일일미션 오류발생 :', error);
         });
     }
   }, []);
@@ -52,7 +52,7 @@ export default function Main() {
       <Ranking />
       <h1>오늘의 미션</h1>
 
-      <Link to={`/challengeDaily/${dailymission.mission_id}`} className="text-black no-underline">
+      <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
         <div>
           <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
@@ -100,6 +100,9 @@ export default function Main() {
         </Link>
         <Link to="/fileUpload">
           <Button>파일 업로드 테스트</Button>
+        </Link>
+        <Link to="/challengeEdit/1">
+          <Button>1번 챌린지 수정</Button>
         </Link>
       </div>
     </div>

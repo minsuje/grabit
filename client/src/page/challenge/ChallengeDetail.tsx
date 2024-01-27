@@ -72,7 +72,7 @@ function ChallengeDetail() {
                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <span>{challenger.nickname}</span>
+                  <span>임시 닉</span>
                 </div>
               );
             })}
