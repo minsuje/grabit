@@ -138,6 +138,7 @@ export class AuthService {
 
     // refreshToken 해싱
     const currentRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
+    console.log(currentRefreshToken);
 
     // db에 넣기
     const inputRefreshToken = await db
