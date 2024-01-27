@@ -4,6 +4,7 @@ interface LoginState {
   isLoggedIn: boolean;
   username: string;
   userId: number;
+  loginToken: string;
   refreshToken: string;
 }
 
@@ -11,6 +12,7 @@ const initialState: LoginState = {
   isLoggedIn: false,
   username: '',
   userId: 0,
+  loginToken: '',
   refreshToken: '',
 };
 
@@ -27,11 +29,14 @@ export const loginSlice = createSlice({
     setUserId: (state, action: PayloadAction<number>) => {
       state.userId = action.payload;
     },
-    setToken: (state, action: PayloadAction<string>) => {
+    setLoginToken: (state, action: PayloadAction<string>) => {
+      state.loginToken = action.payload;
+    },
+    setRefreshToken: (state, action: PayloadAction<string>) => {
       state.refreshToken = action.payload;
     },
   },
 });
 
-export const { setIsLoggedIn, setUsername, setUserId } = loginSlice.actions;
+export const { setIsLoggedIn, setUsername, setUserId, setLoginToken, setRefreshToken } = loginSlice.actions;
 export default loginSlice.reducer;

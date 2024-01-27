@@ -6,34 +6,10 @@ import { eq, and } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { UserService } from '../user/user.service';
 dotenv.config();
 @Injectable()
 export class AuthService {
-  constructor(
-    // private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
-
-  // 시진 작성
-  // async validateUser(userid: string, password: string): Promise<any> {
-  //   console.log(
-  //     `[AuthService] validateUser: userid=${userid}, password=${password}`,
-  //   );
-  //   return await this.userService.validateUser(userid, password);
-  // }
-
-  // async login(user: LoginDto) {
-  //   console.log(`[AuthService] login: user=${JSON.stringify(user)}`);
-  //   const payload = { userid: user.userid, name: user.name };
-  //   return {
-  //     access_token: this.jwtService.sign(payload),
-  //     userid: user.userid,
-  //     nickname: user.nickname,
-  //   };
-  // }
-  // 여기까지
-
+  constructor(private jwtService: JwtService) {}
   loginUser = async ({ userid, password }: LoginDto) => {
     let isLogin: string = 'false';
     let validate: string = 'none';
@@ -162,7 +138,6 @@ export class AuthService {
 
     // refreshToken 해싱
     const currentRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
-    console.log(currentRefreshToken);
 
     // db에 넣기
     const inputRefreshToken = await db

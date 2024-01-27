@@ -60,10 +60,11 @@ import FriendAddition from './page/myPage/FriendAddition';
 // });
 
 function App() {
-  const { refreshToken } = useSelector((state: RootState) => state.login);
+  // const { loginToken } = useSelector((state: RootState) => state.login);
 
   axios.defaults.baseURL = 'http://localhost:3000';
-  axios.defaults.headers.common['Authorization'] = refreshToken;
+
+  // axios.defaults.headers.common['Authorization'] = loginToken;
 
   return (
     <div className="App">
@@ -97,20 +98,24 @@ function App() {
 
             <Route path="/challengetier" element={<ChallengeTier />} />
 
+
             {/* mypage */}
             <Route path="/mypage/:id" element={<MyPage />} />
             <Route path="/:id/mypageedit" element={<MyPageEdit />} />
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
             <Route path="/mypage/friend/detail/:id/" element={<Friend />} />
+
             <Route path="/friend/:id" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
             <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+
             <Route path="/friend/new" element={<FriendAddition />} />
 
             {/*  */}
           </Route>
+
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
         </Routes>

@@ -2,15 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
 import { Button } from './ui/button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Header() {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, refreshToken } = useSelector((state: RootState) => state.login);
+  const { isLoggedIn, loginToken, refreshToken } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -23,22 +24,23 @@ function Header() {
 
   useEffect(() => {
     refreshAccessToken();
-    async function refreshAccessToken() {
-      console.log('refreshAccessToken');
-      await axios
-        .get('/refresh', { withCredentials: true, headers: { Authorization: refreshToken } })
+  }, [location]);
 
-        .then((response) => {
-          console.log('Refresh token success', response);
+  async function refreshAccessToken() {
+    console.log('loginToken', loginToken);
+    console.log('refreshToken', refreshToken);
+    await axios
+      .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
+      .then((response) => {
+        console.log('Refresh token success', response);
 
-          const newAccessToken = response.data.accessToken;
-          axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        })
-        .catch((error) => {
-          console.error('Refresh token error', error);
-        });
-    }
-  }, []);
+        // const newAccessToken = response.data.accessToken;
+        // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+      })
+      .catch((error) => {
+        console.error('Refresh token error', error);
+      });
+  }
 
   function handleLogout() {
     console.log('로그아웃');
