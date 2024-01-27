@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
 import { Challenge } from './challenge.module';
@@ -27,7 +36,10 @@ export class ChallengeController {
 
   // 챌린지 상세 정보 보기
   @Get('/challengeDetail/:challenge_id')
-  getChallengeDetail(@Param('challenge_id') challenge_id: number, @Req() req): any {
+  getChallengeDetail(
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ): any {
     // console.log('controller', challenge_id);
     console.log('controller challengeDetail req > ', req.file);
     return this.ChallengeService.challengeDetail(challenge_id, req.file);
@@ -41,7 +53,10 @@ export class ChallengeController {
 
   // 챌린지 수정하기
   @Patch('/challengeEdit/:challenge_id')
-  patchChallengeEdit(@Param('challenge_id') challenge_id: number, @Body() body: ChallengeDto): any {
+  patchChallengeEdit(
+    @Param('challenge_id') challenge_id: number,
+    @Body() body: ChallengeDto,
+  ): any {
     return this.ChallengeService.patchChallengeEdit(body, challenge_id);
   }
 
@@ -60,13 +75,21 @@ export class ChallengeController {
     @Req() req,
   ): any {
     const file = req.file;
-    return this.ChallengeService.getChallengeAuth(challenge_id, authentication_id, file);
+    return this.ChallengeService.getChallengeAuth(
+      challenge_id,
+      authentication_id,
+      file,
+    );
   }
 
   // 테스트 (s3 이미지 post 요청)
   // 챌린지 인증사진 올리기
   @Post('/challengeAuth/:challenge_id')
-  newChallengeAuth(@Body() body: any, @Param('challenge_id') challenge_id: number, @Req() req): any {
+  newChallengeAuth(
+    @Body() body: any,
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ): any {
     const file = req.file;
     return this.ChallengeService.newChallengeAuth(challenge_id, file);
   }
@@ -78,11 +101,17 @@ export class ChallengeController {
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
   ): any {
-    return this.ChallengeService.newChallengeAuthEmoticon(body, challenge_id, authentication_id);
+    return this.ChallengeService.newChallengeAuthEmoticon(
+      body,
+      challenge_id,
+      authentication_id,
+    );
   }
 
   // 챌린지 인증사진에 대한 이모티콘 취소 요청
-  @Delete('/challengeAuth/:challenge_id/:authentication_id/:authentication_img_emoticon_id')
+  @Delete(
+    '/challengeAuth/:challenge_id/:authentication_id/:authentication_img_emoticon_id',
+  )
   deleteChallengeAuthEmoticon(
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
@@ -105,7 +134,11 @@ export class ChallengeController {
     @Req() req,
   ): any {
     const file = req.file;
-    return this.ChallengeService.patchChallengeAuth(challenge_id, authentication_id, file);
+    return this.ChallengeService.patchChallengeAuth(
+      challenge_id,
+      authentication_id,
+      file,
+    );
   }
 
   // 테스트 (s3 이미지 delete 요청)
@@ -114,6 +147,16 @@ export class ChallengeController {
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
   ): any {
-    return this.ChallengeService.deleteChallengeAuth(challenge_id, authentication_id);
+    return this.ChallengeService.deleteChallengeAuth(
+      challenge_id,
+      authentication_id,
+    );
+  }
+
+  // 챌린지 히스토리 조회
+  @Get('/history/:userid_num') getChallengeHistory(
+    @Param('userid_num') userid_num: number,
+  ): any {
+    return this.ChallengeService.getChallengeHistory(userid_num);
   }
 }

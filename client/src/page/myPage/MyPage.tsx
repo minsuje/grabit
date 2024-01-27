@@ -1,22 +1,71 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import tearImg from '../../../public/challengerTear.png';
 import '../../../../client/src/App.css'; // 스타일 시트 임포트
 
 export default function MyPage() {
-  console.log(ChallengeData);
+  const [nickName, setNickName] = useState<string>('');
+  const [scoreNum, setScorNum] = useState<string>('');
+  const [money, setMoney] = useState<string>('');
+
+  const { id } = useParams();
+  console.log('userid>>>>>>>>>', id);
 
   useEffect(() => {
-    axios.get('url').then((response) => {
-      console.log(response.data);
-    });
+    axios
+      .get(`http://3.34.122.205:3000/friend/${id}`)
+      .then((response) => {
+        console.log('>>>>>>', response.data);
+      })
+      .catch((error) => {
+        console.error('친구 목록 불러오기 axios 오류', error);
+      });
   }, []);
 
+  useEffect(() => {
+    // const tierImages = {
+    //   silver: '/silverTear.png',
+    //   platinum: '/platinumTear.png',
+    //   diamond: '/diamondTear.png',
+    //   challenger: '/challengerTear.png',
+    // };
+
+    axios
+      .get(`http://3.34.122.205:3000/mypage/${id}`) // userid를 사용하여 서버 요청
+      .then((response) => {
+        console.log('res>>>>>>', response.data.userInfo[0]);
+        setNickName(response.data.userInfo[0].nickname);
+        setScorNum(response.data.userInfo[0].score_num);
+        setMoney(response.data.userInfo[0].money);
+      })
+      .catch((error) => {
+        console.error('사용자 정보 불러오기 오류', error);
+      });
+  }, [id]); // id가 변경될 때마다 요청
+
+  console.log(nickName);
+
+  const getTierImage = (score) => {
+    if (score >= 2000) return '/challengerTear.png';
+    if (score >= 1500) return '/diamondTear.png';
+    if (score >= 1000) return '/platinumTear.png';
+    return '/silverTear.png';
+  };
+
+  const getTierName = (score) => {
+    if (score >= 2000) return '챌린저';
+    if (score >= 1500) return '다이아몬드';
+    if (score >= 1000) return '플래티넘';
+    return '실버';
+  };
+
+  const tierImageSrc = getTierImage(parseInt(scoreNum));
+  const tierName = getTierName(parseInt(scoreNum));
   return (
     <div className="p-10">
       <h1>마이페이지</h1>
@@ -26,7 +75,7 @@ export default function MyPage() {
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <Link to="mypageedit">
+        <Link to={`/${id}/mypageedit`}>
           <Button type="submit" variant="outline">
             프로필 수정
           </Button>
@@ -34,19 +83,20 @@ export default function MyPage() {
       </div>
 
       <div>
-        <p>라마</p>
+        <p>{nickName}</p>
       </div>
 
       <div className=" flex content-center mt-10">
         <div className="w-[100%]  flex flex-col justify-center ">
-          <p>티어점수</p>
+          <p>{scoreNum}</p>
         </div>
         <div className="w-[10%] mr-5 text-end">
-          <p>티어</p>
+          <p>{tierName}</p>
           <p className="text-xs text-neutral-300">순위</p>
         </div>
         <div className=" flex flex-col content-center justify-center">
-          <img src={tearImg} alt="tearImg" className="w-12 glowing-image " />
+          {/* 티어에 따른 이미지 렌더링 */}
+          <img src={tierImageSrc} alt="Tier Image" className="w-12 glowing-image " />
         </div>
       </div>
       <br />
@@ -73,14 +123,14 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to="friend">
+        <Link to={`/mypage/friend/detail/${id}/`}>
           <Button>전체보기</Button>
         </Link>
       </div>
 
       <div className="flex flex-col gap-1 ">
         <div className="flex justify-between">
-          <span>금액</span>
+          <span>{money}</span>
           <Link to="mypagewithdraw">
             <span>출금하기</span>
           </Link>

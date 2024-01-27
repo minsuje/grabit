@@ -27,8 +27,34 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
+    // console.log('profileImg middleware originalUrl > ', req.originalUrl);
+
+    // '/friend/detail' 경로로 요청 온 경우
+    if (
+      'friend/detail' ===
+      `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}`
+    ) {
+      let friend = await db
+        .select({
+          userid_num: users.userid_num,
+          nickname: users.nickname,
+          score_num: users.score_num,
+          profile_img: users.profile_img,
+        })
+        .from(users)
+        .where(eq(users.userid_num, Number(req.originalUrl.split('/')[3])));
+
+      const command = new GetObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: friend[0].profile_img,
+      });
+      const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+      friend[0].profile_img = url;
+
+      req['file'] = friend[0];
+    }
     // '/friend' 경로로 요청 온 경우
-    if (req.baseUrl.split('/')[1] === 'friend') {
+    else if (req.baseUrl.split('/')[1] === 'friend') {
       console.log(
         'profileImg middleware friend',
         Number(req.url.split('/')[1]),

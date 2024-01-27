@@ -42,6 +42,7 @@ import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import axios, { AxiosInstance } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import FriendAddition from './page/myPage/FriendAddition';
 
 // const SERVER_ADDRESS: string = 'http://localhost:3000';
 
@@ -62,6 +63,7 @@ function App() {
   // const { loginToken } = useSelector((state: RootState) => state.login);
 
   axios.defaults.baseURL = 'http://localhost:3000';
+
   // axios.defaults.headers.common['Authorization'] = loginToken;
 
   return (
@@ -96,17 +98,24 @@ function App() {
 
             <Route path="/challengetier" element={<ChallengeTier />} />
 
-            <Route path="/mypage/" element={<MyPage />} />
-            <Route path="/mypage/mypageedit" element={<MyPageEdit />} />
+
+            {/* mypage */}
+            <Route path="/mypage/:id" element={<MyPage />} />
+            <Route path="/:id/mypageedit" element={<MyPageEdit />} />
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-            <Route path="/mypage/friend" element={<Friend />} />
+            <Route path="/mypage/friend/detail/:id/" element={<Friend />} />
+
             <Route path="/friend/:id" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
             <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+
+            <Route path="/friend/new" element={<FriendAddition />} />
+
+            {/*  */}
           </Route>
-          {/*  */}
+
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
         </Routes>

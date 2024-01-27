@@ -47,6 +47,12 @@ export class FriendController {
     return this.friendService.remove(createFriendDto, userid);
   }
 
+  // 친구 프로필 상세 보기
+  @Get('/detail/:userid_num')
+  getFriendDetail(@Param('userid_num') userid_num: number, @Req() req) {
+    return req.file;
+  }
+
   // @Get()
   // findAll() {
   //   return this.friendService.findAll();
