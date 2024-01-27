@@ -37,6 +37,7 @@ import Layout from './page/Layout';
 import Camera from './page/challenge/Camera';
 import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
+import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 
 function App() {
   return (
@@ -46,11 +47,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          <Route path="/" element={<Layout />}>
-            <Route path="/main" element={<Main />} />
-            <Route path="/main2" element={<Main2 />} />
-            <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
-            <Route path="/camera/:challenge_id" element={<Camera />} />
+          { <Route path="/" element={<Layout />}> }
+          <Route path="/main" element={<Main />} />
+          <Route path="/main2" element={<Main2 />} />
+          <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+          <Route path="/camera/:challenge_id" element={<Camera />} />
 
           {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
           <Route path="/challengeresult" element={<ChallengeResult />} />
@@ -76,14 +77,14 @@ function App() {
           <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
           <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
           <Route path="/mypage/friend" element={<Friend />} />
+          <Route path="/friend/:id" element={<MyPageFriendDetail />} />
+          <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
 
-
-
-            {/* 테스트 용 */}
-            <Route path="/test" element={<Test />} />
-          </Route>
+          {/* 테스트 용 */}
+          <Route path="/test" element={<Test />} />
+          </Route> 
         </Routes>
       </BrowserRouter>
     </div>

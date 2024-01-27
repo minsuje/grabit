@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
@@ -128,6 +128,7 @@ export default function Register() {
             },
           });
           console.log('회원가입 성공');
+          console.log(res);
           navigate('/login');
         } catch (err) {
           console.error('회원가입 실패:', err);
