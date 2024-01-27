@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 
@@ -52,11 +53,13 @@ export class AuthController {
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
       // maxAge: 7 * 24 * 60 * 60 * 1000,
-      maxAge: 20 * 1000,
+      maxAge: 10 * 1000,
       // maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
     });
+
+    console.log('/ > ', loginToken);
 
     return res.send({
       loginToken,
@@ -122,18 +125,32 @@ export class AuthController {
   async refresh(@Req() req: Request, @Res() res: Response) {
     console.log('/refresh site 접속 >>>');
     try {
-      console.log('/refresh site try >>>');
       const newAccessToken = await this.authService.refresh(
-        req.cookies.loginRefreshToken,
+        req.cookies.refreshToken,
       );
-      console.log('/refresh site after try >>>');
-      res.cookie('loginToken', newAccessToken, {
+
+      console.log('controller new access token >', newAccessToken);
+
+      await res.cookie('jwt', newAccessToken, {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 10 * 60 * 60 * 1000,
         secure: true,
         sameSite: 'none',
       });
-    } catch {}
+      console.log('성공');
+      return res.send({
+        Message: 'new token success',
+      });
+    } catch (err) {
+      console.log('실패');
+      res.clearCookie('login Token');
+      res.clearCookie('refreshToken');
+      res.clearCookie('jwt');
+      res.clearCookie('accessToken');
+      res.clearCookie('isLoggedIn');
+      throw new UnauthorizedException();
+    }
   }
 
   // @Get('/cookies')
