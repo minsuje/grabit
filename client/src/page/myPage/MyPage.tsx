@@ -1,17 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Link, Outlet, useParams } from 'react-router-dom';
-import MyPageData from '@/data/myPageData';
 import ChallengeData from '@/data/ChallengeData';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import tearImg from '../../../public/challengerTear.png';
 import '../../../../client/src/App.css'; // 스타일 시트 임포트
+import { ListComponent3 } from '@/components/ComponentSeong';
 
 export default function MyPage() {
   const [nickName, setNickName] = useState<string>('');
-  const [scoreNum, setScorNum] = useState<string>('');
+  const [scoreNum, setScoreNum] = useState<string>('');
   const [money, setMoney] = useState<string>('');
+  const [win, setWin] = useState<String>('');
+  const [lose, setLose] = useState<String>('');
+  const [history, setHistory] = useState<String[]>([]);
 
   const { id } = useParams();
   console.log('userid>>>>>>>>>', id);
@@ -28,6 +30,21 @@ export default function MyPage() {
   }, []);
 
   useEffect(() => {
+    axios
+      .get(`http://3.34.122.205:3000/history/${id}`)
+      .then((response) => {
+        setWin(response.data.win);
+        setLose(response.data.lose);
+        setHistory(response.data.history);
+      })
+      .catch((error) => {
+        console.error('친구 목록 불러오기 axios 오류', error);
+      });
+  }, []);
+
+  console.log('histroy>>>>>>>>>>>>>!>>!', history);
+
+  useEffect(() => {
     // const tierImages = {
     //   silver: '/silverTear.png',
     //   platinum: '/platinumTear.png',
@@ -40,7 +57,7 @@ export default function MyPage() {
       .then((response) => {
         console.log('res>>>>>>', response.data.userInfo[0]);
         setNickName(response.data.userInfo[0].nickname);
-        setScorNum(response.data.userInfo[0].score_num);
+        setScoreNum(response.data.userInfo[0].score_num);
         setMoney(response.data.userInfo[0].money);
       })
       .catch((error) => {
@@ -67,7 +84,7 @@ export default function MyPage() {
   const tierImageSrc = getTierImage(parseInt(scoreNum));
   const tierName = getTierName(parseInt(scoreNum));
   return (
-    <div className="p-10">
+    <div className="">
       <h1>마이페이지</h1>
 
       <div className="flex justify-between">
@@ -145,27 +162,32 @@ export default function MyPage() {
         <div className="flex justify-between ">
           <p>전적</p>
           <p>
-            {MyPageData[0].win}승 {MyPageData[0].lose}패 {MyPageData[0].draw}무
+            {win}승 {lose}패
           </p>
         </div>
         <div>
-          <h1>히스토리</h1>
-          <Link to=" " className="text-black no-underline">
-            <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-              <div className="flex justify-between">
-                <p>{ChallengeData[0].challenge_name}</p>
-
-                <p>{ChallengeData[0].authentication_term}일 후 종료</p>
-              </div>
-              <p>{ChallengeData[0].goal_money}</p>
-            </div>
-          </Link>
-          <div className="flex justify-center">
-            <Link to="mypagehistorydetail">
-              <button>전체보기</button>
-            </Link>
+          <div>
+            {history.map((item, key) => (
+              <Link to={`/detail/${item.challenge_id}`} key={key} className="text-black no-underline">
+                <ListComponent3 history={item} scoreNum={scoreNum} />
+              </Link>
+            ))}
           </div>
         </div>
+        <div className="flex justify-center">
+          <Link to="mypagehistorydetail">
+            <button>전체보기</button>
+          </Link>
+        </div>
+
+        {/* {history.map((item, index) => (
+          <Link to={`/detail/${item.challenge_id}`} key={index} className="text-black no-underline">
+            <div className="w-100 rounded-lg bg-gray-200 p-6 shadow-md">
+              <div className="flex justify-between">
+                <div className="font-bold text-black">{item.challenge_name}</div>
+                {/* 기타 정보 출력 */}
+
+        {/* 기타 데이터 출력 */}
       </div>
     </div>
   );

@@ -1,15 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {ChallengeProp } from '@/types/types';
+import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
-
-
+import { challenge } from '../../../server/src/modules/challenge/schema';
 
 // ~~~일 후 종료
 
 export function ListComponent1({ challenge }: ChallengeProp) {
-
   // const challenge = challengeProp.challenge;
 
   const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
@@ -44,24 +42,26 @@ export function ListComponent2({ challenge }: ChallengeProp) {
   );
 }
 
-export function ListComponent3() {
+export const ListComponent3 = ({ history, scoreNum }) => {
   return (
     <>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
         <div className="flex justify-between">
-          <div className="font-bold text-black">물마시기</div>
+          <div className="font-bold text-black">{history.challenge_name}</div>
           <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">15,000</div>
+          <div className="mr-3 mt-2 text-black">{history.goal_money}</div>
           <div className="mt-2 text-black">
             <Badge variant="default">+1000원</Badge>
           </div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">1000P</div>
+          <div className="mt-2 text-black">{scoreNum}P</div>
           <div className="mt-2 text-black">
-            <Badge variant="default">+100P</Badge>
+            <Badge variant="default" className="ml-2">
+              +100P
+            </Badge>
           </div>
           <div className="flex w-[100%] justify-end">
             <div className="mt-2 text-black ">승</div>
@@ -70,7 +70,7 @@ export function ListComponent3() {
       </div>
     </>
   );
-}
+};
 interface ProgressProp {
   ProgressName: string;
   total: number;
