@@ -123,33 +123,41 @@ export class AuthController {
   @Get('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
+    console.log('', req.cookies);
     console.log('/refresh site 접속 >>>');
-    try {
-      const newAccessToken = await this.authService.refresh(
-        req.cookies.refreshToken,
-      );
+    if (!req.cookies.jwt) {
+      try {
+        const newAccessToken = await this.authService.refresh(
+          req.cookies.refreshToken,
+        );
 
-      console.log('controller new access token >', newAccessToken);
+        console.log('controller new access token >', newAccessToken);
 
-      await res.cookie('jwt', newAccessToken, {
-        httpOnly: true,
-        // maxAge: 24 * 60 * 60 * 1000,
-        maxAge: 10 * 60 * 60 * 1000,
-        secure: true,
-        sameSite: 'none',
-      });
-      console.log('성공');
+        await res.cookie('jwt', newAccessToken, {
+          httpOnly: true,
+          // maxAge: 24 * 60 * 60 * 1000,
+          maxAge: 10 * 60 * 60 * 1000,
+          secure: true,
+          sameSite: 'none',
+        });
+        console.log('성공');
+        return res.send({
+          Message: 'new token success',
+        });
+      } catch (err) {
+        console.log('실패');
+        res.clearCookie('login Token');
+        res.clearCookie('refreshToken');
+        res.clearCookie('jwt');
+        // res.clearCookie('accessToken');
+        res.clearCookie('isLoggedIn');
+        throw new UnauthorizedException();
+      }
+    } else {
+      console.log('else 문으로 빠짐');
       return res.send({
-        Message: 'new token success',
+        isExpired: true,
       });
-    } catch (err) {
-      console.log('실패');
-      res.clearCookie('login Token');
-      res.clearCookie('refreshToken');
-      res.clearCookie('jwt');
-      // res.clearCookie('accessToken');
-      res.clearCookie('isLoggedIn');
-      throw new UnauthorizedException();
     }
   }
 
