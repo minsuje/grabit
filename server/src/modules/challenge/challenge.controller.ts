@@ -152,4 +152,11 @@ export class ChallengeController {
       authentication_id,
     );
   }
+
+  // 챌린지 히스토리 조회
+  @Get('/history/:userid_num') getChallengeHistory(
+    @Param('userid_num') userid_num: number,
+  ): any {
+    return this.ChallengeService.getChallengeHistory(userid_num);
+  }
 }
