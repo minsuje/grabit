@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 interface FriendDetail {
@@ -12,15 +13,17 @@ interface FriendDetail {
 
 export default function MyPageFriendDetail() {
   const [friendDetail, setFriendDetail] = useState<any | FriendDetail | null>('');
-
+  const { id } = useParams();
+  console.log(id);
   useEffect(() => {
     const userid = 1; // 실제 사용자 ID를 여기에 설정
     axios
-      .get(`http://3.34.122.205:3000/friend/${userid}`)
+      .get(`http://3.34.122.205:3000/friendDetail/${id}`)
       .then((response) => {
         // 상세 정보 설정
-
-        setFriendDetail(response.data.friends_info);
+        console.log(response.data);
+        const detail = response.data.friends_info[0];
+        setFriendDetail(detail);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);
