@@ -8,13 +8,16 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
+import { useNavigate } from 'react-router-dom';
 
 import { format } from 'date-fns';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeDetail() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId =3
 
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
@@ -32,6 +35,19 @@ function ChallengeDetail() {
       money: 1000,
     },
   ]);
+
+
+  const participate = () => {
+    axios
+      .get(`http://3.34.122.205:3000/challengeDetail/${challengeDetail?.challenge_id}/${userId}`)
+      .then((response): void => {
+        console.log('response', response.data);
+       
+      })
+      .catch((error): void => {
+        console.error('ChallengeDetail에서 참가 axios 오류:', error);
+      });
+  }
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 상세', backPath: -1 }));
@@ -59,7 +75,8 @@ function ChallengeDetail() {
         <div className="user-list flex">
           <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
-            <Label className="w-8">공개</Label>
+            
+            <Label className="w-8">{challengeDetail?.is_public?('공개'):('비공개')}</Label>
           </div>
         </div>
 
@@ -72,7 +89,7 @@ function ChallengeDetail() {
                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <span>임시 닉</span>
+                  <span>{challenger.nickname}</span>
                 </div>
               );
             })}
@@ -103,8 +120,19 @@ function ChallengeDetail() {
       </div>
 
       <div className="user-list flex flex-col gap-4 pt-4">
-        <Button>참가하기</Button>
-        <Button>확인</Button>
+
+
+{
+  challengeDetail?.is_public && challengers.length<4 && !challengeDetail.challenger_userid_num.includes(userId) &&(<Button onClick={()=>participate}>참가하기</Button>)
+}
+
+{
+  challengeDetail?.is_public && challengers.length==4 &&(<Button disabled onClick={()=>participate}>정원 초과</Button>)
+}
+       <Button  onClick={()=>{
+        navigate('/challengeList')
+       }}>확인</Button>
+       
       </div>
     </div>
   );

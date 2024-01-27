@@ -1,10 +1,7 @@
 import { Tab } from '@/components/Component0117';
 import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
-import { Button } from '@/components/ui/button';
-
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
 import axios from 'axios';
 import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
@@ -18,18 +15,15 @@ interface url {
   url:string;
 }
 
-
-
 function ChallengeInProgress() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
   const tab:string[]=['나'];
-
+  const tabId:number[]=[3];
+  const UrlGroup:string[][] =[[],[],[],[]]
   const Images:JSX.Element[] = []
 
-
-  
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
@@ -66,7 +60,6 @@ function ChallengeInProgress() {
   ]);
   const [urls,setUrls]=useState<url[]>([])
 
-
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
 
   let totalAuthCount = 3;
@@ -74,14 +67,12 @@ function ChallengeInProgress() {
     totalAuthCount =((period+1)/7)*challengeDetail.term
   }
 
-
   useEffect(() =>{
     console.log('challenge_id', challenge_id)
     axios
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
-        console.log('this Challenge ', response.data.challengeDetail[0]);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
         setUrls(response.data.urls)
@@ -89,44 +80,53 @@ function ChallengeInProgress() {
       .catch((error): void => {
         console.error('Challengeinprogress에서 axios 오류:', error);
       });
-
   }, []);
+
+// 기본값  '나'는 이미 저장된 값
+  // 로그인한 유저가 아닌 challengers의 nickname만 push
+  for (let i=0; i<4; i++) {
+    if(challengers[i]&& challengers[i].userid_num!==3){ //jwt로 수정
+      tab.push(challengers[i].nickname)
+      tabId.push(challengers[i].userid_num)
+    }else{
+      tab.push("")
+    }
+  }
+  
+  for(let j=0; j<tabId.length; j++){
+   for(let i=0; i<urls.length;i++){
+    Number(urls[i].userid_num)===tabId[j] ? UrlGroup[j].push(urls[i].url) : ""
+   }
+  }
+  
+  
+  for (let i=0; i<UrlGroup.length; i++){
+    Images.push  (
+      <div className="grid grid-cols-2 gap-2">
+        {UrlGroup[i].map((url,index)=>{
+          return(
+            <Link to="/challengeImage/1">
+          <div key={index}>
+            <img
+              className="aspect-square w-full rounded-lg object-cover"
+              src={url}
+            ></img>
+          </div>
+        </Link>
+          )
+        })}
+      </div>
+    );
+  }
+
+
+
+
+
+
 
 
   
-  const myImage = (
-    <div className="grid grid-cols-2 gap-2">
-      {urls.map((url,index)=>{
-        return(
-          <Link to="/challengeImage/1">
-        <div key={index}>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src={url.url}
-          ></img>
-        </div>
-      </Link>
-        )
-      })}
-    </div>
-  );
-
-  Images.push(myImage)
-
-
-
-  // 기본값  '나'는 이미 저장된 값
-  // 로그인한 유저가 아닌 challengers의 nickname만 push
-for (let i=0; i<4; i++) {
-  if(challengers[i]&& challengers[i].userid_num!==3){ //jwt로 수정
-    tab.push(challengers[i].nickname)
-    console.log(i,'번째', tab)
-  }else{
-    tab.push("")
-    console.log(i,'번째', tab)
-  }
-}
-
 
 
   return (
@@ -135,24 +135,40 @@ for (let i=0; i<4; i++) {
         총 {challengeDetail.goal_money * challengers.length}원
       </div>
 
-      <div className="m-10 grid grid-cols-2 gap-4 p-1 text-center">
-        <div className="text-xl font-black">나</div>
-        <div className="text-xl font-black">{challengers.length > 1 ? challengers[1]?.nickname : ' ...'}</div>
-        <div className=" text-l">3회 성공</div>
-        <div className="text-l">5회 성공</div>
+      <div className="m-10 flex  p-1 text-center justify-between">
+        <div className="flex-col">
+        <div className="text-xl font-black p-2">나</div>
+        <div className="text-l ">{UrlGroup[0].length}회 성공</div>
+        </div>
+
+        <div className="flex-col">
+        <div className="text-xl font-black p-2">{tab[1]}</div>
+        <div className="text-l ">{UrlGroup[1].length}회 성공</div>
+        </div>
+
+        {tab[2]!==""&&<div className="flex-col">
+        <div className="text-xl font-black p-2">{tab[2]}</div>
+        <div className="text-l ">{UrlGroup[2].length}회 성공</div>
+        </div>}
+        
+        {tab[3]!==""&&<div className="flex-col">
+        <div className="text-xl font-black p-2">{tab[3]}</div>
+        <div className="text-l font-black">{UrlGroup[3].length}회 성공</div>
+        </div>}
+       
+        
       </div>
 
-      {/*로그인 한 유저(나)가 누구인지 확인하는 코드 추가 */}
 
-      <ProgressComponent ProgressName={'진행률'} total={ totalAuthCount} value={0} />
+      <ProgressComponent ProgressName={'진행률'} total={ totalAuthCount} value={UrlGroup[0].length} />
       <ProgressComponent ProgressName={'기간'} total={period+1} value={differenceInDays(new Date(), challengeDetail.authentication_start_date)} />
       <br />
       <ListComponent1 challenge={challengeDetail} />
-      <Tab tab1={tab[0]} tab2={tab[1]} tab3={tab[2]} tab4={tab[3]} tab1content={Images[0]} tab2content={Images[1]}  tab3content={Images[2]} tab4content={Images[3]} />
+      <Tab 
+      tab1={tab[0]} tab2={tab[1]} tab3={tab[2]} tab4={tab[3]} tab1content={Images[0]} tab2content={Images[1]}  tab3content={Images[2]} tab4content={Images[3]} />
       <Cta text='인증하기' onclick={() => {
             navigate(`/camera/${challenge_id}`);
           }} >
-        
       </Cta>
     </div>
   );

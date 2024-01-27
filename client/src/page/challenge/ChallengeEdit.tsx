@@ -162,7 +162,7 @@ function ChallengeEdit() {
                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <span>임시 닉</span>
+                  <span>{challenger.nickname}</span>
                 </div>
               );
             })}
@@ -180,15 +180,29 @@ function ChallengeEdit() {
         }}
       />
 
-      <h2 className="py-4 text-xl font-bold">주제</h2>
-      <Input
-        value={challengeDetail.topic}
-        onChange={(e) => {
+<h2 className="py-4 text-xl font-bold">주제</h2>
+      <Select
+        onValueChange={(value) => {
           setChallengeDetail((challengeDetail) => {
-            return { ...challengeDetail, topic: e.target.value };
+            return { ...challengeDetail, topic: value };
           });
         }}
-      />
+      >
+        <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder={challengeDetail.topic} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="운동">운동</SelectItem>
+          <SelectItem value="셀프케어">셀프케어</SelectItem>
+          <SelectItem value="독서">독서</SelectItem>
+          <SelectItem value="학습">학습</SelectItem>
+          <SelectItem value="취미">취미</SelectItem>
+          <SelectItem value="생활습관">생활습관</SelectItem>
+          <SelectItem value="저축">저축</SelectItem>
+
+        </SelectContent>
+      </Select>
+      
       <h2 className="py-4 text-xl font-bold">기간</h2>
       <Select
         value={period.toString()}
