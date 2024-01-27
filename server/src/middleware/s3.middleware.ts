@@ -84,8 +84,11 @@ export class s3Middleware implements NestMiddleware {
       }
     } else if (req.method === 'POST') {
       // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
-      let today = `${(new Date().getMonth() + 1).toString()}/${new Date().getDate()}/${new Date().getFullYear()}`;
-      console.log('today', today);
+      // let today = `${(new Date().getMonth() + 1).toString()}/${new Date().getDate()}/${new Date().getFullYear()}`;
+      let today = new Date()
+        .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
+        .split(',')[0];
+      // console.log('today', today);
       let auths = await db
         .select({
           created_at: authentication.created_at,
@@ -105,7 +108,7 @@ export class s3Middleware implements NestMiddleware {
           .split(',')[0];
         if (today === date) todayAuth.push(auths[i]);
       }
-      console.log('todayAuth', todayAuth);
+      // console.log('todayAuth', todayAuth);
 
       let already = false;
       for (let i = 0; i < todayAuth.length; i++) {
