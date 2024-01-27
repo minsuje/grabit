@@ -7,7 +7,7 @@ import {
 } from './schema';
 import { users } from '../user/schema';
 import { db } from '../../../db/db';
-import { eq, not, and, desc } from 'drizzle-orm';
+import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
 import { s3Middleware } from 'src/middleware/s3.middleware';
 import { read } from 'fs';
@@ -306,5 +306,46 @@ export class ChallengeService {
     return await db
       .delete(authentication)
       .where(eq(authentication.authentication_id, authentication_id));
+  };
+
+  // 챌린지 히스토리 조회
+  getChallengeHistory = async (userid_num: number) => {
+    console.log('history service > ', userid_num);
+    const myChallenge = await db
+      .select()
+      .from(challenge)
+      .where(arrayOverlaps(challenge.challenger_userid_num, [userid_num]));
+
+    let history = [];
+    let today = new Date()
+      .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
+      .split(',')[0];
+    for (let i = 0; i < myChallenge.length; i++) {
+      if (
+        isAfter(
+          today,
+          myChallenge[i].authentication_end_date
+            .toLocaleString('en-US', {
+              timeZone: 'Asia/Seoul',
+            })
+            .split(',')[0],
+        )
+      )
+        history.push(myChallenge[i]);
+    }
+    let win = 0, // 승리 횟수
+      lose = 0; // 패배 횟수
+    const total = history.length; // 총 챌린지 횟수
+
+    for (let i = 0; i < history.length; i++) {
+      if (
+        history[i].winner_userid_num !== null &&
+        history[i].winner_userid_num.includes(Number(userid_num))
+      )
+        win++;
+      else lose++;
+    }
+
+    return { history, total, win, lose };
   };
 }
