@@ -9,12 +9,15 @@ import axios from 'axios';
 import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import { differenceInDays } from 'date-fns';
+
 
 
 function ChallengeInProgress() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
+  
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
@@ -50,12 +53,22 @@ function ChallengeInProgress() {
     },
   ]);
   const [urls,setUrls]=useState<string[]>([])
+
+
+  const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+
+  let totalAuthCount = 3;
+  if(period!==3){
+    totalAuthCount =((period+1)/7)*challengeDetail.term
+  }
+
+
   useEffect(() => {
     console.log('challenge_id', challenge_id)
     axios
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
-        console.log('response', response);
+        console.log('response', response.data);
         console.log('this Challenge ', response.data.challengeDetail[0]);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
@@ -112,9 +125,9 @@ function ChallengeInProgress() {
 
       {/*로그인 한 유저(나)가 누구인지 확인하는 코드 추가 */}
 
-      <ProgressComponent ProgressName={'진행률'} total={10} value={0} />
+      <ProgressComponent ProgressName={'진행률'} total={ totalAuthCount} value={0} />
 
-      <ProgressComponent ProgressName={'기간'} total={10} value={5} />
+      <ProgressComponent ProgressName={'기간'} total={period+1} value={differenceInDays(new Date(), challengeDetail.authentication_start_date)} />
       <br />
       <ListComponent1 challenge={challengeDetail} />
 

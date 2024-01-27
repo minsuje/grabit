@@ -3,8 +3,10 @@ import { CameraAction } from '../../camera/camera';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Camera() {
+  const navigate = useNavigate();
   const [isCameraOpen, setIsCameraOpen] = useState<Boolean>(false);
   const [cardImage, setCardImage] = useState<Blob>();
   const [file, setFile] = useState<File>();
@@ -32,6 +34,9 @@ function Camera() {
         },
       }).then((res) => {
         console.log(res);
+        alert('업로드 완료!');
+        navigate(`/challengeInProgress/${challenge_id}`)
+        
       });
     });
   }

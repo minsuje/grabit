@@ -6,9 +6,11 @@ import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { users } from '@/types/types';
-// import { Challenge } from '@/types/types';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { ChallengeProp,Challenge } from '@/types/types';
 
-// import { ListComponent1 } from './ComponentSeong';
+import { ListComponent1 } from './ComponentSeong';
 
 function CreateChallenge() {
   return (
@@ -36,13 +38,23 @@ function CreateChallenge() {
 function Tab({
   tab1,
   tab2,
+  tab3,
+  tab4,
   tab1content,
   tab2content,
+  tab3content,
+  tab4content,
 }: {
   tab1: string;
   tab2: string;
+  tab3?: string;
+  tab4?: string;
   tab1content: JSX.Element;
   tab2content: JSX.Element;
+  tab3content?: JSX.Element;
+  tab4content?: JSX.Element;
+ 
+  
 }) {
   return (
     <div className="w-full mt-10">
@@ -50,9 +62,16 @@ function Tab({
         <TabsList>
           <TabsTrigger value={tab1}>{tab1}</TabsTrigger>
           <TabsTrigger value={tab2}>{tab2}</TabsTrigger>
+
+          {tab3&&(<TabsTrigger value={tab3}>{tab3}</TabsTrigger>)}
+          {tab4&&(<TabsTrigger value={tab4}>{tab4}</TabsTrigger>)}
         </TabsList>
         <TabsContent value={tab1}>{tab1content}</TabsContent>
         <TabsContent value={tab2}>{tab2content}</TabsContent>
+        {tab3&&(<TabsContent value={tab3}>{tab3content}</TabsContent>)}
+        {tab4&&(<TabsContent value={tab4}>{tab4content}</TabsContent>)}
+        
+        
       </Tabs>
     </div>
   );
@@ -74,49 +93,61 @@ function Record() {
 
 function HotChallenge() {
   const [hotTopic, setHotTopic] = useState<string[]>([]);
-  // const [hotTopicList, setHotTopicList] = useState<Challenge[]>([]);
-  useEffect(() => {
-    setHotTopic(['물마시기', '걷기', '공부']);
+  const [top1, setTop1] = useState<Challenge[]>([]);
+  const [top2, setTop2] = useState<Challenge[]>([]);
+  const [top3, setTop3] = useState<Challenge[]>([]);
 
-    // {
-    //     axios
-    //         .get('/hotTopic')
-    //         .then((response) => {
-    //             console.log('HotTopicData', response.data);
-    //             setHotTopic(response.data);
-    //         })
-    //         .catch((error) => {
-    //             console.error('HotChallenge Component에서 오류발생 :', error);
-    //         });
-    // }
+  const [showList, setShowList] = useState<Challenge[]>([]);
+
+
+  useEffect(() => {
+    
+    {
+        axios
+            .get('http://3.34.122.205:3000/popularChallenge')
+            .then((response) => {
+                console.log('HotTopicData', response.data);
+                setHotTopic(response.data.popularTopics);
+                setTop1(response.data.top1);
+                setTop2(response.data.top2);
+                setTop3(response.data.top3);
+            })
+            .catch((error) => {
+                console.error('HotChallenge Component에서 오류발생 :', error);
+            });
+    }
   }, []);
 
-  function showHotChallengeList(topic: string) {
-    const data = topic;
-    console.log(data);
-    // {
-    //   axios
-    //     .get(`/hotTopicList/${topic}`)
-    //     .then((response) => {
-    //       console.log('HotTopicList', response.data);
-    //       setHotTopicList(response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.error('HotChallenge Component에서 오류발생 :', error);
-    //     });
-    // }
+  function showHotChallengeList(key:number) {
+    key+=1;
+    switch(key){
+      case 1:
+        setShowList(top1)
+        break;
+      case 2:
+        setShowList(top2)
+        break;
+      case 3:
+        setShowList(top3)
+        break;
+      default:
+        setShowList([])
+        break;
+    }
+
   }
 
   return (
     <>
-      <div className="flex gap-2 text-center">
+      <div className="flex gap-2 text-center hover:cursor-pointer">
         {hotTopic.map((topic, idx) => {
           return (
             <div
-              onClick={() => {
-                showHotChallengeList(topic);
-              }}
+              
               key={idx}
+              onClick={() => {
+                showHotChallengeList(idx);
+              }}
               className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2"
             >
               {topic}
@@ -124,15 +155,15 @@ function HotChallenge() {
           );
         })}
       </div>
-      {/* {hotTopicList.length != 0
-        ? hotTopicList.map((challenge: Challenge) => {
+      {showList.length != 0
+        ? showList.map((challenge: Challenge) => {
             return (
               <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
                 <ListComponent1 challenge={challenge}></ListComponent1>
               </Link>
             );
           })
-        : null} */}
+        : null}
     </>
   );
 }
@@ -167,7 +198,7 @@ function Ranking() {
   );
 }
 
-function ListComponentWithButton({ challenge }: any) {
+function ListComponentWithButton({ challenge }: ChallengeProp) {
   const navigate = useNavigate();
 
   return (
@@ -204,15 +235,15 @@ function ListComponentWithButton({ challenge }: any) {
   );
 }
 
-function ListComponentWithPeriod({ challenge }: any) {
+function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
       <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
         <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
           <div className="flex justify-between">
             <p>{challenge.challenge_name}</p>
-            <p>
-              {challenge.authentication_start_date}~{challenge.authentication_end_date}
+            <p className="text-gray-500">
+              {format(challenge.authentication_start_date, 'PP (EEE)', { locale: ko })} ~ {format(challenge.authentication_end_date, 'PP (EEE)', { locale: ko })}
             </p>
           </div>
           <p>{challenge.goal_money}원</p>

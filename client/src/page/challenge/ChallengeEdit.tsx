@@ -49,6 +49,12 @@ async function patchChallenge(
     data: challengeData,
   });
   console.log(result);
+  if(result.status==200){
+    alert('정상적으로 수정되었습니다.')
+  }else{
+    alert('오류가 발생했습니다. 다시 시도해주세요')
+  }
+ 
 }
 
 async function deleteChallenge(challenge_id: string | undefined) {
@@ -101,14 +107,19 @@ function ChallengeEdit() {
 
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
   let periodChanged = period;
-  console.log('period', period);
+  console.log('period', period);4
 
-  const handleStartDate = (date: Date) => {
+  
+
+  const handleStartDate = (date: Date|undefined) => {
     setDate(date);
-    if (addDays(date, 1) < new Date()) {
-      alert('오늘 이전 날짜는 선택할 수 없습니다.');
-      setDate(new Date());
+    if(date){
+      if (addDays(date, 1) < new Date()) {
+        alert('오늘 이전 날짜는 선택할 수 없습니다.');
+        setDate(new Date());
+      }
     }
+    
   };
 
   const hours: number[] = [];
@@ -129,7 +140,7 @@ function ChallengeEdit() {
           console.error('ChallengeEdit에서 오류발생 :', error);
         });
     }
-  });
+  },[]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -151,7 +162,7 @@ function ChallengeEdit() {
                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
-                  <span>{challenger.nickname}</span>
+                  <span>임시 닉</span>
                 </div>
               );
             })}
@@ -222,7 +233,7 @@ function ChallengeEdit() {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
-          <Calendar mode="single" selected={date} onSelect={() => handleStartDate} initialFocus />
+          <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
         </PopoverContent>
       </Popover>
 

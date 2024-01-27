@@ -1,12 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Challenge } from '@/types/types';
+import {ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 
-interface ChallengeProp {
-  challenge: Challenge;
-}
+
 
 // ~~~일 후 종료
 

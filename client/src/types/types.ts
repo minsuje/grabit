@@ -96,3 +96,8 @@ export type Capture_options = {
     facingMode: string;
   };
 };
+
+
+export interface ChallengeProp {
+  challenge: Challenge;
+}
