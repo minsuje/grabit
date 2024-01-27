@@ -61,7 +61,7 @@ export class AuthService {
         // 2. refresh Token 해당 유저에 넣기
         const inputLogoinReToken = await db
           .update(users)
-          .set({ refreshToken: loginRefreshToken })
+          .set({ refreshToken: [loginRefreshToken, userid] })
           .where(eq(users.userid, userid));
 
         isLogin = 'true';
@@ -111,21 +111,45 @@ export class AuthService {
     }
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
     // DB에 유저가 있다면 토큰 생성
-    const Token = await this.jwtService.sign({ isClear });
+    const loginToken = await this.jwtService.sign({ isClear });
 
     // refresh Token 만들기
-    const refreshToken = await this.jwtService.sign(
+    const loginRefreshToken = await this.jwtService.sign(
       { isClear },
       {
         secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '7d',
       },
     );
+
+    const kakaoid = String(kakaoId);
+
+    // refreshToken 해싱
+    const currentRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
+
     // db에 넣기
     const inputRefreshToken = await db
       .update(users)
-      .set({ refreshToken: refreshToken })
+      .set({ refreshToken: [currentRefreshToken, kakaoid] })
       .where(eq(users.userid, String(kakaoId)));
-    return { Token };
+    return { loginToken, loginRefreshToken };
+  };
+
+  // refresh 토큰을 통해 재발급
+  refresh = async (loginRefreshToken: string) => {
+    try {
+      console.log('refresh loginTOken >>>>>>>>', loginRefreshToken);
+      // 1차검증
+      const decodedRefreshToken = this.jwtService.verify(loginRefreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+      console.log('decodedRefreshToken >>>>>>>', decodedRefreshToken);
+      // const userid = decodedRefreshToken;
+    } catch {
+      return {
+        statusCode: 401,
+        message: 'Unauthorized',
+      };
+    }
   };
 }

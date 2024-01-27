@@ -35,6 +35,7 @@ import Test from './page/challenge/Test';
 import Layout from './page/Layout';
 
 import Camera from './page/challenge/Camera';
+import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 
@@ -46,7 +47,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          {/* <Route path="/" element={<Layout />}> */}
+          { <Route path="/" element={<Layout />}> }
           <Route path="/main" element={<Main />} />
           <Route path="/main2" element={<Main2 />} />
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
@@ -66,6 +67,9 @@ function App() {
           <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
           <Route path="/challengeNotice" element={<ChallengeNotice />} />
           <Route path="/challengeCreate" element={<ChallengeCreate />} />
+
+          <Route path="/refresh" element={<Refresh />}/>
+
           <Route path="/challengetier" element={<ChallengeTier />} />
 
           <Route path="/mypage/" element={<MyPage />} />
@@ -80,7 +84,7 @@ function App() {
 
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
-          {/* </Route> */}
+          </Route> 
         </Routes>
       </BrowserRouter>
     </div>
