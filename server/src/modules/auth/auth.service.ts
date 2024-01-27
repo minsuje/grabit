@@ -47,12 +47,18 @@ export class AuthService {
           .from(users)
           .where(and(eq(users.userid, userid), eq(users.password, field)));
 
+        const tokenInfo = {
+          userid_num: loginAccess[0].userid_num,
+          nickname: loginAccess[0].nickname,
+          name: loginAccess[0].name,
+        };
+
         // 1. Jwt 토큰 생성
-        const loginToken = this.jwtService.sign({ loginAccess });
+        const loginToken = this.jwtService.sign(tokenInfo);
 
         // refresh Token 만들기
         const loginRefreshToken = this.jwtService.sign(
-          { loginAccess },
+          { tokenInfo },
           {
             secret: process.env.JWT_REFRESH_SECRET,
             expiresIn: '7d',
@@ -109,13 +115,19 @@ export class AuthService {
         nickname: username,
       });
     }
+
+    const kakaoTokenInfo = {
+      nickname: isClear[0].nickname,
+      name: isClear[0].name,
+      userid_num: isClear[0].userid_num,
+    };
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
     // DB에 유저가 있다면 토큰 생성
-    const loginToken = await this.jwtService.sign({ isClear });
+    const loginToken = await this.jwtService.sign(kakaoTokenInfo);
 
     // refresh Token 만들기
     const loginRefreshToken = await this.jwtService.sign(
-      { isClear },
+      { kakaoTokenInfo },
       {
         secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '7d',

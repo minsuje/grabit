@@ -129,6 +129,7 @@ export default function Register() {
           });
           console.log('회원가입 성공');
           navigate('/login');
+          console.log(res);
         } catch (err) {
           console.error('회원가입 실패:', err);
         }
