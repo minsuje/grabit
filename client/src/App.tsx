@@ -81,7 +81,7 @@ function App() {
           <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
           <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
           <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
-
+          {/*  */}
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
         </Routes>
