@@ -62,7 +62,7 @@ function App() {
   const { refreshToken } = useSelector((state: RootState) => state.login);
 
   axios.defaults.baseURL = 'http://localhost:3000';
-  axios.defaults.headers.common['Authorization'] = refreshToken;
+  // axios.defaults.headers.common['Authorization'] = refreshToken;
 
   return (
     <div className="App">
@@ -108,7 +108,6 @@ function App() {
           {/*  */}
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
-
         </Routes>
       </BrowserRouter>
     </div>

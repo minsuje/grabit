@@ -10,7 +10,7 @@ import axios from 'axios';
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  const { isLoggedIn, refreshToken } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -23,6 +23,21 @@ function Header() {
 
   useEffect(() => {
     refreshAccessToken();
+    async function refreshAccessToken() {
+      console.log('refreshAccessToken');
+      await axios
+        .get('/refresh', { withCredentials: true, headers: { Authorization: refreshToken } })
+
+        .then((response) => {
+          console.log('Refresh token success', response);
+
+          const newAccessToken = response.data.accessToken;
+          axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+        })
+        .catch((error) => {
+          console.error('Refresh token error', error);
+        });
+    }
   }, []);
 
   function handleLogout() {
@@ -39,21 +54,6 @@ function Header() {
     dispatch(setUsername('홍길동'));
     dispatch(setUserId(1));
     navigate('/main');
-  }
-
-  async function refreshAccessToken() {
-    console.log('refreshAccessToken');
-    await axios
-      .get('/refresh', { withCredentials: true })
-      .then((response) => {
-        console.log('Refresh token success', response);
-
-        const newAccessToken = response.data.accessToken;
-        axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-      })
-      .catch((error) => {
-        console.error('Refresh token error', error);
-      });
   }
 
   return (
