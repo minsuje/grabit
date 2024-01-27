@@ -22,25 +22,25 @@ function Header() {
     window.addEventListener('scroll', updateScroll);
   });
 
-  useEffect(() => {
-    refreshAccessToken();
-  }, [location]);
+  // useEffect(() => {
+  //   refreshAccessToken();
+  //   async function refreshAccessToken() {
+  //     console.log('loginToken', loginToken);
+  //     console.log('refreshToken', refreshToken);
+  //     await axios
+  //       .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
+  //       .then((response) => {
+  //         console.log('Refresh token success', response);
+  //         console.log(location);
 
-  async function refreshAccessToken() {
-    console.log('loginToken', loginToken);
-    console.log('refreshToken', refreshToken);
-    await axios
-      .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
-      .then((response) => {
-        console.log('Refresh token success', response);
-
-        // const newAccessToken = response.data.accessToken;
-        // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-      })
-      .catch((error) => {
-        console.error('Refresh token error', error);
-      });
-  }
+  //         // const newAccessToken = response.data.accessToken;
+  //         // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+  //       })
+  //       .catch((error) => {
+  //         console.error('Refresh token error', error);
+  //       });
+  //   }
+  // }, [location, refreshToken, loginToken]);
 
   function handleLogout() {
     console.log('로그아웃');

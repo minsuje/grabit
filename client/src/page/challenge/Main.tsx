@@ -9,13 +9,40 @@ import { Challenge, dailyMission } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
 export default function Main() {
-  const LoginId:number =3;
+  const LoginId: number = 3;
+  const location = useLocation();
   const dispatch = useDispatch();
+  const { isLoggedIn, loginToken, refreshToken } = useSelector((state: RootState) => state.login);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   refreshAccessToken();
+
+  //   }
+  // }, [location, refreshToken, loginToken]);
+  async function refreshAccessToken() {
+    console.log('loginToken', loginToken);
+    console.log('refreshToken', refreshToken);
+    await axios
+      .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
+      .then((response) => {
+        console.log('Refresh token success', response);
+
+        // const newAccessToken = response.data.accessToken;
+        // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+      })
+      .catch((error) => {
+        console.error('Refresh token error', error);
+      });
+  }
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<dailyMission>({
@@ -50,33 +77,33 @@ export default function Main() {
   return (
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
+      <Button onClick={refreshAccessToken}>refresh 요청</Button>
       {/* <Ranking /> */}
       <h1>오늘의 미션</h1>
 
-
       {!dailymission.success_userid_num.includes(LoginId) ? (
-  <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
-    <div>
-      <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-        <div className="flex justify-between">
-          <p>{dailymission.mission_content}</p>
-          <p>N시간 남음</p>
+        <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
+          <div>
+            <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+              <div className="flex justify-between">
+                <p>{dailymission.mission_content}</p>
+                <p>N시간 남음</p>
+              </div>
+              <p>100P</p>
+            </div>
+          </div>
+        </Link>
+      ) : (
+        <div>
+          <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+            <div className="flex justify-between">
+              <p>{dailymission.mission_content}</p>
+              <p>오늘 미션 완료!!</p>
+            </div>
+            <p>100P</p>
+          </div>
         </div>
-        <p>100P</p>
-      </div>
-    </div>
-  </Link>
-):(
-  <div>
-      <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-        <div className="flex justify-between">
-          <p>{dailymission.mission_content}</p>
-          <p>오늘 미션 완료!!</p>
-        </div>
-        <p>100P</p>
-      </div>
-    </div>
-)}
+      )}
 
       <h1>진행중인 챌린지</h1>
       {ingMyChallenge.length == 0 ? (
