@@ -20,10 +20,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   //     console.log(loginDto);
   //     return loginDto;
   // }
+  // async validate(userid: string, password: string) {
+  //   const user = await this.authService.loginUser({ userid, password });
+  //   console.log('jwt strategy >>>> ', user);
+  //   if (!user) throw new UnauthorizedException();
+  //   return user;
+  // }
   async validate(userid: string, password: string) {
-    const user = await this.authService.loginUser({ userid, password });
-    console.log('jwt strategy >>>> ', user);
-    if (!user) throw new UnauthorizedException();
-    return user;
+    try {
+      const user = await this.authService.loginUser({ userid, password });
+      console.log('jwt strategy >>>> ', user);
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('토큰이 유효하지 않습니다.');
+    }
   }
 }
