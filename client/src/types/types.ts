@@ -1,3 +1,8 @@
+export interface LoginRequest {
+  userid: string;
+  password: string;
+}
+
 export interface Challenge {
   challenge_id?: number;
   userid_num?: number;
@@ -96,7 +101,6 @@ export type Capture_options = {
     facingMode: string;
   };
 };
-
 
 export interface ChallengeProp {
   challenge: Challenge;

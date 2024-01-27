@@ -3,6 +3,8 @@ import friendReducer from './friendSlice';
 import challengeReducer from './challengeSlice';
 import loginReducer from './loginSlice';
 import headerReducer from './headerSlice';
+import authReducer from './authSlice';
+import { authAPI } from '@/services/auth.service';
 
 export const store = configureStore({
   reducer: {
@@ -10,7 +12,11 @@ export const store = configureStore({
     challenge: challengeReducer,
     login: loginReducer,
     header: headerReducer,
+    auth: authReducer,
+
+    [authAPI.reducerPath]: authAPI.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([authAPI.middleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
