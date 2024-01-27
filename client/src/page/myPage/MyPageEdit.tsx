@@ -7,8 +7,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
 
 interface FormData {
   nickname: string;
@@ -43,7 +44,14 @@ const schema = yup
   .required();
 
 export default function MyPageEdit() {
+  const [nickName, setNickName] = useState('');
+
+  console.log(nickName);
+
   const Navigate = useNavigate();
+  const { id } = useParams();
+
+  console.log('id>>>>>', id);
 
   const {
     register,
@@ -55,12 +63,20 @@ export default function MyPageEdit() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.patch('', data);
+      const response = await axios.patch(`http://3.34.122.205:3000/friend/${id}`, data);
       console.log('프로필 수정 성공:', response);
-      Navigate('/mypage');
+      console.log('프로필 데이터', response.data.nickname);
+
+      setNickName(response.data);
+
+      // Navigate(`/mypage/${id}`);
     } catch (err) {
       console.error('프로필 수정 실패:', err);
     }
+  };
+
+  const handleNickNameChange = (e) => {
+    setNickName(e.target.value);
   };
   return (
     <div>
@@ -77,7 +93,7 @@ export default function MyPageEdit() {
         </div>
         <div>
           <Label htmlFor="nickname">닉네임</Label>
-          <Input id="nickname" {...register('nickname')} />
+          <Input id="nickname" {...register('nickname')} value={nickName} onChange={handleNickNameChange} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
         </div>
         <div>

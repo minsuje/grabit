@@ -94,8 +94,10 @@ export default function Main() {
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
-        <Link to="/challengeInProgress/1
-        ">
+        <Link
+          to="/challengeInProgress/1
+        "
+        >
           <Button>진행중인 챌린지</Button>
         </Link>
         <Link to="/fileUpload">
@@ -103,6 +105,9 @@ export default function Main() {
         </Link>
         <Link to="/challengeEdit/1">
           <Button>1번 챌린지 수정</Button>
+        </Link>
+        <Link to="/mypage/1">
+          <Button>마이페이지 </Button>
         </Link>
       </div>
     </div>

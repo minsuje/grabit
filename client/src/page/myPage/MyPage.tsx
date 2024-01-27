@@ -28,12 +28,12 @@ export default function MyPage() {
   }, []);
 
   useEffect(() => {
-    const tierImages = {
-      silver: '/silverTear.png',
-      platinum: '/platinumTear.png',
-      diamond: '/diamondTear.png',
-      challenger: '/challengerTear.png',
-    };
+    // const tierImages = {
+    //   silver: '/silverTear.png',
+    //   platinum: '/platinumTear.png',
+    //   diamond: '/diamondTear.png',
+    //   challenger: '/challengerTear.png',
+    // };
 
     axios
       .get(`http://3.34.122.205:3000/mypage/${id}`) // userid를 사용하여 서버 요청
@@ -123,7 +123,7 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to="/friend/:id">
+        <Link to={`/mypage/friend/detail/${id}/`}>
           <Button>전체보기</Button>
         </Link>
       </div>
