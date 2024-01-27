@@ -217,14 +217,19 @@ export class ChallengeService {
 
   // 챌린지 인증하기
   newChallengeAuth = async (challenge_id: number, file: string) => {
-    let fileName: any = file.split('?')[0].split('.com/')[1];
+    if (file) {
+      let fileName: any = file.split('?')[0].split('.com/')[1];
 
-    await db.insert(authentication).values({
-      challenge_id: challenge_id,
-      userid_num: 3, // JWT 토큰에서 찾아야 하는 값
-      authentication_img: fileName,
-    });
-    return file;
+      await db.insert(authentication).values({
+        challenge_id: challenge_id,
+        userid_num: 3, // JWT 토큰에서 찾아야 하는 값
+        authentication_img: fileName,
+      });
+      return file;
+    } else
+      return {
+        msg: '이미 인증하신 유저입니다.',
+      };
   };
 
   // 테스트 (s3 이미지 get 요청)
