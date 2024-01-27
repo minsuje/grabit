@@ -10,7 +10,7 @@ interface Friend {
   nickname: string;
 }
 
-export default function Friend() {
+export default function FriendAddition() {
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
@@ -36,8 +36,8 @@ export default function Friend() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1>친구추가</h1>
-        <Link to="/friend/new">
+        <h1>친구목록</h1>
+        <Link to="">
           <button>친구 추가</button>
         </Link>
       </div>
