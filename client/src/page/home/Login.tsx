@@ -6,13 +6,21 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderTitle from '@/components/HeaderTitle';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
 
 export default function Login() {
   // const cookies = new Cookies();
   const [userid, setUserid] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  const { title, backPath } = useSelector((state: RootState) => state.header);
 
   // const handleLogin = async () => {
   //     try {
@@ -38,13 +46,18 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/login',
+        '/login',
         { userid, password },
         { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
       );
 
       console.log('로그인 성공:>>>>>', response);
       console.log('로그인 성공:>>>>>', response.data);
+
+      dispatch(setIsLoggedIn(true));
+      dispatch(setUsername('홍길동'));
+      dispatch(setUserId(1));
+      navigate('/main');
 
       // JWT 토큰 response.data 저장
       // const token = response.data;

@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function Header() {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ function Header() {
     window.addEventListener('scroll', updateScroll);
   });
 
+  useEffect(() => {
+    refreshAccessToken();
+  }, []);
+
   function handleLogout() {
     console.log('로그아웃');
     dispatch(setIsLoggedIn(false));
@@ -34,6 +39,21 @@ function Header() {
     dispatch(setUsername('홍길동'));
     dispatch(setUserId(1));
     navigate('/main');
+  }
+
+  async function refreshAccessToken() {
+    console.log('refreshAccessToken');
+    await axios
+      .get('/refresh', { withCredentials: true })
+      .then((response) => {
+        console.log('Refresh token success', response);
+
+        const newAccessToken = response.data.accessToken;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+      })
+      .catch((error) => {
+        console.error('Refresh token error', error);
+      });
   }
 
   return (

@@ -39,7 +39,31 @@ import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 
+import axios, { AxiosInstance } from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+
+// const SERVER_ADDRESS: string = 'http://localhost:3000';
+
+// const customAxios: AxiosInstance = axios.create({
+//   baseURL: `${SERVER_ADDRESS}`,
+// });
+
+// customAxios.interceptors.request.use((config) => {
+
+//   console.log('refreshToken: ', refreshToken);
+//   if (refreshToken) {
+//     config.headers.Authorization = `Bearer ${refreshToken}`;
+//   }
+//   return config;
+// });
+
 function App() {
+  const { refreshToken } = useSelector((state: RootState) => state.login);
+
+  axios.defaults.baseURL = 'http://localhost:3000';
+  axios.defaults.headers.common['Authorization'] = refreshToken;
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -84,6 +108,7 @@ function App() {
           {/*  */}
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
+
         </Routes>
       </BrowserRouter>
     </div>
