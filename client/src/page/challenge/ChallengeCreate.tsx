@@ -19,7 +19,6 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
 import { Friend } from '@/types/types';
 import Cta from '@/components/Cta';
-import { text } from 'drizzle-orm/pg-core';
 // import {
 //   setChallengeName,
 //   setGoalMoney,
@@ -84,9 +83,9 @@ function ChallengeCreate() {
     }
   });
 
-  const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setChallengeName(e.target.value));
-  };
+  // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   dispatch(setChallengeName(e.target.value));
+  // };
 
   const tab1content = (
     <div>
@@ -191,8 +190,8 @@ function ChallengeCreate() {
 
       <div className="challengeName flex flex-col">
         <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
-        {/* <Input onChange={(e) => setChallengeName(e.target.value)} /> */}
-        <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} />
+        <Input onChange={(e) => setChallengeName(e.target.value)} />
+        {/* <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} /> */}
       </div>
 
       <div className="challengeTopic flex flex-col">

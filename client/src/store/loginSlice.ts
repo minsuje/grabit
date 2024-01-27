@@ -4,12 +4,14 @@ interface LoginState {
   isLoggedIn: boolean;
   username: string;
   userId: number;
+  refreshToken: string;
 }
 
 const initialState: LoginState = {
   isLoggedIn: false,
   username: '',
   userId: 0,
+  refreshToken: '',
 };
 
 export const loginSlice = createSlice({
@@ -24,6 +26,9 @@ export const loginSlice = createSlice({
     },
     setUserId: (state, action: PayloadAction<number>) => {
       state.userId = action.payload;
+    },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.refreshToken = action.payload;
     },
   },
 });
