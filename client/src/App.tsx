@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, RouteProps, Outlet, Navigate } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
 import Main2 from './page/challenge/Main2';
@@ -38,11 +38,9 @@ import Camera from './page/challenge/Camera';
 import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
-
-import axios, { AxiosInstance } from 'axios';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 import FriendAddition from './page/myPage/FriendAddition';
+
+import axios from 'axios';
 
 // const SERVER_ADDRESS: string = 'http://localhost:3000';
 
@@ -65,6 +63,11 @@ function App() {
   axios.defaults.baseURL = 'http://localhost:3000';
 
   // axios.defaults.headers.common['Authorization'] = loginToken;
+
+  const PrivateRoute = ({ ...rest }: RouteProps): React.ReactElement | null => {
+    const { access_token } = useAppSelector(selectAuthenticatedUser);
+    return access_token ? <Outlet /> : <Navigate to="/" />;
+  };
 
   return (
     <div className="App">
@@ -97,7 +100,6 @@ function App() {
             <Route path="/refresh" element={<Refresh />} />
 
             <Route path="/challengetier" element={<ChallengeTier />} />
-
 
             {/* mypage */}
             <Route path="/mypage/:id" element={<MyPage />} />
