@@ -6,9 +6,6 @@ import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class DailyMissionService {
   getDailyMission = async () => {
-    const checkDB = await db.select().from(dailyMission);
-    console.log('checkDB >>>>>>>>>');
-
     let mission_content = [
       '물 한잔 마시기',
       '공부하기',
@@ -25,7 +22,11 @@ export class DailyMissionService {
     let random_mission = mission_content[random_index];
     console.log('readom_mission >>>', random_mission);
 
-    // DB 만들기
+    //DB있는지 확인하기
+    const checkDB = await db.select().from(dailyMission);
+    console.log('checkDB >>>>>>>>>');
+
+    // DB 만들기 > 없다면
     if (checkDB.length == 0) {
       const createMission = await db
         .insert(dailyMission)
@@ -33,6 +34,7 @@ export class DailyMissionService {
       console.log('DB 만들기 성공');
     }
 
+    // 미션 이름 DB에서 찾기
     const mission_name = await db
       .select({ mission_content: dailyMission.mission_content })
       .from(dailyMission);
@@ -41,35 +43,19 @@ export class DailyMissionService {
       '🚀 ~ DailyMissionService ~ getDailyMission= ~ mission_name:',
       mission_name[0],
     );
-
-    const checkDate = await db
-      .select({ created_at: dailyMission.created_at })
-      .from(dailyMission);
-
-    console.log('daily_mission service CheckDate >>> ', checkDate);
-    const createTime = checkDate[0].created_at;
-    console.log(
-      '🚀 ~ DailyMissionService ~ getDailyMission= ~ createTime:',
-      createTime,
-    );
-
-    const time = createTime
-      .toLocaleString('en-US', {
-        timeZone: 'Asia/Seoul',
-      })
-      .split(',')[1];
-
-    console.log('Time >>>>> ', time);
-
-    const nowTime = new Date()
-      .toLocaleString('en-US', {
-        timeZone: 'Asia/Seoul',
-      })
-      .split(',')[1];
-
-    console.log(
-      '🚀 ~ DailyMissionService ~ getDailyMission= ~ nowTime:',
-      nowTime,
-    );
+    return;
   };
+
+  // @Cron을 사용하여 매일 23:59.59 에 초기화 실행
+  @Cron('59 59 23 * * *') // 매일 23:59에 실행
+  async handleCron() {
+    try {
+      // 여기에서 테이블 삭제 또는 필요한 작업을 수행합니다.
+      const deleteDaily = await db.delete(dailyMission);
+      // 예를 들면, yourRepositoryService.deleteTable();
+      console.log('매일 23:59에 실행됨');
+    } catch (error) {
+      console.error('에러 발생:', error.message);
+    }
+  }
 }
