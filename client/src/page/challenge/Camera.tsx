@@ -25,19 +25,25 @@ function Camera() {
         type: file?.type,
       },
     }).then((res) => {
-      axios({
-        method: 'put',
-        url: res.data,
-        data: file,
-        headers: {
-          'Content-Type': file?.type,
-        },
-      }).then((res) => {
-        console.log(res);
-        alert('업로드 완료!');
-        navigate(`/challengeInProgress/${challenge_id}`)
-        
-      });
+      console.log('res.data',res.data)
+      if(res.data.msg){
+        alert(res.data.msg)
+      }else{
+        axios({
+          method: 'put',
+          url: res.data,
+          data: file,
+          headers: {
+            'Content-Type': file?.type,
+          },
+        }).then((res) => {
+          console.log(res);
+          alert('업로드 완료!');
+          navigate(`/challengeInProgress/${challenge_id}`)
+          
+        });
+      }
+      
     });
   }
 

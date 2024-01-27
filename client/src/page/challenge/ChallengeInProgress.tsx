@@ -10,6 +10,13 @@ import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { differenceInDays } from 'date-fns';
+import Cta from '@/components/Cta';
+
+
+interface url {
+  userid_num:string;
+  url:string;
+}
 
 
 
@@ -17,6 +24,11 @@ function ChallengeInProgress() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
+  const tab:string[]=['나'];
+
+  const Images:JSX.Element[] = []
+
+
   
 
   useEffect(() => {
@@ -29,12 +41,12 @@ function ChallengeInProgress() {
     challenge_name: '임시 데이터',
     topic: '',
     challenger_userid_num: [1, 2],
-    goal_money: 1000,
+    goal_money: 0,
     is_public: true,
     term: 3,
     winner_userid_num: null,
-    authentication_start_date: new Date('2024-01-24'),
-    authentication_end_date: new Date('2024-01-26'),
+    authentication_start_date: new Date(),
+    authentication_end_date: new Date(),
     authentication_start_time: 4,
     authentication_end_time: 5,
   });
@@ -52,7 +64,7 @@ function ChallengeInProgress() {
       money: 1000,
     },
   ]);
-  const [urls,setUrls]=useState<string[]>([])
+  const [urls,setUrls]=useState<url[]>([])
 
 
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
@@ -63,7 +75,7 @@ function ChallengeInProgress() {
   }
 
 
-  useEffect(() => {
+  useEffect(() =>{
     console.log('challenge_id', challenge_id)
     axios
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
@@ -77,7 +89,11 @@ function ChallengeInProgress() {
       .catch((error): void => {
         console.error('Challengeinprogress에서 axios 오류:', error);
       });
+
   }, []);
+
+
+  
   const myImage = (
     <div className="grid grid-cols-2 gap-2">
       {urls.map((url,index)=>{
@@ -86,7 +102,7 @@ function ChallengeInProgress() {
         <div key={index}>
           <img
             className="aspect-square w-full rounded-lg object-cover"
-            src={url}
+            src={url.url}
           ></img>
         </div>
       </Link>
@@ -94,22 +110,25 @@ function ChallengeInProgress() {
       })}
     </div>
   );
-  const otherImage = (
-    <div className="grid grid-cols-2 gap-2">
-      {urls.map((url,index)=>{
-        return(
-          <Link to="/challengeImage/1">
-        <div key={index}>
-          <img
-            className="aspect-square w-full rounded-lg object-cover"
-            src={url}
-          ></img>
-        </div>
-      </Link>
-        )
-      })}
-    </div>
-  );
+
+  Images.push(myImage)
+
+
+
+  // 기본값  '나'는 이미 저장된 값
+  // 로그인한 유저가 아닌 challengers의 nickname만 push
+for (let i=0; i<4; i++) {
+  if(challengers[i]&& challengers[i].userid_num!==3){ //jwt로 수정
+    tab.push(challengers[i].nickname)
+    console.log(i,'번째', tab)
+  }else{
+    tab.push("")
+    console.log(i,'번째', tab)
+  }
+}
+
+
+
   return (
     <div className="mt-12 flex flex-col gap-4">
       <div className="p-3 text-center text-4xl font-extrabold">
@@ -126,22 +145,15 @@ function ChallengeInProgress() {
       {/*로그인 한 유저(나)가 누구인지 확인하는 코드 추가 */}
 
       <ProgressComponent ProgressName={'진행률'} total={ totalAuthCount} value={0} />
-
       <ProgressComponent ProgressName={'기간'} total={period+1} value={differenceInDays(new Date(), challengeDetail.authentication_start_date)} />
       <br />
       <ListComponent1 challenge={challengeDetail} />
-
-      <Tab tab1="나" tab2="상대" tab1content={myImage} tab2content={otherImage} />
-
-      <div className="mt-5 p-2 text-center">
-        <Button
-          onClick={() => {
+      <Tab tab1={tab[0]} tab2={tab[1]} tab3={tab[2]} tab4={tab[3]} tab1content={Images[0]} tab2content={Images[1]}  tab3content={Images[2]} tab4content={Images[3]} />
+      <Cta text='인증하기' onclick={() => {
             navigate(`/camera/${challenge_id}`);
-          }}
-        >
-          인증하기
-        </Button>
-      </div>
+          }} >
+        
+      </Cta>
     </div>
   );
 }
