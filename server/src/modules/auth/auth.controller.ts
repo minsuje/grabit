@@ -93,7 +93,7 @@ export class AuthController {
 
     console.log('controller searchUser > ', searchUser);
 
-    res.cookie('accessToken', loginToken, {
+    res.cookie('jwt', loginToken, {
       httpOnly: true,
       // maxAge: 24 * 60 * 60 * 1000,
       maxAge: 10 * 1000,
@@ -103,7 +103,7 @@ export class AuthController {
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
       // maxAge: 24 * 60 * 60 * 1000,
-      maxAge: 20 * 1000,
+      maxAge: 40 * 1000,
       secure: true,
       sameSite: 'none',
     });
@@ -147,7 +147,7 @@ export class AuthController {
       res.clearCookie('login Token');
       res.clearCookie('refreshToken');
       res.clearCookie('jwt');
-      res.clearCookie('accessToken');
+      // res.clearCookie('accessToken');
       res.clearCookie('isLoggedIn');
       throw new UnauthorizedException();
     }
