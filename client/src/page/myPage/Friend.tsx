@@ -36,13 +36,11 @@ export default function Friend() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1>친구추가</h1>
-        <Link to="/friend/new">
-          <button>친구 추가</button>
-        </Link>
+        <h1>친구목록</h1>
       </div>
       <div>
         <Input placeholder="검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <button>친구 추가</button>
       </div>
       {filteredFriends.length > 0 ? (
         filteredFriends.map((friend, index) => <MyPageFriendList key={index} friends={friend} />)
