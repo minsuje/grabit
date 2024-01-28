@@ -1,17 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
+import { setIsLoggedIn, setUserid_num, setAccessToken, setNickname, setRefreshToken } from '@/store/loginSlice';
 import { Button } from './ui/button';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LuChevronLeft } from 'react-icons/lu';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 function Header() {
-  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, loginToken, refreshToken } = useSelector((state: RootState) => state.login);
+  const { isLoggedIn } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
 
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -22,39 +20,28 @@ function Header() {
     window.addEventListener('scroll', updateScroll);
   });
 
-  // useEffect(() => {
-  //   refreshAccessToken();
-  //   async function refreshAccessToken() {
-  //     console.log('loginToken', loginToken);
-  //     console.log('refreshToken', refreshToken);
-  //     await axios
-  //       .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
-  //       .then((response) => {
-  //         console.log('Refresh token success', response);
-  //         console.log(location);
-
-  //         // const newAccessToken = response.data.accessToken;
-  //         // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-  //       })
-  //       .catch((error) => {
-  //         console.error('Refresh token error', error);
-  //       });
-  //   }
-  // }, [location, refreshToken, loginToken]);
-
   function handleLogout() {
     console.log('로그아웃');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('userid_num');
+    localStorage.removeItem('isLoggedIn');
     dispatch(setIsLoggedIn(false));
-    dispatch(setUsername(''));
-    dispatch(setUserId(0));
+    dispatch(setUserid_num(0));
+    dispatch(setNickname(''));
+    dispatch(setAccessToken(''));
+    dispatch(setRefreshToken(''));
     navigate('/');
   }
 
   function handleLogin() {
     console.log('로그인');
     dispatch(setIsLoggedIn(true));
-    dispatch(setUsername('홍길동'));
-    dispatch(setUserId(1));
+    dispatch(setAccessToken('accessToken'));
+    dispatch(setRefreshToken('refreshToken'));
+    dispatch(setNickname('nickname'));
+    dispatch(setUserid_num(1));
     navigate('/main');
   }
 

@@ -9,35 +9,29 @@ import { Challenge, dailyMission } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
-import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
 export default function Main() {
   const LoginId: number = 3;
-  const location = useLocation();
   const dispatch = useDispatch();
-  const { isLoggedIn, loginToken, refreshToken } = useSelector((state: RootState) => state.login);
+  const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   refreshAccessToken();
-
-  //   }
-  // }, [location, refreshToken, loginToken]);
   async function refreshAccessToken() {
-    console.log('loginToken', loginToken);
+    console.log('loginToken', accessToken);
     console.log('refreshToken', refreshToken);
     await axios
-      .get('/refresh', { withCredentials: true, headers: { Authorization: `Bearer ${loginToken}` } })
+      // .get('http://localhost:3000/refresh', {
+      //   withCredentials: true,
+      //   headers: { Authorization: `Bearer ${accessToken}` },
+      // })
+      .get('http://localhost:3000/refresh', { withCredentials: true })
       .then((response) => {
         console.log('Refresh token success', response);
-
-        // const newAccessToken = response.data.accessToken;
-        // axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
       })
       .catch((error) => {
         console.error('Refresh token error', error);
@@ -78,7 +72,7 @@ export default function Main() {
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
       <Button onClick={refreshAccessToken}>refresh 요청</Button>
-      {/* <Ranking /> */}
+      <Ranking />
       <h1>오늘의 미션</h1>
 
       {!dailymission.success_userid_num.includes(LoginId) ? (

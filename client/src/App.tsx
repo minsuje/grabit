@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, RouteProps, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
 import Main2 from './page/challenge/Main2';
@@ -40,37 +40,7 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
-import axios from 'axios';
-
-import { useAppSelector } from '@/store/hooks';
-
-// const SERVER_ADDRESS: string = 'http://localhost:3000';
-
-// const customAxios: AxiosInstance = axios.create({
-//   baseURL: `${SERVER_ADDRESS}`,
-// });
-
-// customAxios.interceptors.request.use((config) => {
-
-//   console.log('refreshToken: ', refreshToken);
-//   if (refreshToken) {
-//     config.headers.Authorization = `Bearer ${refreshToken}`;
-//   }
-//   return config;
-// });
-
 function App() {
-  // const { loginToken } = useSelector((state: RootState) => state.login);
-
-  axios.defaults.baseURL = 'http://localhost:3000';
-
-  // axios.defaults.headers.common['Authorization'] = loginToken;
-
-  const PrivateRoute = ({ ...rest }: RouteProps): React.ReactElement | null => {
-    const { access_token } = useAppSelector(selectAuthenticatedUser);
-    return access_token ? <Outlet /> : <Navigate to="/" />;
-  };
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -78,7 +48,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          <Route path="/" element={<Layout />}>
+          <Route element={<Layout />}>
             <Route path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
@@ -116,8 +86,6 @@ function App() {
             <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
 
             <Route path="/friend/new" element={<FriendAddition />} />
-
-            {/*  */}
           </Route>
 
           {/* 테스트 용 */}
