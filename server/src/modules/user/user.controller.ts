@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 @Controller('/')
@@ -26,10 +26,24 @@ export class UserController {
     return this.userService.postProfileUpload(login_type, body, file);
   }
 
+  // 마이페이지 조회
   @Get('/myPage/:userid_num')
   getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
     console.log('myPage controller req.file > ', req.file);
-    return this.userService.getMyPage(userid_num);
+    const file = req.file;
+    return this.userService.getMyPage(userid_num, file);
+  }
+
+  // 마이페이지 수정
+  @Patch('/myPage/:userid_num')
+  patchMyPage(
+    @Body() body: any,
+    @Param('userid_num') userid_num: number,
+    @Req() req,
+  ) {
+    console.log('myPage controller req.file > ', req.file);
+    const file = req.file;
+    return this.userService.patchMyPage(userid_num, file, body);
   }
 
   @Get('score/:userid')
