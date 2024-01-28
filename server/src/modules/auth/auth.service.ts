@@ -8,31 +8,14 @@ import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import { UserService } from '../user/user.service';
 dotenv.config();
+
+interface IPayload {
+  userid_num: number;
+  name: string;
+}
 @Injectable()
 export class AuthService {
-  constructor(
-    // private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
-
-  // 시진 작성
-  // async validateUser(userid: string, password: string): Promise<any> {
-  //   console.log(
-  //     `[AuthService] validateUser: userid=${userid}, password=${password}`,
-  //   );
-  //   return await this.userService.validateUser(userid, password);
-  // }
-
-  // async login(user: LoginDto) {
-  //   console.log(`[AuthService] login: user=${JSON.stringify(user)}`);
-  //   const payload = { userid: user.userid, name: user.name };
-  //   return {
-  //     access_token: this.jwtService.sign(payload),
-  //     userid: user.userid,
-  //     nickname: user.nickname,
-  //   };
-  // }
-  // 여기까지
+  constructor(private jwtService: JwtService) {}
 
   loginUser = async ({ userid, password }: LoginDto) => {
     let isLogin: string = 'false';
@@ -73,7 +56,7 @@ export class AuthService {
 
         const tokenInfo = {
           userid_num: loginAccess[0].userid_num,
-          nickname: loginAccess[0].nickname,
+          // nickname: loginAccess[0].nickname,
           name: loginAccess[0].name,
         };
 
@@ -98,9 +81,13 @@ export class AuthService {
           .set({ refreshToken: [hashRefreshToken, userid] })
           .where(eq(users.userid, userid));
 
+        const userid_num = loginAccess[0].userid_num;
+        const nickname = loginAccess[0].nickname;
+        const name = loginAccess[0].name;
+
         isLogin = 'true';
         validate = 'true';
-        return { loginToken, loginRefreshToken };
+        return { loginToken, loginRefreshToken, userid_num, nickname, name };
       } else {
         console.log('비밀번호가 틀렸습니다.');
         validate = 'noPassword';
@@ -185,7 +172,7 @@ export class AuthService {
   // refresh 토큰을 통해 재발급
   refresh = async (refreshToken: string) => {
     try {
-      console.log('refresh loginTOken >>>>>>>>', refreshToken);
+      console.log('refreshToken 재발급 시작 >>>>>>>>', refreshToken);
       // 1차검증 쿠키에 있는 refresh 토큰 복호화
       const decodedRefreshToken = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -210,8 +197,8 @@ export class AuthService {
       // 새로운 토큰 발급
       const loginToken = this.jwtService.sign({
         userid_num: user[0].userid_num,
-        nickname: user[0].nickname,
-        name: user[0].name,
+        // nickname: user[0].nickname,
+        // name: user[0].name,
       });
 
       console.log('service loginToken >', loginToken);
@@ -223,5 +210,19 @@ export class AuthService {
         message: 'Unauthorized',
       };
     }
+  };
+
+  validateUser = async (payload: IPayload) => {
+    console.log('validateUser >>>>>>>>', payload.userid_num);
+    const user = await db
+      .select()
+      .from(users)
+      .where(
+        and(
+          eq(users.userid_num, payload.userid_num),
+          eq(users.name, payload.name),
+        ),
+      );
+    return user;
   };
 }

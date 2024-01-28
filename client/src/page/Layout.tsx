@@ -4,7 +4,10 @@ import { RootState } from '@/store/store';
 import { Outlet, Navigate } from 'react-router-dom';
 
 function Layout() {
-  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  // const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  // console.log(isLoggedIn);
+
+  const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
 
   return isLoggedIn ? (
     <div>
@@ -14,7 +17,7 @@ function Layout() {
       </div>
     </div>
   ) : (
-    <Navigate to="/" />
+    <Navigate to="/login" />
   );
 }
 

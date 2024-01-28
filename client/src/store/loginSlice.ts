@@ -2,17 +2,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface LoginState {
   isLoggedIn: boolean;
-  username: string;
-  userId: number;
-  loginToken: string;
+  userid_num: number;
+  nickname: string;
+  accessToken: string;
   refreshToken: string;
 }
 
 const initialState: LoginState = {
   isLoggedIn: false,
-  username: '',
-  userId: 0,
-  loginToken: '',
+  userid_num: 0,
+  nickname: '',
+  accessToken: '',
   refreshToken: '',
 };
 
@@ -23,14 +23,14 @@ export const loginSlice = createSlice({
     setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
       state.isLoggedIn = action.payload;
     },
-    setUsername: (state, action: PayloadAction<string>) => {
-      state.username = action.payload;
+    setNickname: (state, action: PayloadAction<string>) => {
+      state.nickname = action.payload;
     },
-    setUserId: (state, action: PayloadAction<number>) => {
-      state.userId = action.payload;
+    setUserid_num: (state, action: PayloadAction<number>) => {
+      state.userid_num = action.payload;
     },
-    setLoginToken: (state, action: PayloadAction<string>) => {
-      state.loginToken = action.payload;
+    setAccessToken: (state, action: PayloadAction<string>) => {
+      state.accessToken = action.payload;
     },
     setRefreshToken: (state, action: PayloadAction<string>) => {
       state.refreshToken = action.payload;
@@ -38,5 +38,5 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { setIsLoggedIn, setUsername, setUserId, setLoginToken, setRefreshToken } = loginSlice.actions;
+export const { setIsLoggedIn, setNickname, setUserid_num, setAccessToken, setRefreshToken } = loginSlice.actions;
 export default loginSlice.reducer;
