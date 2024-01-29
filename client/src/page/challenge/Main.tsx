@@ -64,7 +64,7 @@ export default function Main() {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
       axios
-        .post('/dailymission')
+        .get('http://3.34.122.205:3000/dailyMission')
         .then((response) => {
           console.log(response);
           setDailymission(response.data);
@@ -119,7 +119,7 @@ export default function Main() {
         ingMyChallenge.map((challenge: Challenge) => {
           return (
             <>
-              <Link to={`/challengeInProgress/${challenge.challenge_id}`}>
+              <Link to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
                 <ListComponent1 key={challenge.challenge_id} challenge={challenge} />
               </Link>
             </>

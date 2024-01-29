@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import * as fs from 'fs';
+
 
 function Camera() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function Camera() {
 
   const { challenge_id } = useParams();
 
-  async function query(file: any) {
+  async function query(file: File) {
     const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
       headers: { Authorization: import.meta.env.VITE_HUGGING_FACE_TOKEN },
       method: 'POST',
@@ -25,11 +25,14 @@ function Camera() {
   }
 
   async function upload() {
-    const aiFile = await query(file);
-    console.log('aifile >>>>>>', aiFile);
+    if(file){
+      const aiFile = await query(file);
+      console.log('aifile >>>>>>', aiFile);
+    }
+    
     await axios({
       method: 'post',
-      url: `http://localhost:3000/challengeAuth/${challenge_id}`,
+      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
       data: {
         filename: file?.name,
         type: file?.type,
@@ -82,6 +85,7 @@ function Camera() {
                 onClick={() => {
                   setIsCameraOpen(true);
                   setCardImage(undefined);
+                  
                 }}
               >
                 다시 찍기
