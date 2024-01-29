@@ -59,11 +59,8 @@ export default function MyPageEdit() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // 멀티파트 폼 데이터인 경우
-        },
-      });
+
+      const response = await axios.patch(`http://localhost:3000/mypage/${id}`, data);
       console.log('프로필 수정 성공:', response);
       console.log('프로필 데이터', response.data.nickname);
 

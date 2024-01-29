@@ -170,15 +170,16 @@ export class AuthService {
   };
 
   // refresh 토큰을 통해 재발급
-  refresh = async (refreshToken: string) => {
+  refresh = async (loginRefreshToken: string) => {
     try {
-      console.log('refreshToken 재발급 시작 >>>>>>>>', refreshToken);
+      console.log('refreshToken 재발급 시작 >>>>>>>>', loginRefreshToken);
       // 1차검증 쿠키에 있는 refresh 토큰 복호화
-      const decodedRefreshToken = this.jwtService.verify(refreshToken, {
+      const decodedRefreshToken = this.jwtService.verify(loginRefreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
       console.log('decodedRefreshToken >>>>>>>', decodedRefreshToken.tokenInfo);
 
+      // DB에 저장되어 있는 유저 찾기
       let user = await db
         .select()
         .from(users)
@@ -187,7 +188,7 @@ export class AuthService {
       console.log('refresh user > ', user);
 
       const refreshTokenMatching = await bcrypt.compare(
-        refreshToken,
+        loginRefreshToken,
         user[0].refreshToken[0],
       );
 
@@ -197,8 +198,8 @@ export class AuthService {
       // 새로운 토큰 발급
       const loginToken = this.jwtService.sign({
         userid_num: user[0].userid_num,
-        // nickname: user[0].nickname,
-        // name: user[0].name,
+        nickname: user[0].nickname,
+        name: user[0].name,
       });
 
       console.log('service loginToken >', loginToken);
