@@ -33,6 +33,7 @@ import FriendSelect from './page/myPage/FriendSelect';
 import Test from './page/challenge/Test';
 
 import Layout from './page/Layout';
+import CommonLayout from './page/CommonLayout';
 
 import Camera from './page/challenge/Camera';
 import Refresh from './page/home/Refresh';
@@ -45,9 +46,11 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register/normal" element={<Register />} />
+          <Route element={<CommonLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register/normal" element={<Register />} />
+          </Route>
           <Route element={<Layout />}>
             <Route index path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
