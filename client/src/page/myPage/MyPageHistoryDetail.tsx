@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 
-export default function ListComponent3(props) {
+export default function ListComponent3(props: any) {
   return (
     <div>
       <div>

@@ -3,7 +3,6 @@ import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
-import { challenge } from '../../../server/src/modules/challenge/schema';
 
 // ~~~일 후 종료
 
@@ -41,8 +40,19 @@ export function ListComponent2({ challenge }: ChallengeProp) {
     </>
   );
 }
-
-export const ListComponent3 = ({ history, scoreNum }) => {
+interface ChallengeHistory {
+  challenge_name: string;
+  goal_money: number;
+  // 필요한 다른 속성들을 추가할 수 있습니다.
+}
+export const ListComponent3 = ({
+  history,
+  scoreNum,
+}: {
+  history: ChallengeHistory;
+  scoreNum: number;
+  challenge_name: string;
+}) => {
   return (
     <>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
