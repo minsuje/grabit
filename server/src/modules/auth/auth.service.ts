@@ -212,17 +212,17 @@ export class AuthService {
     }
   };
 
-  validateUser = async (payload: IPayload) => {
-    console.log('validateUser >>>>>>>>', payload.userid_num);
-    const user = await db
-      .select()
-      .from(users)
-      .where(
-        and(
-          eq(users.userid_num, payload.userid_num),
-          eq(users.name, payload.name),
-        ),
-      );
-    return user;
-  };
+  // validateUser = async (payload: IPayload) => {
+  //   console.log('validateUser >>>>>>>>', payload.userid_num);
+  //   const user = await db
+  //     .select()
+  //     .from(users)
+  //     .where(
+  //       and(
+  //         eq(users.userid_num, payload.userid_num),
+  //         eq(users.name, payload.name),
+  //       ),
+  //     );
+  //   return user;
+  // };
 }
