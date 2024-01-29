@@ -42,8 +42,6 @@ export default function MyPage() {
       });
   }, []);
 
-  console.log('histroy>>>>>>>>>>>>>!>>!', history);
-
   useEffect(() => {
     // const tierImages = {
     //   silver: '/silverTear.png',
@@ -64,6 +62,8 @@ export default function MyPage() {
         console.error('사용자 정보 불러오기 오류', error);
       });
   }, [id]); // id가 변경될 때마다 요청
+
+  console.log('histroy>>>>>>>>>>>>>!>>!', history);
 
   console.log(nickName);
 
@@ -167,15 +167,15 @@ export default function MyPage() {
         </div>
         <div>
           <div>
-            {history.map((item, key) => (
-              <Link to={`/detail/${item.challenge_id}`} key={key} className="text-black no-underline">
-                <ListComponent3 history={item} scoreNum={scoreNum} />
+            {history.map((userid, key) => (
+              <Link to={`/mypagehistorydetail/${userid.challenge_id}`} key={key} className="text-black no-underline">
+                <ListComponent3 history={userid} scoreNum={scoreNum} challenge_name={userid.challenge_name} />
               </Link>
             ))}
           </div>
         </div>
         <div className="flex justify-center">
-          <Link to="mypagehistorydetail">
+          <Link to="">
             <button>전체보기</button>
           </Link>
         </div>

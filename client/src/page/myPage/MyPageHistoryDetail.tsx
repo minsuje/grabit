@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 
-export default function ListComponent3() {
+export default function ListComponent3(props) {
   return (
     <div>
       <div>
@@ -8,7 +8,7 @@ export default function ListComponent3() {
       </div>
       <div className="bg-gray-200 p-6 rounded-lg  shadow-md w-100">
         <div className="flex justify-between">
-          <div className="text-black font-bold">물마시기</div>
+          <div className="text-black font-bold">{props.challenge_name}</div>
           <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
         </div>
         <div className="flex">
