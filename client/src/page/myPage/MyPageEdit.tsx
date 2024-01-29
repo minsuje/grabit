@@ -9,14 +9,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FormData {
   nickname: string;
   password: string;
   confirmPassword: string;
 }
-
+//
 const schema = yup
   .object({
     nickname: yup
@@ -49,6 +49,7 @@ export default function MyPageEdit() {
   console.log(nickName);
 
   const Navigate = useNavigate();
+  
   const { id } = useParams();
 
   console.log('id>>>>>', id);
@@ -63,17 +64,28 @@ export default function MyPageEdit() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.patch(`http://3.34.122.205:3000/friend/${id}`, data);
+      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, data);
       console.log('프로필 수정 성공:', response);
       console.log('프로필 데이터', response.data.nickname);
 
       setNickName(response.data);
 
-      // Navigate(`/mypage/${id}`);
+      Navigate(`/mypage/${id}`);
     } catch (err) {
       console.error('프로필 수정 실패:', err);
     }
   };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://3.34.122.205:3000/friend/${id}`)
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.error('친구 목록 불러오기 axios 오류', error);
+  //     });
+  // }, []);
 
   const handleNickNameChange = (e) => {
     setNickName(e.target.value);
@@ -95,6 +107,11 @@ export default function MyPageEdit() {
           <Label htmlFor="nickname">닉네임</Label>
           <Input id="nickname" {...register('nickname')} value={nickName} onChange={handleNickNameChange} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
+        </div>
+        <div>
+          <Label htmlFor="password">현재 비밀번호</Label>
+          <Input id="password" type="password" {...register('password')} />
+          {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
         <div>
           <Label htmlFor="password">비밀번호</Label>

@@ -14,21 +14,25 @@ export default function MyPage() {
   const [win, setWin] = useState<String>('');
   const [lose, setLose] = useState<String>('');
   const [history, setHistory] = useState<String[]>([]);
+  const [profileImg, setProfileImg] = useState();
 
   const { id } = useParams();
   console.log('userid>>>>>>>>>', id);
 
+  // 프로필 이미지 요청
   useEffect(() => {
     axios
-      .get(`http://3.34.122.205:3000/friend/${id}`)
+      .get(`http://3.34.122.205:3000/myPage/${id}`)
       .then((response) => {
-        console.log('>>>>>>', response.data);
+        console.log('이미지>>>>>>', response.data);
+        setProfileImg(response.data.file);
       })
       .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
+        console.error('이미지 불러오기 axios 오류', error);
       });
   }, []);
 
+  // 챌린지 테이블 요청
   useEffect(() => {
     axios
       .get(`http://3.34.122.205:3000/history/${id}`)
@@ -89,7 +93,7 @@ export default function MyPage() {
 
       <div className="flex justify-between">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={profileImg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
         <Link to={`/${id}/mypageedit`}>
