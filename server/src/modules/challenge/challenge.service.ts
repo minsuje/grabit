@@ -224,6 +224,7 @@ export class ChallengeService {
         challenge_id: challenge_id,
         userid_num: 3, // JWT 토큰에서 찾아야 하는 값
         authentication_img: fileName,
+        authentication_status: false,
       });
       return file;
     } else

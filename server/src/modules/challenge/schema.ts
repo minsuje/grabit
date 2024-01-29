@@ -59,6 +59,7 @@ export const authentication = pgTable('authentication', {
   authentication_img: varchar('authentication_img', {
     length: 200,
   }).notNull(),
+  authentication_status: boolean('authentication_status').notNull(),
 });
 
 export const authenticationRelations = relations(challenge, ({ many }) => ({
