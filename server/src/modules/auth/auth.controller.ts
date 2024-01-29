@@ -37,10 +37,10 @@ export class AuthController {
       tokens;
 
     // console.log('login controller >>>>>>>>>.', req.user);
-    // await res.setHeader(
-    //   'Authorization',
-    //   'Bearer ' + [loginToken, loginRefreshToken],
-    // );
+    await res.setHeader(
+      'Authorization',
+      'Bearer ' + [loginToken, loginRefreshToken],
+    );
 
     // cookie set
     res.cookie('accessToken', loginToken, {
