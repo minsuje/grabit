@@ -45,8 +45,8 @@ export class AuthController {
     // cookie set
     res.cookie('accessToken', loginToken, {
       httpOnly: true,
-      // maxAge: 24 * 60 * 60 * 1000,
-      maxAge: 10 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 10 * 1000,
       // maxAge: 6000,
       secure: true,
       sameSite: 'none',
@@ -54,8 +54,8 @@ export class AuthController {
     });
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
-      // maxAge: 7 * 24 * 60 * 60 * 1000,
-      maxAge: 40 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 40 * 1000,
       // maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
@@ -102,15 +102,15 @@ export class AuthController {
 
     res.cookie('accessToken', loginToken, {
       httpOnly: true,
-      // maxAge: 24 * 60 * 60 * 1000,
-      maxAge: 10 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
     });
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
-      // maxAge: 24 * 60 * 60 * 1000,
-      maxAge: 40 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 40 * 1000,
       secure: true,
       sameSite: 'none',
     });
