@@ -50,29 +50,29 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     console.log('JWT Strategy>>>>>>>>>>');
   }
 
-  async validate(payload: any) {
-    console.log('jwt Strategy payload >>> ', payload);
+  // async validate(payload: any) {
+  //   console.log('jwt Strategy payload >>> ', payload);
 
-    if (payload.exp < Date.now() / 1000) {
-      // 토큰이 만료된 경우
+  //   if (payload.exp < Date.now() / 1000) {
+  //     // 토큰이 만료된 경우
 
-      console.log('if문 안에서 시작 >>>> ');
-      throw new UnauthorizedException('Token has expired');
-    }
-    return { userid: payload.userid, name: payload.name };
-  }
+  //     console.log('if문 안에서 시작 >>>> ');
+  //     throw new UnauthorizedException('Token has expired');
+  //   }
+  //   return { userid: payload.userid, name: payload.name };
+  // }
 
   // validate(loginDto: any) {
   //     console.log('Inside jwt strategy');
   //     console.log(loginDto);
   //     return loginDto;
   // }
-  // async validate(userid: string, password: string) {
-  //   const user = await this.authService.loginUser({ userid, password });
-  //   console.log('jwt strategy >>>> ', user);
-  //   if (!user) throw new UnauthorizedException();
-  //   return user;
-  // }
+  async validate(userid: string, password: string) {
+    const user = await this.authService.loginUser({ userid, password });
+    console.log('jwt strategy >>>> ', user);
+    if (!user) throw new UnauthorizedException();
+    return user;
+  }
 
   // jwt 전략인데 왜 userid, password로 검증을 하는지 의문입니다.
   // async validate(userid: string, password: string) {
