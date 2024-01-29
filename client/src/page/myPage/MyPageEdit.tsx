@@ -13,33 +13,26 @@ import { useEffect, useState } from 'react';
 
 interface FormData {
   nickname: string;
-  password: string;
-  confirmPassword: string;
+  password: string; // 이 필드는 현재 비밀번호를 담는 용도로 사용됩니다.
+  changePassword: string; // 변경할 비밀번호
 }
 //
 const schema = yup
   .object({
-    nickname: yup
+    // 기존 필드 유효성 검증 로직...
+    changePassword: yup
       .string()
-      .required('* 닉네임은 필수입니다.')
-      .min(4, '닉네임은 4자 이하 이내여야 합니다.')
-      .max(10, '닉네임은 12자 이하 이내여야 합니다.')
-      .matches(/^[A-Za-z0-9가-힣]{4,12}$/, '닉네임은 영어, 한글, 숫자만 가능합니다.'),
-
-    password: yup
-      .string()
-      .required('* 비밀번호는 필수입니다.')
+      .required('* 변경 비밀번호는 필수입니다.')
       .min(8, '최소 8자 이상 16자 이하로 작성해주세요.')
       .max(16, '최소 8자 이상 16자 이하로 작성해주세요.')
       .matches(
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()])[a-zA-Z0-9!@#$%^&*()]{8,16}$/,
         '비밀번호는 영어, 숫자, 특수문자 혼합하여 사용해주세요.',
       ),
-
     confirmPassword: yup
       .string()
-      .required('* 비밀번호는 필수입니다.')
-      .oneOf([yup.ref('password')], '비밀번호가 일치하지 않습니다'),
+      .required('* 비밀번호 확인은 필수입니다.')
+      .oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다'),
   })
   .required();
 
@@ -58,14 +51,18 @@ export default function MyPageEdit() {
   });
 
   const onSubmit = async (data: FormData) => {
+    const { nickname, password: currentPassword, changePassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
+
     try {
+      const payload = {
+        nickname,
+        currentPassword,
+        changePassword,
+      };
 
-      const response = await axios.patch(`http://localhost:3000/mypage/${id}`, data);
+      const response = await axios.patch(`http://localhost:3000/mypage/${id}`, payload); // 수정된 payload 사용
       console.log('프로필 수정 성공:', response);
-      console.log('프로필 데이터', response.data.nickname);
-
-      setNickName(response.data);
-
+      setNickName(response.data.nickname);
       Navigate(`/mypage/${id}`);
     } catch (err) {
       console.error('프로필 수정 실패:', err);
@@ -113,9 +110,9 @@ export default function MyPageEdit() {
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
         <div>
-          <Label htmlFor="password">변경 비밀번호</Label>
-          <Input id="password" type="password" {...register('password')} />
-          {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+          <Label htmlFor="changePassword">변경비밀번호</Label>
+          <Input id="changePassword" type="password" {...register('changePassword')} />
+          {/* 에러 메시지를 표시하는 로직을 추가할 수 있습니다. */}
         </div>
         <div>
           <Label htmlFor="confirmPassword">비밀번호확인</Label>
