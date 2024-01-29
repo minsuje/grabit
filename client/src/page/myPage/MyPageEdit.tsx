@@ -15,6 +15,7 @@ interface FormData {
   nickname: string;
   password: string; // 이 필드는 현재 비밀번호를 담는 용도로 사용됩니다.
   changePassword: string; // 변경할 비밀번호
+  confirmPassword: string;
 }
 //
 const schema = yup
@@ -38,6 +39,7 @@ const schema = yup
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState('');
+  const [passwordErr, setPasswordErr] = useState('');
   const Navigate = useNavigate();
   const { id } = useParams();
   console.log('id>>>>>', id);
@@ -60,10 +62,14 @@ export default function MyPageEdit() {
         changePassword,
       };
 
-      const response = await axios.patch(`http://localhost:3000/mypage/${id}`, payload); // 수정된 payload 사용
-      console.log('프로필 수정 성공:', response);
+      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
+      console.log('프로필 수정 성공:', response.data.isUser);
       setNickName(response.data.nickname);
-      Navigate(`/mypage/${id}`);
+      if (response.data.isUser === false) {
+        setPasswordErr('현재 비밀번호가 올바르지 않습니다');
+      } else {
+        Navigate(`/mypage/${id}`);
+      }
     } catch (err) {
       console.error('프로필 수정 실패:', err);
     }
@@ -83,9 +89,6 @@ export default function MyPageEdit() {
   const handleNickNameChange = (e) => {
     setNickName(e.target.value);
   };
-
-  if ('') {
-  }
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -108,6 +111,7 @@ export default function MyPageEdit() {
           <Label htmlFor="password">현재 비밀번호</Label>
           <Input id="password" type="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+          {passwordErr && <p className="text-xs text-red-500">{passwordErr}</p>}
         </div>
         <div>
           <Label htmlFor="changePassword">변경비밀번호</Label>
