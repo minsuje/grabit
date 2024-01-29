@@ -24,21 +24,6 @@ export default function Home() {
     navigate('/main');
   }
 
-  async function query(filename) {
-    const data = fs.readFileSync(filename);
-    const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
-      headers: { Authorization: 'Bearer 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' },
-      method: 'POST',
-      body: data,
-    });
-    const result = await response.json();
-    return result;
-  }
-
-  query('cats.jpg').then((response) => {
-    console.log(JSON.stringify(response));
-  });
-
   return (
     <div className="container flex max-w-sm flex-col justify-center gap-4 text-center">
       <div className="flex w-40">
@@ -66,7 +51,6 @@ export default function Home() {
       >
         a 태그 카카오
       </a>
-      <input type="file" capture="environment" onChange={} />
     </div>
   );
 }

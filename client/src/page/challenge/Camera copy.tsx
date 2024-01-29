@@ -1,38 +1,60 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { CameraAction } from '../../camera/camera';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import * as fs from 'fs';
 
 function Camera() {
   const navigate = useNavigate();
   const [isCameraOpen, setIsCameraOpen] = useState<Boolean>(false);
   const [cardImage, setCardImage] = useState<Blob>();
   const [file, setFile] = useState<File>();
+  const [uploadFile, setUploadFile] = useState<File | undefined>();
 
   const { challenge_id } = useParams();
 
-  async function query(file: any) {
-    const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
-      headers: { Authorization: import.meta.env.VITE_HUGGING_FACE_TOKEN },
-      method: 'POST',
-      body: file,
-    });
-    const result = await response.json();
-    return result;
+  // handleFile function
+  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files?.['0'];
+    console.log('🚀 ~ handleFile ~ files:', files);
+    console.log('🚀 ~ handleFile ~ files:', typeof files);
+    if (files) {
+      setUploadFile(files);
+    }
   }
 
   async function upload() {
-    const aiFile = await query(file);
-    console.log('aifile >>>>>>', aiFile);
+    const formData = new FormData();
+
+    console.log('uploadFile ', typeof uploadFile);
+
+    if (uploadFile) {
+      formData.append('file', uploadFile);
+    }
+
+    // if (uploadFile) {
+    //   for (let i = 0; i < uploadFile.length; i++) {
+    //     formData.append('file', uploadFile[i]);
+    //   }
+    // }
+
+    // console log inside formData
+    for (const key of formData.keys()) {
+      console.log(key, formData.get(key));
+    }
+
     await axios({
       method: 'post',
       url: `http://localhost:3000/challengeAuth/${challenge_id}`,
+
       data: {
         filename: file?.name,
         type: file?.type,
+        formData,
+      },
+      headers: {
+        'Context-Type': 'multipart/form-data',
       },
     }).then((res) => {
       console.log('res.data', res.data);
@@ -70,6 +92,9 @@ function Camera() {
             />
           )}
         </div>
+
+        <input type="file" onChange={handleFile} />
+        <Button onClick={upload}>업로드</Button>
 
         {cardImage && (
           <div className="m-auto">

@@ -256,7 +256,6 @@ export class ChallengeService {
   };
 
   // 챌린지 인증사진에 대한 이모티콘 취소 요청
-
   deleteChallengeAuthEmoticon = async (
     challenge_id,
     authentication_id,
