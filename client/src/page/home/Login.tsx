@@ -1,5 +1,5 @@
 import axios from '@/api/axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import HeaderTitle from '@/components/HeaderTitle';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn, setUserid_num, setNickname, setAccessToken, setRefreshToken } from '@/store/loginSlice';
 import { Cookies } from 'react-cookie';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function Login() {
   const cookies = new Cookies();
@@ -17,6 +18,10 @@ export default function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '로그인', backPath: '/' }));
+  }, [dispatch]);
 
   // const handleLogin = async () => {
   //     try {
