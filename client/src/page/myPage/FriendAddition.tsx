@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
 
@@ -16,9 +16,10 @@ export default function FriendAddition() {
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
   useEffect(() => {
+    const { id } = useParams();
     const userid = 1; // props 대체 예정
     axios
-      .get(`http://3.34.122.205:3000/friend/${userid}`)
+      .get(`http://3.34.122.205:3000/friend/${id}`)
       .then((response) => {
         setFriends(response.data.friends_info);
         console.log(response);
