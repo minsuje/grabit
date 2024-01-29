@@ -83,7 +83,8 @@ function App() {
             <Route path="/friend/:id" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-            <Route path="/mypage/mypagehistory/mypagehistorydetail" element={<MyPageHistoryDetail />} />
+            <Route path="/mypagehistorydetail/:id" element={<MyPageHistoryDetail />} />
+            <Route path="/friend/new" element={<FriendAddition />} />
 
             <Route path="/friend/new" element={<FriendAddition />} />
           </Route>
