@@ -1,13 +1,17 @@
 import { Tab } from '@/components/Component0117';
+import { useDispatch, useSelector } from 'react-redux';
 import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
+import { RootState } from '@/store/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,RefObject } from 'react';
 import axios from 'axios';
 import { Challenge, users } from '@/types/types';
-import { useDispatch } from 'react-redux';
+
 import { setHeaderInfo } from '@/store/headerSlice';
-import { differenceInDays } from 'date-fns';
-import Cta from '@/components/Cta';
+import { differenceInDays,differenceInCalendarDays } from 'date-fns';
+// import Cta from '@/components/Cta';
+import { Button } from '@/components/ui/button';
+import { useRef } from 'react'
 
 
 interface url {
@@ -16,13 +20,19 @@ interface url {
 }
 
 function ChallengeInProgress() {
+  const { userid_num } = useSelector((state: RootState) => state.login);
+
+
+  const inputRef:RefObject<HTMLInputElement>|null = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
   const tab:string[]=['나'];
-  const tabId:number[]=[3];
+  const tabId:number[]=[userid_num];
   const UrlGroup:string[][] =[[],[],[],[]]
   const Images:JSX.Element[] = []
+  // const [imgPreview, setImgPreview]=useState<File>();
+// const [Dday,setDday]=useState<number>(1);
 
 
   useEffect(() => {
@@ -63,12 +73,15 @@ function ChallengeInProgress() {
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
 
   let totalAuthCount = 3;
-  if(period!==3){
+  if(period!==2){
     totalAuthCount =((period+1)/7)*challengeDetail.term
   }
 
+
+
   useEffect(() =>{
-    console.log('challenge_id', challenge_id)
+    console.log('challenge_id', challenge_id);
+
     axios
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
@@ -80,16 +93,33 @@ function ChallengeInProgress() {
       .catch((error): void => {
         console.error('Challengeinprogress에서 axios 오류:', error);
       });
+    
+
+      
+    
   }, []);
+
+  useEffect(() =>{
+
+
+      const Dday =differenceInCalendarDays(challengeDetail.authentication_end_date, new Date())
+
+      if(Dday<0){
+        navigate(`/challengeResult/${challenge_id}`)
+      }
+    
+  }, [challengeDetail.authentication_end_date]);
 
 // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
   for (let i=0; i<4; i++) {
-    if(challengers[i]&& challengers[i].userid_num!==3){ //jwt로 수정
+    if(challengers[i]&& challengers[i].userid_num!==userid_num){ //jwt로 수정
       tab.push(challengers[i].nickname)
       tabId.push(challengers[i].userid_num)
+      console.log(tab, tabId)
     }else{
-      tab.push("")
+      
+      console.log(tab, tabId)
     }
   }
   
@@ -121,14 +151,6 @@ function ChallengeInProgress() {
 
 
 
-
-
-
-
-
-  
-
-
   return (
     <div className="mt-12 flex flex-col gap-4">
       <div className="p-3 text-center text-4xl font-extrabold">
@@ -146,17 +168,15 @@ function ChallengeInProgress() {
         <div className="text-l ">{UrlGroup[1].length}회 성공</div>
         </div>
 
-        {tab[2]!==""&&<div className="flex-col">
+        {tab[2]&&<div className="flex-col">
         <div className="text-xl font-black p-2">{tab[2]}</div>
         <div className="text-l ">{UrlGroup[2].length}회 성공</div>
         </div>}
         
-        {tab[3]!==""&&<div className="flex-col">
+        {tab[3]&&<div className="flex-col">
         <div className="text-xl font-black p-2">{tab[3]}</div>
         <div className="text-l font-black">{UrlGroup[3].length}회 성공</div>
         </div>}
-       
-        
       </div>
 
 
@@ -166,10 +186,39 @@ function ChallengeInProgress() {
       <ListComponent1 challenge={challengeDetail} />
       <Tab 
       tab1={tab[0]} tab2={tab[1]} tab3={tab[2]} tab4={tab[3]} tab1content={Images[0]} tab2content={Images[1]}  tab3content={Images[2]} tab4content={Images[3]} />
-      <Cta text='인증하기' onclick={() => {
+
+      <Button onClick={() => {
             navigate(`/camera/${challenge_id}`);
+            
+          }}>인증하기</Button>
+      {/* <Cta text='인증하기' onclick={() => {
+            navigate(`/camera/${challenge_id}`);
+            
           }} >
-      </Cta>
+      </Cta> */}
+
+
+      <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
+      <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
+      <div className="flex-col bg-white px-8  pb-8 ">
+      <input className="opacity-0"  type="file" id="imageFile" capture="environment" accept="image/*"  ref={inputRef}  />
+        <Button onClick={()=>{
+           if (inputRef.current) {
+            inputRef.current.click();
+            console.log(inputRef.current.files)
+            
+          }
+          
+        }} className="w-full rounded-md p-6">인증하기
+        </Button>
+      </div>
+    </div>
+
+  
+
+      
+
+      
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { Label } from '@/components/ui/label';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-
+import { RootState } from '@/store/store';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -11,13 +11,14 @@ import { ko } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 
 import { format } from 'date-fns';
-import { useDispatch } from 'react-redux';
+
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeDetail() {
+  const { userid_num } = useSelector((state: RootState) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userId =3
+
 
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
@@ -39,7 +40,7 @@ function ChallengeDetail() {
 
   const participate = () => {
     axios
-      .get(`http://3.34.122.205:3000/challengeDetail/${challengeDetail?.challenge_id}/${userId}`)
+      .get(`http://3.34.122.205:3000/challengeDetail/${challengeDetail?.challenge_id}/${userid_num}`)
       .then((response): void => {
         console.log('response', response.data);
        
@@ -123,7 +124,7 @@ function ChallengeDetail() {
 
 
 {
-  challengeDetail?.is_public && challengers.length<4 && !challengeDetail.challenger_userid_num.includes(userId) &&(<Button onClick={()=>participate}>참가하기</Button>)
+  challengeDetail?.is_public && challengers.length<4 && !challengeDetail.challenger_userid_num.includes(userid_num) &&(<Button onClick={()=>participate}>참가하기</Button>)
 }
 
 {
