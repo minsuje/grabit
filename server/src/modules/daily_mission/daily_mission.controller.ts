@@ -18,16 +18,17 @@ export class DailyMissionController {
     private dailyMissionService: DailyMissionService,
     private jwtService: JwtService,
   ) {}
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/dailyMission')
   async GetDaily(@Req() req: Request, @Res() res: Response) {
-    const userInfo = req.headers['authorization'].split(' ')[1];
+    // const userInfo = req.headers['authorization'].split(' ')[1];
+    // console.log('controller userInfo >>>', req.headers['authorization']);
+    // const decodedUserInfo = await this.jwtService.verify(userInfo, {
+    //   secret: process.env.JWT_SECRET_KEY,
+    // });
+    // const { userid_num } = decodedUserInfo;
 
-    const decodedUserInfo = await this.jwtService.verify(userInfo, {
-      secret: process.env.JWT_SECRET_KEY,
-    });
-
-    const { userid_num } = decodedUserInfo;
+    const userid_num = 4;
     const isSuccess =
       await this.dailyMissionService.getDailyMission(userid_num);
     return res.send(isSuccess);

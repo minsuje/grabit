@@ -64,7 +64,7 @@ export default function Main() {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
       axios
-        .get('http://3.34.122.205:3000/dailyMission')
+        .get('http://localhost:3000/dailyMission')
         .then((response) => {
           console.log(response);
           setDailymission(response.data);
