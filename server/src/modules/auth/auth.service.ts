@@ -56,7 +56,7 @@ export class AuthService {
 
         const tokenInfo = {
           userid_num: loginAccess[0].userid_num,
-          // nickname: loginAccess[0].nickname,
+          nickname: loginAccess[0].nickname,
           name: loginAccess[0].name,
         };
 
