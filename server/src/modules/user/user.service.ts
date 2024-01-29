@@ -74,16 +74,44 @@ export class UserService {
 
   // 프로필 수정
   patchMyPage = async (userid_num: number, file: string, body: any) => {
-    const { nickname, profile_img, password } = body;
-    const userInfo = await db
-      .update(users)
-      .set({
-        // password:"",
-        nickname: nickname,
-        profile_img: profile_img,
-      })
+    const { nickname, profile_img, currentPassword, changePasssword } = body;
+    let isUser = false;
+    const myDbPassword = await db
+      .select({ password: users.password })
+      .from(users)
       .where(eq(users.userid_num, userid_num));
-    return { userInfo, file };
+
+    const myPassword = myDbPassword[0];
+    const checkPassword = await bcrypt.compare(currentPassword, myPassword[0]);
+
+    if (checkPassword) {
+      if (changePasssword) {
+        const newPassword = await bcrypt.hash(changePasssword, 10);
+        const userInfo = await db
+          .update(users)
+          .set({
+            password: newPassword,
+            nickname: nickname,
+            profile_img: profile_img,
+          })
+          .where(eq(users.userid_num, userid_num));
+
+        isUser = true;
+        return { userInfo, file, isUser };
+      } else {
+        const userInfo = await db
+          .update(users)
+          .set({
+            nickname: nickname,
+            profile_img: profile_img,
+          })
+          .where(eq(users.userid_num, userid_num));
+        isUser = true;
+        return { userInfo, file, isUser };
+      }
+    } else {
+      return { msg: '비밀번호를 다시 한번 확인해 주세요', isUser };
+    }
   };
 
   async getScore(userid: number) {
