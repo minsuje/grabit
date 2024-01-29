@@ -39,7 +39,7 @@ export class AuthController {
     // console.log('login controller >>>>>>>>>.', req.user);
     await res.setHeader(
       'Authorization',
-      'Bearer ' + [loginToken, loginRefreshToken],
+      'Bearer ' + [loginToken, loginRefreshToken].join(' '),
     );
 
     // cookie set
@@ -126,11 +126,13 @@ export class AuthController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get('refresh')
+  @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
-    console.log('req.cookies', req.cookies);
     console.log('/refresh site 접속 >>>');
+    const refreshToken = req.headers['authorization'].split(' ')[1];
+    console.log('Post /refresh refreshtoken >>>', refreshToken);
+
     if (!req.cookies.accessToken) {
       if (req.cookies.refreshToken) {
         console.log('refreshToken이 있습니다. 계속 진행합니다.');
