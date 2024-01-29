@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 interface FriendDetail {
   id: number;
@@ -16,7 +15,6 @@ export default function MyPageFriendDetail() {
   const { id } = useParams();
   console.log(id);
   useEffect(() => {
-    const userid = 1; // 실제 사용자 ID를 여기에 설정
     axios
       .get(`http://3.34.122.205:3000/friendDetail/${id}`)
       .then((response) => {

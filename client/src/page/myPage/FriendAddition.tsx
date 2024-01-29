@@ -17,7 +17,6 @@ export default function FriendAddition() {
 
   useEffect(() => {
     const { id } = useParams();
-    const userid = 1; // props 대체 예정
     axios
       .get(`http://3.34.122.205:3000/friend/${id}`)
       .then((response) => {

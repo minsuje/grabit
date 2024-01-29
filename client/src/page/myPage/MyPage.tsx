@@ -1,26 +1,41 @@
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Link, Outlet, useParams } from 'react-router-dom';
-import ChallengeData from '@/data/ChallengeData';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import '../../../../client/src/App.css'; // 스타일 시트 임포트
 import { ListComponent3 } from '@/components/ComponentSeong';
 
+interface UserInfo {
+  nickname: string;
+  score_num: number;
+  money: string;
+  userInfo: any;
+}
+
+interface ChallengeHistory {
+  challenge_name: string;
+  goal_money: number;
+  challenge_id: string; // challenge_id 속성 추가
+}
+
+interface HistoryData {
+  win: string;
+  lose: string;
+  history: ChallengeHistory[];
+}
+
 export default function MyPage() {
+  const { id } = useParams<{ id: string }>();
   const [nickName, setNickName] = useState<string>('');
-  const [scoreNum, setScoreNum] = useState<string>('');
+  const [scoreNum, setScoreNum] = useState<number>(0); // scoreNum은 숫자 타입
   const [money, setMoney] = useState<string>('');
-  const [win, setWin] = useState<String>('');
-  const [lose, setLose] = useState<String>('');
-  const [history, setHistory] = useState<String[]>([]);
-  const [profileimg, setProfileImg] = useState();
+  const [win, setWin] = useState<string>('');
+  const [lose, setLose] = useState<string>('');
+  const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
+  const [profileimg, setProfileImg] = useState<string | undefined>();
 
-  const { id } = useParams();
-  console.log('userid>>>>>>>>>', id);
-
-  // 프로필 이미지 요청
   useEffect(() => {
+    // 프로필 이미지 요청
     axios
       .get(`http://3.34.122.205:3000/myPage/${id}`)
       .then((response) => {
@@ -30,64 +45,56 @@ export default function MyPage() {
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, []);
+  }, [id]);
 
-  // 챌린지 테이블 요청
   useEffect(() => {
+    // 챌린지 테이블 요청
     axios
       .get(`http://3.34.122.205:3000/history/${id}`)
       .then((response) => {
-        setWin(response.data.win);
-        setLose(response.data.lose);
-        setHistory(response.data.history);
+        const historyData: HistoryData = response.data;
+        setWin(historyData.win);
+        setLose(historyData.lose);
+        setHistory(historyData.history);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);
       });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
-    // const tierImages = {
-    //   silver: '/silverTear.png',
-    //   platinum: '/platinumTear.png',
-    //   diamond: '/diamondTear.png',
-    //   challenger: '/challengerTear.png',
-    // };
-
     axios
-      .get(`http://3.34.122.205:3000/mypage/${id}`) // userid를 사용하여 서버 요청
+      .get<UserInfo>(`http://3.34.122.205:3000/mypage/${id}`)
       .then((response) => {
-        console.log('res>>>>>>', response.data.userInfo[0]);
-        setNickName(response.data.userInfo[0].nickname);
-        setScoreNum(response.data.userInfo[0].score_num);
-        setMoney(response.data.userInfo[0].money);
+        const userInfo: UserInfo = response.data.userInfo[0];
+        console.log('res>>>>>>', userInfo);
+        setNickName(userInfo.nickname);
+        setScoreNum(userInfo.score_num);
+        setMoney(userInfo.money);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
       });
-  }, [id]); // id가 변경될 때마다 요청
+  }, [id]);
 
-  console.log('histroy>>>>>>>>>>>>>!>>!', history);
-
-  console.log(nickName);
-
-  const getTierImage = (score) => {
+  const getTierImage = (score: number) => {
     if (score >= 2000) return '/challengerTear.png';
     if (score >= 1500) return '/diamondTear.png';
     if (score >= 1000) return '/platinumTear.png';
     return '/silverTear.png';
   };
 
-  const getTierName = (score) => {
+  const getTierName = (score: number) => {
     if (score >= 2000) return '챌린저';
     if (score >= 1500) return '다이아몬드';
     if (score >= 1000) return '플래티넘';
     return '실버';
   };
 
-  //  티어 이미지,
-  const tierImageSrc = getTierImage(parseInt(scoreNum));
-  const tierName = getTierName(parseInt(scoreNum));
+  console;
+  const tierImageSrc = getTierImage(scoreNum);
+  const tierName = getTierName(scoreNum);
+
   return (
     <div className="">
       <h1>마이페이지</h1>
@@ -108,16 +115,15 @@ export default function MyPage() {
         <p>{nickName}</p>
       </div>
 
-      <div className=" flex content-center mt-10">
-        <div className="w-[100%]  flex flex-col justify-center ">
+      <div className="flex content-center mt-10">
+        <div className="w-[100%]  flex flex-col justify-center">
           <p>{scoreNum}</p>
         </div>
         <div className="w-[10%] mr-5 text-end">
           <p>{tierName}</p>
           <p className="text-xs text-neutral-300">순위</p>
         </div>
-        <div className=" flex flex-col content-center justify-center">
-          {/* 티어에 따른 이미지 렌더링 */}
+        <div className="flex flex-col content-center justify-center">
           <img src={tierImageSrc} alt="Tier Image" className="w-12 glowing-image " />
         </div>
       </div>
@@ -150,7 +156,7 @@ export default function MyPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-1 ">
+      <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <span>{money}</span>
           <Link to="mypagewithdraw">
@@ -164,7 +170,7 @@ export default function MyPage() {
           </Link>
         </div>
 
-        <div className="flex justify-between ">
+        <div className="flex justify-between">
           <p>전적</p>
           <p>
             {win}승 {lose}패
@@ -172,9 +178,9 @@ export default function MyPage() {
         </div>
         <div>
           <div>
-            {history.map((userid, key) => (
-              <Link to={`/mypagehistorydetail/${userid.challenge_id}`} key={key} className="text-black no-underline">
-                <ListComponent3 history={userid} scoreNum={scoreNum} challenge_name={userid.challenge_name} />
+            {history.map((challenge, key) => (
+              <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
+                <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
               </Link>
             ))}
           </div>
@@ -184,15 +190,6 @@ export default function MyPage() {
             <button>전체보기</button>
           </Link>
         </div>
-
-        {/* {history.map((item, index) => (
-          <Link to={`/detail/${item.challenge_id}`} key={index} className="text-black no-underline">
-            <div className="w-100 rounded-lg bg-gray-200 p-6 shadow-md">
-              <div className="flex justify-between">
-                <div className="font-bold text-black">{item.challenge_name}</div>
-                {/* 기타 정보 출력 */}
-
-        {/* 기타 데이터 출력 */}
       </div>
     </div>
   );
