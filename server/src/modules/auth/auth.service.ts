@@ -173,6 +173,7 @@ export class AuthService {
   refresh = async (loginRefreshToken: string) => {
     try {
       console.log('refreshToken 재발급 시작 >>>>>>>>', loginRefreshToken);
+
       // 1차검증 쿠키에 있는 refresh 토큰 복호화
       const decodedRefreshToken = this.jwtService.verify(loginRefreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,

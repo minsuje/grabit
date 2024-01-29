@@ -48,8 +48,8 @@ export class AuthController {
       // maxAge: 24 * 60 * 60 * 1000,
       maxAge: 10 * 1000,
       // maxAge: 6000,
-      // secure: true,
-      // sameSite: 'none',
+      secure: true,
+      sameSite: 'none',
       // path: '/auth',
     });
     res.cookie('refreshToken', loginRefreshToken, {
@@ -57,10 +57,11 @@ export class AuthController {
       // maxAge: 7 * 24 * 60 * 60 * 1000,
       maxAge: 40 * 1000,
       // maxAge: 10 * 1000,
-      // secure: true,
-      // sameSite: 'none',
+      secure: true,
+      sameSite: 'none',
       // path: '/auth',
     });
+    res.cookie('isLoggedIn', true, { httpOnly: false });
 
     console.log('/ > ', loginToken);
 
@@ -114,7 +115,14 @@ export class AuthController {
       sameSite: 'none',
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
-    return res.redirect('http://localhost:5173');
+    res.redirect('http://localhost:5173');
+    return res.send({
+      accessToken: loginToken,
+      refreshToken: loginRefreshToken,
+      userid_num: id,
+      nickname: username,
+      name: username,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -125,49 +133,57 @@ export class AuthController {
     return req.user;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
     console.log('/refresh site 접속 >>>');
-    const loginRefreshToken = req.headers['authorization'].split(' ')[1];
-    console.log('Post /refresh refreshtoken >>>', loginRefreshToken);
+    const accessToken = req.headers['authorization'].split(' ')[0];
 
-    try {
-      const loginToken = await this.authService.refresh(loginRefreshToken);
+    console.log('auth controller accessToken >>>>', accessToken);
 
-      await res.cookie('jwt', loginToken, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        // maxAge: 10 * 60 * 60 * 1000,
-        // maxAge: 10 * 1000,
-        secure: true,
-        sameSite: 'none',
-      });
-      // return res.send({
-      //   Message: 'new token success',
-      // });
+    const decodedAccessToken = await this.jwtService.verify(accessToken, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
 
-      return await res.setHeader(
-        'Authorization',
-        'Bearer ' + [loginToken, loginRefreshToken].join(' '),
-      );
-    } catch (err) {
-      console.log('실패');
-      res.clearCookie('login Token');
-      res.clearCookie('refreshToken');
-      res.clearCookie('jwt');
-      // res.clearCookie('accessToken');
-      res.clearCookie('isLoggedIn');
-      throw new UnauthorizedException();
+    if (decodedAccessToken.exp < Date.now() / 1000) {
+      const loginRefreshToken = req.headers['authorization'].split(' ')[1];
+
+      console.log('Post /refresh refreshtoken >>>', loginRefreshToken);
+
+      try {
+        const loginToken = await this.authService.refresh(loginRefreshToken);
+
+        await res.cookie('accessToken', loginToken, {
+          httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000,
+          // maxAge: 10 * 60 * 60 * 1000,
+          // maxAge: 10 * 1000,
+          secure: true,
+          sameSite: 'none',
+        });
+        // return res.send({
+        //   Message: 'new token success',
+        // });
+
+        const newHeader = await res.setHeader(
+          'Authorization',
+          'Bearer ' + [loginToken, loginRefreshToken].join(' '),
+        );
+
+        return res.send({ msg: '새로운 토큰 발급 완료' });
+      } catch (err) {
+        console.log('실패');
+        res.clearCookie('login Token');
+        res.clearCookie('refreshToken');
+        // res.clearCookie('accessToken');
+        res.clearCookie('isLoggedIn');
+        throw new UnauthorizedException();
+      }
+    } else {
+      return res.send({ msg: '토큰이 유효합니다.' });
     }
   }
-  // } else {
-  //   console.log('이미 accessToken이 있습니다');
-  //   return res.send({
-  //     isExpired: true,
-  //   });
-  // }
 
   @Post('/logout')
   logout(@Res() res: Response, @Req() req: Request) {
