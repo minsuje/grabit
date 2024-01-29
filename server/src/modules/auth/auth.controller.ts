@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 
@@ -29,35 +30,49 @@ export class AuthController {
   @Post('login')
   @UseGuards(localGuard)
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
+    console.log('login controller >>>>>>>>>.', req.user);
     const token = JSON.stringify(req.user);
     const tokens = JSON.parse(token);
-    const { loginToken, loginRefreshToken } = tokens;
+    const { loginToken, loginRefreshToken, userid_num, nickname, name } =
+      tokens;
 
     // console.log('login controller >>>>>>>>>.', req.user);
-    await res.setHeader(
-      'Authorization',
-      'Bearer ' + [loginToken, loginRefreshToken],
-    );
+    // await res.setHeader(
+    //   'Authorization',
+    //   'Bearer ' + [loginToken, loginRefreshToken],
+    // );
 
     // cookie set
-    res.cookie('jwt', loginToken, {
+    res.cookie('accessToken', loginToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 10 * 1000,
       // maxAge: 6000,
-      secure: true,
-      sameSite: 'none',
+      // secure: true,
+      // sameSite: 'none',
+      // path: '/auth',
     });
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: 'none',
+      // maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 40 * 1000,
+      // maxAge: 10 * 1000,
+      // secure: true,
+      // sameSite: 'none',
+      // path: '/auth',
     });
 
+    console.log('/ > ', loginToken);
+
     return res.send({
-      loginToken,
-      loginRefreshToken,
+      accessToken: loginToken,
+      refreshToken: loginRefreshToken,
+      userid_num,
+      nickname,
+      name,
     });
+
+    // return this.authService.loginUser(req.body);
   }
 
   @UseGuards(AuthGuard('kakao'))
@@ -86,13 +101,15 @@ export class AuthController {
 
     res.cookie('accessToken', loginToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
     });
     res.cookie('refreshToken', loginRefreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 40 * 1000,
       secure: true,
       sameSite: 'none',
     });
@@ -108,24 +125,52 @@ export class AuthController {
     return req.user;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
+    console.log('req.cookies', req.cookies);
     console.log('/refresh site 접속 >>>');
-    try {
-      console.log('/refresh site try >>>');
-      const newAccessToken = await this.authService.refresh(
-        req.cookies.loginRefreshToken,
-      );
-      console.log('/refresh site after try >>>');
-      res.cookie('loginToken', newAccessToken, {
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        secure: true,
-        sameSite: 'none',
+    if (!req.cookies.accessToken) {
+      if (req.cookies.refreshToken) {
+        console.log('refreshToken이 있습니다. 계속 진행합니다.');
+        try {
+          const newAccessToken = await this.authService.refresh(
+            req.cookies.refreshToken,
+          );
+
+          // console.log('controller new access token >', newAccessToken);
+
+          await res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            // maxAge: 24 * 60 * 60 * 1000,
+            // maxAge: 10 * 60 * 60 * 1000,
+            maxAge: 10 * 1000,
+            // secure: true,
+            // sameSite: 'none',
+          });
+          console.log('accessToken을 새로 발급했습니다');
+          return res.send({
+            Message: 'new token success',
+          });
+        } catch (err) {
+          console.log('실패');
+          res.clearCookie('login Token');
+          res.clearCookie('refreshToken');
+          res.clearCookie('jwt');
+          // res.clearCookie('accessToken');
+          res.clearCookie('isLoggedIn');
+          throw new UnauthorizedException();
+        }
+      } else {
+        console.log('refreshToken이 없습니다');
+      }
+    } else {
+      console.log('이미 accessToken이 있습니다');
+      return res.send({
+        isExpired: true,
       });
-    } catch {}
+    }
   }
 
   // @Get('/cookies')

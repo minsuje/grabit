@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/create-auth-dto';
 import { users } from '../user/schema';
 import { db } from 'db/db';
@@ -6,10 +6,17 @@ import { eq, and } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
+import { UserService } from '../user/user.service';
 dotenv.config();
+
+interface IPayload {
+  userid_num: number;
+  name: string;
+}
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
+
   loginUser = async ({ userid, password }: LoginDto) => {
     let isLogin: string = 'false';
     let validate: string = 'none';
@@ -49,7 +56,7 @@ export class AuthService {
 
         const tokenInfo = {
           userid_num: loginAccess[0].userid_num,
-          nickname: loginAccess[0].nickname,
+          // nickname: loginAccess[0].nickname,
           name: loginAccess[0].name,
         };
 
@@ -64,15 +71,23 @@ export class AuthService {
             expiresIn: '7d',
           },
         );
+
+        // refresh 토큰 암호화
+        const hashRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
+
         // 2. refresh Token 해당 유저에 넣기
-        const inputLogoinReToken = await db
+        const inputLoginReToken = await db
           .update(users)
-          .set({ refreshToken: [loginRefreshToken, userid] })
+          .set({ refreshToken: [hashRefreshToken, userid] })
           .where(eq(users.userid, userid));
+
+        const userid_num = loginAccess[0].userid_num;
+        const nickname = loginAccess[0].nickname;
+        const name = loginAccess[0].name;
 
         isLogin = 'true';
         validate = 'true';
-        return { loginToken, loginRefreshToken };
+        return { loginToken, loginRefreshToken, userid_num, nickname, name };
       } else {
         console.log('비밀번호가 틀렸습니다.');
         validate = 'noPassword';
@@ -92,7 +107,6 @@ export class AuthService {
     const findUser = await db
       .select()
       .from(users)
-
       .where(eq(users.userid, String(kakaoId)));
 
     const clearToken = await db
@@ -105,6 +119,8 @@ export class AuthService {
       .from(users)
       .where(eq(users.userid, String(kakaoId)));
 
+    console.log('isClear >>>> ', isClear);
+
     // 유저가 없다면 DB에 유저 추가
     if (findUser.length == 0) {
       const newUser = await db.insert(users).values({
@@ -116,11 +132,14 @@ export class AuthService {
       });
     }
 
+    console.log('console isClear>>>', isClear);
     const kakaoTokenInfo = {
       nickname: isClear[0].nickname,
       name: isClear[0].name,
       userid_num: isClear[0].userid_num,
     };
+
+    console.log('kakaoToken>>> ', kakaoTokenInfo);
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
     // DB에 유저가 있다면 토큰 생성
     const loginToken = await this.jwtService.sign(kakaoTokenInfo);
@@ -143,26 +162,67 @@ export class AuthService {
     // db에 넣기
     const inputRefreshToken = await db
       .update(users)
-      .set({ refreshToken: [currentRefreshToken, kakaoid] })
+      .set({
+        refreshToken: [currentRefreshToken, String(isClear[0].userid_num)],
+      })
       .where(eq(users.userid, String(kakaoId)));
     return { loginToken, loginRefreshToken };
   };
 
   // refresh 토큰을 통해 재발급
-  refresh = async (loginRefreshToken: string) => {
+  refresh = async (refreshToken: string) => {
     try {
-      console.log('refresh loginTOken >>>>>>>>', loginRefreshToken);
-      // 1차검증
-      const decodedRefreshToken = this.jwtService.verify(loginRefreshToken, {
+      console.log('refreshToken 재발급 시작 >>>>>>>>', refreshToken);
+      // 1차검증 쿠키에 있는 refresh 토큰 복호화
+      const decodedRefreshToken = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
-      console.log('decodedRefreshToken >>>>>>>', decodedRefreshToken);
-      // const userid = decodedRefreshToken;
+      console.log('decodedRefreshToken >>>>>>>', decodedRefreshToken.tokenInfo);
+
+      let user = await db
+        .select()
+        .from(users)
+        .where(eq(users.userid_num, decodedRefreshToken.tokenInfo.userid_num));
+
+      console.log('refresh user > ', user);
+
+      const refreshTokenMatching = await bcrypt.compare(
+        refreshToken,
+        user[0].refreshToken[0],
+      );
+
+      if (!refreshTokenMatching)
+        throw new UnauthorizedException('Invalid refresh-token');
+
+      // 새로운 토큰 발급
+      const loginToken = this.jwtService.sign({
+        userid_num: user[0].userid_num,
+        // nickname: user[0].nickname,
+        // name: user[0].name,
+      });
+
+      console.log('service loginToken >', loginToken);
+
+      return loginToken;
     } catch {
       return {
         statusCode: 401,
         message: 'Unauthorized',
       };
     }
+  };
+
+  validateUser = async (payload: IPayload) => {
+    console.log('validateUser >>>>>>>>', payload.userid_num);
+    const user = await db
+      .select()
+      .from(users)
+      .where(
+        and(
+          eq(users.userid_num, payload.userid_num),
+          eq(users.name, payload.name),
+        ),
+      );
+    return user;
   };
 }

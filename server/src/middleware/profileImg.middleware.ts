@@ -5,6 +5,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
+  CompressionType,
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -27,7 +28,7 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
-    // console.log('profileImg middleware originalUrl > ', req.originalUrl);
+    console.log('profileImg middleware originalUrl > ', req.originalUrl);
 
     // '/friend/detail' 경로로 요청 온 경우
     if (
@@ -55,10 +56,6 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
-      console.log(
-        'profileImg middleware friend',
-        Number(req.url.split('/')[1]),
-      );
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
@@ -117,9 +114,12 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/myPage', '/profileUpload' 경로로 요청 온 경우
     else {
-      if (req.url.split('/')[1] === 'normal') {
+      if (
+        req.url.split('/')[1] === 'normal' ||
+        req.originalUrl.split('/')[1] === 'myPage' // myPage 조회
+      ) {
         const body: any = req.body;
-        console.log('profileImg middleware body > ', req.body);
+        // console.log('profileImg middleware body > ', req.body);
         let { filename, type } = body;
 
         let key;
@@ -130,12 +130,13 @@ export class profileImgMiddleware implements NestMiddleware {
             .from(users)
             .where(eq(users.userid_num, Number(req.url.split('/')[1])));
           key = file[0].profile_img;
-          console.log('middleware profileImg key > ', key);
+          // console.log('middleware profileImg key > ', key);
           const command = new GetObjectCommand({
             Bucket: process.env.AWS_S3_BUCKET,
             Key: key,
           });
           const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          // console.log('middleware profileImg url > ', url);
           req['file'] = url;
         } else if (req.method === 'POST') {
           if (filename) {

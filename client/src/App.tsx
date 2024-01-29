@@ -38,33 +38,9 @@ import Camera from './page/challenge/Camera';
 import Refresh from './page/home/Refresh';
 import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
-
-import axios, { AxiosInstance } from 'axios';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 import FriendAddition from './page/myPage/FriendAddition';
 
-// const SERVER_ADDRESS: string = 'http://localhost:3000';
-
-// const customAxios: AxiosInstance = axios.create({
-//   baseURL: `${SERVER_ADDRESS}`,
-// });
-
-// customAxios.interceptors.request.use((config) => {
-
-//   console.log('refreshToken: ', refreshToken);
-//   if (refreshToken) {
-//     config.headers.Authorization = `Bearer ${refreshToken}`;
-//   }
-//   return config;
-// });
-
 function App() {
-  const { refreshToken } = useSelector((state: RootState) => state.login);
-
-  axios.defaults.baseURL = 'http://localhost:3000';
-  // axios.defaults.headers.common['Authorization'] = refreshToken;
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -72,7 +48,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
-          <Route path="/" element={<Layout />}>
+          <Route element={<Layout />}>
             <Route path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
@@ -103,14 +79,16 @@ function App() {
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
             <Route path="/mypage/friend/detail/:id/" element={<Friend />} />
+
             <Route path="/friend/:id" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
             <Route path="/mypagehistorydetail/:id" element={<MyPageHistoryDetail />} />
             <Route path="/friend/new" element={<FriendAddition />} />
 
-            {/*  */}
+            <Route path="/friend/new" element={<FriendAddition />} />
           </Route>
+
           {/* 테스트 용 */}
           <Route path="/test" element={<Test />} />
         </Routes>

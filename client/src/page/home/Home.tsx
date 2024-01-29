@@ -3,7 +3,7 @@ import Lottie from 'lottie-react';
 import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn, setUsername, setUserId } from '@/store/loginSlice';
+import { setIsLoggedIn } from '@/store/loginSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
@@ -20,8 +20,6 @@ export default function Home() {
 
   function handleLogin() {
     dispatch(setIsLoggedIn(true));
-    dispatch(setUsername('유저'));
-    dispatch(setUserId(1));
     navigate('/main');
   }
 

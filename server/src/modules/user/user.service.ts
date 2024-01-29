@@ -59,7 +59,8 @@ export class UserService {
     return file;
   };
 
-  getMyPage = async (userid_num: number) => {
+  // 프로필 조회
+  getMyPage = async (userid_num: number, file: string) => {
     const userInfo = await db
       .select({
         nickname: users.nickname,
@@ -68,7 +69,21 @@ export class UserService {
       })
       .from(users)
       .where(eq(users.userid_num, userid_num));
-    return { userInfo };
+    return { userInfo, file };
+  };
+
+  // 프로필 수정
+  patchMyPage = async (userid_num: number, file: string, body: any) => {
+    const { nickname, profile_img, password } = body;
+    const userInfo = await db
+      .update(users)
+      .set({
+        // password:"",
+        nickname: nickname,
+        profile_img: profile_img,
+      })
+      .where(eq(users.userid_num, userid_num));
+    return { userInfo, file };
   };
 
   async getScore(userid: number) {
