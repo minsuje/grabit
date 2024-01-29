@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import axios from 'axios';
+
 
 function ChallengeImage() {
   const dispatch = useDispatch();
@@ -14,6 +16,15 @@ function ChallengeImage() {
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '인증 사진', backPath: -1 }));
   }, [dispatch]);
+
+
+  useEffect(() => {
+    axios.get('http://43.201.22.60:3000//challengeAuth/:challenge_id/:authentication_id')
+    .then((response) => {console.log(response.data)}).
+    catch((error):void=>{
+      console.error('ChallengeImage에서  오류발생 :', error)
+    })
+  },[])
 
   function addEmotion(emotion: any) {
     switch (emotion) {

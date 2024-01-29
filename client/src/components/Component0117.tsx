@@ -2,8 +2,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
-import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 import { users } from '@/types/types';
 import { format } from 'date-fns';
@@ -197,44 +196,6 @@ function Ranking() {
     </div>
   );
 }
-
-function ListComponentWithButton({ challenge }: ChallengeProp) {
-  const navigate = useNavigate();
-
-  return (
-    <div>
-      <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
-        <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-          <div className="flex justify-between">
-            <p>{challenge.challenge_name}</p>
-            <p></p>
-          </div>
-          <p>{challenge.goal_money}원</p>
-        </Link>
-        <div>
-          <Button
-            onClick={() => {
-              navigate(`/challengeEdit/${challenge.challenge_id}
-                    `);
-            }}
-          >
-            수정
-          </Button>
-          <Button
-            onClick={() => {
-              axios.delete(`http://3.34.122.205:3000/challengeEdit/${challenge.challenge_id}`).then((response) => {
-                console.log('challengeEdit에서 chal', response.data);
-              });
-            }}
-          >
-            삭제
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
@@ -252,4 +213,4 @@ function ListComponentWithPeriod({ challenge }: ChallengeProp) {
     </div>
   );
 }
-export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithButton, ListComponentWithPeriod };
+export { CreateChallenge, Tab, Record, HotChallenge, Ranking,  ListComponentWithPeriod };

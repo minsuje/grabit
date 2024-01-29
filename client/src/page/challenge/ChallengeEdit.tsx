@@ -37,12 +37,6 @@ async function patchChallenge(
     };
   }
 
-  // console.log('시작날짜:', startDay);
-  // console.log('시작날짜 type:', typeof startDay);
-  // console.log('끝날짜 type:', typeof challengeData.authentication_end_date);
-  // console.log('challengeData', challengeData);
-
-  // console.log('period', period);
   const result = await axios({
     method: 'PATCH',
     url: `http://3.34.122.205:3000/challengeEdit/${challenge_id}`,
@@ -119,7 +113,6 @@ function ChallengeEdit() {
         setDate(new Date());
       }
     }
-    
   };
 
   const hours: number[] = [];

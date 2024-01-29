@@ -1,13 +1,17 @@
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Link } from 'react-router-dom';
-import { ListComponentWithButton, ListComponentWithPeriod } from '@/components/Component0117';
+
+import { ListComponentWithButton, ListComponentWithoutButton } from '@/components/PreChallenge';
+import { ListComponentWithPeriod } from '@/components/Component0117';
 import axios from 'axios';
+import { RootState } from '@/store/store';
 import { useEffect, useState } from 'react';
 import { Challenge } from '@/types/types';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
+  const { userid_num } = useSelector((state: RootState) => state.login);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,16 +51,18 @@ function ChallengeList() {
 
       {preMyChallenge.map((challenge: Challenge) => {
         return (
-          <>
-            <ListComponentWithButton challenge={challenge} />
-          </>
+          <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
+
+       
+            {Number(challenge.userid_num)===Number(userid_num)?<ListComponentWithButton challenge={challenge} />:<ListComponentWithoutButton challenge={challenge} />}
+          </Link>
         );
       })}
 
       <h1>열려있는 챌린지</h1>
 
       {publicChallenge.map((challenge: Challenge) => {
-        return <ListComponentWithPeriod challenge={challenge} />;
+        return <ListComponentWithoutButton challenge={challenge} />;
       })}
     </div>
   );
