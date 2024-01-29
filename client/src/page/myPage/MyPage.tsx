@@ -14,7 +14,7 @@ export default function MyPage() {
   const [win, setWin] = useState<String>('');
   const [lose, setLose] = useState<String>('');
   const [history, setHistory] = useState<String[]>([]);
-  const [profileImg, setProfileImg] = useState();
+  const [profileimg, setProfileImg] = useState();
 
   const { id } = useParams();
   console.log('userid>>>>>>>>>', id);
@@ -85,6 +85,7 @@ export default function MyPage() {
     return '실버';
   };
 
+  //  티어 이미지,
   const tierImageSrc = getTierImage(parseInt(scoreNum));
   const tierName = getTierName(parseInt(scoreNum));
   return (
@@ -93,7 +94,7 @@ export default function MyPage() {
 
       <div className="flex justify-between">
         <Avatar>
-          <AvatarImage src={profileImg} />
+          <AvatarImage src={profileimg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
         <Link to={`/${id}/mypageedit`}>

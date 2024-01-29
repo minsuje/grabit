@@ -45,13 +45,8 @@ const schema = yup
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState('');
-
-  console.log(nickName);
-
   const Navigate = useNavigate();
-  
   const { id } = useParams();
-
   console.log('id>>>>>', id);
 
   const {
@@ -64,7 +59,11 @@ export default function MyPageEdit() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, data);
+      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // 멀티파트 폼 데이터인 경우
+        },
+      });
       console.log('프로필 수정 성공:', response);
       console.log('프로필 데이터', response.data.nickname);
 
@@ -90,6 +89,9 @@ export default function MyPageEdit() {
   const handleNickNameChange = (e) => {
     setNickName(e.target.value);
   };
+
+  if ('') {
+  }
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -114,7 +116,7 @@ export default function MyPageEdit() {
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
         <div>
-          <Label htmlFor="password">비밀번호</Label>
+          <Label htmlFor="password">변경 비밀번호</Label>
           <Input id="password" type="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
