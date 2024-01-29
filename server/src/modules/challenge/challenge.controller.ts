@@ -90,6 +90,8 @@ export class ChallengeController {
     @Param('challenge_id') challenge_id: number,
     @Req() req,
   ): any {
+    // console.log('controller newChallengeAuth req > ', req);
+    console.log('controller newChallengeAuth req.file > ', req.file);
     const file = req.file;
     return this.ChallengeService.newChallengeAuth(challenge_id, file);
   }

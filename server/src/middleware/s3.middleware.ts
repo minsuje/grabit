@@ -6,7 +6,6 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
-import { ConfigService } from '@nestjs/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import { authentication, challenge } from '../modules/challenge/schema';
@@ -14,7 +13,6 @@ import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
 import * as dotenv from 'dotenv';
 dotenv.config();
-const moment = require('moment-timezone');
 
 @Injectable()
 export class s3Middleware implements NestMiddleware {
@@ -28,15 +26,12 @@ export class s3Middleware implements NestMiddleware {
     });
 
     const body: any = req.body;
+    // console.log('s3 middleware req > ', req);
+    // console.log('s3 middleware body > ', body);
 
     let { filename, type } = body;
     let key;
 
-    // console.log('middleware body', body);
-    // console.log(req.method);
-    // if (req.url.split('/')[2] === undefined) {
-    //   console.log('req.url', req.url.split('/')[2]);
-    // }
     if (req.method === 'GET') {
       // 인증 사진
       if (req.url.split('/')[2] === undefined) {
@@ -116,10 +111,15 @@ export class s3Middleware implements NestMiddleware {
           // 3은 현재 로그인한 유저의 userid_num
           already = true;
       }
+      // console.log('s3 middleware post body > ', body);
 
+      // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
+      // let today = `${(new Date().getMonth() + 1).toString()}
+      console.log('already > ', already);
       if (!already) {
         if (filename) {
           filename = uuid() + '.' + filename.split('.')[1];
+
           const command = new PutObjectCommand({
             Bucket: process.env.AWS_S3_BUCKET,
             Key: filename,
