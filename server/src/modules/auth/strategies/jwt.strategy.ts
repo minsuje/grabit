@@ -4,16 +4,19 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
 import * as dotenv from 'dotenv';
 import { Request } from 'express';
+import { db } from 'db/db';
+import { users } from 'src/modules/user/schema';
+import { JwtService } from '@nestjs/jwt';
+import { eq } from 'drizzle-orm';
 
 dotenv.config();
 
-interface IPayload {
-  userid_num: number;
-  name: string;
-}
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 
@@ -45,6 +48,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: process.env.JWT_SECRET_KEY,
     });
     console.log('JWT Strategy>>>>>>>>>>');
+  }
+
+  async validate(payload: any) {
+    console.log('jwt Strategy payload >>> ', payload);
+
+    if (payload.exp < Date.now() / 1000) {
+      // 토큰이 만료된 경우
+
+      console.log('if문 안에서 시작 >>>> ');
+      throw new UnauthorizedException('Token has expired');
+    }
+    return { userid: payload.userid, name: payload.name };
   }
 
   // validate(loginDto: any) {

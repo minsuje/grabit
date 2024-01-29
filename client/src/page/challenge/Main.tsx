@@ -25,9 +25,16 @@ export default function Main() {
     console.log('loginToken', accessToken);
     console.log('refreshToken', refreshToken);
     await axios
-      .get('http://localhost:3000/refresh', {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${accessToken}` },
+      // .get('http://localhost:3000/refresh', {
+      //   withCredentials: true,
+      //   headers: { Authorization: `Bearer ${accessToken}` },
+      // })
+      ({
+        method: 'POST',
+        url: 'http://localhost:3000/refresh',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
       // .get('http://localhost:3000/refresh', { withCredentials: true })
       .then((response) => {
