@@ -12,17 +12,24 @@ import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
 import { Challenge } from './challenge.module';
 import { s3Middleware } from 'src/middleware/s3.middleware';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { UseGuards } from '@nestjs/common';
 
+@UseGuards(JwtAuthGuard)
 @Controller('/')
 export class ChallengeController {
   constructor(private ChallengeService: ChallengeService) {}
   // 챌린지 생성
+
+  @UseGuards(JwtAuthGuard)
   @Post('/challengeCreate')
   postChallengeCreate(@Body() body: ChallengeDto): any {
     return this.ChallengeService.newChallenge(body);
   }
 
   // 챌린지 목록
+  @UseGuards(JwtAuthGuard)
   @Get('/challengeList')
   getChallengeList(): any {
     return this.ChallengeService.challengeList();
@@ -35,6 +42,7 @@ export class ChallengeController {
   }
 
   // 챌린지 상세 정보 보기
+  @UseGuards(JwtAuthGuard)
   @Get('/challengeDetail/:challenge_id')
   getChallengeDetail(
     @Param('challenge_id') challenge_id: number,
@@ -52,6 +60,7 @@ export class ChallengeController {
   // }
 
   // 챌린지 수정하기
+  @UseGuards(JwtAuthGuard)
   @Patch('/challengeEdit/:challenge_id')
   patchChallengeEdit(
     @Param('challenge_id') challenge_id: number,
@@ -61,6 +70,7 @@ export class ChallengeController {
   }
 
   // 챌린지 삭제하기
+  @UseGuards(JwtAuthGuard)
   @Delete('/challengeEdit/:challenge_id')
   deleteChallengeEdit(@Param('challenge_id') challenge_id: number): any {
     return this.ChallengeService.deleteChallengeEdit(challenge_id);
@@ -68,6 +78,7 @@ export class ChallengeController {
 
   // 테스트 (s3 이미지 get 요청)
   // 챌린지 인증사진 상세 보기
+  @UseGuards(JwtAuthGuard)
   @Get('/challengeAuth/:challenge_id/:authentication_id')
   getChallengeAuth(
     @Param('challenge_id') challenge_id: number,
@@ -84,6 +95,7 @@ export class ChallengeController {
 
   // 테스트 (s3 이미지 post 요청)
   // 챌린지 인증사진 올리기
+  @UseGuards(JwtAuthGuard)
   @Post('/challengeAuth/:challenge_id')
   newChallengeAuth(
     @Body() body: any,
