@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { db } from 'db/db';
 import { dailyMission } from './schema';
 import { Cron } from '@nestjs/schedule';
+import { arrayOverlaps } from 'drizzle-orm';
 
 @Injectable()
 export class DailyMissionService {
-  getDailyMission = async () => {
+  getDailyMission = async (userid_num: number) => {
+    //미션 성공 여부
+    let completed = 'none';
+
     let mission_content = [
       '물 한잔 마시기',
       '공부하기',
@@ -20,18 +24,15 @@ export class DailyMissionService {
     ];
     let random_index = Math.floor(Math.random() * mission_content.length);
     let random_mission = mission_content[random_index];
-    console.log('readom_mission >>>', random_mission);
 
     //DB있는지 확인하기
     const checkDB = await db.select().from(dailyMission);
-    console.log('checkDB >>>>>>>>>');
 
     // DB 만들기 > 없다면
     if (checkDB.length == 0) {
       const createMission = await db
         .insert(dailyMission)
         .values({ mission_content: random_mission });
-      console.log('DB 만들기 성공');
     }
 
     // 미션 이름 DB에서 찾기
@@ -39,11 +40,17 @@ export class DailyMissionService {
       .select({ mission_content: dailyMission.mission_content })
       .from(dailyMission);
 
-    console.log(
-      '🚀 ~ DailyMissionService ~ getDailyMission= ~ mission_name:',
-      mission_name[0],
-    );
-    return;
+    // 성공한 유저 확인
+    const checkUser = await db
+      .select({ success_userid_num: dailyMission.success_userid_num })
+      .from(dailyMission);
+
+    if (checkUser[0].success_userid_num !== null) {
+      if (checkUser[0].success_userid_num.includes(userid_num)) {
+        completed = 'success';
+      }
+    }
+    return { completed, random_mission };
   };
 
   // @Cron을 사용하여 매일 23:59.59 에 초기화 실행
@@ -52,7 +59,6 @@ export class DailyMissionService {
     try {
       // 여기에서 테이블 삭제 또는 필요한 작업을 수행합니다.
       const deleteDaily = await db.delete(dailyMission);
-      // 예를 들면, yourRepositoryService.deleteTable();
       console.log('매일 23:59에 실행됨');
     } catch (error) {
       console.error('에러 발생:', error.message);

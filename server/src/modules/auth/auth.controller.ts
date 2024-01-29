@@ -138,7 +138,7 @@ export class AuthController {
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
     console.log('/refresh site 접속 >>>');
-    const accessToken = req.headers['authorization'].split(' ')[0];
+    const accessToken = req.headers['authorization'].split(' ')[1];
 
     console.log('auth controller accessToken >>>>', accessToken);
 
@@ -147,7 +147,7 @@ export class AuthController {
     });
 
     if (decodedAccessToken.exp < Date.now() / 1000) {
-      const loginRefreshToken = req.headers['authorization'].split(' ')[1];
+      const loginRefreshToken = req.headers['authorization'].split(' ')[2];
 
       console.log('Post /refresh refreshtoken >>>', loginRefreshToken);
 
@@ -157,14 +157,9 @@ export class AuthController {
         await res.cookie('accessToken', loginToken, {
           httpOnly: true,
           maxAge: 24 * 60 * 60 * 1000,
-          // maxAge: 10 * 60 * 60 * 1000,
-          // maxAge: 10 * 1000,
           secure: true,
           sameSite: 'none',
         });
-        // return res.send({
-        //   Message: 'new token success',
-        // });
 
         const newHeader = await res.setHeader(
           'Authorization',
