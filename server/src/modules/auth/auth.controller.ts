@@ -130,56 +130,43 @@ export class AuthController {
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
     console.log('/refresh site 접속 >>>');
-    const refreshToken = req.headers['authorization'].split(' ')[1];
-    console.log('Post /refresh refreshtoken >>>', refreshToken);
+    const loginRefreshToken = req.headers['authorization'].split(' ')[1];
+    console.log('Post /refresh refreshtoken >>>', loginRefreshToken);
 
-    if (!req.cookies.accessToken) {
-      if (req.cookies.refreshToken) {
-        console.log('refreshToken이 있습니다. 계속 진행합니다.');
-        try {
-          const newAccessToken = await this.authService.refresh(
-            req.cookies.refreshToken,
-          );
+    try {
+      const loginToken = await this.authService.refresh(loginRefreshToken);
 
-          // console.log('controller new access token >', newAccessToken);
-
-          await res.cookie('accessToken', newAccessToken, {
-            httpOnly: true,
-            // maxAge: 24 * 60 * 60 * 1000,
-            // maxAge: 10 * 60 * 60 * 1000,
-            maxAge: 10 * 1000,
-            // secure: true,
-            // sameSite: 'none',
-          });
-          console.log('accessToken을 새로 발급했습니다');
-          return res.send({
-            Message: 'new token success',
-          });
-        } catch (err) {
-          console.log('실패');
-          res.clearCookie('login Token');
-          res.clearCookie('refreshToken');
-          res.clearCookie('jwt');
-          // res.clearCookie('accessToken');
-          res.clearCookie('isLoggedIn');
-          throw new UnauthorizedException();
-        }
-      } else {
-        console.log('refreshToken이 없습니다');
-      }
-    } else {
-      console.log('이미 accessToken이 있습니다');
-      return res.send({
-        isExpired: true,
+      await res.cookie('jwt', loginToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 10 * 60 * 60 * 1000,
+        // maxAge: 10 * 1000,
+        secure: true,
+        sameSite: 'none',
       });
+      // return res.send({
+      //   Message: 'new token success',
+      // });
+
+      return await res.setHeader(
+        'Authorization',
+        'Bearer ' + [loginToken, loginRefreshToken].join(' '),
+      );
+    } catch (err) {
+      console.log('실패');
+      res.clearCookie('login Token');
+      res.clearCookie('refreshToken');
+      res.clearCookie('jwt');
+      // res.clearCookie('accessToken');
+      res.clearCookie('isLoggedIn');
+      throw new UnauthorizedException();
     }
   }
-
-  // @Get('/cookies')
-  // getCookies(@Req() req: Request, @Res() res: Response) {
-  //     console.log(req.cookies);
-  //     const jwt = req.cookies['jwt'];
-  //     return res.send(jwt);
+  // } else {
+  //   console.log('이미 accessToken이 있습니다');
+  //   return res.send({
+  //     isExpired: true,
+  //   });
   // }
 
   @Post('/logout')
