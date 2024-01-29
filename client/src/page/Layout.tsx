@@ -8,6 +8,7 @@ function Layout() {
   // console.log(isLoggedIn);
 
   const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+  console.log(isLoggedIn);
 
   return isLoggedIn ? (
     <div>

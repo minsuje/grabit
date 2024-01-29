@@ -49,7 +49,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register/normal" element={<Register />} />
           <Route element={<Layout />}>
-            <Route path="/main" element={<Main />} />
+            <Route index path="/main" element={<Main />} />
             <Route path="/main2" element={<Main2 />} />
             <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
             <Route path="/camera/:challenge_id" element={<Camera />} />

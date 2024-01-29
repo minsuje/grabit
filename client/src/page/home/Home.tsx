@@ -20,6 +20,7 @@ export default function Home() {
 
   function handleLogin() {
     dispatch(setIsLoggedIn(true));
+    localStorage.setItem('isLoggedIn', 'true');
     navigate('/main');
   }
 
