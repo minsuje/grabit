@@ -6,9 +6,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState,RefObject } from 'react';
 import axios from 'axios';
 import { Challenge, users } from '@/types/types';
-
+import { setTotalAuth,setResult } from '@/store/resultSlice';
 import { setHeaderInfo } from '@/store/headerSlice';
-import { differenceInDays,differenceInCalendarDays } from 'date-fns';
+import { differenceInDays} from 'date-fns';
 // import Cta from '@/components/Cta';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react'
@@ -21,7 +21,11 @@ interface url {
 }
 
 function ChallengeInProgress() {
+  const  info  = useSelector((state: RootState) => state.result);
+  console.log(info)
+
   const { userid_num } = useSelector((state: RootState) => state.login);
+  console.log('user',userid_num)
 
   const [file,setFile] = useState<File>();
  
@@ -36,8 +40,7 @@ function ChallengeInProgress() {
   const tabId:number[]=[userid_num];
   const UrlGroup:string[][] =[[],[],[],[]]
   const Images:JSX.Element[] = []
-  // const [imgPreview, setImgPreview]=useState<File>();
-// const [Dday,setDday]=useState<number>(1);
+
 
 
   useEffect(() => {
@@ -155,14 +158,29 @@ function ChallengeInProgress() {
     
   }, []);
 
+
+
   useEffect(() =>{
-
-
-      const Dday =differenceInCalendarDays(challengeDetail.authentication_end_date, new Date())
-
-      if(Dday<0){
-        navigate(`/challengeResult/${challenge_id}`)
+    const resultArr =[];
+    for (let i=0; i<4; i++){
+      if(tab[i]){
+        resultArr.push({userid_num:tabId[i],
+          nickname:tab[i],
+          Authcount:UrlGroup[i].length})
       }
+    }
+
+    dispatch(setTotalAuth(totalAuthCount))
+    dispatch(setResult(resultArr))
+             
+ 
+
+
+      // const Dday =differenceInCalendarDays(challengeDetail.authentication_end_date, new Date())
+
+      // if(Dday<0){
+      //   navigate(`/challengeResult/${challenge_id}`)
+      // }
     
   }, [challengeDetail.authentication_end_date]);
 
@@ -261,7 +279,6 @@ function ChallengeInProgress() {
         if(e.target.files?.length==1){
           console.log(e.target.files[0])
           setFile(e.target.files[0])
-    
           setImgUrl(URL.createObjectURL(e.target.files[0]))
       }}}  />
         <Button onClick={()=>{
