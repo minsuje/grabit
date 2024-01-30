@@ -40,6 +40,7 @@ export class s3Middleware implements NestMiddleware {
           .select({
             userid_num: authentication.userid_num,
             authentication_img: authentication.authentication_img,
+            authentication_id: authentication.authentication_id,
           })
           .from(authentication)
           .where(eq(authentication.challenge_id, Number(req.url.split('/')[1])))
@@ -56,7 +57,11 @@ export class s3Middleware implements NestMiddleware {
           });
 
           let url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          urls.push({ userid_num: files[i].userid_num, url: url });
+          urls.push({
+            authentication_id: files[i].authentication_id,
+            userid_num: files[i].userid_num,
+            url: url,
+          });
         }
         req['file'] = urls;
       } else {

@@ -43,6 +43,8 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
+import PayTest from './page/PayTest';
+
 function App() {
   return (
     <div className="App">
@@ -52,7 +54,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
-            <Route path='/auth/kakao' element={<KakaoAuth />} />
+            <Route path="/auth/kakao" element={<KakaoAuth />} />
           </Route>
           <Route element={<Layout />}>
             <Route index path="/main" element={<Main />} />
@@ -96,7 +98,7 @@ function App() {
           </Route>
 
           {/* 테스트 용 */}
-          {/* <Route path="/test" element={<Test />} /> */}
+          <Route path="/pay" element={<PayTest />} />
         </Routes>
       </BrowserRouter>
     </div>
