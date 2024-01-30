@@ -10,13 +10,11 @@ import { useEffect } from 'react';
 export default function Home() {
   const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
-  
+
   useEffect(() => {
-    console.log("🚀 ~ Home ~ REST_API_KEY:", REST_API_KEY)
-    console.log("🚀 ~ Home ~ REDIRECT_URI:", REDIRECT_URI)
-  })
-  
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+    console.log('🚀 ~ Home ~ REST_API_KEY:', REST_API_KEY);
+    console.log('🚀 ~ Home ~ REDIRECT_URI:', REDIRECT_URI);
+  });
 
   const Rabbit = () => {
     return <Lottie animationData={rabbit} width={0} height={0} />;
@@ -42,13 +40,12 @@ export default function Home() {
         </Button>
       </Link>
       <Button onClick={handleLogin}>임시 로그인</Button>
-      <a href={link}>카카오 로그인</a>
       <Link to="/register/normal" className="mt-[5%] ">
         <Button variant="default" className="w-[100%]">
           회원가입
         </Button>
       </Link>
-      <Link
+      {/* <Link
         to={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
       >
         카카오회원가입
@@ -57,6 +54,11 @@ export default function Home() {
         href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
       >
         a 태그 카카오
+      </a> */}
+      <a
+        href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
+      >
+        <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
       </a>
     </div>
   );
