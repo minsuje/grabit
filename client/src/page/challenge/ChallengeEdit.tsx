@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
@@ -37,22 +37,21 @@ async function patchChallenge(
     };
   }
 
-  const result = await axios({
+  const result = await privateApi({
     method: 'PATCH',
     url: `http://3.34.122.205:3000/challengeEdit/${challenge_id}`,
     data: challengeData,
   });
   console.log(result);
-  if(result.status==200){
-    alert('정상적으로 수정되었습니다.')
-  }else{
-    alert('오류가 발생했습니다. 다시 시도해주세요')
+  if (result.status == 200) {
+    alert('정상적으로 수정되었습니다.');
+  } else {
+    alert('오류가 발생했습니다. 다시 시도해주세요');
   }
- 
 }
 
 async function deleteChallenge(challenge_id: string | undefined) {
-  const result = await axios({
+  const result = await privateApi({
     method: 'DELETE',
     url: `http://3.34.122.205:3000/challengeEdit/${challenge_id}`,
   });
@@ -101,13 +100,12 @@ function ChallengeEdit() {
 
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
   let periodChanged = period;
-  console.log('period', period);4
+  console.log('period', period);
+  4;
 
-  
-
-  const handleStartDate = (date: Date|undefined) => {
+  const handleStartDate = (date: Date | undefined) => {
     setDate(date);
-    if(date){
+    if (date) {
       if (addDays(date, 1) < new Date()) {
         alert('오늘 이전 날짜는 선택할 수 없습니다.');
         setDate(new Date());
@@ -122,7 +120,7 @@ function ChallengeEdit() {
 
   useEffect(() => {
     {
-      axios
+      privateApi
         .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
         .then((response) => {
           console.log(response.data);
@@ -133,7 +131,7 @@ function ChallengeEdit() {
           console.error('ChallengeEdit에서 오류발생 :', error);
         });
     }
-  },[]);
+  }, []);
 
   return (
     <div className="flex flex-col gap-8">
@@ -173,7 +171,7 @@ function ChallengeEdit() {
         }}
       />
 
-<h2 className="py-4 text-xl font-bold">주제</h2>
+      <h2 className="py-4 text-xl font-bold">주제</h2>
       <Select
         onValueChange={(value) => {
           setChallengeDetail((challengeDetail) => {
@@ -182,7 +180,7 @@ function ChallengeEdit() {
         }}
       >
         <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={challengeDetail.topic} />
+          <SelectValue placeholder={challengeDetail.topic} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="운동">운동</SelectItem>
@@ -192,10 +190,9 @@ function ChallengeEdit() {
           <SelectItem value="취미">취미</SelectItem>
           <SelectItem value="생활습관">생활습관</SelectItem>
           <SelectItem value="저축">저축</SelectItem>
-
         </SelectContent>
       </Select>
-      
+
       <h2 className="py-4 text-xl font-bold">기간</h2>
       <Select
         value={period.toString()}

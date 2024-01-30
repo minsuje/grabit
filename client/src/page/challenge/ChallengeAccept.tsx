@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
@@ -21,7 +21,7 @@ function ChallengeAccept() {
 
   useEffect(() => {
     console.log(challenge_id);
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);

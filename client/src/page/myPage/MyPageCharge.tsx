@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 
 export default function MypageCharge() {
   const [chargeAmount, setChargeAmount] = useState<number | null>(null);
@@ -16,7 +16,7 @@ export default function MypageCharge() {
     if (chargeAmount !== null) {
       try {
         // 서버로 충전 요청을 보냅니다.
-        const response = await axios.post('', {
+        const response = await privateApi.post('', {
           amount: chargeAmount,
         });
         console.log(response.data); // 응답 로그 출력

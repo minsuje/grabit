@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { privateApi } from '@/api/axios';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
