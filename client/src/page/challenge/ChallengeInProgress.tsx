@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useRef } from 'react'
 
 
+
 interface url {
   userid_num:string;
   url:string;
@@ -21,6 +22,10 @@ interface url {
 
 function ChallengeInProgress() {
   const { userid_num } = useSelector((state: RootState) => state.login);
+
+  const [file,setFile] = useState<File>();
+ 
+  const [imgUrl, setImgUrl] = useState<string>();
 
 
   const inputRef:RefObject<HTMLInputElement>|null = useRef(null);
@@ -77,6 +82,57 @@ function ChallengeInProgress() {
     totalAuthCount =((period+1)/7)*challengeDetail.term
   }
 
+  async function query(file: File) {
+    const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
+      headers: { Authorization: import.meta.env.VITE_HUGGING_FACE_TOKEN },
+      method: 'POST',
+      body: file,
+    });
+    const result = await response.json();
+    return result;
+  }
+
+  async function upload() {
+    if(file){
+      const aiFile = await query(file);
+      console.log('aifile >>>>>>', aiFile);
+      
+    }
+    
+    await axios({
+      method: 'post',
+      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
+      data: {
+        filename: file?.name,
+        type: file?.type,
+      },
+    }).then((res) => {
+      console.log('res.data', res.data);
+      if (res.data.msg) {
+        alert(res.data.msg);
+      } else {
+        axios({
+          method: 'put',
+          url: res.data,
+          data: file,
+          headers: {
+            'Content-Type': file?.type,
+          },
+        }).then((res) => {
+          console.log(res);
+          alert('업로드 완료!');
+          navigate(`/challengeInProgress/${challenge_id}`);
+        });
+      }
+    });
+    if(imgUrl){
+      URL.revokeObjectURL(imgUrl);
+    }
+    
+    setFile(undefined)
+  
+  }
+
 
 
   useEffect(() =>{
@@ -116,10 +172,7 @@ function ChallengeInProgress() {
     if(challengers[i]&& challengers[i].userid_num!==userid_num){ //jwt로 수정
       tab.push(challengers[i].nickname)
       tabId.push(challengers[i].userid_num)
-      console.log(tab, tabId)
-    }else{
-      
-      console.log(tab, tabId)
+     
     }
   }
   
@@ -132,12 +185,12 @@ function ChallengeInProgress() {
   
   for (let i=0; i<UrlGroup.length; i++){
     Images.push  (
-      <div className="grid grid-cols-2 gap-2">
+      <div key={i} className="grid grid-cols-2 gap-2">
         {UrlGroup[i].map((url,index)=>{
           return(
-            <Link to="/challengeImage/1">
-          <div key={index}>
-            <img
+            <Link  key={index} to="/challengeImage/1">
+          <div>
+            <img 
               className="aspect-square w-full rounded-lg object-cover"
               src={url}
             ></img>
@@ -187,28 +240,34 @@ function ChallengeInProgress() {
       <Tab 
       tab1={tab[0]} tab2={tab[1]} tab3={tab[2]} tab4={tab[3]} tab1content={Images[0]} tab2content={Images[1]}  tab3content={Images[2]} tab4content={Images[3]} />
 
-      <Button onClick={() => {
+      {/* <Button onClick={() => {
             navigate(`/camera/${challenge_id}`);
             
-          }}>인증하기</Button>
+          }}>인증하기</Button> */}
       {/* <Cta text='인증하기' onclick={() => {
             navigate(`/camera/${challenge_id}`);
             
           }} >
       </Cta> */}
+      {imgUrl&&<div className='text-center mx-auto'><img src={imgUrl}></img><Button onClick={upload}>업로드</Button></div>
 
+      }
+      
 
       <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
       <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
       <div className="flex-col bg-white px-8  pb-8 ">
-      <input className="opacity-0"  type="file" id="imageFile" capture="environment" accept="image/*"  ref={inputRef}  />
+      <input className="opacity-0"  type="file" id="imageFile" capture="environment" accept="image/*"  ref={inputRef} onChange={(e)=>{
+        if(e.target.files?.length==1){
+          console.log(e.target.files[0])
+          setFile(e.target.files[0])
+    
+          setImgUrl(URL.createObjectURL(e.target.files[0]))
+      }}}  />
         <Button onClick={()=>{
            if (inputRef.current) {
             inputRef.current.click();
-            console.log(inputRef.current.files)
-            
           }
-          
         }} className="w-full rounded-md p-6">인증하기
         </Button>
       </div>

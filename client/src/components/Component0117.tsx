@@ -158,7 +158,7 @@ function HotChallenge() {
         ? showList.map((challenge: Challenge) => {
             return (
               <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-                <ListComponent1 challenge={challenge}></ListComponent1>
+                <ListComponentWithPeriod challenge={challenge}></ListComponentWithPeriod>
               </Link>
             );
           })

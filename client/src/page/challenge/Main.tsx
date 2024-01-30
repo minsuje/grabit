@@ -11,6 +11,10 @@ import { setHeaderInfo } from '@/store/headerSlice';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { differenceInHours } from 'date-fns';
+interface Mission {
+  completed:string
+random_mission:string}
 
 export default function Main() {
   const LoginId: number = 3;
@@ -46,32 +50,33 @@ export default function Main() {
   }
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
-  const [dailymission, setDailymission] = useState<dailyMission>({
-    mission_id: 1,
-    mission_content: '임시 데이터',
-    success_userid_num: [1, 2],
+  const [dailymission, setDailymission] = useState<Mission>({
+    completed:'',
+    random_mission:'임시 데이터'
   });
 
   useEffect(() => {
     {
+
+      axios
+      .get('http://3.34.122.205:3000/dailyMission')
+      .then((response) => {
+        console.log(response);
+        setDailymission(response.data);
+      })
+      .catch((error) => {
+        console.error('main에서 일일미션 오류발생 :', error);
+      });
       axios
         .get('http://3.34.122.205:3000/challengeList')
         .then((response) => {
-          console.log(response.data);
+          // console.log(response);
           setIngMyChallenge(response.data.ingMyChallenge);
         })
         .catch((error) => {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
-      axios
-        .get('http://3.34.122.205:3000/dailyMission')
-        .then((response) => {
-          console.log(response);
-          setDailymission(response.data);
-        })
-        .catch((error) => {
-          console.error('main에서 일일미션 오류발생 :', error);
-        });
+     
     }
   }, []);
 
@@ -82,13 +87,13 @@ export default function Main() {
       <Ranking />
       <h1>오늘의 미션</h1>
 
-      {!dailymission.success_userid_num.includes(LoginId) ? (
-        <Link to={`/challengeDaily/${dailymission.mission_content}`} className="text-black no-underline">
+      {dailymission.completed==='none' ? (
+        <Link to={`/challengeDaily/${dailymission.random_mission}`} className="text-black no-underline">
           <div>
-            <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+            <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
               <div className="flex justify-between">
-                <p>{dailymission.mission_content}</p>
-                <p>N시간 남음</p>
+                <p>{dailymission.random_mission}</p>
+                <p>{23-new Date().getHours()}시간 {59-new Date().getMinutes()}분 남음</p> 
               </div>
               <p>100P</p>
             </div>
@@ -96,9 +101,9 @@ export default function Main() {
         </Link>
       ) : (
         <div>
-          <div key={dailymission.mission_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+          <div  className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
-              <p>{dailymission.mission_content}</p>
+              <p>{dailymission.random_mission}</p>
               <p>오늘 미션 완료!!</p>
             </div>
             <p>100P</p>
