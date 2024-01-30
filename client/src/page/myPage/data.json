@@ -1,0 +1,14 @@
+{
+  "goal_mony": [
+    { "id": 1, "money": 20000 },
+    { "id": 2, "money": 25000 }
+  ],
+  "socre": [
+    { "id": 1, "socre": 3000 },
+    { "id": 2, "socre": 1000 }
+  ],
+  "challenge_name": [
+    { "id": 1, "challenge_name": "물마시기" },
+    { "id": 2, "challenge_name": "테스트" }
+  ]
+}

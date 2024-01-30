@@ -43,7 +43,7 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
-import PayTest from './page/PayTest';
+// import PayTest from './page/PayTest';
 
 function App() {
   return (
@@ -98,7 +98,7 @@ function App() {
           </Route>
 
           {/* 테스트 용 */}
-          <Route path="/pay" element={<PayTest />} />
+          {/* <Route path="/pay" element={<PayTest />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
