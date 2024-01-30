@@ -30,7 +30,7 @@ import MyPageHistoryDetail from './page/myPage/MyPageHistoryDetail';
 
 import FileUploadTest from './page/FileUploadTest';
 import FriendSelect from './page/myPage/FriendSelect';
-import Test from './page/challenge/Test';
+// import Test from './page/challenge/Test';
 
 import Layout from './page/Layout';
 import CommonLayout from './page/CommonLayout';
@@ -93,7 +93,7 @@ function App() {
           </Route>
 
           {/* 테스트 용 */}
-          <Route path="/test" element={<Test />} />
+          {/* <Route path="/test" element={<Test />} /> */}
         </Routes>
       </BrowserRouter>
     </div>

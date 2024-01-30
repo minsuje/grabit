@@ -77,13 +77,17 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('kakao'))
-  @Get('/test')
+  @Get('/auth/kakao')
   @HttpCode(301)
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
     const user = JSON.stringify(req.user);
     const users = JSON.parse(user);
 
     const { username, profile_image, id } = users;
+    console.log(
+      '🚀 ~ AuthController ~ kakaoLogin ~ profile_image:',
+      profile_image,
+    );
 
     // searchUser service 값 보내기
     let searchUser = await this.authService.searchUser(
@@ -91,11 +95,13 @@ export class AuthController {
       profile_image,
       username,
     );
+    console.log('🚀 ~ AuthController ~ kakaoLogin ~ searchUser:', searchUser);
+
     const { loginToken, loginRefreshToken } = searchUser;
 
     await res.setHeader(
       'Authorization',
-      'Bearer ' + [loginToken, loginRefreshToken],
+      'Bearer ' + [loginToken, loginRefreshToken].join(' '),
     );
 
     console.log('controller searchUser > ', searchUser);
@@ -115,7 +121,8 @@ export class AuthController {
       sameSite: 'none',
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
-    res.redirect('http://localhost:5173');
+    console.log('set cookie?????');
+    // res.redirect('http://localhost:5173/login');
     return res.send({
       accessToken: loginToken,
       refreshToken: loginRefreshToken,
