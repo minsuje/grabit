@@ -3,11 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { users } from '@/types/types';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { ChallengeProp,Challenge } from '@/types/types';
+import { ChallengeProp, Challenge } from '@/types/types';
 
 import { ListComponent1 } from './ComponentSeong';
 
@@ -15,8 +15,8 @@ function CreateChallenge() {
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
-        <div className="col-start-1 col-span-2 font-bold text-xl ">주제</div>
-        <div className="col-start-1 col-span-1">
+        <div className="col-span-2 col-start-1 text-xl font-bold ">주제</div>
+        <div className="col-span-1 col-start-1">
           <Select>
             <SelectTrigger className="w-[100%]">
               <SelectValue placeholder="Theme" />
@@ -28,7 +28,7 @@ function CreateChallenge() {
             </SelectContent>
           </Select>
         </div>
-        <input className="col-start-2 col-span-2 p-2" placeholder="이름" />
+        <input className="col-span-2 col-start-2 p-2" placeholder="이름" />
       </div>
     </>
   );
@@ -52,25 +52,21 @@ function Tab({
   tab2content: JSX.Element;
   tab3content?: JSX.Element;
   tab4content?: JSX.Element;
- 
-  
 }) {
   return (
-    <div className="w-full mt-10">
+    <div className="mt-10 w-full">
       <Tabs defaultValue={tab1} className="w-full">
         <TabsList>
           <TabsTrigger value={tab1}>{tab1}</TabsTrigger>
           <TabsTrigger value={tab2}>{tab2}</TabsTrigger>
 
-          {tab3&&(<TabsTrigger value={tab3}>{tab3}</TabsTrigger>)}
-          {tab4&&(<TabsTrigger value={tab4}>{tab4}</TabsTrigger>)}
+          {tab3 && <TabsTrigger value={tab3}>{tab3}</TabsTrigger>}
+          {tab4 && <TabsTrigger value={tab4}>{tab4}</TabsTrigger>}
         </TabsList>
         <TabsContent value={tab1}>{tab1content}</TabsContent>
         <TabsContent value={tab2}>{tab2content}</TabsContent>
-        {tab3&&(<TabsContent value={tab3}>{tab3content}</TabsContent>)}
-        {tab4&&(<TabsContent value={tab4}>{tab4content}</TabsContent>)}
-        
-        
+        {tab3 && <TabsContent value={tab3}>{tab3content}</TabsContent>}
+        {tab4 && <TabsContent value={tab4}>{tab4content}</TabsContent>}
       </Tabs>
     </div>
   );
@@ -81,7 +77,7 @@ function Record() {
   return (
     <>
       <div className="flex justify-between text-xl">
-        <div className="font-bold p-2">전적</div>
+        <div className="p-2 font-bold">전적</div>
         <div className="p-2">
           {recordData[0]}승 {recordData[1]}패 {recordData[2]}무
         </div>
@@ -98,42 +94,39 @@ function HotChallenge() {
 
   const [showList, setShowList] = useState<Challenge[]>([]);
 
-
   useEffect(() => {
-    
     {
-        axios
-            .get('http://3.34.122.205:3000/popularChallenge')
-            .then((response) => {
-                console.log('HotTopicData', response.data);
-                setHotTopic(response.data.popularTopics);
-                setTop1(response.data.top1);
-                setTop2(response.data.top2);
-                setTop3(response.data.top3);
-            })
-            .catch((error) => {
-                console.error('HotChallenge Component에서 오류발생 :', error);
-            });
+      privateApi
+        .get('http://3.34.122.205:3000/popularChallenge')
+        .then((response) => {
+          console.log('HotTopicData', response.data);
+          setHotTopic(response.data.popularTopics);
+          setTop1(response.data.top1);
+          setTop2(response.data.top2);
+          setTop3(response.data.top3);
+        })
+        .catch((error) => {
+          console.error('HotChallenge Component에서 오류발생 :', error);
+        });
     }
   }, []);
 
-  function showHotChallengeList(key:number) {
-    key+=1;
-    switch(key){
+  function showHotChallengeList(key: number) {
+    key += 1;
+    switch (key) {
       case 1:
-        setShowList(top1)
+        setShowList(top1);
         break;
       case 2:
-        setShowList(top2)
+        setShowList(top2);
         break;
       case 3:
-        setShowList(top3)
+        setShowList(top3);
         break;
       default:
-        setShowList([])
+        setShowList([]);
         break;
     }
-
   }
 
   return (
@@ -142,12 +135,11 @@ function HotChallenge() {
         {hotTopic.map((topic, idx) => {
           return (
             <div
-              
               key={idx}
               onClick={() => {
                 showHotChallengeList(idx);
               }}
-              className="rounded-lg border-solid border-2 border-pink-500 bg-white  w-full m-2 p-2"
+              className="m-2 w-full rounded-lg border-2 border-solid  border-pink-500 bg-white p-2"
             >
               {topic}
             </div>
@@ -171,7 +163,7 @@ function Ranking() {
   const [ranking, setRanking] = useState<users[]>([]);
   useEffect(() => {
     {
-      axios
+      privateApi
         .get('http://3.34.122.205:3000/Ranking')
         .then((response) => {
           console.log('ranking axios response', response);
@@ -199,12 +191,13 @@ function Ranking() {
 function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
-      <div className="bg-gray-200 p-6 rounded-lg shadow-md flex flex-col mb-[5%]">
+      <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
         <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
           <div className="flex justify-between">
             <p>{challenge.challenge_name}</p>
             <p className="text-gray-500">
-              {format(challenge.authentication_start_date, 'PP (EEE)', { locale: ko })} ~ {format(challenge.authentication_end_date, 'PP (EEE)', { locale: ko })}
+              {format(challenge.authentication_start_date, 'PP (EEE)', { locale: ko })} ~{' '}
+              {format(challenge.authentication_end_date, 'PP (EEE)', { locale: ko })}
             </p>
           </div>
           <p>{challenge.goal_money}원</p>
@@ -213,4 +206,4 @@ function ListComponentWithPeriod({ challenge }: ChallengeProp) {
     </div>
   );
 }
-export { CreateChallenge, Tab, Record, HotChallenge, Ranking,  ListComponentWithPeriod };
+export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithPeriod };

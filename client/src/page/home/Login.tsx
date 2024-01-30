@@ -65,7 +65,7 @@ export default function Login() {
 
         console.log('cookies get accessToken', cookies.get('accessToken'));
 
-        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('accessToken', accessToken);
         dispatch(setIsLoggedIn(true));
         dispatch(setNickname(nickname));
         dispatch(setUserid_num(userid_num));

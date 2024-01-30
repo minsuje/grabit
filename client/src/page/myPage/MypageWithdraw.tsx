@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useState } from 'react';
 
 export default function MypageWithdraw() {
@@ -13,7 +13,7 @@ export default function MypageWithdraw() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('', {
+      const response = await privateApi.post('', {
         amount,
         accountNumber,
         password,

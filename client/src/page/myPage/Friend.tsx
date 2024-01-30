@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,8 @@ export default function Friend() {
 
   useEffect(() => {
     const userid = 1; // props 대체 예정
-    axios
+
+    privateApi
       .get(`http://3.34.122.205:3000/friend/${userid}`)
       .then((response) => {
         setFriends(response.data.friends_info);

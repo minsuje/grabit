@@ -8,13 +8,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr, setPasswordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState('');
+  const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -62,7 +63,7 @@ export default function MyPageEdit() {
         changePassword,
       };
 
-      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
+      const response = await privateApi.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
       console.log('프로필 수정 성공:', response.data.isUser);
       setNickName(response.data.nickname);
       if (response.data.isUser === false) {
@@ -77,7 +78,7 @@ export default function MyPageEdit() {
 
   // 프로필 이미지 요청
   useEffect(() => {
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/myPage/${id}`)
       .then((response) => {
         console.log('이미지>>>>>>', response.data);
@@ -88,22 +89,43 @@ export default function MyPageEdit() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://3.34.122.205:3000/friend/${id}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.error('친구 목록 불러오기 axios 오류', error);
-  //     });
-  // }, []);
+  // 프로필 이미지 수정
+  async function handleUpdate() {
+    await privateApi({
+      method: 'patch',
+      url: `http://localhost:3000/myPage/${id}`,
+      data: {
+        filename: file?.name,
+        type: file?.type,
+      },
+    }).then((res) => {
+      console.log('patch res.data', res);
+      privateApi({
+        method: 'put',
+        url: res.data,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      });
+    });
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.files![0]);
+    setFile(e.target.files![0]);
+  }
 
   const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
   };
   return (
     <div>
+      <input type="file" onChange={handleChange} />
+      <button onClick={handleUpdate} className="rounded-md bg-blue-500 p-3 text-white">
+        업데이트
+      </button>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1>마이페이지</h1>
         <div className="flex justify-between">

@@ -7,7 +7,8 @@ function Layout() {
   // const { isLoggedIn } = useSelector((state: RootState) => state.login);
   // console.log(isLoggedIn);
 
-  const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+  // const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+  const isLoggedIn = true;
   console.log(isLoggedIn);
 
   return isLoggedIn ? (

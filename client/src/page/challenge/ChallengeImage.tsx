@@ -1,17 +1,19 @@
 import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
+
 
 interface Emotion {
   count: number;
   checked: boolean;
 }
+
 function ChallengeImage() {
   const dispatch = useDispatch();
 
-  const {challenge_id,authentication_id}=useParams();
+  const { challenge_id, authentication_id } = useParams();
   const emotionList: any = useRef<HTMLInputElement>(null);
 
   const [first, setFirst] = useState<Emotion>({
@@ -35,14 +37,16 @@ function ChallengeImage() {
     dispatch(setHeaderInfo({ title: '인증 사진', backPath: -1 }));
   }, [dispatch]);
 
-
   useEffect(() => {
-    axios.get(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`)
-    .then((response) => {console.log(response.data)}).
-    catch((error):void=>{
-      console.error('ChallengeImage에서  오류발생 :', error)
-    })
-  },[])
+    privateApi
+      .get(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error): void => {
+        console.error('ChallengeImage에서  오류발생 :', error);
+      });
+  }, []);
 
 
 
