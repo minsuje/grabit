@@ -6,6 +6,8 @@ import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import Home from './page/home/Home';
 import Register from './page/home/Register';
 import Login from './page/home/Login';
+import KakaoAuth from './page/home/KakaoAuth';
+
 import ChallengeNotice from './page/challenge/ChallengeNotice';
 import ChallengeCreate from './page/challenge/ChallengeCreate';
 import ChallengeResult from './page/challenge/ChallengeResult';
@@ -50,6 +52,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
+            <Route path='/auth/kakao' element={<KakaoAuth />}
           </Route>
           <Route element={<Layout />}>
             <Route index path="/main" element={<Main />} />
