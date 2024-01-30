@@ -1,4 +1,4 @@
-function KakaoAuth() {'
+function KakaoAuth() {
 
 
 

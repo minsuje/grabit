@@ -52,7 +52,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
-            <Route path='/auth/kakao' element={<KakaoAuth />}
+            <Route path='/auth/kakao' element={<KakaoAuth />} />
           </Route>
           <Route element={<Layout />}>
             <Route index path="/main" element={<Main />} />
