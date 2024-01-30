@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { RootState } from '@/store/store';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
@@ -18,7 +18,6 @@ function ChallengeDetail() {
   const { userid_num } = useSelector((state: RootState) => state.login);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
 
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
@@ -37,18 +36,16 @@ function ChallengeDetail() {
     },
   ]);
 
-
   const participate = () => {
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challengeDetail?.challenge_id}/${userid_num}`)
       .then((response): void => {
         console.log('response', response.data);
-       
       })
       .catch((error): void => {
         console.error('ChallengeDetail에서 참가 axios 오류:', error);
       });
-  }
+  };
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 상세', backPath: -1 }));
@@ -56,7 +53,7 @@ function ChallengeDetail() {
 
   useEffect(() => {
     console.log(challenge_id);
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
@@ -76,8 +73,7 @@ function ChallengeDetail() {
         <div className="user-list flex">
           <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
-            
-            <Label className="w-8">{challengeDetail?.is_public?('공개'):('비공개')}</Label>
+            <Label className="w-8">{challengeDetail?.is_public ? '공개' : '비공개'}</Label>
           </div>
         </div>
 
@@ -121,19 +117,24 @@ function ChallengeDetail() {
       </div>
 
       <div className="user-list flex flex-col gap-4 pt-4">
+        {challengeDetail?.is_public &&
+          challengers.length < 4 &&
+          !challengeDetail.challenger_userid_num.includes(userid_num) && (
+            <Button onClick={() => participate}>참가하기</Button>
+          )}
 
-
-{
-  challengeDetail?.is_public && challengers.length<4 && !challengeDetail.challenger_userid_num.includes(userid_num) &&(<Button onClick={()=>participate}>참가하기</Button>)
-}
-
-{
-  challengeDetail?.is_public && challengers.length==4 &&(<Button disabled onClick={()=>participate}>정원 초과</Button>)
-}
-       <Button  onClick={()=>{
-        navigate('/challengeList')
-       }}>확인</Button>
-       
+        {challengeDetail?.is_public && challengers.length == 4 && (
+          <Button disabled onClick={() => participate}>
+            정원 초과
+          </Button>
+        )}
+        <Button
+          onClick={() => {
+            navigate('/challengeList');
+          }}
+        >
+          확인
+        </Button>
       </div>
     </div>
   );

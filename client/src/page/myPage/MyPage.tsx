@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ListComponent3 } from '@/components/ComponentSeong';
@@ -36,7 +36,7 @@ export default function MyPage() {
 
   useEffect(() => {
     // 프로필 이미지 요청
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/myPage/${id}`)
       .then((response) => {
         console.log('이미지>>>>>>', response.data);
@@ -49,7 +49,7 @@ export default function MyPage() {
 
   useEffect(() => {
     // 챌린지 테이블 요청
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/history/${id}`)
       .then((response) => {
         const historyData: HistoryData = response.data;
@@ -64,7 +64,7 @@ export default function MyPage() {
   }, [id]);
 
   useEffect(() => {
-    axios
+    privateApi
       .get<UserInfo>(`http://3.34.122.205:3000/mypage/${id}`)
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
@@ -116,21 +116,21 @@ export default function MyPage() {
         <p>{nickName}</p>
       </div>
 
-      <div className="flex content-center mt-10">
-        <div className="w-[100%]  flex flex-col justify-center">
+      <div className="mt-10 flex content-center">
+        <div className="flex  w-[100%] flex-col justify-center">
           <p>{scoreNum}</p>
         </div>
-        <div className="w-[10%] mr-5 text-end">
+        <div className="mr-5 w-[10%] text-end">
           <p>{tierName}</p>
           <p className="text-xs text-neutral-300">순위</p>
         </div>
         <div className="flex flex-col content-center justify-center">
-          <img src={tierImageSrc} alt="Tier Image" className="w-12 glowing-image " />
+          <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
         </div>
       </div>
       <br />
       <br />
-      <div className="user-list flex flex-col rgap-4">
+      <div className="user-list rgap-4 flex flex-col">
         <div className="flex items-center gap-2">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

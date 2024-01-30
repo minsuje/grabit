@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { CameraAction } from '../../camera/camera';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
 
 function Camera() {
   const navigate = useNavigate();
@@ -25,12 +24,12 @@ function Camera() {
   }
 
   async function upload() {
-    if(file){
+    if (file) {
       const aiFile = await query(file);
       console.log('aifile >>>>>>', aiFile);
     }
-    
-    await axios({
+
+    await privateApi({
       method: 'post',
       url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
       data: {
@@ -42,7 +41,7 @@ function Camera() {
       if (res.data.msg) {
         alert(res.data.msg);
       } else {
-        axios({
+        privateApi({
           method: 'put',
           url: res.data,
           data: file,
@@ -85,7 +84,6 @@ function Camera() {
                 onClick={() => {
                   setIsCameraOpen(true);
                   setCardImage(undefined);
-                  
                 }}
               >
                 다시 찍기

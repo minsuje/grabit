@@ -47,10 +47,10 @@ privateApi.interceptors.response.use(
         } catch (error) {
           if (axios.isAxiosError(error)) {
             if (error.response?.status === 404 || error.response?.status === 422) {
-              alert('만료되었습니다');
+              console.log('만료되었습니다');
               window.location.replace('/sign-in');
             } else {
-              alert('로그인 실패');
+              console.log('로그인 실패');
             }
           }
         }

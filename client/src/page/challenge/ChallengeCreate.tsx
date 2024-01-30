@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
@@ -164,7 +164,7 @@ function ChallengeCreate() {
 
     const friendId: number[] = selectedFriends.map((friend) => friend.id);
 
-    const result = await axios({
+    const result = await privateApi({
       method: 'POST',
       url: 'http://3.34.122.205:3000/challengeCreate',
       data: {
