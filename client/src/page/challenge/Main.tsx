@@ -76,7 +76,7 @@ export default function Main() {
         .catch((error) => {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
-     
+
     }
   }, []);
 

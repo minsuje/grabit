@@ -12,6 +12,7 @@ import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
   const { userid_num } = useSelector((state: RootState) => state.login);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,21 +22,35 @@ function ChallengeList() {
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [preMyChallenge, setPreMyChallenge] = useState<Challenge[]>([]);
   const [publicChallenge, setPublicChallenge] = useState<Challenge[]>([]);
+
+  
+  const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
+
+  
   useEffect(() => {
-    {
-      axios
-        .get('http://3.34.122.205:3000/challengeList')
-        .then((response) => {
-          console.log(response.data);
-          setIngMyChallenge(response.data.ingMyChallenge);
-          setPreMyChallenge(response.data.preMyChallenge);
-          setPublicChallenge(response.data.prePublicChallenge);
-        })
-        .catch((error) => {
-          console.error('ChallengeList에서  오류발생 :', error);
-        });
-    }
+    // {
+    //   axios
+    //     .get('http://3.34.122.205:3000/challengeList')
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       setIngMyChallenge(response.data.ingMyChallenge);
+    //       setPreMyChallenge(response.data.preMyChallenge);
+    //       setPublicChallenge(response.data.prePublicChallenge);
+    //     })
+    //     .catch((error) => {
+    //       console.error('ChallengeList에서  오류발생 :', error);
+    //     });
+    // }
+    axios({method: 'GET',
+      url: 'http://localhost:3000/challengeList',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+    })
   }, []);
+
+
+  
   return (
     <div className="mt-8 flex flex-col gap-12">
       <h1>참여중인 챌린지</h1>

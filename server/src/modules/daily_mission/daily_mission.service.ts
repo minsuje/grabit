@@ -50,7 +50,7 @@ export class DailyMissionService {
         completed = 'success';
       }
     }
-    return { completed, random_mission };
+    return { completed, mission_name };
   };
 
   // @Cron을 사용하여 매일 23:59.59 에 초기화 실행
