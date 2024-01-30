@@ -3,6 +3,7 @@ import friendReducer from './friendSlice';
 import challengeReducer from './challengeSlice';
 import loginReducer from './loginSlice';
 import headerReducer from './headerSlice';
+import resultReducer from './resultSlice'
 import { authReducer } from './authSlice';
 import { authAPI } from '@/services/auth.service';
 
@@ -13,6 +14,7 @@ export const store = configureStore({
     login: loginReducer,
     header: headerReducer,
     auth: authReducer,
+    result: resultReducer,
 
     [authAPI.reducerPath]: authAPI.reducer,
   },

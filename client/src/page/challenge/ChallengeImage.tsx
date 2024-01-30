@@ -2,10 +2,13 @@ import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
 function ChallengeImage() {
   const dispatch = useDispatch();
+
+  const {challenge_id,authentication_id}=useParams();
   const emotionList: any = useRef<HTMLInputElement>(null);
 
   const [first, setFirst] = useState(0);
@@ -19,14 +22,14 @@ function ChallengeImage() {
 
 
   useEffect(() => {
-    axios.get('http://43.201.22.60:3000//challengeAuth/:challenge_id/:authentication_id')
+    axios.get(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`)
     .then((response) => {console.log(response.data)}).
     catch((error):void=>{
       console.error('ChallengeImage에서  오류발생 :', error)
     })
   },[])
 
-  function addEmotion(emotion: any) {
+  function addEmotion(emotion: string) {
     switch (emotion) {
       case 'first':
         setFirst(first + 1);
@@ -39,7 +42,6 @@ function ChallengeImage() {
         break;
       case 'fourth':
         setFourth(fourth + 1);
-
         break;
     }
 
@@ -61,28 +63,28 @@ function ChallengeImage() {
               addEmotion('first');
             }}
           >
-            😀
+            1
           </button>
           <button
             onClick={() => {
               addEmotion('second');
             }}
           >
-            ❤
+            2
           </button>
           <button
             onClick={() => {
               addEmotion('third');
             }}
           >
-            😢
+            3
           </button>
           <button
             onClick={() => {
               addEmotion('fourth');
             }}
           >
-            😡
+            4
           </button>
         </div>
       </div>
