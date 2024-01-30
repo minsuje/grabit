@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 
 function FileUploadTest() {
@@ -12,7 +12,7 @@ function FileUploadTest() {
   async function handleUpload() {
     console.log('axios', file);
 
-    await axios({
+    await privateApi({
       method: 'post',
       url: 'http://localhost:3000/challengeAuth/1',
       data: {
@@ -20,7 +20,7 @@ function FileUploadTest() {
         type: file?.type,
       },
     }).then((res) => {
-      axios({
+      privateApi({
         method: 'put',
         url: res.data,
         data: file,
@@ -34,7 +34,7 @@ function FileUploadTest() {
   }
 
   async function handleUpdate() {
-    await axios({
+    await privateApi({
       method: 'patch',
       url: 'http://localhost:3000/challengeAuth/1/77',
       data: {
@@ -43,7 +43,7 @@ function FileUploadTest() {
       },
     }).then((res) => {
       console.log('patch res.data', res);
-      axios({
+      privateApi({
         method: 'put',
         url: res.data,
         data: file,
@@ -55,7 +55,7 @@ function FileUploadTest() {
   }
 
   async function handleGet() {
-    await axios({
+    await privateApi({
       method: 'get',
       url: 'http://localhost:3000/challengeAuth/1/77',
     }).then((res) => {
@@ -70,7 +70,7 @@ function FileUploadTest() {
   }
 
   async function handleDelete() {
-    await axios({
+    await privateApi({
       method: 'delete',
       url: 'http://localhost:3000/challengeAuth/1/77',
     }).then(() => {

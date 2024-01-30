@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { CameraAction } from '../../camera/camera';
 import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ function Camera() {
       console.log(key, formData.get(key));
     }
 
-    await axios({
+    await privateApi({
       method: 'post',
       url: `http://localhost:3000/challengeAuth/${challenge_id}`,
 
@@ -61,7 +61,7 @@ function Camera() {
       if (res.data.msg) {
         alert(res.data.msg);
       } else {
-        axios({
+        privateApi({
           method: 'put',
           url: res.data,
           data: file,

@@ -9,6 +9,7 @@ import { Challenge, users } from '@/types/types';
 import { setTotalAuth, setResult } from '@/store/resultSlice';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { differenceInDays, differenceInCalendarDays } from 'date-fns';
+import { privateApi } from '@/api/axios';
 // import Cta from '@/components/Cta';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
@@ -96,7 +97,8 @@ function ChallengeInProgress() {
       console.log('aifile >>>>>>', aiFile);
     }
 
-    await axios({
+
+    await privateApi({
       method: 'post',
       url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
       data: {
@@ -108,7 +110,7 @@ function ChallengeInProgress() {
       if (res.data.msg) {
         alert(res.data.msg);
       } else {
-        axios({
+        privateApi({
           method: 'put',
           url: res.data,
           data: file,
@@ -132,7 +134,7 @@ function ChallengeInProgress() {
   useEffect(() => {
     console.log('challenge_id', challenge_id);
 
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
@@ -156,11 +158,19 @@ function ChallengeInProgress() {
     dispatch(setTotalAuth(totalAuthCount));
     dispatch(setResult(resultArr));
 
+
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
+
+    // const Dday =differenceInCalendarDays(challengeDetail.authentication_end_date, new Date())
+
+    // if(Dday<0){
+    //   navigate(`/challengeResult/${challenge_id}`)
+    // }
+
   }, [challengeDetail.authentication_end_date]);
 
   // 기본값  '나'는 이미 저장된 값
@@ -201,27 +211,30 @@ function ChallengeInProgress() {
         총 {challengeDetail.goal_money * challengers.length}원
       </div>
 
-      <div className="m-10 flex  p-1 text-center justify-between">
+      <div className="m-10 flex  justify-between p-1 text-center">
         <div className="flex-col">
-          <div className="text-xl font-black p-2">나</div>
+
+          <div className="p-2 text-xl font-black">나</div>
           <div className="text-l ">{UrlGroup[0].length}회 성공</div>
         </div>
 
         <div className="flex-col">
-          <div className="text-xl font-black p-2">{tab[1]}</div>
+          <div className="p-2 text-xl font-black">{tab[1]}</div>
           <div className="text-l ">{UrlGroup[1].length}회 성공</div>
         </div>
 
         {tab[2] && (
           <div className="flex-col">
-            <div className="text-xl font-black p-2">{tab[2]}</div>
+
+            <div className="p-2 text-xl font-black">{tab[2]}</div>
             <div className="text-l ">{UrlGroup[2].length}회 성공</div>
           </div>
         )}
 
         {tab[3] && (
           <div className="flex-col">
-            <div className="text-xl font-black p-2">{tab[3]}</div>
+
+            <div className="p-2 text-xl font-black">{tab[3]}</div>
             <div className="text-l font-black">{UrlGroup[3].length}회 성공</div>
           </div>
         )}
@@ -256,7 +269,8 @@ function ChallengeInProgress() {
           }} >
       </Cta> */}
       {imgUrl && (
-        <div className="text-center mx-auto">
+
+        <div className="mx-auto text-center">
           <img src={imgUrl}></img>
           <Button onClick={upload}>업로드</Button>
         </div>

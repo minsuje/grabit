@@ -3,7 +3,7 @@ import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { Challenge, dailyMission } from '@/types/types';
 
 import { useDispatch } from 'react-redux';
@@ -13,8 +13,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { differenceInHours } from 'date-fns';
 interface Mission {
-  completed:string
-random_mission:string}
+  completed: string;
+  random_mission: string;
+}
 
 export default function Main() {
   const LoginId: number = 3;
@@ -28,18 +29,19 @@ export default function Main() {
   async function refreshAccessToken() {
     console.log('loginToken', accessToken);
     console.log('refreshToken', refreshToken);
-    await axios
+    await privateApi(
       // .get('http://localhost:3000/refresh', {
       //   withCredentials: true,
       //   headers: { Authorization: `Bearer ${accessToken}` },
       // })
-      ({
+      {
         method: 'POST',
         url: 'http://localhost:3000/refresh',
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      })
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    )
       // .get('http://localhost:3000/refresh', { withCredentials: true })
       .then((response) => {
         console.log('Refresh token success', response);
@@ -51,23 +53,24 @@ export default function Main() {
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<Mission>({
-    completed:'',
+
+    completed:'none',
     random_mission:'임시 데이터'
+
   });
 
   useEffect(() => {
     {
-
-      axios
-      .get('http://3.34.122.205:3000/dailyMission')
-      .then((response) => {
-        console.log(response);
-        setDailymission(response.data);
-      })
-      .catch((error) => {
-        console.error('main에서 일일미션 오류발생 :', error);
-      });
-      axios
+      privateApi
+        .get('http://3.34.122.205:3000/dailyMission')
+        .then((response) => {
+          console.log(response);
+          setDailymission(response.data);
+        })
+        .catch((error) => {
+          console.error('main에서 일일미션 오류발생 :', error);
+        });
+      privateApi
         .get('http://3.34.122.205:3000/challengeList')
         .then((response) => {
           // console.log(response);
@@ -76,7 +79,6 @@ export default function Main() {
         .catch((error) => {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
-
     }
   }, []);
 
@@ -87,13 +89,15 @@ export default function Main() {
       <Ranking />
       <h1>오늘의 미션</h1>
 
-      {dailymission.completed==='none' ? (
+      {dailymission.completed === 'none' ? (
         <Link to={`/challengeDaily/${dailymission.random_mission}`} className="text-black no-underline">
           <div>
             <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
               <div className="flex justify-between">
                 <p>{dailymission.random_mission}</p>
-                <p>{23-new Date().getHours()}시간 {59-new Date().getMinutes()}분 남음</p> 
+                <p>
+                  {23 - new Date().getHours()}시간 {59 - new Date().getMinutes()}분 남음
+                </p>
               </div>
               <p>100P</p>
             </div>
@@ -101,7 +105,7 @@ export default function Main() {
         </Link>
       ) : (
         <div>
-          <div  className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+          <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
               <p>{dailymission.random_mission}</p>
               <p>오늘 미션 완료!!</p>

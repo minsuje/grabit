@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 import { ListComponentWithButton, ListComponentWithoutButton } from '@/components/PreChallenge';
 import { ListComponentWithPeriod } from '@/components/Component0117';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { RootState } from '@/store/store';
 import { useEffect, useState } from 'react';
 import { Challenge } from '@/types/types';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
@@ -23,10 +23,8 @@ function ChallengeList() {
   const [preMyChallenge, setPreMyChallenge] = useState<Challenge[]>([]);
   const [publicChallenge, setPublicChallenge] = useState<Challenge[]>([]);
 
-  
   const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
 
-  
   useEffect(() => {
     // {
     //   axios
@@ -41,16 +39,15 @@ function ChallengeList() {
     //       console.error('ChallengeList에서  오류발생 :', error);
     //     });
     // }
-    axios({method: 'GET',
+    privateApi({
+      method: 'GET',
       url: 'http://localhost:3000/challengeList',
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-    })
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   }, []);
 
-
-  
   return (
     <div className="mt-8 flex flex-col gap-12">
       <h1>참여중인 챌린지</h1>
@@ -67,9 +64,11 @@ function ChallengeList() {
       {preMyChallenge.map((challenge: Challenge) => {
         return (
           <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-
-       
-            {Number(challenge.userid_num)===Number(userid_num)?<ListComponentWithButton challenge={challenge} />:<ListComponentWithoutButton challenge={challenge} />}
+            {Number(challenge.userid_num) === Number(userid_num) ? (
+              <ListComponentWithButton challenge={challenge} />
+            ) : (
+              <ListComponentWithoutButton challenge={challenge} />
+            )}
           </Link>
         );
       })}

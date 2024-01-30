@@ -1,4 +1,5 @@
 import AlarmList from '@/components/AlarmList';
+import { useState } from 'react';
 
 const dummyAlarm = [
   {
@@ -16,6 +17,8 @@ const dummyAlarm = [
 ];
 
 function Alarm() {
+
+  const AlarmListArr = useState([]);
   return (
     <div>
       <h1 className="text-2xl font-extrabold">알림</h1>

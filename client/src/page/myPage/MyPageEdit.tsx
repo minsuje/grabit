@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 
 export default function MyPageEdit() {
@@ -63,7 +63,7 @@ export default function MyPageEdit() {
         changePassword,
       };
 
-      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
+      const response = await privateApi.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
       console.log('프로필 수정 성공:', response.data.isUser);
       setNickName(response.data.nickname);
       if (response.data.isUser === false) {
@@ -78,7 +78,7 @@ export default function MyPageEdit() {
 
   // 프로필 이미지 요청
   useEffect(() => {
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/myPage/${id}`)
       .then((response) => {
         console.log('이미지>>>>>>', response.data);
@@ -91,7 +91,7 @@ export default function MyPageEdit() {
 
   // 프로필 이미지 수정
   async function handleUpdate() {
-    await axios({
+    await privateApi({
       method: 'patch',
       url: `http://localhost:3000/myPage/${id}`,
       data: {
@@ -100,7 +100,7 @@ export default function MyPageEdit() {
       },
     }).then((res) => {
       console.log('patch res.data', res);
-      axios({
+      privateApi({
         method: 'put',
         url: res.data,
         data: file,

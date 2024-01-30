@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ export default function MyPageFriendDetail() {
   const { id } = useParams();
   console.log(id);
   useEffect(() => {
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/friendDetail/${id}`)
       .then((response) => {
         // 상세 정보 설정
