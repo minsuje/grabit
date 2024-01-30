@@ -6,7 +6,7 @@ import { privateApi } from '@/api/axios';
 
 function KakaoAuth() {
   const navigate = useNavigate();
-  const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  const [accessTokenFetching, setAccessToskenFetching] = useState(false);
 
   // Access Token 받아오기
   const getAccessToken = async () => {
