@@ -51,7 +51,7 @@ export default function Main() {
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<Mission>({
-    completed:'',
+    completed:'none',
     random_mission:'임시 데이터'
   });
 
