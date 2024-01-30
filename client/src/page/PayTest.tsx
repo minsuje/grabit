@@ -1,13 +1,13 @@
-import { Script } from 'vm';
+// import { Script } from 'vm';
 
-<Script src="https://cdn.iamport.kr/v1/iamport.js" />;
+// <Script src="https://cdn.iamport.kr/v1/iamport.js" />;
 
-function PayTest() {
-  return (
-    <>
-      <button>payNow</button>
-    </>
-  );
-}
+// function PayTest() {
+//   return (
+//     <>
+//       <button>payNow</button>
+//     </>
+//   );
+// }
 
-export default PayTest;
+// export default PayTest;
