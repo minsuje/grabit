@@ -66,7 +66,10 @@ export default function Login() {
         console.log('cookies get accessToken', cookies.get('accessToken'));
 
         localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
+
         dispatch(setIsLoggedIn(true));
         dispatch(setNickname(nickname));
         dispatch(setUserid_num(userid_num));
