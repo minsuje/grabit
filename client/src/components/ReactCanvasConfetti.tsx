@@ -18,7 +18,7 @@ function ReactCanvasConfetti() {
             });
             // 두 번째 방향에서 폭죽 효과
             canvasConfetti({
-                particleCount: 350,
+                particleCount: 150,
                 spread: 520,
                 origin: { y: 0.4 },
                 angle: 250,
@@ -37,7 +37,7 @@ function ReactCanvasConfetti() {
             });
             // 네 번째 방향에서 폭죽 효과
             canvasConfetti({
-                particleCount: 250,
+                particleCount: 150,
                 spread: 350,
                 origin: { y: 0.7 },
                 angle: 250,
@@ -46,7 +46,7 @@ function ReactCanvasConfetti() {
             });
             // 다섯 번째 방향에서 폭죽 효과
             canvasConfetti({
-                particleCount: 450,
+                particleCount: 150,
                 spread: 350,
                 origin: { y: 0.9 },
                 angle: 250,

@@ -27,7 +27,7 @@ interface HistoryData {
 export default function MyPage() {
   const { id } = useParams<{ id: string }>();
   const [nickName, setNickName] = useState<string>('');
-  const [scoreNum, setScoreNum] = useState<number>(0); // scoreNum은 숫자 타입
+  const [scoreNum, setScoreNum] = useState<number>(0);
   const [money, setMoney] = useState<string>('');
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
@@ -92,7 +92,6 @@ export default function MyPage() {
     return '실버';
   };
 
-  console;
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
@@ -160,13 +159,13 @@ export default function MyPage() {
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <span>{money}</span>
-          <Link to="mypagewithdraw">
+          <Link to="/mypage/myPagewithdraw">
             <span>출금하기</span>
           </Link>
         </div>
         <div className="flex justify-between">
           <button className="text-xs text-gray-400">내역보기</button>
-          <Link to="MypageCharge">
+          <Link to="/mypage/mypagecharge">
             <span>충전하기</span>
           </Link>
         </div>
@@ -187,7 +186,7 @@ export default function MyPage() {
           </div>
         </div>
         <div className="flex justify-center">
-          <Link to="">
+          <Link to={`/mypagehistorydetail/${id}`}>
             <button>전체보기</button>
           </Link>
         </div>

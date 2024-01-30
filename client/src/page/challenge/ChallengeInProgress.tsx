@@ -4,11 +4,12 @@ import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
 import { RootState } from '@/store/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, RefObject } from 'react';
-import { privateApi } from '@/api/axios';
+import axios from 'axios';
 import { Challenge, users } from '@/types/types';
 import { setTotalAuth, setResult } from '@/store/resultSlice';
 import { setHeaderInfo } from '@/store/headerSlice';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, differenceInCalendarDays } from 'date-fns';
+import { privateApi } from '@/api/axios';
 // import Cta from '@/components/Cta';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
@@ -96,6 +97,7 @@ function ChallengeInProgress() {
       console.log('aifile >>>>>>', aiFile);
     }
 
+
     await privateApi({
       method: 'post',
       url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
@@ -156,11 +158,19 @@ function ChallengeInProgress() {
     dispatch(setTotalAuth(totalAuthCount));
     dispatch(setResult(resultArr));
 
+
+    const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
+
+    if (Dday < 0) {
+      navigate(`/challengeResult/${challenge_id}`);
+    }
+
     // const Dday =differenceInCalendarDays(challengeDetail.authentication_end_date, new Date())
 
     // if(Dday<0){
     //   navigate(`/challengeResult/${challenge_id}`)
     // }
+
   }, [challengeDetail.authentication_end_date]);
 
   // 기본값  '나'는 이미 저장된 값
@@ -203,6 +213,7 @@ function ChallengeInProgress() {
 
       <div className="m-10 flex  justify-between p-1 text-center">
         <div className="flex-col">
+
           <div className="p-2 text-xl font-black">나</div>
           <div className="text-l ">{UrlGroup[0].length}회 성공</div>
         </div>
@@ -214,6 +225,7 @@ function ChallengeInProgress() {
 
         {tab[2] && (
           <div className="flex-col">
+
             <div className="p-2 text-xl font-black">{tab[2]}</div>
             <div className="text-l ">{UrlGroup[2].length}회 성공</div>
           </div>
@@ -221,6 +233,7 @@ function ChallengeInProgress() {
 
         {tab[3] && (
           <div className="flex-col">
+
             <div className="p-2 text-xl font-black">{tab[3]}</div>
             <div className="text-l font-black">{UrlGroup[3].length}회 성공</div>
           </div>
@@ -256,6 +269,7 @@ function ChallengeInProgress() {
           }} >
       </Cta> */}
       {imgUrl && (
+
         <div className="mx-auto text-center">
           <img src={imgUrl}></img>
           <Button onClick={upload}>업로드</Button>
