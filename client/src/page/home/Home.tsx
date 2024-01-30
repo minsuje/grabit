@@ -5,10 +5,17 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/store/loginSlice';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export default function Home() {
   const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+  
+  useEffect(() => {
+    console.log("🚀 ~ Home ~ REST_API_KEY:", REST_API_KEY)
+    console.log("🚀 ~ Home ~ REDIRECT_URI:", REDIRECT_URI)
+  })
+  
   const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
 
   const Rabbit = () => {
