@@ -15,6 +15,7 @@ export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr, setPasswordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState('');
+  const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -88,22 +89,43 @@ export default function MyPageEdit() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://3.34.122.205:3000/friend/${id}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.error('친구 목록 불러오기 axios 오류', error);
-  //     });
-  // }, []);
+  // 프로필 이미지 수정
+  async function handleUpdate() {
+    await axios({
+      method: 'patch',
+      url: `http://localhost:3000/myPage/${id}`,
+      data: {
+        filename: file?.name,
+        type: file?.type,
+      },
+    }).then((res) => {
+      console.log('patch res.data', res);
+      axios({
+        method: 'put',
+        url: res.data,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      });
+    });
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.files![0]);
+    setFile(e.target.files![0]);
+  }
 
   const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
   };
   return (
     <div>
+      <input type="file" onChange={handleChange} />
+      <button onClick={handleUpdate} className="rounded-md bg-blue-500 p-3 text-white">
+        업데이트
+      </button>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1>마이페이지</h1>
         <div className="flex justify-between">

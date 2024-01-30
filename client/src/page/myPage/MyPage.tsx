@@ -53,12 +53,13 @@ export default function MyPage() {
       .get(`http://3.34.122.205:3000/history/${id}`)
       .then((response) => {
         const historyData: HistoryData = response.data;
+        console.log('>>>>>', historyData);
         setWin(historyData.win);
         setLose(historyData.lose);
         setHistory(historyData.history);
       })
       .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
+        console.error(' 히스토리 오류 axios 오류', error);
       });
   }, [id]);
 
