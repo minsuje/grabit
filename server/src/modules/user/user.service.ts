@@ -97,6 +97,7 @@ export class UserService {
     // console.log('user service checkPassword >>', checkPassword);
 
     if (checkPassword) {
+      // 비밀번호 O, 이미지 O
       if (changePassword) {
         const newPassword = await bcrypt.hash(changePassword, 10);
         const userInfo = await db
@@ -110,12 +111,32 @@ export class UserService {
 
         isUser = true;
         return { userInfo, file, isUser };
-      } else {
+      } else if (changePassword.length !== 0 && profile_img.length == 0) {
+        // 비밀번호 O, 프로필 이미지 X
+        const newPassword = await bcrypt.hash(changePassword, 10);
+        const userInfo = await db
+          .update(users)
+          .set({ password: newPassword, nickname: nickname })
+          .where(eq(users.userid_num, userid_num));
+        isUser = true;
+        return { userInfo, file, isUser };
+      } else if (changePassword.length == 0 && profile_img.length !== 0) {
+        // 비밀번호 X, 프로필 이미지 O
         const userInfo = await db
           .update(users)
           .set({
             nickname: nickname,
             profile_img: filename,
+          })
+          .where(eq(users.userid_num, userid_num));
+        isUser = true;
+        return { userInfo, file, isUser };
+      } else {
+        // 비밀번호 X, 프로필 X
+        const userInfo = await db
+          .update(users)
+          .set({
+            nickname: nickname,
           })
           .where(eq(users.userid_num, userid_num));
         isUser = true;
