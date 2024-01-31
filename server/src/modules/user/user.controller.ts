@@ -50,4 +50,6 @@ export class UserController {
   getScore(@Param('userid') userid: number) {
     return this.userService.getScore(userid);
   }
+
+  
 }
