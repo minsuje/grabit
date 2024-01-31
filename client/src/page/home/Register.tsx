@@ -86,7 +86,7 @@ export default function Register() {
   const onSubmit = async (form: RegisterForm) => {
     await axios({
       method: 'post',
-      url: 'http://localhost:3000/profileUpload/normal',
+      url: 'http://3.34.122.205:3000/profileUpload/normal',
       data: {
         filename: profilePic?.name,
         type: profilePic?.type,
@@ -118,7 +118,7 @@ export default function Register() {
         try {
           axios({
             method: 'post',
-            url: 'http://localhost:3000/register/normal',
+            url: 'http://3.34.122.205:3000/register/normal',
             data: {
               name: form.name,
               userid: form.userid,
