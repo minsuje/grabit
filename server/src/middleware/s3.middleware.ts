@@ -1,11 +1,12 @@
-import { Injectable, NestMiddleware, Request, Next } from '@nestjs/common';
-import { Response } from 'express';
+import { Injectable, NestMiddleware, Req, Next } from '@nestjs/common';
+import { Response, Request } from 'express';
 import {
   S3Client,
   PutObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
+import { JwtService } from '@nestjs/jwt';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import { authentication, challenge } from '../modules/challenge/schema';
@@ -16,6 +17,7 @@ dotenv.config();
 
 @Injectable()
 export class s3Middleware implements NestMiddleware {
+  constructor(private jwtService: JwtService) {}
   async use(req: Request, res: Response, next: (error?: any) => void) {
     const client = new S3Client({
       region: process.env.AWS_REGION,
@@ -26,11 +28,22 @@ export class s3Middleware implements NestMiddleware {
     });
 
     const body: any = req.body;
-    // console.log('s3 middleware req > ', req);
+    console.log('s3 middleware req > ', req.originalUrl.split('/'));
+    console.log(
+      's3 middleware req [4] > ',
+      req.originalUrl.split('/')[4] === undefined,
+    );
     // console.log('s3 middleware body > ', body);
 
     let { filename, type } = body;
     let key;
+
+    // 로그인한 유저의 userid_num 찾아오기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
 
     if (req.method === 'GET') {
       // 인증 사진
@@ -112,15 +125,13 @@ export class s3Middleware implements NestMiddleware {
 
       let already = false;
       for (let i = 0; i < todayAuth.length; i++) {
-        if (todayAuth[i].userid_num === 3)
-          // 3은 현재 로그인한 유저의 userid_num
-          already = true;
+        if (todayAuth[i].userid_num === userid_num) already = true;
       }
       // console.log('s3 middleware post body > ', body);
 
       // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
       // let today = `${(new Date().getMonth() + 1).toString()}
-      console.log('already > ', already);
+      // console.log('already > ', already);
       if (!already) {
         if (filename) {
           filename = uuid() + '.' + filename.split('.')[1];
@@ -141,34 +152,39 @@ export class s3Middleware implements NestMiddleware {
         } else req['file'] = null;
       }
     } else {
-      let file = await db
-        .select()
-        .from(authentication)
-        .where(
-          eq(authentication.authentication_id, Number(req.url.split('/')[2])),
-        );
+      // 이모티콘 DELETE 요청은 가지 않도록 하기
+      if (req.originalUrl.split('/')[4] === undefined) {
+        console.log('이모티콘 삭제 아님');
+        let file = await db
+          .select()
+          .from(authentication)
+          .where(
+            eq(authentication.authentication_id, Number(req.url.split('/')[2])),
+          );
 
-      key = file[0].authentication_img;
+        key = file[0].authentication_img;
 
-      if (req.method === 'DELETE' || req.method === 'PATCH') {
-        const params = {
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: key,
-        };
-        let command = new DeleteObjectCommand(params);
-        await client.send(command);
-      }
-      if (req.method === 'PATCH') {
-        filename = uuid() + '.' + filename.split('.')[1];
-        let command = new PutObjectCommand({
-          Bucket: process.env.AWS_S3_BUCKET,
-          Key: filename,
-          ContentType: type,
-        });
+        if (req.method === 'DELETE' || req.method === 'PATCH') {
+          // console.log('is deleted?');
+          const params = {
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          };
+          let command = new DeleteObjectCommand(params);
+          await client.send(command);
+        }
+        if (req.method === 'PATCH') {
+          filename = uuid() + '.' + filename.split('.')[1];
+          let command = new PutObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: filename,
+            ContentType: type,
+          });
 
-        const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
 
-        req['file'] = url;
+          req['file'] = url;
+        }
       }
     }
     next();

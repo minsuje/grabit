@@ -30,7 +30,14 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
-    console.log('profileImg middleware originalUrl > ', req.originalUrl);
+    // console.log('profileImg middleware originalUrl > ', req.originalUrl);
+
+    // 로그인한 유저의 userid_num 찾아오기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
 
     // '/friend/detail' 경로로 요청 온 경우
     if (
@@ -121,15 +128,6 @@ export class profileImgMiddleware implements NestMiddleware {
         req.url.split('/')[1] === 'normal' ||
         req.originalUrl.split('/')[1] === 'myPage' // myPage 조회
       ) {
-        // 로그인한 유저의 userid_num 찾아오기
-        const userInfo = req.headers['authorization'].split(' ')[1];
-        const decodedUserInfo = await this.jwtService.verify(userInfo, {
-          secret: process.env.JWT_SECRET_KEY,
-        });
-        const userid_num = decodedUserInfo.userid_num;
-
-        // console.log('userid_num', userid_num);
-
         const body: any = req.body;
         // console.log('profileImg middleware body > ', req.body);
         let { filename, type } = body;
