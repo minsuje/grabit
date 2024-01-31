@@ -65,14 +65,24 @@ export class DailyMissionService {
     }
   }
 
-  async success(isSuccess: Boolean, userid: number) {
+  async success(isSuccess: Boolean, userid_num: number) {
+    isSuccess = true;
+    console.log('service >> 성공');
     if (isSuccess == true) {
       const getSuccess = await db
         .update(dailyMission)
-        .set({ success_userid_num: [userid] });
+        .set({ success_userid_num: [userid_num] });
+
+      const getDB = await db.select().from(dailyMission);
+
+      console.log('dailyMission log >', getDB);
 
       return {
         msg: '인증 성공',
+      };
+    } else {
+      return {
+        msg: '오류 발생',
       };
     }
   }
