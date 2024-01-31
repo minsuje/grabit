@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/localstrategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { KakaoStrategy } from './strategies/kakao.strategy';
-import { UserModule } from 'src/modules/user/user.module';
+import { UserModule } from './../user/user.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 @Module({
