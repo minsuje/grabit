@@ -104,4 +104,7 @@ export class UserController {
   //   return await this.userService.successPay(body, res);
   //   return;
   // }
+
+  //   @Get('/ranking')
+  //   async getUserRank(@Res() res:Response, @Req() req:Request)
 }
