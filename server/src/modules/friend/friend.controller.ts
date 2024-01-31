@@ -16,6 +16,7 @@ import { UpdateFriendDto } from './dto/update-friend.dto';
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
+  // 유저 친구 조회
   @Get(':userid')
   findOne(@Param('userid') userid: number, @Req() req) {
     console.log('controller friend > ', req.file);
@@ -23,14 +24,17 @@ export class FriendController {
     return this.friendService.findOne(userid, friends_info);
   }
 
+  // 유저 친구 추가
   @Post(':userid')
   create(
     @Body() createFriendDto: CreateFriendDto,
     @Param('userid') userid: number,
   ) {
+    console.log('친구 추가 시작');
     return this.friendService.create(createFriendDto, userid);
   }
 
+  // 유저 친구 수락
   @Patch(':userid')
   update(
     @Body() updateFriendDto: UpdateFriendDto,
@@ -39,6 +43,7 @@ export class FriendController {
     return this.friendService.update(userid, updateFriendDto);
   }
 
+  // 유저 친구 삭제
   @Delete(':userid')
   remove(
     @Body() createFriendDto: CreateFriendDto,
