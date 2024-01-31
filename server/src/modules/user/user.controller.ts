@@ -6,13 +6,14 @@ import {
   Patch,
   Post,
   Redirect,
-  Req,
   Res,
+  Req,
 } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
 import { UserService } from './user.service';
+import { REPLCommand } from 'repl';
 
 @Controller('/')
 export class UserController {
@@ -64,12 +65,11 @@ export class UserController {
     return this.userService.getScore(userid);
   }
 
-
   //결제페이지
   @Get('/checkout/success')
-  success(@Res() res: Response, @Req() req: Request) {
+  success(@Req() req: Request, @Res() res: Response) {
     console.log('controller success');
-    console.log('req.user >>>> ', req.user);
+    // console.log('req.user >>>> ', req.user);
     // console.log(res);
     // res.sendFile('./../../../../client/src/page/CheckoutSuccess.tsx');
     return res.send('success');
@@ -78,7 +78,7 @@ export class UserController {
 
   @Post('/checkout')
   tossPayment(@Body() paymentDTO: PaymentDTO, @Req() req: Request) {
-    console.log('post service url > ', req);
+    // console.log('post service url > ', req);
     console.log('post seevice >> ', paymentDTO);
     return this.userService.tossPayment(paymentDTO);
   }
