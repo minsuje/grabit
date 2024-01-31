@@ -20,6 +20,9 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { KakaoStrategy } from './strategies/kakao.strategy';
 import { stringify } from 'querystring';
+import { db } from 'db/db';
+import { users } from '../user/schema';
+import { eq } from 'drizzle-orm';
 
 @Controller('/')
 export class AuthController {
@@ -188,8 +191,19 @@ export class AuthController {
   }
 
   @Post('/logout')
-  logout(@Res() res: Response, @Req() req: Request) {
-    res.cookie('jwt', '', { maxAge: 0 });
+  async logout(@Res() res: Response, @Req() req: Request) {
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const clearRefreshToken = await db
+      .update(users)
+      .set({ refreshToken: null })
+      .where(eq(users.userid_num, decodedUserInfo[0].userid_num));
+
+    res.cookie('accessToken', '', { maxAge: 0 });
+    res.cookie('refreshToken', '', { maxAge: 0 });
     return res.send({ message: 'success' });
   }
 }

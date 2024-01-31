@@ -9,6 +9,7 @@ import { users } from '../user/schema';
 
 @Injectable()
 export class FriendService {
+  // 유저 친구 목록 조회
   async findOne(userid: number, friends_info: any) {
     // const userid_num = userid;
     // const result = await db
@@ -31,9 +32,13 @@ export class FriendService {
     return { friends_info };
   }
 
+  // 유저 친구 추가
   async create(createFriendDto: CreateFriendDto, userid: number) {
-    console.log(createFriendDto, userid);
+    // console.log(createFriendDto, userid);
     const { other_userid_num, is_friend } = createFriendDto;
+
+    if (other_userid_num == userid)
+      return { msg: '본인과 친구를 맺을 수 없습니다' };
 
     const userid_num = userid;
     const result = await db
@@ -53,7 +58,8 @@ export class FriendService {
         is_friend,
       });
     } else {
-      return { msg: '이미 친구입니다' };
+      if (result[0].is_friend === true) return { msg: '이미 친구입니다' };
+      else return { msg: '이미 전송된 친구 요청입니다' };
     }
   }
 

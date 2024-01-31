@@ -33,26 +33,27 @@ export default function MyPage() {
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
-  const [proFileImg, setProfileImg] = useState<string | undefined>();
+  const [proFileImg, setProfileImg] = useState<string>('');
 
   console.log('>>>>>>>>', userid_num);
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-      .get(`http://localhost:3000/myPage/${userid_num}`)
+
+      .get(`http://localhost:3000/myPage`)
       .then((response) => {
-        console.log('이미지>>>>>>>>', response.data);
         setProfileImg(response.data.file);
+        console.log('이미지 set ????? >>>>>>>>', proFileImg);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, [userid_num]);
+  }, [proFileImg]);
 
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://localhost:3000/history/${userid_num}`)
+      .get(`http://localhost:3000/history`)
       .then((response) => {
         const historyData: HistoryData = response.data;
         console.log('>>>>>', historyData);
@@ -67,7 +68,7 @@ export default function MyPage() {
 
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://localhost:3000/myPage/${userid_num}`)
+      .get<UserInfo>(`http://localhost:3000/myPage`)
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
         console.log('res>>>>>>', userInfo);
@@ -102,15 +103,16 @@ export default function MyPage() {
     <div className="">
       <h1>마이페이지</h1>
 
-      <div className="flex justify-between">
-        <img src={proFileImg} alt="" />
+      <Avatar>
+        <AvatarImage src={proFileImg} />
+        <AvatarFallback></AvatarFallback>
+      </Avatar>
 
-        <Link to={`/${userid_num}/mypageedit`}>
-          <Button type="submit" variant="outline">
-            프로필 수정
-          </Button>
-        </Link>
-      </div>
+      <Link to={`/${userid_num}/mypageedit`}>
+        <Button type="submit" variant="outline">
+          프로필 수정
+        </Button>
+      </Link>
 
       <div>
         <p>{nickName}</p>
