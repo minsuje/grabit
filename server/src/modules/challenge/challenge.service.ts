@@ -246,10 +246,6 @@ export class ChallengeService {
       .where(
         and(
           eq(authentication_img_emoticon.authentication_id, authentication_id),
-          eq(
-            authentication_img_emoticon.authentication_img_comment_userid_num,
-            3, // JWT 토큰에서 찾아올 유저 정보
-          ),
         ),
       );
     return { fileUrl, emoticon };
