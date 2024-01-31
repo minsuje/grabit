@@ -11,7 +11,7 @@ function Header() {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
-
+  const accessToken = localStorage.getItem('accessToken');
   const [scrollPosition, setScrollPosition] = useState(0);
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
@@ -58,7 +58,7 @@ function Header() {
         </h1>
       ) : null}
 
-      {isLoggedIn ? (
+      {accessToken ? (
         <div className="flex items-center gap-3 ">
           <Button onClick={handleLogout}>로그아웃</Button>
         </div>

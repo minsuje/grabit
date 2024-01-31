@@ -12,19 +12,21 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { differenceInHours } from 'date-fns';
+import { setUserid_num } from '@/store/loginSlice';
 
 export default function Main() {
   const LoginId: number = 3;
   const dispatch = useDispatch();
-  const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
-
-  useEffect(() => {
-    dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
-  }, [dispatch]);
+  // const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
+  console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
+  console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
 
   async function refreshAccessToken() {
-    console.log('loginToken', accessToken);
-    console.log('refreshToken', refreshToken);
+    console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
+    console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
+
     await privateApi(
       // .get('http://localhost:3000/refresh', {
       //   withCredentials: true,
@@ -47,39 +49,53 @@ export default function Main() {
       });
   }
 
+  const [userid_num, setUserid_num] = useState<number>(0);
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
 
   useEffect(() => {
-    {
-      privateApi
-        .get('http://3.34.122.205:3000/dailyMission')
-        .then((response) => {
-          console.log(response);
-          setDailymission(response.data.mission_name[0].mission_content);
-          setCompleted(response.data.completed);
-        })
-        .catch((error) => {
-          console.error('main에서 일일미션 오류발생 :', error);
-        });
-      privateApi
-        .get('http://3.34.122.205:3000/challengeList')
-        .then((response) => {
-          // console.log(response);
-          setIngMyChallenge(response.data.ingMyChallenge);
-        })
-        .catch((error) => {
-          console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
-        });
-    }
-  }, []);
+    setUserid_num(Number(localStorage.getItem('userid_num')));
+    console.log('userid >>>>>>>>>>>', userid_num);
+
+    privateApi
+      .get('http://3.34.122.205:3000/dailyMission', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log('dailyMission >>>>>>>', response.data);
+        setDailymission(response.data.mission_name[0].mission_content);
+        setCompleted(response.data.completed);
+      })
+      .catch((error) => {
+        console.error('main에서 일일미션 오류발생 :', error);
+      });
+    privateApi
+      .get('http://3.34.122.205:3000/challengeList', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log('challengeList >>>>>>>>>', response.data);
+        setIngMyChallenge(response.data.ingMyChallenge);
+      })
+      .catch((error) => {
+        console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
+      });
+
+    console.log('dailyMission', dailymission);
+    console.log('completed', completed);
+    console.log('ingMyChallenge', ingMyChallenge);
+  }, [userid_num]);
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
+  }, [dispatch]);
 
   return (
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
       <Button onClick={refreshAccessToken}>refresh 요청</Button>
-      <Ranking />
+      {/* <Ranking /> */}
       <h1>오늘의 미션</h1>
 
       {completed === 'none' ? (
