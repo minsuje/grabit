@@ -48,8 +48,7 @@ export default function MyPage() {
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, [id, proFileImg]);
-
+  }, [proFileImg]);
 
   useEffect(() => {
     // 챌린지 테이블 요청
@@ -104,21 +103,16 @@ export default function MyPage() {
     <div className="">
       <h1>마이페이지</h1>
 
-      <div className="flex justify-between">
-        <img src={proFileImg} alt="" />
+      <Avatar>
+        <AvatarImage src={proFileImg} />
+        <AvatarFallback></AvatarFallback>
+      </Avatar>
 
-        <Avatar>
-          <AvatarImage src={proFileImg} />
-          <AvatarFallback></AvatarFallback>
-        </Avatar>
-
-        <Link to={`/${userid_num}/mypageedit`}>
-
-          <Button type="submit" variant="outline">
-            프로필 수정
-          </Button>
-        </Link>
-      </div>
+      <Link to={`/${userid_num}/mypageedit`}>
+        <Button type="submit" variant="outline">
+          프로필 수정
+        </Button>
+      </Link>
 
       <div>
         <p>{nickName}</p>

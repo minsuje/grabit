@@ -11,6 +11,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { Value } from '@radix-ui/react-select';
+import { setNickname } from '@/store/loginSlice';
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
@@ -34,7 +35,7 @@ export default function MyPageEdit() {
     .object({
       nickname: yup
         .string()
-        .required('* 닉네임은 필수입니다.')
+        .required('닉네임은 필수입니다.')
         .min(2, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
         .max(10, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
         .matches(/^[A-Za-z0-9가-힣]{2,12}$/, '닉네임은 영어, 한글, 포함하여 작성해주세요.'),
@@ -77,6 +78,9 @@ export default function MyPageEdit() {
         headers: {
           'Content-Type': file?.type,
         },
+      }).then((res) => {
+        console.log(res);
+        Navigate(`/myPage/${userid_num}`);
       });
     });
   };
@@ -86,7 +90,9 @@ export default function MyPageEdit() {
     privateApi
       .get(`http://localhost:3000/myPage`)
       .then((response) => {
-        setProFileImg(response.data);
+        console.log('>>>>', response.data.userInfo[0].nickname);
+        setNickName(response.data.userInfo[0].nickname);
+        setProFileImg(response.data.file);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
@@ -97,7 +103,7 @@ export default function MyPageEdit() {
     setNickName(e.target.value);
   };
 
-  console.log('프로필 이미지>>>>>>??이거임?', proFileImg.file);
+  console.log('프로필 이미지>>>>>>??이거임?', proFileImg);
   return (
     <div>
       {/* <input type="file" onChange={handleChange} />
@@ -109,14 +115,11 @@ export default function MyPageEdit() {
         <h1>마이페이지</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg?.file ? proFileImg.file : undefined} />
+            <AvatarImage src={proFileImg} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
-          <Link to="http://localhost:3000/myPage">
-            <Button type="submit" variant="outline">
-              프로필 수정
-            </Button>
-          </Link>
+
+          <Button variant="outline">프로필 수정</Button>
         </div>
         <Label htmlFor="profile">
           <input
@@ -132,12 +135,17 @@ export default function MyPageEdit() {
           />
         </Label>
         <div>
-          <Label htmlFor="nickname">닉네임</Label>
-          <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} />
+          <Label htmlFor="nickname">
+            <span className="text-xs text-red-500">*</span> 닉네임
+          </Label>
+          <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} value={nickName} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
         </div>
         <div>
-          <Label htmlFor="password">현재 비밀번호</Label>
+          <Label htmlFor="password">
+            <span className="text-xs text-red-500">* </span>
+            현재 비밀번호
+          </Label>
           <Input id="password" type="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
           {passwordErr && <p className="text-xs text-red-500">{passwordErr}</p>}
