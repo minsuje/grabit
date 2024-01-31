@@ -32,25 +32,27 @@ export default function MyPage() {
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
-  const [proFileImg, setProfileImg] = useState<string | undefined>();
+  const [proFileImg, setProfileImg] = useState<string>('');
 
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-      .get(`http://localhost:3000/myPage/32`)
+      .get(`http://localhost:3000/myPage`)
       .then((response) => {
+        console.log('response>>>>>>>>', response);
         console.log('이미지>>>>>>>>', response.data.file);
         setProfileImg(response.data.file);
+        console.log('이미지 set ????? >>>>>>>>', proFileImg);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, [id]);
+  }, [id, proFileImg]);
 
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://localhost:3000/history/32`)
+      .get(`http://localhost:3000/history`)
       .then((response) => {
         const historyData: HistoryData = response.data;
         console.log('>>>>>', historyData);
@@ -65,7 +67,7 @@ export default function MyPage() {
 
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://localhost:3000/myPage/32`)
+      .get<UserInfo>(`http://localhost:3000/myPage`)
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
         console.log('res>>>>>>', userInfo);
@@ -100,6 +102,7 @@ export default function MyPage() {
       <h1>마이페이지</h1>
 
       <div className="flex justify-between">
+        <img src={proFileImg} alt="" />
         <Avatar>
           <AvatarImage src={proFileImg} />
           <AvatarFallback></AvatarFallback>

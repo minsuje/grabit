@@ -310,7 +310,7 @@ export class ChallengeService {
 
   // 챌린지 히스토리 조회
   getChallengeHistory = async (userid_num: number) => {
-    console.log('history service > ', userid_num);
+    // console.log('history service > ', userid_num);
     const myChallenge = await db
       .select()
       .from(challenge)

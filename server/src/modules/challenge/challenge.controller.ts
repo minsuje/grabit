@@ -15,11 +15,15 @@ import { s3Middleware } from 'src/middleware/s3.middleware';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/')
 export class ChallengeController {
-  constructor(private ChallengeService: ChallengeService) {}
+  constructor(
+    private ChallengeService: ChallengeService,
+    private jwtService: JwtService,
+  ) {}
   // 챌린지 생성
 
   @UseGuards(JwtAuthGuard)
@@ -168,9 +172,15 @@ export class ChallengeController {
   }
 
   // 챌린지 히스토리 조회
-  @Get('/history/:userid_num') getChallengeHistory(
-    @Param('userid_num') userid_num: number,
-  ): any {
+  // @Get('/history/:userid_num') getChallengeHistory(
+  //   @Param('userid_num') userid_num: number,
+  @Get('/history')
+  async getChallengeHistory(@Req() req) {
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
     return this.ChallengeService.getChallengeHistory(userid_num);
   }
 }
