@@ -19,7 +19,7 @@ export default function MyPageEdit() {
   const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { userid_num } = useParams();
   // FormData 인터페이스 정의
   interface FormData {
     nickname: string;
@@ -60,7 +60,7 @@ export default function MyPageEdit() {
 
     await privateApi({
       method: 'patch',
-      url: 'http://localhost:3000/myPage/32',
+      url: `http://localhost:3000/myPage/${userid_num}`,
       data: {
         filename: file?.name,
         type: file?.type,
@@ -84,9 +84,9 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/myPage/32`)
+      .get(`http://localhost:3000/myPage/${userid_num}`)
       .then((response) => {
-        setProFileImg(response.data.file);
+        setProFileImg(response.data);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
@@ -97,7 +97,7 @@ export default function MyPageEdit() {
     setNickName(e.target.value);
   };
 
-  console.log('프로필 이미지>>>>>>??이거임?', proFileImg);
+  console.log('프로필 이미지>>>>>>??이거임?', proFileImg.file);
   return (
     <div>
       {/* <input type="file" onChange={handleChange} />
@@ -109,10 +109,10 @@ export default function MyPageEdit() {
         <h1>마이페이지</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg} />
+            <AvatarImage src={proFileImg?.file ? proFileImg.file : undefined} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
-          <Link to="http://localhost:3000/myPage/32">
+          <Link to={`http://localhost:3000/myPage/${userid_num}`}>
             <Button type="submit" variant="outline">
               프로필 수정
             </Button>

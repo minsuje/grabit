@@ -83,15 +83,15 @@ function App() {
 
             {/* mypage */}
             <Route path="/myPage/:userid_num" element={<MyPage />} />
-            <Route path="/:id/mypageedit" element={<MyPageEdit />} />
+            <Route path="/:userid_num/mypageedit" element={<MyPageEdit />} />
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-            <Route path="/mypage/friend/detail/:id/" element={<Friend />} />
+            <Route path="/mypage/friend/detail/:userid_num" element={<Friend />} />
 
             <Route path="/friend/:id" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-            <Route path="/mypagehistorydetail/:id" element={<MyPageHistoryDetail />} />
+            <Route path="/mypagehistorydetail/:userid_num" element={<MyPageHistoryDetail />} />
             <Route path="/friend/new" element={<FriendAddition />} />
 
             <Route path="/friend/new" element={<FriendAddition />} />

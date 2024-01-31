@@ -154,7 +154,7 @@ export default function Main() {
         <Link to="/challengeEdit/1">
           <Button>1번 챌린지 수정</Button>
         </Link>
-        <Link to="/mypage/31">
+        <Link to="/mypage/32">
           <Button>마이페이지 </Button>
         </Link>
       </div>
