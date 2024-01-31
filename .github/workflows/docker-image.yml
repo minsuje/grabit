@@ -29,7 +29,6 @@ jobs:
                   AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
                   AWS_S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
                   AWS_REGION: ${{ secrets.AWS_REGION }}
-                  AUTH_AI: ${{ secrets.AUTH_AI }}
                   TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
               run: |
                   docker build \
@@ -43,7 +42,6 @@ jobs:
                     --build-arg AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY} \
                     --build-arg AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} \
                     --build-arg AWS_REGION=${AWS_REGION} \
-                    --build-arg AUTH_AI:${AUTH_AI} \
                     --build-arg TOSS_SECRET_KEY:${TOSS_SECRET_KEY} \
                     --build-arg TZ=Asia/Seoul \
                     -t seejnn/grabit -f server/dockerfile server
