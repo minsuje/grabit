@@ -53,10 +53,8 @@ export default function Main() {
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<Mission>({
-
-    completed:'none',
-    random_mission:'임시 데이터'
-
+    completed: 'none',
+    random_mission: '임시 데이터',
   });
 
   useEffect(() => {
@@ -156,7 +154,7 @@ export default function Main() {
         <Link to="/challengeEdit/1">
           <Button>1번 챌린지 수정</Button>
         </Link>
-        <Link to="/mypage/1">
+        <Link to="/mypage/31">
           <Button>마이페이지 </Button>
         </Link>
       </div>

@@ -82,7 +82,7 @@ function App() {
             <Route path="/challengetier" element={<ChallengeTier />} />
 
             {/* mypage */}
-            <Route path="/mypage/:id" element={<MyPage />} />
+            <Route path="/myPage/:userid_num" element={<MyPage />} />
             <Route path="/:id/mypageedit" element={<MyPageEdit />} />
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />

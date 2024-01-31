@@ -25,21 +25,21 @@ interface HistoryData {
 }
 
 export default function MyPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [money, setMoney] = useState<string>('');
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
-  const [profileimg, setProfileImg] = useState<string | undefined>();
+  const [proFileImg, setProfileImg] = useState<string | undefined>();
 
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-      .get(`http://3.34.122.205:3000/myPage/${id}`)
+      .get(`http://localhost:3000/myPage/32`)
       .then((response) => {
-        console.log('이미지>>>>>>', response.data);
+        console.log('이미지>>>>>>>>', response.data.file);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -50,7 +50,7 @@ export default function MyPage() {
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://3.34.122.205:3000/history/${id}`)
+      .get(`http://localhost:3000/history/32`)
       .then((response) => {
         const historyData: HistoryData = response.data;
         console.log('>>>>>', historyData);
@@ -65,7 +65,7 @@ export default function MyPage() {
 
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://3.34.122.205:3000/mypage/${id}`)
+      .get<UserInfo>(`http://localhost:3000/myPage/32`)
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
         console.log('res>>>>>>', userInfo);
@@ -101,10 +101,10 @@ export default function MyPage() {
 
       <div className="flex justify-between">
         <Avatar>
-          <AvatarImage src={profileimg} />
+          <AvatarImage src={proFileImg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <Link to={`/${id}/mypageedit`}>
+        <Link to={`/31/mypageedit`}>
           <Button type="submit" variant="outline">
             프로필 수정
           </Button>
