@@ -44,7 +44,7 @@ jobs:
                     --build-arg AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} \
                     --build-arg AWS_REGION=${AWS_REGION} \
                     --build-arg TZ=Asia/Seoul \
-                    -t seejnn/grabit -f server/Dockerfile server .
+                    -t seejnn/grabit -f server/Dockerfile server
 
             - name: Tagging
               run: docker tag seejnn/grabit minsuje/grabit
