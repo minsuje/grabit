@@ -44,7 +44,7 @@ jobs:
                     --build-arg AWS_REGION=${AWS_REGION} \
                     --build-arg TOSS_SECRET_KEY:${TOSS_SECRET_KEY} \
                     --build-arg TZ=Asia/Seoul \
-                    -t seejnn/grabit -f server/dockerfile server
+                    -t seejnn/grabit -f server/Dockerfile server
 
             - name: Tagging
               run: docker tag seejnn/grabit minsuje/grabit
