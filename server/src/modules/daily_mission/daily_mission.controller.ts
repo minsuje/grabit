@@ -52,16 +52,18 @@ export class DailyMissionController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = users.userid_num;
-    console.log('PatchDaily userid_num >>>', userid_num);
     const insert = await this.dailyMissionService.success(
       isSuccess,
       userid_num,
     );
     if (insert) {
-      console.log('성공');
+      return res.send({
+        msg: '데일리 미션 성공',
+      });
+    } else {
+      return res.send({
+        msg: '데일리 미션 실패',
+      });
     }
-    return await res.send({
-      msg: '성공',
-    });
   }
 }
