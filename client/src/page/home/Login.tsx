@@ -63,12 +63,17 @@ export default function Login() {
 
         const { nickname, userid_num, accessToken, refreshToken } = response.data;
 
-        console.log('cookies get accessToken', cookies.get('accessToken'));
+        // console.log('cookies get accessToken', cookies.get('accessToken'));
 
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
+
+        console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
+        console.log('🚀 ~ handleLogin ~ nickname:', nickname);
+        console.log('🚀 ~ handleLogin ~ refreshToken:', refreshToken);
+        console.log('🚀 ~ handleLogin ~ accessToken:', accessToken);
 
         dispatch(setIsLoggedIn(true));
         dispatch(setNickname(nickname));
