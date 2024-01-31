@@ -2,7 +2,7 @@ import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { privateApi } from '@/api/axios';
 import { Challenge, dailyMission } from '@/types/types';
 
@@ -46,12 +46,14 @@ export default function Main() {
         console.error('Refresh token error', error);
       });
   }
-
+  const userid_num = Number(localStorage.getItem('userid_num'));
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
 
   useEffect(() => {
+    console.log('userid_num>>>>>>>>>>', userid_num);
+    console.log('마운트될 때 실행1');
     {
       privateApi
         .get('http://3.34.122.205:3000/dailyMission')
@@ -63,6 +65,8 @@ export default function Main() {
         .catch((error) => {
           console.error('main에서 일일미션 오류발생 :', error);
         });
+      console.log('마운트될 때 실행2');
+
       privateApi
         .get('http://3.34.122.205:3000/challengeList')
         .then((response) => {
@@ -72,6 +76,7 @@ export default function Main() {
         .catch((error) => {
           console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
         });
+      console.log('마운트될 때 실행3');
     }
   }, []);
 
@@ -101,6 +106,8 @@ export default function Main() {
           <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
               <p>{dailymission}</p>
+              <p>{completed}</p>
+
               <p>오늘 미션 완료!!</p>
             </div>
             <p>10P</p>
