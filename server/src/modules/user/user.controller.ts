@@ -64,6 +64,7 @@ export class UserController {
     return this.userService.getScore(userid);
   }
 
+
   //결제페이지
   @Get('/checkout/success')
   success(@Res() res: Response, @Req() req: Request) {
