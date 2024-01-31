@@ -13,11 +13,15 @@ import { Request, Response } from 'express';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
 import { UserService } from './user.service';
+import { JwtService } from '@nestjs/jwt';
 import { REPLCommand } from 'repl';
 
 @Controller('/')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   @Post('/register/:type')
   createUserDto(
@@ -41,21 +45,28 @@ export class UserController {
   }
 
   // 마이페이지 조회
-  @Get('/myPage/:userid_num')
-  getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
-    console.log('myPage controller req.file > ', req.file);
+  // @Get('/myPage/:userid_num')
+  // getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
+  @Get('/myPage')
+  async getMyPage(@Req() req) {
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+    // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
     return this.userService.getMyPage(userid_num, file);
   }
 
   // 마이페이지 수정
-  @Patch('/myPage/:userid_num')
-  patchMyPage(
-    @Body() body: any,
-    @Param('userid_num') userid_num: number,
-    @Req() req,
-  ) {
-    console.log('myPage controller req.file > ', req.file);
+  @Patch('/myPage')
+  async patchMyPage(@Body() body: any, @Req() req) {
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
     const file = req.file;
     return this.userService.patchMyPage(userid_num, file, body);
   }

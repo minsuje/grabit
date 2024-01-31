@@ -60,7 +60,7 @@ export default function MyPageEdit() {
 
     await privateApi({
       method: 'patch',
-      url: `http://localhost:3000/myPage/${userid_num}`,
+      url: 'http://localhost:3000/myPage',
       data: {
         filename: file?.name,
         type: file?.type,
@@ -84,7 +84,7 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/myPage/${userid_num}`)
+      .get(`http://localhost:3000/myPage`)
       .then((response) => {
         setProFileImg(response.data);
       })
@@ -112,7 +112,7 @@ export default function MyPageEdit() {
             <AvatarImage src={proFileImg?.file ? proFileImg.file : undefined} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
-          <Link to={`http://localhost:3000/myPage/${userid_num}`}>
+          <Link to="http://localhost:3000/myPage">
             <Button type="submit" variant="outline">
               프로필 수정
             </Button>
