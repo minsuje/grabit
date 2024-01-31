@@ -70,7 +70,7 @@ function App() {
 
             {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
             <Route path="/challengeresult" element={<ChallengeResult />} />
-            <Route path="/challengeImage/:authentication_id" element={<ChallengeImage />} />
+            <Route path="/challengeImage/:challenge_id/:authentication_id" element={<ChallengeImage />} />
             <Route path="/challengeList" element={<ChallengeList />} />
             <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
             <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
@@ -88,7 +88,7 @@ function App() {
             <Route path="/challengetier" element={<ChallengeTier />} />
 
             {/* mypage */}
-            <Route path="/mypage/:id" element={<MyPage />} />
+            <Route path="/myPage/:userid_num" element={<MyPage />} />
             <Route path="/:id/mypageedit" element={<MyPageEdit />} />
             <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />

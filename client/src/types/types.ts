@@ -35,7 +35,7 @@ export interface authentication_img_emotion {
   authentication_img_emotion_id: number;
   authentication_id: number;
   authentication_img_comment_userid_num: number;
-  authentication_img_comment_emotion: number;
+  authentication_img_comment_emoticon: number;
 }
 export interface score {
   score_id: number;

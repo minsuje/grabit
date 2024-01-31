@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import MyPageFriendList from '../../components/MyPageFriendList';
@@ -17,7 +17,7 @@ export default function FriendAddition() {
 
   useEffect(() => {
     const { id } = useParams();
-    axios
+    privateApi
       .get(`http://3.34.122.205:3000/friend/${id}`)
       .then((response) => {
         setFriends(response.data.friends_info);

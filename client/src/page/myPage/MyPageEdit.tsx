@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -7,24 +7,26 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
+import { Value } from '@radix-ui/react-select';
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr, setPasswordErr] = useState<string>('');
-  const [proFileImg, setProFileImg] = useState('');
+  const [proFileImg, setProFileImg] = useState<string>('');
+  const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  console.log('id>>>>>', id);
   // FormData 인터페이스 정의
   interface FormData {
     nickname: string;
     password: string;
     changePassword: string;
     confirmPassword?: string;
+    file?: any;
   }
 
   // yup 스키마 정의
@@ -52,35 +54,38 @@ export default function MyPageEdit() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = async (data: FormData) => {
     const { nickname, password: currentPassword, changePassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
 
-    try {
-      const payload = {
+    await privateApi({
+      method: 'patch',
+      url: 'http://localhost:3000/myPage/32',
+      data: {
+        filename: file?.name,
+        type: file?.type,
         nickname,
         currentPassword,
         changePassword,
-      };
-
-      const response = await axios.patch(`http://3.34.122.205:3000/mypage/${id}`, payload); // 수정된 payload 사용
-      console.log('프로필 수정 성공:', response.data.isUser);
-      setNickName(response.data.nickname);
-      if (response.data.isUser === false) {
-        setPasswordErr('현재 비밀번호가 올바르지 않습니다');
-      } else {
-        Navigate(`/mypage/${id}`);
-      }
-    } catch (err) {
-      console.error('프로필 수정 실패:', err);
-    }
+      },
+    }).then((res) => {
+      console.log('patch res.data', res.data.file);
+      axios({
+        method: 'put',
+        url: res.data.file,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      });
+    });
   };
 
   // 프로필 이미지 요청
   useEffect(() => {
-    axios
-      .get(`http://3.34.122.205:3000/myPage/${id}`)
+    privateApi
+      .get(`http://localhost:3000/myPage/32`)
       .then((response) => {
-        console.log('이미지>>>>>>', response.data);
         setProFileImg(response.data.file);
       })
       .catch((error) => {
@@ -88,39 +93,47 @@ export default function MyPageEdit() {
       });
   }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://3.34.122.205:3000/friend/${id}`)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.error('친구 목록 불러오기 axios 오류', error);
-  //     });
-  // }, []);
-
   const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
   };
+
+  console.log('프로필 이미지>>>>>>??이거임?', proFileImg);
   return (
     <div>
+      {/* <input type="file" onChange={handleChange} />
+      <button onClick={handleUpdate} className="rounded-md bg-blue-500 p-3 text-white">
+        업데이트
+      </button> */}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1>마이페이지</h1>
         <div className="flex justify-between">
           <Avatar>
             <AvatarImage src={proFileImg} />
-            {/* <AvatarFallback>CN</AvatarFallback> */}
+            <AvatarFallback></AvatarFallback>
           </Avatar>
-          <Button type="submit" variant="outline">
-            프로필 수정
-          </Button>
+          <Link to="http://localhost:3000/myPage/32">
+            <Button type="submit" variant="outline">
+              프로필 수정
+            </Button>
+          </Link>
         </div>
         <Label htmlFor="profile">
-          <input id="profile" type="file" />
+          <input
+            id="profile"
+            type="file"
+            onChange={(e) => {
+              console.log('파일 입력시 이벤트 객체', e);
+              if (e.target.files?.length == 1) {
+                setFile(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }
+            }}
+          />
         </Label>
         <div>
           <Label htmlFor="nickname">닉네임</Label>
-          <Input id="nickname" {...register('nickname')} value={nickName} onChange={handleNickNameChange} />
+          <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
         </div>
         <div>

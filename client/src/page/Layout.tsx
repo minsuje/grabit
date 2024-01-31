@@ -7,10 +7,11 @@ function Layout() {
   // const { isLoggedIn } = useSelector((state: RootState) => state.login);
   // console.log(isLoggedIn);
 
-  const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
-  console.log(isLoggedIn);
+  // const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
+  // const isLoggedIn = true;
+  const accessToken = localStorage.getItem('accessToken');
 
-  return isLoggedIn ? (
+  return accessToken ? (
     <div>
       <Header />
       <div className="container mb-40 mt-12 py-4">

@@ -37,12 +37,7 @@ function Header() {
 
   function handleLogin() {
     console.log('로그인');
-    dispatch(setIsLoggedIn(true));
-    dispatch(setAccessToken('accessToken'));
-    dispatch(setRefreshToken('refreshToken'));
-    dispatch(setNickname('nickname'));
-    dispatch(setUserid_num(1));
-    navigate('/main');
+    navigate('/login');
   }
 
   return (

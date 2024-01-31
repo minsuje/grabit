@@ -166,6 +166,8 @@ export class profileImgMiddleware implements NestMiddleware {
             let command = new DeleteObjectCommand(params);
             await client.send(command);
             if (req.method === 'PATCH') {
+              console.log('PATCH>>>>>>>>');
+              console.log('filename', filename);
               filename = uuid() + '.' + filename.split('.')[1];
               let command = new PutObjectCommand({
                 Bucket: process.env.AWS_S3_BUCKET,
@@ -177,6 +179,7 @@ export class profileImgMiddleware implements NestMiddleware {
                 expiresIn: 3600,
               });
 
+              console.log(url)
               req['file'] = url;
             }
           }

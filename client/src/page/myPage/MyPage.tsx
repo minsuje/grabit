@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ListComponent3 } from '@/components/ComponentSeong';
@@ -25,21 +25,21 @@ interface HistoryData {
 }
 
 export default function MyPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const [nickName, setNickName] = useState<string>('');
-  const [scoreNum, setScoreNum] = useState<number>(0); // scoreNum은 숫자 타입
+  const [scoreNum, setScoreNum] = useState<number>(0);
   const [money, setMoney] = useState<string>('');
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
-  const [profileimg, setProfileImg] = useState<string | undefined>();
+  const [proFileImg, setProfileImg] = useState<string | undefined>();
 
   useEffect(() => {
     // 프로필 이미지 요청
-    axios
-      .get(`http://3.34.122.205:3000/myPage/${id}`)
+    privateApi
+      .get(`http://localhost:3000/myPage/32`)
       .then((response) => {
-        console.log('이미지>>>>>>', response.data);
+        console.log('이미지>>>>>>>>', response.data.file);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -49,22 +49,23 @@ export default function MyPage() {
 
   useEffect(() => {
     // 챌린지 테이블 요청
-    axios
-      .get(`http://3.34.122.205:3000/history/${id}`)
+    privateApi
+      .get(`http://localhost:3000/history/32`)
       .then((response) => {
         const historyData: HistoryData = response.data;
+        console.log('>>>>>', historyData);
         setWin(historyData.win);
         setLose(historyData.lose);
         setHistory(historyData.history);
       })
       .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
+        console.error(' 히스토리 오류 axios 오류', error);
       });
   }, [id]);
 
   useEffect(() => {
-    axios
-      .get<UserInfo>(`http://3.34.122.205:3000/mypage/${id}`)
+    privateApi
+      .get<UserInfo>(`http://localhost:3000/myPage/32`)
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
         console.log('res>>>>>>', userInfo);
@@ -91,7 +92,6 @@ export default function MyPage() {
     return '실버';
   };
 
-  console;
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
@@ -101,10 +101,10 @@ export default function MyPage() {
 
       <div className="flex justify-between">
         <Avatar>
-          <AvatarImage src={profileimg} />
+          <AvatarImage src={proFileImg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <Link to={`/${id}/mypageedit`}>
+        <Link to={`/31/mypageedit`}>
           <Button type="submit" variant="outline">
             프로필 수정
           </Button>
@@ -115,21 +115,21 @@ export default function MyPage() {
         <p>{nickName}</p>
       </div>
 
-      <div className="flex content-center mt-10">
-        <div className="w-[100%]  flex flex-col justify-center">
+      <div className="mt-10 flex content-center">
+        <div className="flex  w-[100%] flex-col justify-center">
           <p>{scoreNum}</p>
         </div>
-        <div className="w-[10%] mr-5 text-end">
+        <div className="mr-5 w-[10%] text-end">
           <p>{tierName}</p>
           <p className="text-xs text-neutral-300">순위</p>
         </div>
         <div className="flex flex-col content-center justify-center">
-          <img src={tierImageSrc} alt="Tier Image" className="w-12 glowing-image " />
+          <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
         </div>
       </div>
       <br />
       <br />
-      <div className="user-list flex flex-col rgap-4">
+      <div className="user-list rgap-4 flex flex-col">
         <div className="flex items-center gap-2">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -159,13 +159,13 @@ export default function MyPage() {
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <span>{money}</span>
-          <Link to="mypagewithdraw">
+          <Link to="/mypage/myPagewithdraw">
             <span>출금하기</span>
           </Link>
         </div>
         <div className="flex justify-between">
           <button className="text-xs text-gray-400">내역보기</button>
-          <Link to="MypageCharge">
+          <Link to="/mypage/mypagecharge">
             <span>충전하기</span>
           </Link>
         </div>
@@ -186,7 +186,7 @@ export default function MyPage() {
           </div>
         </div>
         <div className="flex justify-center">
-          <Link to="">
+          <Link to={`/mypagehistorydetail/${id}`}>
             <button>전체보기</button>
           </Link>
         </div>
