@@ -10,6 +10,7 @@ interface UserInfo {
   score_num: number;
   money: string;
   userInfo: any;
+  id: number;
 }
 
 interface ChallengeHistory {
@@ -25,7 +26,7 @@ interface HistoryData {
 }
 
 export default function MyPage() {
-  const { id } = useParams();
+  const { userid_num } = useParams();
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [money, setMoney] = useState<string>('');
@@ -34,13 +35,13 @@ export default function MyPage() {
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
 
+  console.log('>>>>>>>>', userid_num);
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
+
       .get(`http://localhost:3000/myPage`)
       .then((response) => {
-        console.log('response>>>>>>>>', response);
-        console.log('이미지>>>>>>>>', response.data.file);
         setProfileImg(response.data.file);
         console.log('이미지 set ????? >>>>>>>>', proFileImg);
       })
@@ -48,6 +49,7 @@ export default function MyPage() {
         console.error('이미지 불러오기 axios 오류', error);
       });
   }, [id, proFileImg]);
+
 
   useEffect(() => {
     // 챌린지 테이블 요청
@@ -63,7 +65,7 @@ export default function MyPage() {
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
       });
-  }, [id]);
+  }, [userid_num]);
 
   useEffect(() => {
     privateApi
@@ -78,7 +80,7 @@ export default function MyPage() {
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
       });
-  }, [id]);
+  }, [userid_num]);
 
   const getTierImage = (score: number) => {
     if (score >= 2000) return '/challengerTear.png';
@@ -97,17 +99,21 @@ export default function MyPage() {
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
+  console.log('이미지 주소>>>>>>', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>
 
       <div className="flex justify-between">
         <img src={proFileImg} alt="" />
+
         <Avatar>
           <AvatarImage src={proFileImg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <Link to={`/31/mypageedit`}>
+
+        <Link to={`/${userid_num}/mypageedit`}>
+
           <Button type="submit" variant="outline">
             프로필 수정
           </Button>
@@ -154,7 +160,7 @@ export default function MyPage() {
           </Avatar>
           <span>홍길동</span>
         </div>
-        <Link to={`/mypage/friend/detail/${id}/`}>
+        <Link to={`/mypage/friend/detail/${userid_num}/`}>
           <Button>전체보기</Button>
         </Link>
       </div>
@@ -189,7 +195,7 @@ export default function MyPage() {
           </div>
         </div>
         <div className="flex justify-center">
-          <Link to={`/mypagehistorydetail/${id}`}>
+          <Link to={`/mypagehistorydetail/${userid_num}`}>
             <button>전체보기</button>
           </Link>
         </div>
