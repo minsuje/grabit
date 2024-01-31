@@ -64,4 +64,16 @@ export class DailyMissionService {
       console.error('에러 발생:', error.message);
     }
   }
+
+  async success(isSuccess: Boolean, userid: number) {
+    if (isSuccess == true) {
+      const getSuccess = await db
+        .update(dailyMission)
+        .set({ success_userid_num: [userid] });
+
+      return {
+        msg: '인증 성공',
+      };
+    }
+  }
 }
