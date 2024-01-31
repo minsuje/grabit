@@ -81,7 +81,7 @@ export class UserService {
   // 프로필 수정
   patchMyPage = async (userid_num: number, file: string, body: any) => {
     const { nickname, profile_img, currentPassword, changePassword } = body;
-    console.log('user service Body >>> ', body);
+    const filename = file.split('/')[3].split('?')[0];
     let isUser = false;
     const myDbPassword = await db
       .select({ password: users.password })
@@ -89,13 +89,12 @@ export class UserService {
       .where(eq(users.userid_num, userid_num));
 
     const myPassword = myDbPassword[0];
-    console.log('user service myPassword >> ', myPassword);
     const checkPassword = await bcrypt.compare(
       currentPassword,
       myPassword.password,
     );
 
-    console.log('user service checkPassword >>', checkPassword);
+    // console.log('user service checkPassword >>', checkPassword);
 
     if (checkPassword) {
       if (changePassword) {
@@ -105,7 +104,7 @@ export class UserService {
           .set({
             password: newPassword,
             nickname: nickname,
-            profile_img: profile_img,
+            profile_img: filename,
           })
           .where(eq(users.userid_num, userid_num));
 
@@ -116,7 +115,7 @@ export class UserService {
           .update(users)
           .set({
             nickname: nickname,
-            profile_img: profile_img,
+            profile_img: filename,
           })
           .where(eq(users.userid_num, userid_num));
         isUser = true;

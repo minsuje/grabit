@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { db } from 'db/db';
 import { dailyMission } from './schema';
 import { Cron } from '@nestjs/schedule';
-import { arrayOverlaps } from 'drizzle-orm';
+import { arrayOverlaps, eq } from 'drizzle-orm';
+import { users } from '../user/schema';
 
 @Injectable()
 export class DailyMissionService {
@@ -62,6 +63,70 @@ export class DailyMissionService {
       console.log('매일 23:59에 실행됨');
     } catch (error) {
       console.error('에러 발생:', error.message);
+    }
+  }
+
+  async success(isSuccess: Boolean, userid_num: number) {
+    isSuccess = true;
+    if (isSuccess == true) {
+      // DB에 저장되어 있는 유저 정보 꺼내오기
+      const successArray = await db
+        .select({ success_userid_num: dailyMission.success_userid_num })
+        .from(dailyMission);
+
+      console.log('success Array > ', successArray[0].success_userid_num);
+
+      // case1. 버그가 생겨서 또 인증 됐을 때 에러 처리
+      if (
+        successArray[0].success_userid_num !== null &&
+        successArray[0].success_userid_num.includes(userid_num)
+      ) {
+        console.log('이미 인증 되었습니다.');
+        return {
+          msg: '이미 인증 되었습니다.',
+        };
+      }
+
+      // userState에 저장 하기
+      let userState: number[] = [];
+      if (successArray[0].success_userid_num !== null) {
+        userState = successArray[0].success_userid_num;
+      }
+
+      console.log('userState > ', userState);
+
+      // 성공한 유저를 배열에 추가
+      userState.push(userid_num);
+      console.log('push userState >> ', userState);
+
+      // 추가한 배열을 DB에 저장
+      const getSuccess = await db
+        .update(dailyMission)
+        .set({ success_userid_num: userState });
+
+      // db에서 해당 유저의 점수를 가져옴
+      const getMyScore = await db
+        .select({ score_num: users.score_num })
+        .from(users)
+        .where(eq(users.userid_num, userid_num));
+
+      // 10점 추가
+      const myScore = getMyScore[0].score_num + 10;
+
+      // 점수 추가
+      const addScore = await db
+        .update(users)
+        .set({ score_num: myScore })
+        .where(eq(users.userid_num, userid_num));
+
+      return {
+        msg: '인증 성공',
+        score: '10 XP',
+      };
+    } else {
+      return {
+        msg: '오류 발생',
+      };
     }
   }
 }

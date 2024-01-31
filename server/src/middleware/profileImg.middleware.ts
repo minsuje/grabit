@@ -8,6 +8,7 @@ import {
   CompressionType,
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq } from 'drizzle-orm';
 import { users } from '../modules/user/schema';
@@ -19,6 +20,7 @@ dotenv.config();
 
 @Injectable()
 export class profileImgMiddleware implements NestMiddleware {
+  constructor(private jwtService: JwtService) {}
   async use(req: Request, res: Response, next: (error?: any) => void) {
     const client = new S3Client({
       region: process.env.AWS_REGION,
@@ -28,7 +30,14 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
-    console.log('profileImg middleware originalUrl > ', req.originalUrl);
+    // console.log('profileImg middleware originalUrl > ', req.originalUrl);
+
+    // 로그인한 유저의 userid_num 찾아오기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
 
     // '/friend/detail' 경로로 요청 온 경우
     if (
@@ -114,6 +123,7 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/myPage', '/profileUpload' 경로로 요청 온 경우
     else {
+      // console.log('req.url', req.url);
       if (
         req.url.split('/')[1] === 'normal' ||
         req.originalUrl.split('/')[1] === 'myPage' // myPage 조회
@@ -128,7 +138,7 @@ export class profileImgMiddleware implements NestMiddleware {
           let file = await db
             .select()
             .from(users)
-            .where(eq(users.userid_num, Number(req.url.split('/')[1])));
+            .where(eq(users.userid_num, userid_num));
           key = file[0].profile_img;
           // console.log('middleware profileImg key > ', key);
           const command = new GetObjectCommand({
@@ -152,22 +162,26 @@ export class profileImgMiddleware implements NestMiddleware {
             req['file'] = url;
           }
         } else {
+          // console.log('profileImg middleware body patch> ', req.body);
           let file = await db
             .select()
             .from(users)
-            .where(eq(users.userid_num, Number(req.url.split('/')[1])));
+            .where(eq(users.userid_num, userid_num));
+
+          // console.log('patch file >> ', file[0].profile_img);
 
           key = file[0].profile_img;
           if (req.method === 'DELETE' || req.method === 'PATCH') {
-            const params = {
-              Bucket: process.env.AWS_S3_BUCKET,
-              Key: key,
-            };
-            let command = new DeleteObjectCommand(params);
-            await client.send(command);
+            if (key != null) {
+              const params = {
+                Bucket: process.env.AWS_S3_BUCKET,
+                Key: key,
+              };
+              let command = new DeleteObjectCommand(params);
+              await client.send(command);
+            }
             if (req.method === 'PATCH') {
-              console.log('PATCH>>>>>>>>');
-              console.log('filename', filename);
+              // console.log('filename', filename);
               filename = uuid() + '.' + filename.split('.')[1];
               let command = new PutObjectCommand({
                 Bucket: process.env.AWS_S3_BUCKET,
@@ -179,7 +193,7 @@ export class profileImgMiddleware implements NestMiddleware {
                 expiresIn: 3600,
               });
 
-              console.log(url)
+              console.log(url);
               req['file'] = url;
             }
           }

@@ -131,7 +131,7 @@ function HotChallenge() {
 
   return (
     <>
-      <div className="flex gap-2 text-center hover:cursor-pointer">
+      <div className="flex gap-8 text-center hover:cursor-pointer">
         {hotTopic.map((topic, idx) => {
           return (
             <div
@@ -139,7 +139,7 @@ function HotChallenge() {
               onClick={() => {
                 showHotChallengeList(idx);
               }}
-              className="m-2 w-full rounded-lg border-2 border-solid  border-pink-500 bg-white p-2"
+              className="m-2 w-full rounded-md border-2 border-solid  border-pink-200 bg-pink-100 p-1"
             >
               {topic}
             </div>
@@ -147,12 +147,8 @@ function HotChallenge() {
         })}
       </div>
       {showList.length != 0
-        ? showList.map((challenge: Challenge) => {
-            return (
-              <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-                <ListComponentWithPeriod challenge={challenge}></ListComponentWithPeriod>
-              </Link>
-            );
+        ? showList.map((challenge: Challenge, idx: number) => {
+            return <ListComponentWithPeriod key={idx} challenge={challenge}></ListComponentWithPeriod>;
           })
         : null}
     </>

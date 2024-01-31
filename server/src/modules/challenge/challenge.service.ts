@@ -246,10 +246,6 @@ export class ChallengeService {
       .where(
         and(
           eq(authentication_img_emoticon.authentication_id, authentication_id),
-          eq(
-            authentication_img_emoticon.authentication_img_comment_userid_num,
-            3, // JWT 토큰에서 찾아올 유저 정보
-          ),
         ),
       );
     return { fileUrl, emoticon };
@@ -310,7 +306,7 @@ export class ChallengeService {
 
   // 챌린지 히스토리 조회
   getChallengeHistory = async (userid_num: number) => {
-    console.log('history service > ', userid_num);
+    // console.log('history service > ', userid_num);
     const myChallenge = await db
       .select()
       .from(challenge)
