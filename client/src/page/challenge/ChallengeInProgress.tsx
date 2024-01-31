@@ -160,6 +160,7 @@ function ChallengeInProgress() {
     dispatch(setResult(resultArr));
 
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
+    console.log(Dday, 'dday');
 
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);

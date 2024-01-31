@@ -12,10 +12,6 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { differenceInHours } from 'date-fns';
-interface Mission {
-  completed: string;
-  random_mission: string;
-}
 
 export default function Main() {
   const LoginId: number = 3;
@@ -52,10 +48,8 @@ export default function Main() {
   }
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
-  const [dailymission, setDailymission] = useState<Mission>({
-    completed: 'none',
-    random_mission: '임시 데이터',
-  });
+  const [dailymission, setDailymission] = useState<string>('');
+  const [completed, setCompleted] = useState<string>('none');
 
   useEffect(() => {
     {
@@ -63,7 +57,8 @@ export default function Main() {
         .get('http://3.34.122.205:3000/dailyMission')
         .then((response) => {
           console.log(response);
-          setDailymission(response.data);
+          setDailymission(response.data.mission_name[0].mission_content);
+          setCompleted(response.data.completed);
         })
         .catch((error) => {
           console.error('main에서 일일미션 오류발생 :', error);
@@ -87,17 +82,17 @@ export default function Main() {
       <Ranking />
       <h1>오늘의 미션</h1>
 
-      {dailymission.completed === 'none' ? (
-        <Link to={`/challengeDaily/${dailymission.random_mission}`} className="text-black no-underline">
+      {completed === 'none' ? (
+        <Link to={`/challengeDaily/${dailymission}`} className="text-black no-underline">
           <div>
             <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
               <div className="flex justify-between">
-                <p>{dailymission.random_mission}</p>
+                <p>{dailymission}</p>
                 <p>
                   {23 - new Date().getHours()}시간 {59 - new Date().getMinutes()}분 남음
                 </p>
               </div>
-              <p>100P</p>
+              <p>10P</p>
             </div>
           </div>
         </Link>
@@ -105,10 +100,10 @@ export default function Main() {
         <div>
           <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
-              <p>{dailymission.random_mission}</p>
+              <p>{dailymission}</p>
               <p>오늘 미션 완료!!</p>
             </div>
-            <p>100P</p>
+            <p>10P</p>
           </div>
         </div>
       )}
@@ -123,11 +118,11 @@ export default function Main() {
           </Link>
         </div>
       ) : (
-        ingMyChallenge.map((challenge: Challenge) => {
+        ingMyChallenge.map((challenge: Challenge, idx: number) => {
           return (
             <>
               <Link to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
-                <ListComponent1 key={challenge.challenge_id} challenge={challenge} />
+                <ListComponent1 key={idx} challenge={challenge} />
               </Link>
             </>
           );
