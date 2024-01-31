@@ -17,13 +17,15 @@ import { useRef } from 'react';
 interface url {
   userid_num: string;
   url: string;
+  authentication_id: number;
 }
 
 function ChallengeInProgress() {
   const info = useSelector((state: RootState) => state.result);
   console.log(info);
 
-  const { userid_num } = useSelector((state: RootState) => state.login);
+  // const { userid_num } = useSelector((state: RootState) => state.login);
+  const userid_num = Number(localStorage.getItem('userid_num'));
   console.log('user', userid_num);
 
   const [file, setFile] = useState<File>();
@@ -36,8 +38,9 @@ function ChallengeInProgress() {
   const { challenge_id } = useParams();
   const tab: string[] = ['나'];
   const tabId: number[] = [userid_num];
-  const UrlGroup: string[][] = [[], [], [], []];
+  const UrlGroup: url[][] = [[], [], [], []];
   const Images: JSX.Element[] = [];
+  const [urls, setUrls] = useState<url[]>([]);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
@@ -72,7 +75,6 @@ function ChallengeInProgress() {
       money: 1000,
     },
   ]);
-  const [urls, setUrls] = useState<url[]>([]);
 
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
 
@@ -97,7 +99,6 @@ function ChallengeInProgress() {
       console.log('aifile >>>>>>', aiFile);
     }
 
-
     await privateApi({
       method: 'post',
       url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
@@ -110,7 +111,7 @@ function ChallengeInProgress() {
       if (res.data.msg) {
         alert(res.data.msg);
       } else {
-        privateApi({
+        axios({
           method: 'put',
           url: res.data,
           data: file,
@@ -158,7 +159,6 @@ function ChallengeInProgress() {
     dispatch(setTotalAuth(totalAuthCount));
     dispatch(setResult(resultArr));
 
-
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
     if (Dday < 0) {
@@ -170,7 +170,6 @@ function ChallengeInProgress() {
     // if(Dday<0){
     //   navigate(`/challengeResult/${challenge_id}`)
     // }
-
   }, [challengeDetail.authentication_end_date]);
 
   // 기본값  '나'는 이미 저장된 값
@@ -185,7 +184,7 @@ function ChallengeInProgress() {
 
   for (let j = 0; j < tabId.length; j++) {
     for (let i = 0; i < urls.length; i++) {
-      Number(urls[i].userid_num) === tabId[j] ? UrlGroup[j].push(urls[i].url) : '';
+      Number(urls[i].userid_num) === tabId[j] ? UrlGroup[j].push(urls[i]) : '';
     }
   }
 
@@ -194,9 +193,9 @@ function ChallengeInProgress() {
       <div key={i} className="grid grid-cols-2 gap-2">
         {UrlGroup[i].map((url, index) => {
           return (
-            <Link key={index} to="/challengeImage/1">
+            <Link key={index} to={`/challengeImage/${challenge_id}/${url.authentication_id}`}>
               <div>
-                <img className="aspect-square w-full rounded-lg object-cover" src={url}></img>
+                <img className="aspect-square w-full rounded-lg object-cover" src={url.url}></img>
               </div>
             </Link>
           );
@@ -213,7 +212,6 @@ function ChallengeInProgress() {
 
       <div className="m-10 flex  justify-between p-1 text-center">
         <div className="flex-col">
-
           <div className="p-2 text-xl font-black">나</div>
           <div className="text-l ">{UrlGroup[0].length}회 성공</div>
         </div>
@@ -225,7 +223,6 @@ function ChallengeInProgress() {
 
         {tab[2] && (
           <div className="flex-col">
-
             <div className="p-2 text-xl font-black">{tab[2]}</div>
             <div className="text-l ">{UrlGroup[2].length}회 성공</div>
           </div>
@@ -233,9 +230,8 @@ function ChallengeInProgress() {
 
         {tab[3] && (
           <div className="flex-col">
-
             <div className="p-2 text-xl font-black">{tab[3]}</div>
-            <div className="text-l font-black">{UrlGroup[3].length}회 성공</div>
+            <div className="text-l">{UrlGroup[3].length}회 성공</div>
           </div>
         )}
       </div>
@@ -269,7 +265,6 @@ function ChallengeInProgress() {
           }} >
       </Cta> */}
       {imgUrl && (
-
         <div className="mx-auto text-center">
           <img src={imgUrl}></img>
           <Button onClick={upload}>업로드</Button>
