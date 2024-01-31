@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
+import { PaymentDTO } from './dto/paymentsDto';
 import { users } from './schema';
 import { db } from 'db/db';
 import { eq, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
+import axios from 'axios';
+import { response } from 'express';
+
+// const got = require('got');
+// import * as got from 'got';
 
 @Injectable()
 export class UserService {
@@ -128,4 +134,69 @@ export class UserService {
       })
       .from(users);
   }
+
+  // 결제
+  // tossUrl = 'https://api.tosspayments.com/v1/payments/';
+  // async successPay(paymentDTO, res) {
+  //   console.log('user service paymentDTO >>>> ', paymentDTO);
+
+  //   const { orderId, amount, paymentKey } = paymentDTO;
+  //   // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
+  //   // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
+  //   const widgetSecretKey = process.env.TOSS_SECRET_KEY;
+  //   const encryptedSecretKey =
+  //     'Basic ' + Buffer.from(widgetSecretKey + ':').toString('base64');
+
+  //   // 결제를 승인하면 결제수단에서 금액이 차감돼요.
+  //   axios
+  //     .post('https://api.tosspayments.com/v1/payments/confirm', {
+  //       headers: {
+  //         Authorization: encryptedSecretKey,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       json: {
+  //         orderId: orderId,
+  //         amount: amount,
+  //         paymentKey: paymentKey,
+  //       },
+  //       responseType: 'json',
+  //     })
+  //     .then(function (response) {
+  //       // 결제 성공 비즈니스 로직을 구현하세요.
+  //       console.log(response);
+  //       // res.status(response.statusCode).json(response.body);
+  //     })
+  //     .catch(function (error) {
+  //       // 결제 실패 비즈니스 로직을 구현하세요.
+  //       console.log(error.response.body);
+  //       // res.status(error.response.statusCode).json(error.response.body);
+  //     });
+  // }
+
+  private readonly tossUrl = 'https://api.tosspayments.com/v1/payments/';
+  private readonly secretKey = process.env.TOSS_SECRET_KEY;
+
+  tossPayment = async (paymentDTO: PaymentDTO) => {
+    // console.log('service > ', response);
+    const { orderId, amount, paymentKey } = paymentDTO;
+    try {
+      const response = await axios.post(
+        `${this.tossUrl}/${paymentKey}`,
+        { orderId, amount },
+        {
+          headers: {
+            Authorization: `Basic ${Buffer.from(`${this.secretKey}:`).toString('base64')}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return {
+        title: '결제 성공',
+        body: response.data,
+        // amount: response.data. totalAmount,
+      };
+    } catch (e) {
+      console.log('토스페이먼츠 에러', e);
+    }
+  };
 }
