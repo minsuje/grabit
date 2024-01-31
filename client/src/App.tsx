@@ -43,9 +43,15 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
-// import PayTest from './page/PayTest';
+import CheckoutPage from './page/CheckoutPage';
+import CheckoutSuccess from './page/CheckoutSuccess';
+import CheckoutFail from './page/CheckoutFail';
+import Payment from './page/Payment';
+import { useState } from 'react';
 
 function App() {
+  const [price, setPrice] = useState<number>(0);
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -98,7 +104,10 @@ function App() {
           </Route>
 
           {/* 테스트 용 */}
-          {/* <Route path="/pay" element={<PayTest />} /> */}
+          <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
+          <Route path="/checkout" element={<CheckoutPage price={price} />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
+          <Route path="/checkout/fail" element={<CheckoutFail />} />
         </Routes>
       </BrowserRouter>
     </div>
