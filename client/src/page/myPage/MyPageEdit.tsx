@@ -27,7 +27,7 @@ export default function MyPageEdit() {
     password: string; // 필수 필드로 정의
     changePassword?: string;
     confirmPassword?: string;
-    file?: any;
+    file?: any | undefined;
   }
 
   // yup 스키마 정의
@@ -49,7 +49,7 @@ export default function MyPageEdit() {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     const { nickname, password: currentPassword, changePassword, confirmPassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
@@ -68,9 +68,10 @@ export default function MyPageEdit() {
       return; // 함수 종료
     }
 
-    await privateApi({
+    await axios({
       method: 'patch',
       url: 'http://localhost:3000/myPage',
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       data: {
         filename: file?.name,
         type: file?.type,
@@ -79,6 +80,7 @@ export default function MyPageEdit() {
         changePassword,
       },
     }).then((res) => {
+      console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
       console.log('patch res.data', res.data.file);
       axios({
@@ -113,7 +115,6 @@ export default function MyPageEdit() {
     setNickName(e.target.value);
   };
 
-  console.log('프로필 이미지>>>>>>??이거임?', proFileImg);
   return (
     <div>
       {/* <input type="file" onChange={handleChange} />
