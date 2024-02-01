@@ -23,7 +23,6 @@ export class DailyMissionController {
   @Get('/dailyMission')
   async GetDaily(@Req() req: Request, @Res() res: Response) {
     const userInfo = req.headers['authorization'].split(' ')[1];
-    console.log('controller userInfo >>>', userInfo);
 
     if (userInfo.length == 0) {
       return res.send(false);
@@ -34,7 +33,6 @@ export class DailyMissionController {
     });
 
     const { userid_num } = decodedUserInfo;
-    // const userid_num = 4;
     const isSuccess =
       await this.dailyMissionService.getDailyMission(userid_num);
     return res.send(isSuccess);

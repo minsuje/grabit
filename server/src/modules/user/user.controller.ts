@@ -125,17 +125,13 @@ export class UserController {
   @Get('/myRanking')
   async getMyRank(@Req() req: Request, @Res() res: Response) {
     const myInfo = req.headers['authorization'].split(' ')[1];
-    console.log('🚀 ~ getMyRank ~ myInfo:', myInfo);
 
     const decodedUserInfo = await this.jwtService.verify(myInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
-    console.log('🚀 ~ getMyRank ~ decodedUserInfo:', decodedUserInfo);
 
     const userid_num = decodedUserInfo.userid_num;
-    console.log('🚀 ~ getMyRank ~ userid_num:', userid_num);
     const rank = await this.userService.myRank(userid_num);
-    console.log('🚀 ~ getMyRank ~ rank:', rank);
 
     return res.send(String(rank));
   }
