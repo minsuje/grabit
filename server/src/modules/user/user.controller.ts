@@ -117,11 +117,8 @@ export class UserController {
   @Get('/ranking')
   async getRank(@Res() res: Response, @Req() req: Request) {
     console.log('현재 랭킹');
-    await this.userService.rank();
-
-    return res.send({
-      mes: '랭킹 전송',
-    });
+    const rank = await this.userService.rank();
+    return res.send(rank);
   }
 
   @UseGuards(JwtService)
@@ -133,10 +130,8 @@ export class UserController {
     });
 
     const userid_num = decodedUserInfo.userid_num;
-    await this.userService.myRank(userid_num);
+    const rank = await this.userService.myRank(userid_num);
 
-    return res.send({
-      mes: '내 랭킹 전송',
-    });
+    return res.send(rank);
   }
 }
