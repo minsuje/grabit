@@ -4,7 +4,7 @@ export class ChallengeDto {
   challenge_name: string;
   is_public: boolean;
   topic: string;
-  challenger_userid_num?: number[];
+  challenger_userid_num?: object[];
   goal_money: number;
   term: number;
   winner_userid_num?: number[];

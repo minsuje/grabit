@@ -29,11 +29,19 @@ export class ChallengeService {
       authentication_end_time,
     } = body;
 
+    let challengers = [];
+    for (let i = 0; i < challenger_userid_num.length; i++) {
+      challengers.push({
+        userid_num: challenger_userid_num[i],
+        isAccept: false,
+      });
+    }
+
     return await db.insert(challenge).values({
       challenge_name,
       is_public,
       topic,
-      challenger_userid_num,
+      challenger_userid_num: challengers,
       goal_money,
       term,
       authentication_start_date: new Date(authentication_start_date),
@@ -45,103 +53,95 @@ export class ChallengeService {
 
   // 챌린지 목록
   challengeList = async () => {
-    const today = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
-    const challengeAll = await db.select().from(challenge);
-    let myChallenge = [];
-    for (let i = 0; i < challengeAll.length; i++) {
-      if (challengeAll[i].challenger_userid_num.includes(3))
-        // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
-        myChallenge.push(challengeAll[i]);
-    }
-    // 참여중인 챌린지
-    let ingMyChallenge = [];
-    for (let i = 0; i < myChallenge.length; i++) {
-      if (
-        isBefore(myChallenge[i].authentication_start_date, new Date()) &&
-        isAfter(myChallenge[i].authentication_end_date, new Date())
-      ) {
-        ingMyChallenge.push(myChallenge[i]);
-      }
-    }
-    // 참가 예정 챌린지
-    let preMyChallenge = [];
-    for (let i = 0; i < myChallenge.length; i++) {
-      if (isAfter(myChallenge[i].authentication_start_date, new Date())) {
-        preMyChallenge.push(myChallenge[i]);
-      }
-    }
-
-    // 열려있는 챌린지
-    const publicChallengeAll = await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.is_public, true));
-    let publicChallenge = [];
-    for (let i = 0; i < publicChallengeAll.length; i++) {
-      if (!publicChallengeAll[i].challenger_userid_num.includes(3))
-        // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
-        publicChallenge.push(publicChallengeAll[i]);
-    }
-    let prePublicChallenge = [];
-    for (let i = 0; i < publicChallenge.length; i++) {
-      if (isAfter(publicChallenge[i].authentication_start_date, new Date())) {
-        prePublicChallenge.push(publicChallenge[i]);
-      }
-    }
-    return { ingMyChallenge, preMyChallenge, prePublicChallenge };
-  };
-
-  // 인기 있는 챌린지 주제
-  getPopularChallenge = async () => {
-    const topics = await db.select({ topic: challenge.topic }).from(challenge);
-
-    let topicCounts = [
-      { name: '운동', count: 0 },
-      { name: '셀프케어', count: 0 },
-      { name: '독서', count: 0 },
-      { name: '학습', count: 0 },
-      { name: '취미', count: 0 },
-      { name: '생활습관', count: 0 },
-      { name: '저축', count: 0 },
-    ];
-
-    for (let i = 0; i < topics.length; i++) {
-      if (topics[i].topic === '운동') topicCounts[0].count++;
-      else if (topics[i].topic === '셀프케어') topicCounts[1].count++;
-      else if (topics[i].topic === '독서') topicCounts[2].count++;
-      else if (topics[i].topic === '학습') topicCounts[3].count++;
-      else if (topics[i].topic === '취미') topicCounts[4].count++;
-      else if (topics[i].topic === '생활습관') topicCounts[5].count++;
-      else if (topics[i].topic === '저축') topicCounts[6].count++;
-    }
-
-    // count 기준으로 내림차순 정렬
-    topicCounts.sort((a, b) => b.count - a.count);
-
-    const popularTopic = topicCounts.slice(0, 3);
-    const popularTopics = popularTopic.map((topic) => topic.name);
-    console.log('s3middleware service popularTopics', popularTopics);
-
-    const top1 = await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.topic, popularTopics[0]))
-      .orderBy(desc(challenge.created_at))
-      .limit(3);
-    const top2 = await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.topic, popularTopics[1]))
-      .orderBy(desc(challenge.created_at))
-      .limit(3);
-    const top3 = await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.topic, popularTopics[2]))
-      .orderBy(desc(challenge.created_at))
-      .limit(3);
-
-    return { popularTopics, top1, top2, top3 };
+    //   const today = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
+    //   const challengeAll = await db.select().from(challenge);
+    //   let myChallenge = [];
+    //   for (let i = 0; i < challengeAll.length; i++) {
+    //     if (challengeAll[i].challenger_userid_num.includes(3))
+    //       // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
+    //       myChallenge.push(challengeAll[i]);
+    //   }
+    //   // 참여중인 챌린지
+    //   let ingMyChallenge = [];
+    //   for (let i = 0; i < myChallenge.length; i++) {
+    //     if (
+    //       isBefore(myChallenge[i].authentication_start_date, new Date()) &&
+    //       isAfter(myChallenge[i].authentication_end_date, new Date())
+    //     ) {
+    //       ingMyChallenge.push(myChallenge[i]);
+    //     }
+    //   }
+    //   // 참가 예정 챌린지
+    //   let preMyChallenge = [];
+    //   for (let i = 0; i < myChallenge.length; i++) {
+    //     if (isAfter(myChallenge[i].authentication_start_date, new Date())) {
+    //       preMyChallenge.push(myChallenge[i]);
+    //     }
+    //   }
+    //   // 열려있는 챌린지
+    //   const publicChallengeAll = await db
+    //     .select()
+    //     .from(challenge)
+    //     .where(eq(challenge.is_public, true));
+    //   let publicChallenge = [];
+    //   for (let i = 0; i < publicChallengeAll.length; i++) {
+    //     if (!publicChallengeAll[i].challenger_userid_num.includes(3))
+    //       // 3 대신 JWT에서 찾아온 userid_num 값 넣어줘야 함
+    //       publicChallenge.push(publicChallengeAll[i]);
+    //   }
+    //   let prePublicChallenge = [];
+    //   for (let i = 0; i < publicChallenge.length; i++) {
+    //     if (isAfter(publicChallenge[i].authentication_start_date, new Date())) {
+    //       prePublicChallenge.push(publicChallenge[i]);
+    //     }
+    //   }
+    //   return { ingMyChallenge, preMyChallenge, prePublicChallenge };
+    // };
+    // // 인기 있는 챌린지 주제
+    // getPopularChallenge = async () => {
+    //   const topics = await db.select({ topic: challenge.topic }).from(challenge);
+    //   let topicCounts = [
+    //     { name: '운동', count: 0 },
+    //     { name: '셀프케어', count: 0 },
+    //     { name: '독서', count: 0 },
+    //     { name: '학습', count: 0 },
+    //     { name: '취미', count: 0 },
+    //     { name: '생활습관', count: 0 },
+    //     { name: '저축', count: 0 },
+    //   ];
+    //   for (let i = 0; i < topics.length; i++) {
+    //     if (topics[i].topic === '운동') topicCounts[0].count++;
+    //     else if (topics[i].topic === '셀프케어') topicCounts[1].count++;
+    //     else if (topics[i].topic === '독서') topicCounts[2].count++;
+    //     else if (topics[i].topic === '학습') topicCounts[3].count++;
+    //     else if (topics[i].topic === '취미') topicCounts[4].count++;
+    //     else if (topics[i].topic === '생활습관') topicCounts[5].count++;
+    //     else if (topics[i].topic === '저축') topicCounts[6].count++;
+    //   }
+    //   // count 기준으로 내림차순 정렬
+    //   topicCounts.sort((a, b) => b.count - a.count);
+    //   const popularTopic = topicCounts.slice(0, 3);
+    //   const popularTopics = popularTopic.map((topic) => topic.name);
+    //   console.log('s3middleware service popularTopics', popularTopics);
+    //   const top1 = await db
+    //     .select()
+    //     .from(challenge)
+    //     .where(eq(challenge.topic, popularTopics[0]))
+    //     .orderBy(desc(challenge.created_at))
+    //     .limit(3);
+    //   const top2 = await db
+    //     .select()
+    //     .from(challenge)
+    //     .where(eq(challenge.topic, popularTopics[1]))
+    //     .orderBy(desc(challenge.created_at))
+    //     .limit(3);
+    //   const top3 = await db
+    //     .select()
+    //     .from(challenge)
+    //     .where(eq(challenge.topic, popularTopics[2]))
+    //     .orderBy(desc(challenge.created_at))
+    //     .limit(3);
+    //   return { popularTopics, top1, top2, top3 };
   };
 
   // 챌린지 상세 정보 보기
@@ -151,25 +151,31 @@ export class ChallengeService {
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
 
-    if (challengeDetail.length !== 0) {
-      let challengers = [];
-      for (
-        let i = 0;
-        i < challengeDetail[0].challenger_userid_num.length;
-        i++
-      ) {
-        let challenger = await db
-          .select()
-          .from(users)
-          .where(
-            eq(users.userid_num, challengeDetail[0].challenger_userid_num[i]),
-          );
+    console.log('service challengeDetail > ', challengeDetail);
 
-        await challengers.push(challenger[0]);
-      }
+    // if (challengeDetail.length !== 0) {
+    //   let challengers = [];
+    //   for (
+    //     let i = 0;
+    //     i < challengeDetail[0].challenger_userid_num.length;
+    //     i++
+    //   ) {
+    //     let challenger = await db
+    //       .select()
+    //       .from(users)
+    //       .where(
+    //         eq(
+    //           users.userid_num,
+    //           challengeDetail[0].challenger_userid_num[i].userid_num,
+    //         ),
+    //       );
 
-      return { challengeDetail, challengers, urls };
-    } else return { msg: '존재하지 않는 챌린지입니다.' };
+    //     await challengers.push(challenger[0]);
+    //   }
+
+    //   return { challengeDetail, challengers, urls };
+    // } else return { msg: '존재하지 않는 챌린지입니다.' };
+    return 'dd';
   };
 
   // 챌린지 수정 페이지 보기
@@ -307,41 +313,38 @@ export class ChallengeService {
   // 챌린지 히스토리 조회
   getChallengeHistory = async (userid_num: number) => {
     // console.log('history service > ', userid_num);
-    const myChallenge = await db
-      .select()
-      .from(challenge)
-      .where(arrayOverlaps(challenge.challenger_userid_num, [userid_num]));
-
-    let history = [];
-    let today = new Date()
-      .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
-      .split(',')[0];
-    for (let i = 0; i < myChallenge.length; i++) {
-      if (
-        isAfter(
-          today,
-          myChallenge[i].authentication_end_date
-            .toLocaleString('en-US', {
-              timeZone: 'Asia/Seoul',
-            })
-            .split(',')[0],
-        )
-      )
-        history.push(myChallenge[i]);
-    }
-    let win = 0, // 승리 횟수
-      lose = 0; // 패배 횟수
-    const total = history.length; // 총 챌린지 횟수
-
-    for (let i = 0; i < history.length; i++) {
-      if (
-        history[i].winner_userid_num !== null &&
-        history[i].winner_userid_num.includes(Number(userid_num))
-      )
-        win++;
-      else lose++;
-    }
-
-    return { history, total, win, lose };
+    // const myChallenge = await db
+    //   .select()
+    //   .from(challenge)
+    //   .where(arrayOverlaps(challenge.challenger_userid_num, [userid_num]));
+    // let history = [];
+    // let today = new Date()
+    //   .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
+    //   .split(',')[0];
+    // for (let i = 0; i < myChallenge.length; i++) {
+    //   if (
+    //     isAfter(
+    //       today,
+    //       myChallenge[i].authentication_end_date
+    //         .toLocaleString('en-US', {
+    //           timeZone: 'Asia/Seoul',
+    //         })
+    //         .split(',')[0],
+    //     )
+    //   )
+    //     history.push(myChallenge[i]);
+    // }
+    // let win = 0, // 승리 횟수
+    //   lose = 0; // 패배 횟수
+    // const total = history.length; // 총 챌린지 횟수
+    // for (let i = 0; i < history.length; i++) {
+    //   if (
+    //     history[i].winner_userid_num !== null &&
+    //     history[i].winner_userid_num.includes(Number(userid_num))
+    //   )
+    //     win++;
+    //   else lose++;
+    // }
+    // return { history, total, win, lose };
   };
 }

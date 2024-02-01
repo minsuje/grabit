@@ -166,44 +166,6 @@ export class UserService {
       .from(users);
   }
 
-  // 결제
-  // tossUrl = 'https://api.tosspayments.com/v1/payments/';
-  // async successPay(paymentDTO, res) {
-  //   console.log('user service paymentDTO >>>> ', paymentDTO);
-
-  //   const { orderId, amount, paymentKey } = paymentDTO;
-  //   // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
-  //   // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-  //   const widgetSecretKey = process.env.TOSS_SECRET_KEY;
-  //   const encryptedSecretKey =
-  //     'Basic ' + Buffer.from(widgetSecretKey + ':').toString('base64');
-
-  //   // 결제를 승인하면 결제수단에서 금액이 차감돼요.
-  //   axios
-  //     .post('https://api.tosspayments.com/v1/payments/confirm', {
-  //       headers: {
-  //         Authorization: encryptedSecretKey,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       json: {
-  //         orderId: orderId,
-  //         amount: amount,
-  //         paymentKey: paymentKey,
-  //       },
-  //       responseType: 'json',
-  //     })
-  //     .then(function (response) {
-  //       // 결제 성공 비즈니스 로직을 구현하세요.
-  //       console.log(response);
-  //       // res.status(response.statusCode).json(response.body);
-  //     })
-  //     .catch(function (error) {
-  //       // 결제 실패 비즈니스 로직을 구현하세요.
-  //       console.log(error.response.body);
-  //       // res.status(error.response.statusCode).json(error.response.body);
-  //     });
-  // }
-
   private readonly tossUrl = 'https://api.tosspayments.com/v1/payments/';
   private readonly secretKey = process.env.TOSS_SECRET_KEY;
 

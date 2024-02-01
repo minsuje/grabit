@@ -1,3 +1,4 @@
+import axios from '@/api/axios';
 import { useSearchParams } from 'react-router-dom';
 
 export default async function CheckoutSuccess() {
@@ -14,8 +15,11 @@ export default async function CheckoutSuccess() {
   //     amount: searchParams.get('amount'),
   //   }),
   // });
-  // console.log('response >>>> ', response);
-
+  console.log('checkout success page?');
+  const response = await axios({
+    method: 'get',
+  });
+  console.log('response  >>>>>>', response);
   return (
     <div>
       <h1>결제 성공</h1>
