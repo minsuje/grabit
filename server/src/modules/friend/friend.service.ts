@@ -6,6 +6,7 @@ import { friend } from './schema';
 import { eq, not, and, or } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
 import { users } from '../user/schema';
+import { notification } from '../notification/schema';
 
 @Injectable()
 export class FriendService {
@@ -36,7 +37,6 @@ export class FriendService {
 
   //# 유저 친구 추가
   async create(createFriendDto: CreateFriendDto, userid: number) {
-    // console.log(createFriendDto, userid);
     const { other_userid_num, is_friend } = createFriendDto;
 
     if (other_userid_num == userid)
@@ -59,14 +59,22 @@ export class FriendService {
         ),
       );
 
-    console.log('result', result);
-
     if (result.length < 1) {
-      return await db.insert(friend).values({
-        userid_num: userid,
-        other_userid_num: other_userid_num,
-        is_friend,
+      const newFriendRequest = await db
+        .insert(friend)
+        .values({
+          userid_num: userid,
+          other_userid_num: other_userid_num,
+          is_friend,
+        })
+        .returning();
+      await db.insert(notification).values({
+        userid_num: other_userid_num,
+        reference_id: newFriendRequest[0].friend_id,
+        type: 'friend_request',
+        is_confirm: false,
       });
+      return { msg: '친구 신청이 완료되었습니다' };
     } else {
       if (result[0].is_friend === true) return { msg: '이미 친구입니다' };
       else return { msg: '이미 전송된 친구 요청입니다' };

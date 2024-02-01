@@ -9,7 +9,7 @@ import {
 import { users } from '../user/schema';
 
 export const notification = pgTable('notification', {
-  notification_id: serial('notification_id').notNull(),
+  notification_id: serial('notification_id'),
   userid_num: integer('userid_num')
     .notNull()
     .references(() => users.userid_num, { onDelete: 'cascade' }),
@@ -17,7 +17,7 @@ export const notification = pgTable('notification', {
   type: varchar('type', { length: 20 }).notNull(),
   message: varchar('message', { length: 300 }),
   is_confirm: boolean('is_confirm').notNull(),
-  created_at: timestamp('created_at', { withTimezone: true })
-    .default(new Date())
-    .notNull(),
+  created_at: timestamp('created_at', { withTimezone: true }).default(
+    new Date(),
+  ),
 });
