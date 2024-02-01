@@ -78,7 +78,7 @@ export default function MyPage() {
       })
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
-        console.log('res>>>>>>', userInfo);
+        console.log('response>>>>>>', response);
         setNickName(userInfo.nickname);
         setScoreNum(userInfo.score_num);
         setMoney(userInfo.money);
