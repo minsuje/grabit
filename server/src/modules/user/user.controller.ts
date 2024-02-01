@@ -8,6 +8,7 @@ import {
   Redirect,
   Res,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
@@ -16,6 +17,7 @@ import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { REPLCommand } from 'repl';
 
+@UseGuards(JwtService)
 @Controller('/')
 export class UserController {
   constructor(
@@ -23,6 +25,7 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
+  @UseGuards(JwtService)
   @Post('/register/:type')
   createUserDto(
     @Param('type') login_type: string,
@@ -32,6 +35,7 @@ export class UserController {
     return this.userService.createNewUser(login_type, createUserDto);
   }
 
+  @UseGuards(JwtService)
   @Post('/profileUpload/:type')
   postProfileUpload(
     @Param('type') login_type: string,
@@ -47,9 +51,10 @@ export class UserController {
   // 마이페이지 조회
   // @Get('/myPage/:userid_num')
   // getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
+  @UseGuards(JwtService)
   @Get('/myPage')
-  async getMyPage(@Req() req) {
-    const userInfo = req.headers['authorization'].split(' ')[1];
+  async getMyPage(@Req() req, @Req() request: Request) {
+    const userInfo = request.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
@@ -61,14 +66,14 @@ export class UserController {
 
   // 마이페이지 수정
   @Patch('/myPage')
-  async patchMyPage(@Body() body: any, @Req() req) {
+  async patchMyPage(@Body() body: any, @Req() req: Request) {
     const userInfo = req.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    const file = req.file;
-    return this.userService.patchMyPage(userid_num, file, body);
+    // const file = req.file;
+    // return this.userService.patchMyPage(userid_num, file, body);
   }
 
   @Get('score/:userid')
@@ -77,6 +82,7 @@ export class UserController {
   }
 
   //결제페이지
+  @UseGuards(JwtService)
   @Get('/checkout/success')
   success(@Req() req: Request, @Res() res: Response) {
     console.log('controller success');
@@ -87,6 +93,7 @@ export class UserController {
     // Redirect('/checkout/success');
   }
 
+  @UseGuards(JwtService)
   @Post('/checkout')
   tossPayment(@Body() paymentDTO: PaymentDTO, @Req() req: Request) {
     // console.log('post service url > ', req);
@@ -105,6 +112,22 @@ export class UserController {
   //   return;
   // }
 
-  //   @Get('/ranking')
-  //   async getUserRank(@Res() res:Response, @Req() req:Request)
+  @UseGuards(JwtService)
+  @Get('/ranking')
+  async getRank(@Res() res: Response, @Req() req: Request) {
+    console.log('현재 랭킹');
+    return this.userService.rank();
+  }
+
+  @UseGuards(JwtService)
+  @Get('/myRanking')
+  async getMyRank(@Req() req: Request) {
+    const myInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(myInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const userid_num = decodedUserInfo.userid_num;
+    this.userService.myRank(userid_num);
+  }
 }
