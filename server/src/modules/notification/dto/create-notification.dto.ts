@@ -3,5 +3,6 @@ export class CreateNotificationDto {
   userid_num: number;
   reference_id: number;
   type: string;
-  is_confirm: string;
+  message?: string;
+  is_confirm: boolean;
 }
