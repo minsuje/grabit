@@ -49,7 +49,6 @@ export default function Main() {
       });
   }
 
-
   const [userid_num, setUserid_num] = useState<number>(0);
 
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
@@ -57,7 +56,6 @@ export default function Main() {
   const [completed, setCompleted] = useState<string>('none');
 
   useEffect(() => {
-
     setUserid_num(Number(localStorage.getItem('userid_num')));
     console.log('userid >>>>>>>>>>>', userid_num);
 
@@ -94,7 +92,6 @@ export default function Main() {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
 
-
   return (
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
@@ -121,8 +118,6 @@ export default function Main() {
           <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
             <div className="flex justify-between">
               <p>{dailymission}</p>
-              <p>{completed}</p>
-
               <p>오늘 미션 완료!!</p>
             </div>
             <p>10P</p>
