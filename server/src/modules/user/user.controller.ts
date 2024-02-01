@@ -8,6 +8,7 @@ import {
   Redirect,
   Res,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
@@ -60,6 +61,7 @@ export class UserController {
   }
 
   // 마이페이지 수정
+  @UseGuards(JwtService)
   @Patch('/myPage')
   async patchMyPage(@Body() body: any, @Req() req) {
     const userInfo = req.headers['authorization'].split(' ')[1];

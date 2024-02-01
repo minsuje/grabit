@@ -10,6 +10,7 @@ import { response } from 'express';
 
 // const got = require('got');
 // import * as got from 'got';
+// import { type } from '../../../../client/src/store/store';
 
 @Injectable()
 export class UserService {
@@ -80,7 +81,8 @@ export class UserService {
 
   // 프로필 수정
   patchMyPage = async (userid_num: number, file: string, body: any) => {
-    const { nickname, profile_img, currentPassword, changePassword } = body;
+    const { nickname, currentPassword, changePassword } = body;
+    console.log('file >>>> ', file);
     const filename = file.split('/')[3].split('?')[0];
     let isUser = false;
     const myDbPassword = await db
@@ -94,25 +96,30 @@ export class UserService {
       myPassword.password,
     );
 
-    // console.log('user service checkPassword >>', checkPassword);
+    console.log('user service checkPassword >>', checkPassword);
+    console.log('user service profile_img', file);
+    // console.log('user service profile_img', profile_img);
 
     if (checkPassword) {
       // 비밀번호 O, 이미지 O
       if (changePassword) {
+        console.log('비밀번호 O, 이미지 O');
         const newPassword = await bcrypt.hash(changePassword, 10);
         const userInfo = await db
           .update(users)
           .set({
             password: newPassword,
             nickname: nickname,
-            profile_img: filename,
+            profile_img: file,
           })
           .where(eq(users.userid_num, userid_num));
 
         isUser = true;
         return { userInfo, file, isUser };
-      } else if (changePassword.length !== 0 && profile_img.length == 0) {
+      } else if (changePassword.length !== 0 && file.length == 0) {
         // 비밀번호 O, 프로필 이미지 X
+        console.log('비밀번호 O, 이미지 X');
+
         const newPassword = await bcrypt.hash(changePassword, 10);
         const userInfo = await db
           .update(users)
@@ -120,19 +127,23 @@ export class UserService {
           .where(eq(users.userid_num, userid_num));
         isUser = true;
         return { userInfo, file, isUser };
-      } else if (changePassword.length == 0 && profile_img.length !== 0) {
+      } else if (changePassword.length == 0 && file.length !== 0) {
         // 비밀번호 X, 프로필 이미지 O
+        console.log('비밀번호 X, 이미지 O');
+
         const userInfo = await db
           .update(users)
           .set({
             nickname: nickname,
-            profile_img: filename,
+            profile_img: file,
           })
           .where(eq(users.userid_num, userid_num));
         isUser = true;
         return { userInfo, file, isUser };
       } else {
         // 비밀번호 X, 프로필 X
+        console.log('비밀번호 x, 이미지 x');
+
         const userInfo = await db
           .update(users)
           .set({

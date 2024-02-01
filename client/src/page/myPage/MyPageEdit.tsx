@@ -23,9 +23,9 @@ export default function MyPageEdit() {
   const { userid_num } = useParams();
   // FormData 인터페이스 정의
   interface FormData {
-    nickname: string;
-    password: string;
-    changePassword: string;
+    nickname?: string | null;
+    password: string; // 필수 필드로 정의
+    changePassword?: string;
     confirmPassword?: string;
     file?: any;
   }
@@ -33,31 +33,40 @@ export default function MyPageEdit() {
   // yup 스키마 정의
   const schema = yup
     .object({
-      nickname: yup
-        .string()
-        .required('닉네임은 필수입니다.')
-        .min(2, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
-        .max(10, '닉네임은 2글자 이상 10글자 이하로 작성해주세요.')
-        .matches(/^[A-Za-z0-9가-힣]{2,12}$/, '닉네임은 영어, 한글, 포함하여 작성해주세요.'),
+      nickname: yup?.string().nullable(),
 
       password: yup.string().required('현재 비밀번호는 필수입니다.'),
-      changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
-      confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
+      // changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
+      // confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
     })
     .required();
 
   // useForm 사용
-
   const {
     register,
     handleSubmit,
+    watch,
+    setError,
+    clearErrors,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: yupResolver(schema),
-  });
+  } = useForm();
 
   const onSubmit = async (data: FormData) => {
-    const { nickname, password: currentPassword, changePassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
+    const { nickname, password: currentPassword, changePassword, confirmPassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
+
+    if (changePassword && changePassword !== confirmPassword) {
+      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+      return; // 비밀번호 불일치시 함수 종료
+    }
+    // 비밀번호 변경을 원하는 경우 검증
+    if (changePassword && changePassword !== confirmPassword) {
+      // 비밀번호와 비밀번호 확인이 일치하지 않으면 오류 설정
+      setError('confirmPassword', {
+        type: 'manual',
+        message: '비밀번호가 일치하지 않습니다.',
+      });
+      return; // 함수 종료
+    }
 
     await privateApi({
       method: 'patch',
@@ -79,7 +88,7 @@ export default function MyPageEdit() {
           'Content-Type': file?.type,
         },
       }).then((res) => {
-        console.log(res);
+        console.log('>>>>', res);
         Navigate(`/myPage/${userid_num}`);
       });
     });
@@ -90,7 +99,7 @@ export default function MyPageEdit() {
     privateApi
       .get(`http://localhost:3000/myPage`)
       .then((response) => {
-        console.log('>>>>', response.data.userInfo[0].nickname);
+        console.log('>>>>', response.data.userInfo[0]);
         setNickName(response.data.userInfo[0].nickname);
         setProFileImg(response.data.file);
       })
@@ -139,7 +148,7 @@ export default function MyPageEdit() {
             <span className="text-xs text-red-500">*</span> 닉네임
           </Label>
           <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} value={nickName} />
-          {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
+          {/* {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>} */}
         </div>
         <div>
           <Label htmlFor="password">
@@ -147,7 +156,7 @@ export default function MyPageEdit() {
             현재 비밀번호
           </Label>
           <Input id="password" type="password" {...register('password')} />
-          {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+          {/* {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>} */}
           {passwordErr && <p className="text-xs text-red-500">{passwordErr}</p>}
         </div>
         <div>
@@ -158,7 +167,7 @@ export default function MyPageEdit() {
         <div>
           <Label htmlFor="confirmPassword">비밀번호확인</Label>
           <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
-          {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
+          {/* {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>} */}
         </div>
       </form>
     </div>
