@@ -169,6 +169,31 @@ export class UserService {
         return { msg: '비밀번호를 다시 한번 확인해 주세요', isUser };
       }
     }
+
+    if (login_type === 'kakao') {
+      if (file.length !== 0) {
+        console.log('이미지 O');
+        const userInfo = await db
+          .update(users)
+          .set({
+            nickname: nickname,
+            profile_img: filename,
+          })
+          .where(eq(users.userid_num, userid_num));
+        isUser = true;
+        return { userInfo, file, isUser };
+      } else {
+        console.log('이미지 X');
+        const userInfo = await db
+          .update(users)
+          .set({
+            nickname: nickname,
+          })
+          .where(eq(users.userid_num, userid_num));
+        isUser = true;
+        return { userInfo, file, isUser };
+      }
+    }
   };
 
   async getScore(userid: number) {
