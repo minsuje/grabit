@@ -76,6 +76,8 @@ export class UserService {
       })
       .from(users)
       .where(eq(users.userid_num, userid_num));
+    console.log('getMyPage service userInfo > ', userInfo);
+    console.log('getMyPage service file > ', file);
     return { userInfo, file };
   };
 
@@ -110,7 +112,7 @@ export class UserService {
           .set({
             password: newPassword,
             nickname: nickname,
-            profile_img: file,
+            profile_img: filename,
           })
           .where(eq(users.userid_num, userid_num));
 
@@ -135,7 +137,7 @@ export class UserService {
           .update(users)
           .set({
             nickname: nickname,
-            profile_img: file,
+            profile_img: filename,
           })
           .where(eq(users.userid_num, userid_num));
         isUser = true;
