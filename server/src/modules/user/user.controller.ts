@@ -116,18 +116,26 @@ export class UserController {
   @Get('/ranking')
   async getRank(@Res() res: Response, @Req() req: Request) {
     console.log('현재 랭킹');
-    return this.userService.rank();
+    await this.userService.rank();
+
+    return res.send({
+      mes: '랭킹 전송',
+    });
   }
 
   @UseGuards(JwtService)
   @Get('/myRanking')
-  async getMyRank(@Req() req: Request) {
+  async getMyRank(@Req() req: Request, @Res() res: Response) {
     const myInfo = req.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(myInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
 
     const userid_num = decodedUserInfo.userid_num;
-    this.userService.myRank(userid_num);
+    await this.userService.myRank(userid_num);
+
+    return res.send({
+      mes: '내 랭킹 전송',
+    });
   }
 }

@@ -230,7 +230,7 @@ export class UserService {
       })
       .from(users)
       .orderBy(desc(users.score_num))
-      .limit(10);
+      .limit(3);
 
     console.log('topRank >>>> ', topRank);
 
