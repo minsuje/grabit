@@ -9,7 +9,8 @@ import { users } from '../user/schema';
 import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
 import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
-import { isBefore, isAfter } from 'date-fns';
+import { isBefore, isAfter, addHours, addMonths } from 'date-fns';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class ChallengeService {
@@ -554,4 +555,36 @@ export class ChallengeService {
     console.log('history >> ', history);
     return { history, total, win, lose };
   };
+
+  // challenge 테이블에서 challenger_userid_num.length가 0이면서 authentication_start_date로 부터 30일 지났으면 삭제
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleCron() {
+    const everyChallenge = await db.select().from(challenge);
+    console.log('everyChallenge', everyChallenge);
+
+    const dateNow = addHours(new Date(), 9);
+
+    for (let i = 0; i < everyChallenge.length; i++) {
+      const time = everyChallenge[i].authentication_start_date
+        .toLocaleString('en-US', {
+          timeZone: 'Asia/Seoul',
+        })
+        .split(', ')[0];
+
+      const month = Number(time.split('/')[0]);
+      const day = Number(time.split('/')[1]);
+      const year = Number(time.split('/')[2]);
+
+      const timeNow = addMonths(new Date(year, month - 1, day), 1);
+      console.log(`timeNow${i} >>> `, timeNow);
+      console.log('dateNow >>> ', dateNow);
+
+      if (dateNow === timeNow || dateNow > timeNow) {
+        await db
+          .delete(challenge)
+          .where(eq(challenge.challenge_id, everyChallenge[i].challenge_id));
+      }
+    }
+    console.log('30일이 지난 챌린지 삭제');
+  }
 }
