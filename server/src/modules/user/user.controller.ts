@@ -59,7 +59,7 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    console.log('myPage controller userid_num > ', userid_num);
+
     // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
     return this.userService.getMyPage(userid_num, file);
@@ -74,8 +74,9 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
+    const login_type = decodedUserInfo.login_type;
     const file = req.file;
-    return this.userService.patchMyPage(userid_num, file, body);
+    return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 
   @Get('score/:userid')
