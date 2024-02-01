@@ -76,7 +76,7 @@ export class NotificationService {
 
         const timenow = addMonths(new Date(year, month, day), 1);
 
-        if (dateNow === timenow) {
+        if (dateNow === timenow || dateNow > timenow) {
           await db
             .delete(notification)
             .where(
