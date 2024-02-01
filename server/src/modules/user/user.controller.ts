@@ -55,6 +55,7 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
+    console.log('myPage controller userid_num > ', userid_num);
     // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
     return this.userService.getMyPage(userid_num, file);

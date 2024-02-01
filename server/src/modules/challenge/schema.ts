@@ -27,6 +27,7 @@ export const challenge = pgTable('challenge', {
   challenge_name: varchar('challenge_name', { length: 200 }).notNull(),
   is_public: boolean('is_public').notNull().default(false),
   topic: varchar('topic', { length: 50 }).notNull(),
+  auth_keyword: varchar('auth_keyword').notNull(),
   challenger_userid_num: jsonb('challenger_userid_num')
     .$type<MyObjectType[]>()
     .notNull(),
@@ -59,7 +60,6 @@ export const authentication = pgTable('authentication', {
     () => challenge.challenge_id,
     { onDelete: 'cascade', onUpdate: 'cascade' },
   ),
-  authentication_keyword: varchar('authentication_keyword').notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

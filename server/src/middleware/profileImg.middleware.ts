@@ -31,19 +31,24 @@ export class profileImgMiddleware implements NestMiddleware {
     });
 
     console.log('profileImg middleware originalUrl > ', req.originalUrl);
-    console.log('headers > ', req.headers['authorization']);
+
+    let userInfo: string, decodedUserInfo: any, userid_num: number;
+
+    // 로그인한 유저의 userid_num 찾아오기
+    if (req.headers['authorization']) {
+      userInfo = req.headers['authorization'].split(' ')[1];
+      decodedUserInfo = await this.jwtService.verify(userInfo, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+      userid_num = decodedUserInfo.userid_num;
+    }
+    console.log('userid_num > ', userid_num);
 
     // '/friend/detail' 경로로 요청 온 경우
     if (
       'friend/detail' ===
       `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}`
     ) {
-      // 로그인한 유저의 userid_num 찾아오기
-      const userInfo = req.headers['authorization'].split(' ')[1];
-      const decodedUserInfo = await this.jwtService.verify(userInfo, {
-        secret: process.env.JWT_SECRET_KEY,
-      });
-      const userid_num = decodedUserInfo.userid_num;
       console.log('friend/detail 요청 옴');
       let friend = await db
         .select({
@@ -66,12 +71,6 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
-      // 로그인한 유저의 userid_num 찾아오기
-      const userInfo = req.headers['authorization'].split(' ')[1];
-      const decodedUserInfo = await this.jwtService.verify(userInfo, {
-        secret: process.env.JWT_SECRET_KEY,
-      });
-      const userid_num = decodedUserInfo.userid_num;
       console.log('else if /friend', req.baseUrl.split('/')[1]);
       let friends = [];
       // 양방향으로 친구 관계 확인
@@ -136,14 +135,8 @@ export class profileImgMiddleware implements NestMiddleware {
         req.url.split('/')[1] === 'normal' ||
         req.originalUrl.split('/')[1] === 'myPage' // myPage 조회
       ) {
-        // 로그인한 유저의 userid_num 찾아오기
-        const userInfo = req.headers['authorization'].split(' ')[1];
-        const decodedUserInfo = await this.jwtService.verify(userInfo, {
-          secret: process.env.JWT_SECRET_KEY,
-        });
-        const userid_num = decodedUserInfo.userid_num;
         const body: any = req.body;
-        // console.log('profileImg middleware body > ', req.body);
+        console.log('myPage? ', req.originalUrl.split('/')[1]);
         let { filename, type } = body;
 
         let key;
@@ -160,7 +153,7 @@ export class profileImgMiddleware implements NestMiddleware {
             Key: key,
           });
           const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          // console.log('middleware profileImg url > ', url);
+          console.log('middleware profileImg url > ', url);
           req['file'] = url;
         } else if (req.method === 'POST') {
           if (filename) {
@@ -177,12 +170,6 @@ export class profileImgMiddleware implements NestMiddleware {
           }
         } else {
           // console.log('profileImg middleware body patch> ', req.body);
-          // 로그인한 유저의 userid_num 찾아오기
-          const userInfo = req.headers['authorization'].split(' ')[1];
-          const decodedUserInfo = await this.jwtService.verify(userInfo, {
-            secret: process.env.JWT_SECRET_KEY,
-          });
-          const userid_num = decodedUserInfo.userid_num;
           let file = await db
             .select()
             .from(users)
