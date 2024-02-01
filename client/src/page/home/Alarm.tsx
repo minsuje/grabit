@@ -1,5 +1,6 @@
 import AlarmList from '@/components/AlarmList';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { privateApi } from '@/api/axios';
 
 interface challengeAlarm {
   title: string;
@@ -31,6 +32,20 @@ function Alarm() {
       content: '친구 신청입니다',
     },
   ]);
+  useEffect(() => {
+    {
+      // privateApi
+      //   .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     setChallengeDetail(response.data.challengeDetail[0]);
+      //     setChallengers(response.data.challengers);
+      //   })
+      //   .catch((error) => {
+      //     console.error('ChallengeEdit에서 오류발생 :', error);
+      //   });
+    }
+  }, []);
 
   return (
     <div>

@@ -13,6 +13,7 @@ import { privateApi } from '@/api/axios';
 // import Cta from '@/components/Cta';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
+import Cta from '@/components/Cta';
 
 interface url {
   userid_num: string;
@@ -58,8 +59,8 @@ function ChallengeInProgress() {
     winner_userid_num: null,
     authentication_start_date: new Date(),
     authentication_end_date: new Date(),
-    authentication_start_time: 4,
-    authentication_end_time: 5,
+    authentication_start_time: 9,
+    authentication_end_time: 23,
   });
   const [challengers, setChallengers] = useState<users[]>([
     {
@@ -99,32 +100,32 @@ function ChallengeInProgress() {
       console.log('aifile >>>>>>', aiFile);
     }
 
-    await privateApi({
-      method: 'post',
-      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
-      data: {
-        filename: file?.name,
-        type: file?.type,
-      },
-    }).then((res) => {
-      console.log('res.data', res.data);
-      if (res.data.msg) {
-        alert(res.data.msg);
-      } else {
-        axios({
-          method: 'put',
-          url: res.data,
-          data: file,
-          headers: {
-            'Content-Type': file?.type,
-          },
-        }).then((res) => {
-          console.log(res);
-          alert('업로드 완료!');
-          navigate(`/challengeInProgress/${challenge_id}`);
-        });
-      }
-    });
+    // await privateApi({
+    //   method: 'post',
+    //   url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
+    //   data: {
+    //     filename: file?.name,
+    //     type: file?.type,
+    //   },
+    // }).then((res) => {
+    //   console.log('res.data', res.data);
+    //   if (res.data.msg) {
+    //     alert(res.data.msg);
+    //   } else {
+    //     axios({
+    //       method: 'put',
+    //       url: res.data,
+    //       data: file,
+    //       headers: {
+    //         'Content-Type': file?.type,
+    //       },
+    //     }).then((res) => {
+    //       console.log(res);
+    //       alert('업로드 완료!');
+    //       navigate(`/challengeInProgress/${challenge_id}`);
+    //     });
+    //   }
+    // });
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);
     }
@@ -260,11 +261,12 @@ function ChallengeInProgress() {
             navigate(`/camera/${challenge_id}`);
             
           }}>인증하기</Button> */}
-      {/* <Cta text='인증하기' onclick={() => {
-            navigate(`/camera/${challenge_id}`);
-            
-          }} >
-      </Cta> */}
+      {/* <Cta
+        text="인증하기"
+        onclick={() => {
+          navigate(`/camera/${challenge_id}`);
+        }}
+      ></Cta> */}
       {imgUrl && (
         <div className="mx-auto text-center">
           <img src={imgUrl}></img>
@@ -290,16 +292,23 @@ function ChallengeInProgress() {
               }
             }}
           />
-          <Button
-            onClick={() => {
-              if (inputRef.current) {
-                inputRef.current.click();
-              }
-            }}
-            className="w-full rounded-md p-6"
-          >
-            인증하기
-          </Button>
+          {challengeDetail.authentication_start_time <= new Date().getHours() &&
+          challengeDetail.authentication_end_time > new Date().getHours() ? (
+            <Button
+              onClick={() => {
+                if (inputRef.current) {
+                  inputRef.current.click();
+                }
+              }}
+              className="w-full rounded-md p-6"
+            >
+              인증하기
+            </Button>
+          ) : (
+            <Button className="w-full rounded-md p-6" disabled>
+              인증하기
+            </Button>
+          )}
         </div>
       </div>
     </div>
