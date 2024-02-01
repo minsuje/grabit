@@ -31,6 +31,7 @@ export class FriendController {
     @Param('userid') userid: number,
   ) {
     console.log('친구 추가 시작');
+
     return this.friendService.create(createFriendDto, userid);
   }
 
