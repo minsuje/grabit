@@ -59,6 +59,7 @@ export const authentication = pgTable('authentication', {
     () => challenge.challenge_id,
     { onDelete: 'cascade', onUpdate: 'cascade' },
   ),
+  authentication_keyword: varchar('authentication_keyword').notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
