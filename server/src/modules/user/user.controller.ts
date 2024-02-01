@@ -68,14 +68,14 @@ export class UserController {
   // 마이페이지 수정
   @UseGuards(JwtService)
   @Patch('/myPage')
-  async patchMyPage(@Body() body: any, @Req() req: Request) {
-    const userInfo = req.headers['authorization'].split(' ')[1];
+  async patchMyPage(@Body() body: any, @Req() req, @Req() request: Request) {
+    const userInfo = request.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    // const file = req.file;
-    // return this.userService.patchMyPage(userid_num, file, body);
+    const file = req.file;
+    return this.userService.patchMyPage(userid_num, file, body);
   }
 
   @Get('score/:userid')

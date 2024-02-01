@@ -24,26 +24,38 @@ export class ChallengeController {
     private ChallengeService: ChallengeService,
     private jwtService: JwtService,
   ) {}
-  // 챌린지 생성
 
+  // 챌린지 생성
   @UseGuards(JwtAuthGuard)
   @Post('/challengeCreate')
-  postChallengeCreate(@Body() body: ChallengeDto): any {
-    return this.ChallengeService.newChallenge(body);
+  async postChallengeCreate(@Body() body: ChallengeDto, @Req() req) {
+    console.log('controller postChallengeCreate');
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+    return this.ChallengeService.newChallenge(userid_num, body);
   }
 
   // 챌린지 목록
   @UseGuards(JwtAuthGuard)
   @Get('/challengeList')
-  getChallengeList(): any {
-    return this.ChallengeService.challengeList();
+  async getChallengeList(@Req() req) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+    return this.ChallengeService.challengeList(userid_num);
   }
 
   // 인기 있는 챌린지 주제
   @Get('/popularChallenge')
   getPopularChallenge(): any {
-    return 'dd';
-    // return this.ChallengeService.getPopularChallenge();
+    return this.ChallengeService.getPopularChallenge();
   }
 
   // 챌린지 상세 정보 보기
@@ -59,10 +71,10 @@ export class ChallengeController {
   }
 
   // 챌린지 수정 페이지 보기
-  // @Get('/challengeEdit/:challenge_id')
-  // getChallengeEdit(@Param('challenge_id') challenge_id: number): any {
-  //   return this.ChallengeService.getChallengeEdit(challenge_id);
-  // }
+  @Get('/challengeEdit/:challenge_id')
+  async getChallengeEdit(@Param('challenge_id') challenge_id: number) {
+    return this.ChallengeService.getChallengeEdit(challenge_id);
+  }
 
   // 챌린지 수정하기
   @UseGuards(JwtAuthGuard)
@@ -102,25 +114,42 @@ export class ChallengeController {
   // 챌린지 인증사진 올리기
   @UseGuards(JwtAuthGuard)
   @Post('/challengeAuth/:challenge_id')
-  newChallengeAuth(
+  async newChallengeAuth(
     @Body() body: any,
     @Param('challenge_id') challenge_id: number,
     @Req() req,
-  ): any {
-    // console.log('controller newChallengeAuth req > ', req);
+  ) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
     console.log('controller newChallengeAuth req.file > ', req.file);
     const file = req.file;
-    return this.ChallengeService.newChallengeAuth(challenge_id, file);
+    return this.ChallengeService.newChallengeAuth(
+      userid_num,
+      challenge_id,
+      file,
+    );
   }
 
   // 챌린지 인증사진에 대한 이모티콘 요청
   @Post('/challengeAuth/:challenge_id/:authentication_id')
-  newChallengeAuthEmoticon(
+  async newChallengeAuthEmoticon(
     @Body() body: any,
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
-  ): any {
+    @Req() req,
+  ) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
     return this.ChallengeService.newChallengeAuthEmoticon(
+      userid_num,
       body,
       challenge_id,
       authentication_id,
@@ -136,7 +165,7 @@ export class ChallengeController {
     @Param('authentication_id') authentication_id: number,
     @Param('authentication_img_emoticon_id')
     authentication_img_emoticon_id: number,
-  ): any {
+  ) {
     return this.ChallengeService.deleteChallengeAuthEmoticon(
       challenge_id,
       authentication_id,
