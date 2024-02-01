@@ -34,6 +34,7 @@ export default function MyPage() {
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
+  const [ranking, setRanking] = useState<string>('');
 
   console.log('>>>>>>>>', userid_num);
   useEffect(() => {
@@ -46,7 +47,6 @@ export default function MyPage() {
         console.log('image > ', response);
         console.log('image file > ', response.data.file);
         setProfileImg(response.data.file);
-        console.log('이미지 set ????? >>>>>>>>', proFileImg);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
@@ -88,6 +88,21 @@ export default function MyPage() {
       });
   }, [userid_num]);
 
+  useEffect(() => {
+    // 랭킹 요청
+    privateApi
+      .get(`http://localhost:3000/myRanking`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log('랭킹>>>>>>>>>>>>>>>>>>>>>>>', response);
+        setRanking(response.data);
+      })
+      .catch((error) => {
+        console.error(' 랭킹 axios 오류', error);
+      });
+  }, []);
+
   const getTierImage = (score: number) => {
     if (score >= 2000) return '/challengerTear.png';
     if (score >= 1500) return '/diamondTear.png';
@@ -97,7 +112,7 @@ export default function MyPage() {
 
   const getTierName = (score: number) => {
     if (score >= 2000) return '챌린저';
-    if (score >= 1500) return '다이아몬드';
+    if (score >= 1500) return '다이아';
     if (score >= 1000) return '플래티넘';
     return '실버';
   };
@@ -131,7 +146,7 @@ export default function MyPage() {
         </div>
         <div className="mr-5 w-[10%] text-end">
           <p>{tierName}</p>
-          <p className="text-xs text-neutral-300">순위</p>
+          <p className="text-xs text-neutral-300">{ranking}위</p>
         </div>
         <div className="flex flex-col content-center justify-center">
           <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
