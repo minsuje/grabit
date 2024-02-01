@@ -3,7 +3,7 @@ import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
 import { users } from './schema';
 import { db } from 'db/db';
-import { eq, sql } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import axios from 'axios';
 import { response } from 'express';
@@ -194,4 +194,40 @@ export class UserService {
       console.log('토스페이먼츠 에러', e);
     }
   };
+
+  async rank() {
+    // 상위 3명의 랭크 표시
+    const topRank = await db
+      .select({
+        name: users.name,
+        nickname: users.nickname,
+        score_num: users.score_num,
+      })
+      .from(users)
+      .orderBy(desc(users.score_num))
+      .limit(10);
+
+    console.log('topRank >>>> ', topRank);
+
+    return topRank;
+  }
+
+  async myRank(userid_num: number) {
+    const allRank = await db
+      .select({
+        userid_num: users.userid_num,
+        score_num: users.score_num,
+      })
+      .from(users)
+      .orderBy(desc(users.score_num));
+
+    console.log('allRank >>>> ', allRank);
+    console.log('my num ??? ', userid_num);
+    // 내가 몇번 째 인덱스에 있는지
+    const findMe = allRank.findIndex((rank) => rank.userid_num === userid_num);
+    console.log('myRank >>>> ', findMe + 1);
+    const myRank = findMe + 1;
+
+    return myRank;
+  }
 }
