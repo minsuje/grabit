@@ -90,7 +90,12 @@ export class UserService {
   };
 
   // 프로필 수정
-  patchMyPage = async (userid_num: number, file: string, body: any) => {
+  patchMyPage = async (
+    userid_num: number,
+    file: string,
+    body: any,
+    login_type: string,
+  ) => {
     const { nickname, currentPassword, changePassword } = body;
     console.log('file >>>> ', file);
     const filename = file.split('/')[3].split('?')[0];
@@ -106,61 +111,63 @@ export class UserService {
       myPassword.password,
     );
 
-    if (checkPassword) {
-      // 비밀번호 O, 이미지 O
-      if (changePassword) {
-        console.log('비밀번호 O, 이미지 O');
-        const newPassword = await bcrypt.hash(changePassword, 10);
-        const userInfo = await db
-          .update(users)
-          .set({
-            password: newPassword,
-            nickname: nickname,
-            profile_img: filename,
-          })
-          .where(eq(users.userid_num, userid_num));
+    if (login_type === 'normal') {
+      if (checkPassword) {
+        // 비밀번호 O, 이미지 O
+        if (changePassword) {
+          console.log('비밀번호 O, 이미지 O');
+          const newPassword = await bcrypt.hash(changePassword, 10);
+          const userInfo = await db
+            .update(users)
+            .set({
+              password: newPassword,
+              nickname: nickname,
+              profile_img: filename,
+            })
+            .where(eq(users.userid_num, userid_num));
 
-        isUser = true;
-        return { userInfo, file, isUser };
-      } else if (changePassword.length !== 0 && file.length == 0) {
-        // 비밀번호 O, 프로필 이미지 X
-        console.log('비밀번호 O, 이미지 X');
+          isUser = true;
+          return { userInfo, file, isUser };
+        } else if (changePassword.length !== 0 && file.length == 0) {
+          // 비밀번호 O, 프로필 이미지 X
+          console.log('비밀번호 O, 이미지 X');
 
-        const newPassword = await bcrypt.hash(changePassword, 10);
-        const userInfo = await db
-          .update(users)
-          .set({ password: newPassword, nickname: nickname })
-          .where(eq(users.userid_num, userid_num));
-        isUser = true;
-        return { userInfo, file, isUser };
-      } else if (changePassword.length == 0 && file.length !== 0) {
-        // 비밀번호 X, 프로필 이미지 O
-        console.log('비밀번호 X, 이미지 O');
+          const newPassword = await bcrypt.hash(changePassword, 10);
+          const userInfo = await db
+            .update(users)
+            .set({ password: newPassword, nickname: nickname })
+            .where(eq(users.userid_num, userid_num));
+          isUser = true;
+          return { userInfo, file, isUser };
+        } else if (changePassword.length == 0 && file.length !== 0) {
+          // 비밀번호 X, 프로필 이미지 O
+          console.log('비밀번호 X, 이미지 O');
 
-        const userInfo = await db
-          .update(users)
-          .set({
-            nickname: nickname,
-            profile_img: filename,
-          })
-          .where(eq(users.userid_num, userid_num));
-        isUser = true;
-        return { userInfo, file, isUser };
+          const userInfo = await db
+            .update(users)
+            .set({
+              nickname: nickname,
+              profile_img: filename,
+            })
+            .where(eq(users.userid_num, userid_num));
+          isUser = true;
+          return { userInfo, file, isUser };
+        } else {
+          // 비밀번호 X, 프로필 X
+          console.log('비밀번호 x, 이미지 x');
+
+          const userInfo = await db
+            .update(users)
+            .set({
+              nickname: nickname,
+            })
+            .where(eq(users.userid_num, userid_num));
+          isUser = true;
+          return { userInfo, file, isUser };
+        }
       } else {
-        // 비밀번호 X, 프로필 X
-        console.log('비밀번호 x, 이미지 x');
-
-        const userInfo = await db
-          .update(users)
-          .set({
-            nickname: nickname,
-          })
-          .where(eq(users.userid_num, userid_num));
-        isUser = true;
-        return { userInfo, file, isUser };
+        return { msg: '비밀번호를 다시 한번 확인해 주세요', isUser };
       }
-    } else {
-      return { msg: '비밀번호를 다시 한번 확인해 주세요', isUser };
     }
   };
 
