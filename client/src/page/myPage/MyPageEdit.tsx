@@ -79,6 +79,7 @@ export default function MyPageEdit() {
         changePassword,
       },
     }).then((res) => {
+      console.log('patch res.data', res.data);
       console.log('patch res.data', res.data.file);
       axios({
         method: 'put',
