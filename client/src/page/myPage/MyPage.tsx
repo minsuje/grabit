@@ -39,9 +39,12 @@ export default function MyPage() {
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-
-      .get(`http://localhost:3000/myPage`)
+      .get(`http://localhost:3000/myPage`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
+        console.log('image > ', response);
+        console.log('image file > ', response.data.file);
         setProfileImg(response.data.file);
         console.log('이미지 set ????? >>>>>>>>', proFileImg);
       })
@@ -53,7 +56,9 @@ export default function MyPage() {
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://localhost:3000/history`)
+      .get(`http://localhost:3000/history`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         const historyData: HistoryData = response.data;
         console.log('>>>>>', historyData);
@@ -68,7 +73,9 @@ export default function MyPage() {
 
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://localhost:3000/myPage`)
+      .get<UserInfo>(`http://localhost:3000/myPage`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
         console.log('res>>>>>>', userInfo);
@@ -181,7 +188,7 @@ export default function MyPage() {
         </div>
         <div>
           <div>
-            {history.map((challenge, key) => (
+            {history?.map((challenge, key) => (
               <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
                 <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
               </Link>
