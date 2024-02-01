@@ -4,6 +4,7 @@ import {
   pgTable,
   serial,
   varchar,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { users } from '../user/schema';
 
@@ -14,7 +15,8 @@ export const notification = pgTable('notification', {
     .references(() => users.userid_num, { onDelete: 'cascade' }),
   reference_id: integer('reference_id').notNull(),
   type: varchar('type', { length: 20 }).notNull(),
-  is_confirm: varchar('is_confirm', { length: 10 }).notNull(),
+  message: varchar('message', { length: 300 }),
+  is_confirm: boolean('is_confirm').notNull(),
   created_at: timestamp('created_at', { withTimezone: true })
     .default(new Date())
     .notNull(),

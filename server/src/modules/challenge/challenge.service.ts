@@ -6,11 +6,10 @@ import {
   authentication_img_emoticon,
 } from './schema';
 import { users } from '../user/schema';
+import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
 import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
-import { s3Middleware } from 'src/middleware/s3.middleware';
-import { read } from 'fs';
 
 @Injectable()
 export class ChallengeService {
@@ -29,6 +28,10 @@ export class ChallengeService {
       authentication_start_time,
       authentication_end_time,
     } = body;
+    console.log(
+      'service newChallenge body challenger userid_num > ',
+      challenger_userid_num,
+    );
 
     let challengers = [];
     for (let i = 0; i < challenger_userid_num.length; i++) {
@@ -46,20 +49,110 @@ export class ChallengeService {
     }
     // console.log('service newChallenge challengers', challengers);
 
-    return await db.insert(challenge).values({
-      challenge_name,
-      userid_num: login_userid_num,
-      is_public,
-      topic,
-      auth_keyword,
-      challenger_userid_num: challengers,
-      goal_money,
-      term,
-      authentication_start_date: new Date(authentication_start_date),
-      authentication_end_date: new Date(authentication_end_date),
-      authentication_start_time,
-      authentication_end_time,
+    // 챌린지 테이블에 추가하기
+    const newChallenge = await db
+      .insert(challenge)
+      .values({
+        challenge_name,
+        userid_num: login_userid_num,
+        is_public,
+        topic,
+        auth_keyword,
+        challenger_userid_num: challengers,
+        goal_money,
+        term,
+        authentication_start_date: new Date(authentication_start_date),
+        authentication_end_date: new Date(authentication_end_date),
+        authentication_start_time,
+        authentication_end_time,
+      })
+      .returning(); // 생성하고 바로 객체로 반환받아서 값 사용할 수 있음
+
+    // notification 테이블에 추가하기
+    const challengeNotification = [];
+    let noti: any;
+    for (let i = 0; i < challenger_userid_num.length; i++) {
+      // 챌린지를 생성하는 유저를 제외하고 알람 보내주기
+      if (Number(challenger_userid_num[i]) !== login_userid_num) {
+        noti = await db.insert(notification).values({
+          userid_num: Number(challenger_userid_num[i]),
+          reference_id: newChallenge[0].challenge_id,
+          message: 'create',
+          type: 'challenge',
+          is_confirm: false,
+        });
+        challengeNotification.push(noti);
+      }
+    }
+
+    return { newChallenge, challengeNotification };
+  };
+
+  // 챌린지 수락
+  challengeAccept = async (userid_num: number, challenge_id: number) => {
+    let challengeWait: any = await db
+      .select({ challenger_userid_num: challenge.challenger_userid_num })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+    challengeWait = challengeWait[0].challenger_userid_num;
+
+    for (let i = 0; i < challengeWait.length; i++) {
+      if (challengeWait[i].userid_num === userid_num) {
+        challengeWait[i].isAccept = true;
+      }
+    }
+
+    return await db
+      .update(challenge)
+      .set({
+        challenger_userid_num: challengeWait,
+      })
+      .where(eq(challenge.challenge_id, challenge_id));
+  };
+
+  // 챌린지 거절
+  challengeReject = async (login_userid_num: number, challenge_id: number) => {
+    let challengeWait: any = await db
+      .select({ challenger_userid_num: challenge.challenger_userid_num })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+    challengeWait = challengeWait[0].challenger_userid_num;
+    let newChallengeWait = [];
+    for (let i = 0; i < challengeWait.length; i++) {
+      if (challengeWait[i].userid_num !== login_userid_num) {
+        newChallengeWait.push(challengeWait[i]);
+      }
+    }
+    // console.log('service challengeReject challengeWait > ', newChallengeWait);
+
+    const updateChallenge = await db
+      .update(challenge)
+      .set({
+        challenger_userid_num: newChallengeWait,
+      })
+      .where(eq(challenge.challenge_id, challenge_id))
+      .returning();
+
+    let noti: any;
+    noti = await db.insert(notification).values({
+      userid_num: updateChallenge[0].userid_num,
+      reference_id: updateChallenge[0].challenge_id,
+      message: `reject/${login_userid_num}`,
+      type: 'challenge',
+      is_confirm: false,
     });
+
+    if (updateChallenge[0].challenger_userid_num.length == 0) {
+      noti = await db.insert(notification).values({
+        userid_num: updateChallenge[0].userid_num,
+        reference_id: updateChallenge[0].challenge_id,
+        message: 'delete/noChallenger',
+        type: 'challenge',
+        is_confirm: false,
+      });
+    }
+
+    return updateChallenge;
   };
 
   // 챌린지 목록
@@ -67,11 +160,7 @@ export class ChallengeService {
     const today = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
     const challengeAll = await db.select().from(challenge);
     let myChallenge = [];
-    console.log('service challengeList challengeAll > ', challengeAll);
-    console.log(
-      'service challengeList > ',
-      challengeAll[1].challenger_userid_num,
-    );
+
     for (let i = 0; i < challengeAll.length; i++) {
       for (let j = 0; j < challengeAll[i].challenger_userid_num.length; j++) {
         if (
@@ -233,7 +322,8 @@ export class ChallengeService {
       authentication_start_time,
       authentication_end_time,
     } = body;
-    return await db
+
+    let updateChallenge: any = await db
       .update(challenge)
       .set({
         challenge_name: challenge_name,
@@ -247,14 +337,69 @@ export class ChallengeService {
         authentication_end_time: authentication_end_time,
         updated_at: new Date(),
       })
-      .where(eq(challenge.challenge_id, challenge_id));
+      .where(eq(challenge.challenge_id, challenge_id))
+      .returning();
+
+    updateChallenge = updateChallenge[0];
+    console.log(
+      '🚀 ~ ChallengeService ~ patchChallengeEdit= ~ updateChallenge:',
+      updateChallenge,
+    );
+
+    for (let i = 0; i < updateChallenge.challenger_userid_num.length; i++) {
+      if (
+        updateChallenge.userid_num !==
+        updateChallenge.challenger_userid_num[i].userid_num
+      ) {
+        let noti = await db.insert(notification).values({
+          userid_num: updateChallenge.challenger_userid_num[i].userid_num,
+          reference_id: challenge_id,
+          message: 'modify',
+          type: 'challenge',
+          is_confirm: false,
+        });
+      }
+    }
+    return updateChallenge;
   };
 
   // 챌린지 삭제하기
   deleteChallengeEdit = async (challenge_id: number) => {
-    return await db
-      .delete(challenge)
+    let challengeInfo: any = await db
+      .select({
+        challenge_id: challenge.challenge_id,
+        userid_num: challenge.userid_num,
+        challenger_userid_num: challenge.challenger_userid_num,
+      })
+      .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
+    challengeInfo = challengeInfo[0];
+    console.log(
+      '🚀 ~ ChallengeService ~ deleteChallengeEdit ~ challenger:',
+      challengeInfo,
+    );
+    console.log(challengeInfo.challenger_userid_num.length);
+    for (let i = 0; i < challengeInfo.challenger_userid_num.length; i++) {
+      if (
+        challengeInfo.userid_num !==
+        challengeInfo.challenger_userid_num[i].userid_num
+      ) {
+        let noti = await db.insert(notification).values({
+          userid_num: challengeInfo.challenger_userid_num[i].userid_num,
+          reference_id: challenge_id,
+          message: 'delete/byOwner',
+          type: 'challenge',
+          is_confirm: false,
+        });
+      }
+    }
+
+    // return await db
+    //   .delete(challenge)
+    //   .where(eq(challenge.challenge_id, challenge_id));
+
+    // 일단 알림만 보내주고 30일 이후에 db에서 삭제해줘야 함. -> 알림 조회될 때 없으면 충돌 발생하기 때문
+    return 'success';
   };
 
   // 챌린지 인증하기

@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
-import { Challenge } from './challenge.module';
-import { s3Middleware } from 'src/middleware/s3.middleware';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards } from '@nestjs/common';
@@ -37,6 +35,38 @@ export class ChallengeController {
     });
     const userid_num = decodedUserInfo.userid_num;
     return this.ChallengeService.newChallenge(userid_num, body);
+  }
+
+  // 챌린지 수락하기
+  @UseGuards(JwtAuthGuard)
+  @Patch('/challengeAccept/:challenge_id')
+  async challengeAccept(
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+    return this.ChallengeService.challengeAccept(userid_num, challenge_id);
+  }
+
+  // 챌린지 거절하기
+  @UseGuards(JwtAuthGuard)
+  @Patch('/challengeReject/:challenge_id')
+  async challengeReject(
+    @Param('challenge_id') challenge_id: number,
+    @Req() req,
+  ) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+    return this.ChallengeService.challengeReject(userid_num, challenge_id);
   }
 
   // 챌린지 목록
@@ -93,7 +123,6 @@ export class ChallengeController {
     return this.ChallengeService.deleteChallengeEdit(challenge_id);
   }
 
-  // 테스트 (s3 이미지 get 요청)
   // 챌린지 인증사진 상세 보기
   @UseGuards(JwtAuthGuard)
   @Get('/challengeAuth/:challenge_id/:authentication_id')
@@ -110,7 +139,6 @@ export class ChallengeController {
     );
   }
 
-  // 테스트 (s3 이미지 post 요청)
   // 챌린지 인증사진 올리기
   @UseGuards(JwtAuthGuard)
   @Post('/challengeAuth/:challenge_id')
@@ -173,7 +201,7 @@ export class ChallengeController {
     );
   }
 
-  // 테스트 (s3 이미지 patch 요청)
+  // 챌린지 인증 이미지 patch 요청
   @Patch('/challengeAuth/:challenge_id/:authentication_id')
   patchChallengeAuth(
     @Body() body: any,
@@ -189,7 +217,7 @@ export class ChallengeController {
     );
   }
 
-  // 테스트 (s3 이미지 delete 요청)
+  // 챌린지 인증 이미지 delete 요청
   @Delete('/challengeAuth/:challenge_id/:authentication_id')
   deleteChallengeAuth(
     @Param('challenge_id') challenge_id: number,
