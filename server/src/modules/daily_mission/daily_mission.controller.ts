@@ -21,11 +21,11 @@ export class DailyMissionController {
   ) {}
   // @UseGuards(JwtAuthGuard)
   @Get('/dailyMission')
-  async GetDaily(@Req() req: Request, @Res() res: Response) {
+  async GetDaily(@Req() req: Request) {
     const userInfo = req.headers['authorization'].split(' ')[1];
 
     if (userInfo.length == 0) {
-      return res.send(false);
+      return false;
     }
 
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
@@ -35,15 +35,11 @@ export class DailyMissionController {
     const { userid_num } = decodedUserInfo;
     const isSuccess =
       await this.dailyMissionService.getDailyMission(userid_num);
-    return res.send(isSuccess);
+    return isSuccess;
   }
 
   @Patch('/DailymissionAuth')
-  async PatchDaily(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Body() isSuccess: Boolean,
-  ) {
+  async PatchDaily(@Req() req: Request, @Body() isSuccess: Boolean) {
     const userInfo = await req.headers['authorization'].split(' ')[1];
 
     const users = await this.jwtService.verify(userInfo, {
@@ -55,13 +51,13 @@ export class DailyMissionController {
       userid_num,
     );
     if (insert) {
-      return res.send({
+      return {
         msg: '데일리 미션 성공',
-      });
+      };
     } else {
-      return res.send({
+      return {
         msg: '데일리 미션 실패',
-      });
+      };
     }
   }
 }
