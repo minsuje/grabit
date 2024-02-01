@@ -530,7 +530,14 @@ export class ChallengeService {
             .split(',')[0],
         )
       )
-        history.push(myChallenge[i]);
+        console.log(
+          myChallenge[i].authentication_end_date
+            .toLocaleString('en-US', {
+              timeZone: 'Asia/Seoul',
+            })
+            .split(',')[0],
+        );
+      history.push(myChallenge[i]);
     }
     let win = 0, // 승리 횟수
       lose = 0; // 패배 횟수

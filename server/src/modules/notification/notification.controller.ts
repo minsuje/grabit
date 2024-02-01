@@ -31,7 +31,7 @@ export class NotificationController {
   // }
 
   @Get()
-  async findOne(@Param('id') id: string, @Req() req) {
+  async findOne(@Req() req) {
     // 로그인한 유저의 정보 찾기
     const userInfo = req.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
@@ -51,9 +51,7 @@ export class NotificationController {
   ) {
     return this.notificationService.update(+id, updateNotificationDto);
   }
-  ß;
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationService.remove(+id);
-  }
+
+  @Delete()
+  async remove() {}
 }
