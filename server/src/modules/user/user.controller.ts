@@ -9,7 +9,7 @@ import {
   Res,
   Req,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response, Request } from 'express';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
 import { UserService } from './user.service';
@@ -78,19 +78,18 @@ export class UserController {
 
   //결제페이지
   @Get('/checkout/success')
-  success(@Req() req: Request, @Res() res: Response) {
+  success(@Res() res: Response, @Req() req: Request) {
     console.log('controller success');
-    // console.log('req.user >>>> ', req.user);
-    // console.log(res);
+    console.log('/checkout/success res >>>>>>>>>', res.req.url);
     // res.sendFile('./../../../../client/src/page/CheckoutSuccess.tsx');
     return res.send('success');
     // Redirect('/checkout/success');
   }
 
   @Post('/checkout')
-  tossPayment(@Body() paymentDTO: PaymentDTO, @Req() req: Request) {
-    // console.log('post service url > ', req);
-    console.log('post seevice >> ', paymentDTO);
+  tossPayment(@Body() paymentDTO: PaymentDTO, @Res() res, @Req() req: Request) {
+    console.log('/checkout req >>>>>>>>>');
+    console.log('/checkout res >>>>>>>>>');
     return this.userService.tossPayment(paymentDTO);
   }
   // async success(

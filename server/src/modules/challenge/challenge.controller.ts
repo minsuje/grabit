@@ -42,7 +42,8 @@ export class ChallengeController {
   // 인기 있는 챌린지 주제
   @Get('/popularChallenge')
   getPopularChallenge(): any {
-    return this.ChallengeService.getPopularChallenge();
+    return 'dd';
+    // return this.ChallengeService.getPopularChallenge();
   }
 
   // 챌린지 상세 정보 보기
