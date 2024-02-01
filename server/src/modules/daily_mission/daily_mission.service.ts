@@ -3,7 +3,7 @@ import { db } from 'db/db';
 import { dailyMission } from './schema';
 import { Cron } from '@nestjs/schedule';
 import { arrayOverlaps, eq } from 'drizzle-orm';
-import { users } from '../user/schema';
+import { score, users } from '../user/schema';
 
 @Injectable()
 export class DailyMissionService {
@@ -118,6 +118,16 @@ export class DailyMissionService {
         .update(users)
         .set({ score_num: myScore })
         .where(eq(users.userid_num, userid_num));
+
+      // 점수가 추가될 때 score테이블에 설명 추가
+      if (addScore) {
+        const addScoreTable = await db.insert(score).values({
+          userid_num: userid_num,
+          score_description: '데일리 미션 성공',
+          score_type: 'win',
+          score: 10,
+        });
+      }
 
       return {
         msg: '인증 성공',

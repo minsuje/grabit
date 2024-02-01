@@ -207,8 +207,6 @@ export class UserService {
       .orderBy(desc(users.score_num))
       .limit(3);
 
-    console.log('topRank >>>> ', topRank);
-
     return topRank;
   }
 
@@ -221,11 +219,9 @@ export class UserService {
       .from(users)
       .orderBy(desc(users.score_num));
 
-    console.log('allRank >>>> ', allRank);
-    console.log('my num ??? ', userid_num);
     // 내가 몇번 째 인덱스에 있는지
     const findMe = allRank.findIndex((rank) => rank.userid_num === userid_num);
-    console.log('myRank >>>> ', findMe + 1);
+
     const myRank = findMe + 1;
 
     return myRank;
