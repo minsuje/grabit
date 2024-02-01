@@ -76,9 +76,17 @@ export class UserService {
       })
       .from(users)
       .where(eq(users.userid_num, userid_num));
+
+    // 로그인 타입
+    const loginType = await db
+      .select({ login_type: users.login_type })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+
+    console.log('loginType', loginType);
     console.log('getMyPage service userInfo > ', userInfo);
     console.log('getMyPage service file > ', file);
-    return { userInfo, file };
+    return { userInfo, file, loginType };
   };
 
   // 프로필 수정
@@ -97,10 +105,6 @@ export class UserService {
       currentPassword,
       myPassword.password,
     );
-
-    console.log('user service checkPassword >>', checkPassword);
-    console.log('user service profile_img', file);
-    // console.log('user service profile_img', profile_img);
 
     if (checkPassword) {
       // 비밀번호 O, 이미지 O
