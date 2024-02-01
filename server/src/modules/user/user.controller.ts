@@ -96,7 +96,7 @@ export class UserController {
 
   @UseGuards(JwtService)
   @Post('/checkout')
-  tossPayment(@Body() paymentDTO: PaymentDTO, @Res() res, @Req() req: Request) {
+  tossPayment(@Body() paymentDTO: PaymentDTO, @Req() req: Request) {
     console.log('/checkout req >>>>>>>>>');
     console.log('/checkout res >>>>>>>>>');
     return this.userService.tossPayment(paymentDTO);
@@ -115,10 +115,10 @@ export class UserController {
 
   @UseGuards(JwtService)
   @Get('/ranking')
-  async getRank(@Res() res: Response) {
+  async getRank() {
     console.log('현재 랭킹');
     const rank = await this.userService.rank();
-    return res.send(rank);
+    return rank;
   }
 
   @UseGuards(JwtService)
