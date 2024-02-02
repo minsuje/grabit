@@ -7,6 +7,8 @@ import { desc, eq, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import axios from 'axios';
 import { response } from 'express';
+import { challenge } from '../challenge/schema';
+import { isAfter } from 'date-fns';
 
 // const got = require('got');
 // import * as got from 'got';
@@ -87,6 +89,79 @@ export class UserService {
     console.log('getMyPage service userInfo > ', userInfo);
     console.log('getMyPage service file > ', file);
     return { userInfo, file, loginType };
+  };
+
+  // 다른 사람 프로필 조회
+  getProfilePage = async (userid: string, file: object) => {
+    // 로그인한 userid로 userid_num 찾기
+    let userid_num: any = await db
+      .select({ userid_num: users.userid_num })
+      .from(users)
+      .where(eq(users.userid, userid));
+    userid_num = userid_num[0].userid_num;
+    // - 랭킹 조회
+    const allRank = await db
+      .select({
+        userid_num: users.userid_num,
+        score_num: users.score_num,
+      })
+      .from(users)
+      .orderBy(desc(users.score_num));
+
+    // 내가 몇번 째 인덱스에 있는지
+    const findMe = allRank.findIndex((rank) => rank.userid_num === userid_num);
+    const myRank = findMe + 1;
+
+    // - 전적 조회
+    // 모든 챌린지 찾기
+    const challengeAll = await db.select().from(challenge);
+    let myChallenge = [];
+    for (let i = 0; i < challengeAll.length; i++) {
+      for (let j = 0; j < challengeAll[i].challenger_userid_num.length; j++) {
+        if (
+          challengeAll[i].challenger_userid_num[j].userid_num === userid_num &&
+          challengeAll[i].challenger_userid_num[j].isAccept === true
+        ) {
+          myChallenge.push(challengeAll[i]);
+        }
+      }
+    }
+    let history = [];
+    let today = new Date()
+      .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
+      .split(',')[0];
+    for (let i = 0; i < myChallenge.length; i++) {
+      if (
+        isAfter(
+          today,
+          myChallenge[i].authentication_end_date
+            .toLocaleString('en-US', {
+              timeZone: 'Asia/Seoul',
+            })
+            .split(',')[0],
+        )
+      )
+        history.push(myChallenge[i]);
+    }
+    let win = 0, // 승리 횟수
+      lose = 0; // 패배 횟수
+    const total = history.length; // 총 챌린지 횟수
+    for (let i = 0; i < history.length; i++) {
+      if (
+        history[i].winner_userid_num !== null &&
+        history[i].winner_userid_num.includes(Number(userid_num))
+      )
+        win++;
+      else lose++;
+    }
+
+    let finalHistory = {
+      total: total,
+      win: win,
+      lose: lose,
+    };
+
+    return { userid, file, myRank, finalHistory };
   };
 
   // 프로필 수정

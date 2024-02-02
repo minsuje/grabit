@@ -207,6 +207,25 @@ export class ChallengeService {
       }
     }
 
+    // 종료된 챌린지
+    let endedMyChallenge = [];
+    for (let i = 0; i < myChallenge.length; i++) {
+      if (isBefore(myChallenge[i].authentication_end_date, new Date())) {
+        for (let j = 0; j < myChallenge[i].challenger_userid_num.length; j++) {
+          if (
+            myChallenge[i].challenger_userid_num[j].userid_num === userid_num
+          ) {
+            if (myChallenge[i].challenger_userid_num[j].resultConfirm === false)
+              endedMyChallenge.push(myChallenge[i]);
+          }
+        }
+      }
+    }
+    console.log(
+      '🚀 ~ ChallengeService ~ challengeList= ~ endedMyChallenge:',
+      endedMyChallenge,
+    );
+
     // 열려있는 챌린지
     const publicChallengeAll = await db
       .select()
@@ -233,7 +252,12 @@ export class ChallengeService {
         prePublicChallenge.push(publicChallenge[i]);
       }
     }
-    return { ingMyChallenge, preMyChallenge, prePublicChallenge };
+    return {
+      ingMyChallenge,
+      preMyChallenge,
+      endedMyChallenge,
+      prePublicChallenge,
+    };
   };
 
   // 인기 있는 챌린지 주제
