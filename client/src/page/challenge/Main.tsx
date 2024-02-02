@@ -2,9 +2,9 @@ import { HotChallenge, Ranking } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { useEffect, useState, useLayoutEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { privateApi } from '@/api/axios';
-import { Challenge, dailyMission } from '@/types/types';
+import { Challenge } from '@/types/types';
 
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
@@ -14,12 +14,12 @@ export default function Main() {
 
   const accessToken = localStorage.getItem('accessToken');
   const refreshToken = localStorage.getItem('refreshToken');
-  console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
-  console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
+  // console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
+  // console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
 
   async function refreshAccessToken() {
-    console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
-    console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
+    // console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
+    // console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
 
     await privateApi(
       // .get('http://localhost:3000/refresh', {
@@ -45,6 +45,7 @@ export default function Main() {
 
   const [userid_num, setUserid_num] = useState<number>(0);
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
+  const [endedMyChallenge, setEndedMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
 
@@ -70,6 +71,7 @@ export default function Main() {
       .then((response) => {
         console.log('challengeList >>>>>>>>>', response.data);
         setIngMyChallenge(response.data.ingMyChallenge);
+        setEndedMyChallenge(response.data.endedMyChallenge);
       })
       .catch((error) => {
         console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
@@ -116,6 +118,27 @@ export default function Main() {
             <p>10P</p>
           </div>
         </div>
+      )}
+
+      {endedMyChallenge.length !== 0 && (
+        <>
+          <h1>완료된 챌린지</h1>
+          {endedMyChallenge.map((challenge: Challenge) => {
+            return (
+              <Link to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
+                <div key={challenge.challenge_id}>
+                  <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
+                    <div className="flex justify-between">
+                      <p>{challenge.challenge_name}</p>
+                      <p>챌린지 완료</p>
+                    </div>
+                    <p>결과 확인하기 {'>>'} </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </>
       )}
 
       <h1>진행중인 챌린지</h1>

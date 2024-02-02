@@ -17,6 +17,7 @@ export interface Challenge {
   goal_money: number;
   is_public: boolean;
   term: number;
+  auth_keyword: string;
   winner_userid_num?: number | null;
   authentication_start_date: Date;
   authentication_end_date: Date;
