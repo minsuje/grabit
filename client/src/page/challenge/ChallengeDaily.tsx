@@ -39,6 +39,7 @@ function ChallengeDaily() {
         console.log('response', response.data);
         if (response.data.msg) {
           alert(response.data.msg);
+          window.location.href = '/main';
         }
       })
       .catch((error): void => {
@@ -47,6 +48,7 @@ function ChallengeDaily() {
 
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);
+      setImgUrl(undefined);
     }
 
     setFile(undefined);
