@@ -33,8 +33,12 @@ export class ChallengeController {
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
+    //  { userid_num: 35,nickname: 'yewon',name: '김예원',iat: 1706841839,exp: 1706928239 }
+
+    console.log('controller decodedUserInfo > ', decodedUserInfo);
     const userid_num = decodedUserInfo.userid_num;
-    return this.ChallengeService.newChallenge(userid_num, body);
+    const nickname = decodedUserInfo.nickname;
+    return this.ChallengeService.newChallenge(userid_num, nickname, body);
   }
 
   // 챌린지 수락하기
@@ -66,7 +70,12 @@ export class ChallengeController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    return this.ChallengeService.challengeReject(userid_num, challenge_id);
+    const nickname = decodedUserInfo.nickname;
+    return this.ChallengeService.challengeReject(
+      userid_num,
+      nickname,
+      challenge_id,
+    );
   }
 
   // 챌린지 목록

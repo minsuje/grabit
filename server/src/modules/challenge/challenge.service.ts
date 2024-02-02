@@ -15,7 +15,11 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 export class ChallengeService {
   // 챌린지 생성
-  newChallenge = async (login_userid_num: number, body: ChallengeDto) => {
+  newChallenge = async (
+    login_userid_num: number,
+    login_nickname: string,
+    body: ChallengeDto,
+  ) => {
     let {
       challenge_name,
       is_public,
@@ -40,11 +44,13 @@ export class ChallengeService {
         challengers.push({
           userid_num: challenger_userid_num[i],
           isAccept: false,
+          resultConfirm: false,
         });
       } else {
         challengers.push({
           userid_num: challenger_userid_num[i],
           isAccept: true,
+          resultConfirm: false,
         });
       }
     }
@@ -78,8 +84,11 @@ export class ChallengeService {
         noti = await db.insert(notification).values({
           userid_num: Number(challenger_userid_num[i]),
           reference_id: newChallenge[0].challenge_id,
-          message: 'create',
-          type: 'challenge',
+          message: {
+            challengeName: newChallenge[0].challenge_name,
+            inviterName: login_nickname,
+          },
+          type: 'challenge/create',
           is_confirm: false,
         });
         challengeNotification.push(noti);
@@ -112,7 +121,11 @@ export class ChallengeService {
   };
 
   // 챌린지 거절
-  challengeReject = async (login_userid_num: number, challenge_id: number) => {
+  challengeReject = async (
+    login_userid_num: number,
+    login_nickname: string,
+    challenge_id: number,
+  ) => {
     let challengeWait: any = await db
       .select({ challenger_userid_num: challenge.challenger_userid_num })
       .from(challenge)
@@ -138,8 +151,11 @@ export class ChallengeService {
     noti = await db.insert(notification).values({
       userid_num: updateChallenge[0].userid_num,
       reference_id: updateChallenge[0].challenge_id,
-      message: `reject/${login_userid_num}`,
-      type: 'challenge',
+      message: {
+        challengeName: updateChallenge[0].challenge_name,
+        rejectorName: login_nickname,
+      },
+      type: `challenge/reject/${login_userid_num}`,
       is_confirm: false,
     });
 
@@ -147,8 +163,8 @@ export class ChallengeService {
       noti = await db.insert(notification).values({
         userid_num: updateChallenge[0].userid_num,
         reference_id: updateChallenge[0].challenge_id,
-        message: 'delete/noChallenger',
-        type: 'challenge',
+        message: { challengeName: updateChallenge[0].challenge_name },
+        type: 'challenge/delete/noChallenger',
         is_confirm: false,
       });
     }
@@ -355,8 +371,8 @@ export class ChallengeService {
         let noti = await db.insert(notification).values({
           userid_num: updateChallenge.challenger_userid_num[i].userid_num,
           reference_id: challenge_id,
-          message: 'modify',
-          type: 'challenge',
+          message: { challengeName: updateChallenge[0].challenge_name },
+          type: 'challenge/modify',
           is_confirm: false,
         });
       }
@@ -369,6 +385,7 @@ export class ChallengeService {
     let challengeInfo: any = await db
       .select({
         challenge_id: challenge.challenge_id,
+        challenge_name: challenge.challenge_name,
         userid_num: challenge.userid_num,
         challenger_userid_num: challenge.challenger_userid_num,
       })
@@ -388,8 +405,10 @@ export class ChallengeService {
         let noti = await db.insert(notification).values({
           userid_num: challengeInfo.challenger_userid_num[i].userid_num,
           reference_id: challenge_id,
-          message: 'delete/byOwner',
-          type: 'challenge',
+          message: {
+            challengeName: challengeInfo.challenge_name,
+          },
+          type: 'challenge/delete/byOwner',
           is_confirm: false,
         });
       }

@@ -16,6 +16,7 @@ type MyObjectType = {
   /* object structure */
   userid_num: number;
   isAccept: boolean;
+  resultConfirm: boolean;
 };
 
 export const challenge = pgTable('challenge', {
