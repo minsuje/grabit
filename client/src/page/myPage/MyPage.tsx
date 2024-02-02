@@ -21,7 +21,7 @@ interface ChallengeHistory {
   goal_money: number;
   is_public: boolean;
   term: number;
-  winner_userid_num?: number | null;
+
   authentication_start_date: Date;
   authentication_end_date: Date;
   authentication_start_time: number;
@@ -52,6 +52,7 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
+        console.log(response);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
