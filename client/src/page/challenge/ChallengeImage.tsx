@@ -12,8 +12,8 @@ interface Emotion {
 
 function ChallengeImage() {
   const dispatch = useDispatch();
-  // const userid_num = Number(localStorage.getItem('userid_num'));
-  const userid_num = 3;
+  const userid_num = Number(localStorage.getItem('userid_num'));
+  // const userid_num = 3;
 
   const { challenge_id, authentication_id } = useParams();
   // const emotionList: any = useRef<HTMLInputElement>(null);
@@ -43,7 +43,9 @@ function ChallengeImage() {
 
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`)
+      .get(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response): void => {
         console.log(response.data);
         setFileUrl(response.data.fileUrl);
@@ -85,14 +87,18 @@ function ChallengeImage() {
       case 'first':
         if (first.checked) {
           setFirst({ count: first.count - 1, checked: false });
+          console.log("first -1")
           privateApi
-            .delete(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}/${1}`)
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/${1}`, {
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+            })
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
         } else {
           setFirst({ count: first.count + 1, checked: true });
+          console.log('frist +1')
           privateApi
-            .post(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
+            .post(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 1,
             })
             .then((res) => console.log(res))
@@ -104,13 +110,15 @@ function ChallengeImage() {
         if (second.checked) {
           setSecond({ count: second.count - 1, checked: false });
           privateApi
-            .delete(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}/2`)
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/2`,{
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+            })
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
         } else {
           setSecond({ count: second.count + 1, checked: true });
           privateApi
-            .post(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
+            .post(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 2,
             })
             .then((res) => console.log(res))
@@ -121,13 +129,15 @@ function ChallengeImage() {
         if (third.checked) {
           setThird({ count: third.count - 1, checked: false });
           privateApi
-            .delete(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}/3`)
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/3`,{
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+            })
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
         } else {
           setThird({ count: third.count + 1, checked: true });
           privateApi
-            .post(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
+            .post(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 3,
             })
             .then((res) => console.log(res))
@@ -138,13 +148,15 @@ function ChallengeImage() {
         if (fourth.checked) {
           setFourth({ count: fourth.count - 1, checked: false });
           privateApi
-            .delete(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}/4`)
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/4`,{
+              headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+            })
             .then((res) => console.log(res))
             .catch((err) => console.error(err));
         } else {
           setFourth({ count: fourth.count + 1, checked: true });
           privateApi
-            .post(`http://3.34.122.205:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
+            .post(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 4,
             })
             .then((res) => console.log(res))

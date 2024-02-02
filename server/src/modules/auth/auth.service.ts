@@ -55,6 +55,7 @@ export class AuthService {
           .where(and(eq(users.userid, userid), eq(users.password, field)));
 
         const tokenInfo = {
+          login_type: loginAccess[0].login_type,
           userid_num: loginAccess[0].userid_num,
           nickname: loginAccess[0].nickname,
           name: loginAccess[0].name,
@@ -134,6 +135,7 @@ export class AuthService {
 
     console.log('console isClear>>>', isClear);
     const kakaoTokenInfo = {
+      login_type: isClear[0].login_type,
       nickname: isClear[0].nickname,
       name: isClear[0].name,
       userid_num: isClear[0].userid_num,
@@ -198,6 +200,7 @@ export class AuthService {
 
       // 새로운 토큰 발급
       const loginToken = this.jwtService.sign({
+        login_type: user[0].login_type,
         userid_num: user[0].userid_num,
         nickname: user[0].nickname,
         name: user[0].name,

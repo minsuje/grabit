@@ -448,13 +448,23 @@ export class ChallengeService {
     challenge_id: number,
     authentication_id: number,
     authentication_img_emoticon_id: number,
+    userid_num: number,
   ) => {
+    console.log(authentication_id);
+    console.log(authentication_img_emoticon_id);
+    console.log(challenge_id);
     return await db
       .delete(authentication_img_emoticon)
       .where(
-        eq(
-          authentication_img_emoticon.authentication_img_emoticon_id,
-          authentication_img_emoticon_id,
+        and(
+          eq(
+            authentication_img_emoticon.authentication_img_comment_emoticon,
+            authentication_img_emoticon_id,
+          ),
+          eq(
+            authentication_img_emoticon.authentication_img_comment_userid_num,
+            userid_num,
+          ),
         ),
       );
   };

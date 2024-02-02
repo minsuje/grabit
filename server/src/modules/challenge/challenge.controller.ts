@@ -14,6 +14,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('/')
@@ -188,16 +189,28 @@ export class ChallengeController {
   @Delete(
     '/challengeAuth/:challenge_id/:authentication_id/:authentication_img_emoticon_id',
   )
-  deleteChallengeAuthEmoticon(
+  async deleteChallengeAuthEmoticon(
     @Param('challenge_id') challenge_id: number,
     @Param('authentication_id') authentication_id: number,
     @Param('authentication_img_emoticon_id')
     authentication_img_emoticon_id: number,
+    @Req() req: Request,
   ) {
-    return this.ChallengeService.deleteChallengeAuthEmoticon(
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    console.log('controller userInfo >>>', req);
+
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    console.log('userid num', decodedUserInfo.userid_num);
+    const userid_num = decodedUserInfo.userid_num;
+
+    return await this.ChallengeService.deleteChallengeAuthEmoticon(
       challenge_id,
       authentication_id,
       authentication_img_emoticon_id,
+      userid_num,
     );
   }
 
