@@ -9,15 +9,9 @@ import { Challenge, dailyMission } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import { differenceInHours } from 'date-fns';
-import { setUserid_num } from '@/store/loginSlice';
-
 export default function Main() {
-  const LoginId: number = 3;
   const dispatch = useDispatch();
-  // const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
+
   const accessToken = localStorage.getItem('accessToken');
   const refreshToken = localStorage.getItem('refreshToken');
   console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
@@ -56,7 +50,6 @@ export default function Main() {
 
   useEffect(() => {
     setUserid_num(Number(localStorage.getItem('userid_num')));
-    console.log('userid >>>>>>>>>>>', userid_num);
 
     privateApi
       .get('http://3.34.122.205:3000/dailyMission', {
@@ -95,7 +88,7 @@ export default function Main() {
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
       <Button onClick={refreshAccessToken}>refresh 요청</Button>
-      <p>----------</p>
+
       <Ranking />
       <h1>오늘의 미션</h1>
 

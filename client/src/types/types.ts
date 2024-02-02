@@ -2,13 +2,18 @@ export interface LoginRequest {
   userid: string;
   password: string;
 }
+export interface Challenger_userid_num {
+  userid_num: number;
+  isAccept: boolean;
+  resultConfirm: boolean;
+}
 
 export interface Challenge {
   challenge_id?: number;
   userid_num?: number;
   challenge_name: string;
   topic: string;
-  challenger_userid_num: number[];
+  challenger_userid_num: Challenger_userid_num[];
   goal_money: number;
   is_public: boolean;
   term: number;
