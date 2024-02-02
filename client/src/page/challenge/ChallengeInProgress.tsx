@@ -46,6 +46,7 @@ function ChallengeInProgress() {
     goal_money: 0,
     is_public: true,
     term: 3,
+    auth_keyword: '',
     winner_userid_num: null,
     authentication_start_date: new Date(2024, 1, 1),
     authentication_end_date: new Date(2024, 1, 3),
@@ -222,7 +223,12 @@ function ChallengeInProgress() {
       <Cta
         text="인증하기"
         onclick={() => {
-          navigate(`/camera/${challenge_id}`);
+          navigate(`/camera/${challenge_id}`, {
+            state: {
+              keyword: challengeDetail.auth_keyword,
+              name: challengeDetail.challenge_name,
+            },
+          });
         }}
       ></Cta>
     </div>
