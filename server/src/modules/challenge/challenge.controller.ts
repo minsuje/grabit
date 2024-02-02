@@ -289,12 +289,23 @@ export class ChallengeController {
   // @Get('/history/:userid_num') getChallengeHistory(
   //   @Param('userid_num') userid_num: number,
   @Get('/history')
-  async getChallengeHistory(@Req() req) {
-    const userInfo = req.headers['authorization'].split(' ')[1];
-    const decodedUserInfo = await this.jwtService.verify(userInfo, {
-      secret: process.env.JWT_SECRET_KEY,
-    });
-    const userid_num = decodedUserInfo.userid_num;
-    return this.ChallengeService.getChallengeHistory(userid_num);
+  async getChallengeHistory(@Req() req: Request) {
+    try {
+      const userInfo = req.headers['authorization'].split(' ')[1];
+      const decodedUserInfo = await this.jwtService.verify(userInfo, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+      const userid_num = decodedUserInfo.userid_num;
+      const history =
+        await this.ChallengeService.getChallengeHistory(userid_num);
+
+      if (!Array.isArray(history)) {
+        throw new Error('Invalid history data');
+      }
+      return history;
+    } catch (error) {
+      console.error('Error in getChallengeHistory:', error);
+      throw error;
+    }
   }
 }
