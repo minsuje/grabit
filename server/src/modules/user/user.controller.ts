@@ -49,8 +49,6 @@ export class UserController {
   }
 
   // 마이페이지 조회
-  // @Get('/myPage/:userid_num')
-  // getMyPage(@Param('userid_num') userid_num: number, @Req() req) {
   @UseGuards(JwtService)
   @Get('/myPage')
   async getMyPage(@Req() req, @Req() request: Request) {
@@ -63,6 +61,19 @@ export class UserController {
     // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
     return this.userService.getMyPage(userid_num, file);
+  }
+
+  // 다른 사람 프로필 조회
+  @UseGuards(JwtService)
+  @Get('/profile/:userid')
+  async getProfilePage(
+    @Param('userid') userid: string,
+    @Req() req,
+    @Req() request: Request,
+  ) {
+    console.log('myPage controller req.file > ', req.file);
+    const file = req.file;
+    return this.userService.getProfilePage(userid, file);
   }
 
   // 마이페이지 수정

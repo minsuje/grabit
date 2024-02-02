@@ -27,6 +27,6 @@ export class AppModule {
     consumer.apply(s3Middleware).forRoutes('challengeAuth', 'challengeDetail');
     consumer
       .apply(profileImgMiddleware)
-      .forRoutes('myPage', 'profileUpload', 'friend');
+      .forRoutes('myPage', 'profileUpload', 'friend', 'profile');
   }
 }

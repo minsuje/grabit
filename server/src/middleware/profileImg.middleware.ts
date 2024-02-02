@@ -30,7 +30,10 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
-    console.log('profileImg middleware originalUrl > ', req.originalUrl);
+    console.log(
+      'profileImg middleware originalUrl > ',
+      req.originalUrl.split('/')[1],
+    );
 
     let userInfo: string, decodedUserInfo: any, userid_num: number;
 
@@ -44,21 +47,41 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     console.log('userid_num > ', userid_num);
 
-    // '/friend/detail' 경로로 요청 온 경우
+    // '/friend/detail', '/profile/:userid' 경로로 요청 온 경우
     if (
       'friend/detail' ===
-      `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}`
+        `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}` ||
+      'profile' === req.originalUrl.split('/')[1]
     ) {
       console.log('friend/detail 요청 옴');
-      let friend = await db
-        .select({
-          userid_num: users.userid_num,
-          nickname: users.nickname,
-          score_num: users.score_num,
-          profile_img: users.profile_img,
-        })
-        .from(users)
-        .where(eq(users.userid_num, Number(req.originalUrl.split('/')[3])));
+      let friend: any;
+      // '/friend/detail'
+      if (
+        'friend/detail' ===
+        `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}`
+      ) {
+        friend = await db
+          .select({
+            userid_num: users.userid_num,
+            nickname: users.nickname,
+            score_num: users.score_num,
+            profile_img: users.profile_img,
+          })
+          .from(users)
+          .where(eq(users.userid_num, Number(req.originalUrl.split('/')[3])));
+      }
+      // '/profile/:userid'
+      else if ('profile' === req.originalUrl.split('/')[1]) {
+        friend = await db
+          .select({
+            userid_num: users.userid_num,
+            nickname: users.nickname,
+            score_num: users.score_num,
+            profile_img: users.profile_img,
+          })
+          .from(users)
+          .where(eq(users.userid, req.originalUrl.split('/')[2]));
+      }
 
       const command = new GetObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET,
