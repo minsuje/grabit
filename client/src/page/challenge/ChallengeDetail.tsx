@@ -120,7 +120,7 @@ function ChallengeDetail() {
       <div className="user-list flex flex-col gap-4 pt-4">
         {challengeDetail?.is_public &&
           challengers.length < 4 &&
-          !challengeDetail.challenger_userid_num.includes(userid_num) && (
+          challengers.find((challenger) => challenger.userid_num == userid_num) == undefined && (
             <Button onClick={() => participate}>참가하기</Button>
           )}
 

@@ -85,7 +85,7 @@ function ChallengeEdit() {
     userid_num: 1,
     challenge_name: '',
     topic: '',
-    challenger_userid_num: [1, 2],
+    challenger_userid_num: [{ resultConfirm: false, userid_num: 30, isAccept: true }],
     goal_money: 1000,
     is_public: true,
     term: 3,
