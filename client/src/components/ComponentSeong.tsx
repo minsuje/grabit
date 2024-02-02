@@ -1,8 +1,13 @@
+import { privateApi } from '@/api/axios';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
+import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Challenge } from '@/types/types';
 
 // ~~~일 후 종료
 
@@ -40,47 +45,72 @@ export function ListComponent2({ challenge }: ChallengeProp) {
     </>
   );
 }
-interface ChallengeHistory {
-  challenge_name: string;
-  goal_money: number;
-  // 필요한 다른 속성들을 추가할 수 있습니다.
-}
+
+// ////////////////////////////////////////////
+
+// const formattedEndDate = format(new Date(history.authentication_end_date), 'yyyy-MM-dd');
+// const formattedStartDate = format(new Date(history.authentication_start_date), 'yyyy-MM-dd');
 export const ListComponent3 = ({
   history,
   scoreNum,
 }: {
-  history: ChallengeHistory;
+  history: Challenge;
   scoreNum: number;
   challenge_name: string;
 }) => {
+  const { userid_num } = useParams<any>();
+  const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
+  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
+  useEffect(() => {
+    // 챌린지 테이블 요청
+    privateApi
+      .get(`http://localhost:3000/history`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        console.log('>>>>>', response);
+        setWinnerUseridNum(response.data.history[0].winner_userid_num);
+      })
+      .catch((error) => {
+        console.error(' 히스토리 오류 axios 오류', error);
+      });
+  }, []);
+
+  console.log('???????>>>>>>', winnerUseridNum);
   return (
     <>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
         <div className="flex justify-between">
           <div className="font-bold text-black">{history.challenge_name}</div>
-          <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
-        </div>
-        <div className="flex">
-          <div className="mr-3 mt-2 text-black">{history.goal_money}</div>
-          <div className="mt-2 text-black">
-            <Badge variant="default">+1000원</Badge>
+          <div className="text-gray-400 ">
+            {format(new Date(history.authentication_start_date), 'yyyy-MM-dd')}~
+            {format(new Date(history.authentication_end_date), 'yyyy-MM-dd')}
           </div>
         </div>
         <div className="flex">
-          <div className="mt-2 text-black">{scoreNum}P</div>
+          <div className="mr-3 mt-2 text-black">{history.goal_money}원</div>
+          <div className="mt-2 text-black">
+            <Badge variant="default">{history.goal_money}</Badge>
+          </div>
+        </div>
+        <div className="flex">
+          <div className="mt-2 text-black">{scoreNum + 100}P</div>
           <div className="mt-2 text-black">
             <Badge variant="default" className="ml-2">
               +100P
             </Badge>
           </div>
           <div className="flex w-[100%] justify-end">
-            <div className="mt-2 text-black ">승</div>
+            <div className="mt-2 text-black "> {history?.winner_userid_num?.includes(userIdNum) ? '승' : '패배'}</div>
           </div>
         </div>
       </div>
     </>
   );
 };
+
+// ////////////////////////////////////////////
+
 interface ProgressProp {
   ProgressName: string;
   total: number;

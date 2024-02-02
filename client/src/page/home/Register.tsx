@@ -86,7 +86,7 @@ export default function Register() {
   const onSubmit = async (form: RegisterForm) => {
     await axios({
       method: 'post',
-      url: 'http://3.34.122.205:3000/profileUpload/normal',
+      url: 'http://localhost:3000/profileUpload/normal',
       data: {
         filename: profilePic?.name,
         type: profilePic?.type,
@@ -118,7 +118,7 @@ export default function Register() {
         try {
           axios({
             method: 'post',
-            url: 'http://3.34.122.205:3000/register/normal',
+            url: 'http://localhost:3000/register/normal',
             data: {
               name: form.name,
               userid: form.userid,
@@ -170,7 +170,7 @@ export default function Register() {
           <Input type="password" id="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-≈2">
           <Label htmlFor="confirmPassword">비밀번호 확인</Label>
           <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
           {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
