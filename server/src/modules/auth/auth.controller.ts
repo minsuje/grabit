@@ -102,7 +102,7 @@ export class AuthController {
 
     const { loginToken, loginRefreshToken } = searchUser;
 
-    await res.setHeader(
+    const header = await res.setHeader(
       'Authorization',
       'Bearer ' + [loginToken, loginRefreshToken].join(' '),
     );
@@ -125,14 +125,17 @@ export class AuthController {
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
     console.log('set cookie?????');
-    // res.redirect('http://localhost:5173/login');
-    return res.send({
-      accessToken: loginToken,
-      refreshToken: loginRefreshToken,
-      userid_num: id,
-      nickname: username,
-      name: username,
-    });
+    await res.redirect('http://localhost:5173/auth/kakao/');
+    // console.log('여기는?');
+
+    // await res.send({
+    //   accessToken: loginToken,
+    //   refreshToken: loginRefreshToken,
+    //   userid_num: id,
+    //   nickname: username,
+    //   name: username,
+    // });
+    // console.log('wwwww');
   }
 
   @UseGuards(JwtAuthGuard)
