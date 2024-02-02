@@ -27,9 +27,9 @@ function ChallengeNotice() {
   return (
     <div className="container flex flex-col">
       <div className="text flex flex-col">
-        <h1 className="font-bold text-stone-600">챌린지 참여 주의사항</h1>
-        <p className="text-stone-500">챌린지 참여 시 수수료 3%가 적용됩니다</p>
-        <p className="text-stone-500">수수료 3%는 서비스 운영에 이용됩니다</p>
+        <h1 className="text-grabit-600 font-bold">챌린지 참여 주의사항</h1>
+        <p className="text-grabit-500">챌린지 참여 시 수수료 3%가 적용됩니다</p>
+        <p className="text-grabit-500">수수료 3%는 서비스 운영에 이용됩니다</p>
       </div>
 
       <div className="bottom fixed bottom-0 left-0 right-0 p-4">

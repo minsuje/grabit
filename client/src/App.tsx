@@ -53,7 +53,7 @@ function App() {
   const [price, setPrice] = useState<number>(0);
 
   return (
-    <div className="App">
+    <div className="App bg-grabit-50">
       <BrowserRouter>
         <Routes>
           <Route element={<CommonLayout />}>
