@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChallengeProp } from '@/types/types';
-import { differenceInCalendarDays } from 'date-fns';
+import { compareAsc, differenceInCalendarDays } from 'date-fns';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -60,7 +60,7 @@ export const ListComponent3 = ({
 }) => {
   const { userid_num } = useParams<any>();
   const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
-  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
+  const [, setWinnerUseridNum] = useState<number[]>([]);
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
@@ -76,35 +76,46 @@ export const ListComponent3 = ({
       });
   }, []);
 
-  console.log('???????>>>>>>', winnerUseridNum);
+  // history를 배열로 변환
+  const historyArray = [history];
+
+  // history 배열을 날짜 기준으로 정렬
+  const sortedHistory = historyArray.slice().sort((a, b) => {
+    const startDateA = new Date(a.authentication_start_date).getTime();
+    const startDateB = new Date(b.authentication_start_date).getTime();
+    return startDateB - startDateA; // 날짜를 내림차순으로 정렬
+  });
   return (
     <>
-      <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
-        <div className="flex justify-between">
-          <div className="font-bold text-black">{history.challenge_name}</div>
-          <div className="text-gray-400 ">
-            {format(new Date(history.authentication_start_date), 'yyyy-MM-dd')}~
-            {format(new Date(history.authentication_end_date), 'yyyy-MM-dd')}
+      {sortedHistory.map((item) => (
+        <div className="w-100 mb-10 rounded-lg bg-gray-200 p-6 shadow-md">
+          <div className="flex justify-between">
+            <div className="font-bold text-black">{item.challenge_name}</div>
+            <div className="text-gray-400">
+              {format(new Date(item.authentication_start_date), 'yyyy-MM-dd')}~
+              {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')}
+            </div>
+          </div>
+          <div className="flex ">
+            {/* <Badge variant="default">{item.goal_money}</Badge> */}
+            {/* <div className="mr-3 mt-2 text-black">{item.goal_money}원</div> */}
+            <div className="mt-2 text-black"></div>
+          </div>
+          <div className="flex">
+            <div className="mt-2 text-black">
+              {/* {item?.winner_userid_num?.includes(userIdNum) ? scoreNum + 100 : scoreNum - 50}P */}
+            </div>
+            <div className="mt-2 text-black">
+              <Badge variant="default" className="ml-2">
+                {item?.winner_userid_num?.includes(userIdNum) ? '+100P' : '-50P'}
+              </Badge>
+            </div>
+            <div className="flex w-[100%] justify-end">
+              <div className="mt-2 text-black ">{item?.winner_userid_num?.includes(userIdNum) ? '승' : '패배'}</div>
+            </div>
           </div>
         </div>
-        <div className="flex">
-          <div className="mr-3 mt-2 text-black">{history.goal_money}원</div>
-          <div className="mt-2 text-black">
-            <Badge variant="default">{history.goal_money}</Badge>
-          </div>
-        </div>
-        <div className="flex">
-          <div className="mt-2 text-black">{scoreNum + 100}P</div>
-          <div className="mt-2 text-black">
-            <Badge variant="default" className="ml-2">
-              +100P
-            </Badge>
-          </div>
-          <div className="flex w-[100%] justify-end">
-            <div className="mt-2 text-black "> {history?.winner_userid_num?.includes(userIdNum) ? '승' : '패배'}</div>
-          </div>
-        </div>
-      </div>
+      ))}
     </>
   );
 };
