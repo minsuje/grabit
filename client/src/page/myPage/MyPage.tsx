@@ -12,11 +12,20 @@ interface UserInfo {
   userInfo: any;
   id: number;
 }
-
 interface ChallengeHistory {
+  challenge_id?: number;
+  userid_num?: number;
   challenge_name: string;
+  topic: string;
+  challenger_userid_num: [];
   goal_money: number;
-  challenge_id: string; // challenge_id 속성 추가
+  is_public: boolean;
+  term: number;
+  winner_userid_num?: number | null;
+  authentication_start_date: Date;
+  authentication_end_date: Date;
+  authentication_start_time: number;
+  authentication_end_time: number;
 }
 
 interface HistoryData {
@@ -36,7 +45,6 @@ export default function MyPage() {
   const [proFileImg, setProfileImg] = useState<string>('');
   const [ranking, setRanking] = useState<string>('');
 
-  console.log('>>>>>>>>', userid_num);
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
@@ -44,8 +52,6 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('image > ', response);
-        console.log('image file > ', response.data.file);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -78,7 +84,7 @@ export default function MyPage() {
       })
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
-        console.log('response>>>>>>', response);
+
         setNickName(userInfo.nickname);
         setScoreNum(userInfo.score_num);
         setMoney(userInfo.money);
@@ -95,7 +101,6 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('랭킹>>>>>>>>>>>>>>>>>>>>>>>', response);
         setRanking(response.data);
       })
       .catch((error) => {
@@ -120,7 +125,6 @@ export default function MyPage() {
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
-  console.log('이미지 주소>>>>>>', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>
@@ -197,6 +201,7 @@ export default function MyPage() {
 
         <div className="flex justify-between">
           <p>전적</p>
+          {/* http://localhost:3000/history history axios */}
           <p>
             {win}승 {lose}패
           </p>

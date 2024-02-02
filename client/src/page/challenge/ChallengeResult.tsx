@@ -12,16 +12,16 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 export default function ChallengeResult() {
-  const [currentScore, setCurrentScore] = useState(1900); // 사용자의 현재 점수
-  const [earnedScore, setEarnedScore] = useState(100); // 사용자가 획득한 점수
-  const [finalScore, setFinalScore] = useState(currentScore + earnedScore); // 최종 점수
-  const [tierName, setTierName] = useState('');
-  const [tierImageSrc, setTierImageSrc] = useState('');
-  const [showTierResult, setShowTierResult] = useState(true);
+  const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
+  const [earnedScore, setEarnedScore] = useState<number>(-50); // 사용자가 획득한 점수
+  const [finalScore, setFinalScore] = useState<number>(currentScore + earnedScore); // 최종 점수
+  const [tierName, setTierName] = useState<string>('');
+  const [tierImageSrc, setTierImageSrc] = useState<string>('');
+  const [showTierResult, setShowTierResult] = useState<boolean>(true);
 
   const info = useSelector((state: RootState) => state.result);
-  console.log('>>>>>>>>', info);
   const dispatch = useDispatch();
+  console.log(info);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 결과', backPath: -1 }));
@@ -34,13 +34,12 @@ export default function ChallengeResult() {
       })
       .then((response) => {
         console.log('res>>>>>>', response);
+        setFinalScore(response.data.userInfo[0].score_num + earnedScore);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
       });
   }, []);
-
-  console.log(info);
 
   // 티어 결과 숨기기 함수
   const handleHideTierResult = () => {
@@ -72,7 +71,7 @@ export default function ChallengeResult() {
     let score = currentScore;
     const interval = setInterval(() => {
       if (score < finalScore) {
-        score++;
+        score += 3;
         setCurrentScore(score);
       } else if (score > finalScore) {
         // 추가된 부분: 점수가 finalScore보다 크면 감소
@@ -81,7 +80,7 @@ export default function ChallengeResult() {
       } else {
         clearInterval(interval);
       }
-    }, 10); // 10ms 간격으로 점수를 1씩 증가 또는 감소
+    }, 1); // 10ms 간격으로 점수를 1씩 증가 또는 감소
 
     return () => clearInterval(interval);
   }, [finalScore]);
@@ -109,7 +108,7 @@ export default function ChallengeResult() {
           </div>
         </div>
       )}
-      <ReactCanvasConfetti />;
+      <ReactCanvasConfetti />
       <div className="container">
         <div className="mb-10 p-3 text-center text-5xl font-extrabold">30,000 원</div>
         <div className="grid grid-cols-2 gap-4 p-1 text-center">
@@ -127,13 +126,13 @@ export default function ChallengeResult() {
             <div className="text-center">
               <p>총점</p>
               <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-              <p></p>
+              <p>{finalScore}</p>
             </div>
           </div>
           <div className="text-center">
             <p>총점</p>
             <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-            <p>총점</p>
+            <p>{finalScore}</p>
           </div>
         </div>
         <ProgressComponent ProgressName="진행률" total={info.totalAuth} value={info.result[0].Authcount} />
