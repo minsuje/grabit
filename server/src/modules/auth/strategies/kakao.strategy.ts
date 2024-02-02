@@ -24,11 +24,19 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
     const { _json } = profile;
     const user = {
       id: _json.id,
+      login_type: _json.login_type,
       username: _json.properties.nickname,
       profile_image: _json.properties.profile_image,
     };
-    const { username, profile_image, id } = user;
+    const { username, profile_image, id, login_type } = user;
     console.log('kakao strategy profile json >>>>>', _json);
-    return { accessToken, refreshToken, username, profile_image, id };
+    return {
+      accessToken,
+      refreshToken,
+      username,
+      profile_image,
+      id,
+      login_type,
+    };
   }
 }
