@@ -18,6 +18,7 @@ export interface Challenge {
   is_public: boolean;
   term: number;
   winner_userid_num?: number[] | null;
+  auth_keyword: string;
   authentication_start_date: Date;
   authentication_end_date: Date;
   authentication_start_time: number;

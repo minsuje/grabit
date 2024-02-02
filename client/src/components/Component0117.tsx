@@ -8,8 +8,9 @@ import { users } from '@/types/types';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ChallengeProp, Challenge } from '@/types/types';
-
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ListComponent1 } from './ComponentSeong';
+import { ToggleGroupDemo } from './ToggleGroupSingle';
 
 function CreateChallenge() {
   return (
@@ -87,11 +88,13 @@ function Record() {
 }
 
 function HotChallenge() {
+  // 가장 인기있는 주제 3개
   const [hotTopic, setHotTopic] = useState<string[]>([]);
+  // 각각의 주제에 맞는 챌린지 3개씩ㅇ
   const [top1, setTop1] = useState<Challenge[]>([]);
   const [top2, setTop2] = useState<Challenge[]>([]);
   const [top3, setTop3] = useState<Challenge[]>([]);
-
+  // 화면에 보여줄 챌린지를 저장
   const [showList, setShowList] = useState<Challenge[]>([]);
 
   useEffect(() => {
@@ -131,21 +134,21 @@ function HotChallenge() {
 
   return (
     <>
-      <div className="flex gap-8 text-center hover:cursor-pointer">
+      <ToggleGroup type="single">
         {hotTopic.map((topic, idx) => {
           return (
-            <div
+            <ToggleGroupItem
+              onClick={() => showHotChallengeList(idx)}
               key={idx}
-              onClick={() => {
-                showHotChallengeList(idx);
-              }}
-              className="m-2 w-full rounded-md border-2 border-solid  border-pink-200 bg-pink-100 p-1"
+              value={topic}
+              className="mx-2 w-full rounded-lg border-2 border-solid "
             >
               {topic}
-            </div>
+            </ToggleGroupItem>
           );
         })}
-      </div>
+      </ToggleGroup>
+
       {showList.length != 0
         ? showList.map((challenge: Challenge, idx: number) => {
             return <ListComponentWithPeriod key={idx} challenge={challenge}></ListComponentWithPeriod>;

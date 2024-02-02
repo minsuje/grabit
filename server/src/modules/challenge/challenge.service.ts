@@ -340,6 +340,8 @@ export class ChallengeService {
     } else return { msg: '존재하지 않는 챌린지입니다.' };
   };
 
+  // 챌린지 상세 결과 페이지
+
   // 챌린지 수정 페이지 보기
   getChallengeEdit = async (challenge_id: number) => {
     const challengeDetail = await db
@@ -493,9 +495,6 @@ export class ChallengeService {
     authentication_img_emoticon_id: number,
     userid_num: number,
   ) => {
-    console.log(authentication_id);
-    console.log(authentication_img_emoticon_id);
-    console.log(challenge_id);
     return await db
       .delete(authentication_img_emoticon)
       .where(
@@ -609,6 +608,51 @@ export class ChallengeService {
     return { history, total, win, lose };
   };
 
+  // challenge 승자 업데이트
+  async challengeWinner(
+    winner: number[],
+    challenge_id: number,
+    userid_num: number,
+  ) {
+    let visible = 'show';
+    if (winner.length === 0 || winner === undefined) {
+      visible = 'show';
+    } else {
+      // winner 추가하기
+      const addWinner = await db
+        .update(challenge)
+        .set({ winner_userid_num: winner })
+        .where(eq(challenge.challenge_id, challenge_id));
+
+      visible = 'hide';
+    }
+
+    // 이긴 유저들을 winner배열에 넣어줌
+    const winnerArray: number[] = [];
+    const findWinner = await db
+      .select({ winner_userid_num: challenge.winner_userid_num })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+
+    for (let element of findWinner) {
+      await winnerArray.push(...element.winner_userid_num);
+    }
+
+    console.log('winnerArray', winnerArray);
+
+    // Body로 들어온 winner 마다 score 추가
+    // winner_userid_num에 내 userid_num이 포함되지 않으면 -50점
+    // 먼저 내가 포함 되어 있는지 찾기
+    const score = findWinner[0].winner_userid_num.includes(userid_num);
+
+    const minusScore = await db.select();
+
+    // if(findWinner[0] === )
+  }
+
+  // challenge 종료 score 올리기
+  // async challengeScore(challenge_id: number) {}
+
   // challenge 테이블에서 challenger_userid_num.length가 0이면서 authentication_start_date로 부터 30일 지났으면 삭제
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
@@ -622,7 +666,7 @@ export class ChallengeService {
         .toLocaleString('en-US', {
           timeZone: 'Asia/Seoul',
         })
-        .split(', ')[0];
+        .split(',')[0];
 
       const month = Number(time.split('/')[0]);
       const day = Number(time.split('/')[1]);

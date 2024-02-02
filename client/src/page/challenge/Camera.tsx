@@ -40,6 +40,11 @@ function Camera() {
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
   }, [dispatch]);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  }, []);
 
   async function query(file: File) {
     const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
