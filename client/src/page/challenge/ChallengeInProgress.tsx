@@ -91,7 +91,7 @@ function ChallengeInProgress() {
     console.log('challenge_id', challenge_id);
 
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://localhost:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {
@@ -128,6 +128,7 @@ function ChallengeInProgress() {
 
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
+    console.log('>Dday>>>>>', Dday);
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
