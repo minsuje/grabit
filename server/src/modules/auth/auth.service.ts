@@ -61,6 +61,8 @@ export class AuthService {
           name: loginAccess[0].name,
         };
 
+        // 토큰 때문에 잠깐 만든 거예요 누가 발견하면 지워요
+
         // 1. Jwt 토큰 생성
         const loginToken = this.jwtService.sign(tokenInfo);
 
