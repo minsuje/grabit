@@ -411,18 +411,21 @@ export class ChallengeService {
     if (challengeDetail[0].term == 7) {
       // 매일 인증
       let last = myAuth.length;
-      let lastAuth = myAuth[last - 1].created_at
-        .toLocaleString('en-US', {
-          timeZone: 'Asia/Seoul',
-        })
-        .split(',')[0];
-      let yesterday: any = subDays(new Date(year, month - 1, day), 1);
-      yesterday = yesterday
-        .toLocaleString('en-US', {
-          timeZone: 'Asia/Seoul',
-        })
-        .split(',')[0];
-      if (lastAuth != yesterday) isAcceptable = false;
+      // 인증 첫 날에 대한 확인
+      if (last > 0) {
+        let lastAuth = myAuth[last - 1].created_at
+          .toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+          })
+          .split(',')[0];
+        let yesterday: any = subDays(new Date(year, month - 1, day), 1);
+        yesterday = yesterday
+          .toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+          })
+          .split(',')[0];
+        if (lastAuth != yesterday) isAcceptable = false;
+      }
       // console.log('service isAcceptable term 7 > ', isAcceptable);
     } else if (challengeDetail[0].term == 3) {
       // 주 3회 인증
