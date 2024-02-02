@@ -88,6 +88,7 @@ function ChallengeEdit() {
     challenger_userid_num: [{ resultConfirm: false, userid_num: 30, isAccept: true }],
     goal_money: 1000,
     is_public: true,
+    auth_keyword: '',
     term: 3,
     winner_userid_num: null,
     authentication_start_date: new Date('2024-02-01'),

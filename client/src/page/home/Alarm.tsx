@@ -23,7 +23,7 @@ function Alarm() {
   useEffect(() => {
     {
       privateApi
-        .get(`http://3.34.122.205:3000/Alarm`)
+        .get(`http://3.34.122.205:3000/notification`)
         .then((response) => {
           console.log(response.data);
         })
