@@ -9,9 +9,7 @@ import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-
 import { format } from 'date-fns';
-
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeDetail() {
@@ -38,7 +36,7 @@ function ChallengeDetail() {
 
   const participate = () => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challengeDetail?.challenge_id}/${userid_num}`)
+      .get(`http://3.34.122.205:3000/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -54,7 +52,10 @@ function ChallengeDetail() {
   useEffect(() => {
     console.log(challenge_id);
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
+      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+
       .then((response): void => {
         console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);
@@ -63,7 +64,7 @@ function ChallengeDetail() {
       .catch((error): void => {
         console.error('ChallengeDetail에서 axios 오류:', error);
       });
-  });
+  }, []);
 
   return (
     <div className="container ">
@@ -123,11 +124,7 @@ function ChallengeDetail() {
             <Button onClick={() => participate}>참가하기</Button>
           )}
 
-        {challengeDetail?.is_public && challengers.length == 4 && (
-          <Button disabled onClick={() => participate}>
-            정원 초과
-          </Button>
-        )}
+        {challengeDetail?.is_public && challengers.length == 4 && <Button disabled>정원 초과</Button>}
         <Button
           onClick={() => {
             navigate('/challengeList');

@@ -94,6 +94,17 @@ export type Friend = {
   profile_img: string;
 };
 
+export interface AlarmType {
+  alarm_id: number;
+  userid_num: number;
+  reference_id: number;
+  type: string;
+  is_confirm: string;
+  challenge_id?: number;
+  created_at: Date;
+  friend_id?: number;
+}
+
 // useUserMedia 에서 사용
 export type Capture_options = {
   audio: boolean;

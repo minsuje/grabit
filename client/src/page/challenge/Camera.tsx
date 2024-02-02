@@ -1,17 +1,45 @@
-import { useState } from 'react';
-import { CameraAction } from '../../camera/camera';
-import { Button } from '@/components/ui/button';
+import { Tab } from '@/components/Component0117';
+import { useDispatch, useSelector } from 'react-redux';
+import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
+import { RootState } from '@/store/store';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, RefObject } from 'react';
+import axios from 'axios';
+import { Challenge, users } from '@/types/types';
+import { setTotalAuth, setResult } from '@/store/resultSlice';
+import { setHeaderInfo } from '@/store/headerSlice';
+import { differenceInDays, differenceInCalendarDays } from 'date-fns';
 import { privateApi } from '@/api/axios';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+// import Cta from '@/components/Cta';
+import { Button } from '@/components/ui/button';
+import { useRef } from 'react';
+import Cta from '@/components/Cta';
 
+interface url {
+  userid_num?: string;
+  url: string;
+  authentication_id?: number;
+}
 function Camera() {
-  const navigate = useNavigate();
-  const [isCameraOpen, setIsCameraOpen] = useState<Boolean>(false);
-  const [cardImage, setCardImage] = useState<Blob>();
+  const info = useSelector((state: RootState) => state.result);
+  console.log(info);
+
+  // const { userid_num } = useSelector((state: RootState) => state.login);
+  const userid_num = Number(localStorage.getItem('userid_num'));
+  console.log('user', userid_num);
+
   const [file, setFile] = useState<File>();
 
+  const [imgUrl, setImgUrl] = useState<string>();
+
+  const inputRef: RefObject<HTMLInputElement> | null = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { challenge_id } = useParams();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
+  }, [dispatch]);
 
   async function query(file: File) {
     const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
@@ -37,75 +65,74 @@ function Camera() {
         type: file?.type,
       },
     }).then((res) => {
-      console.log('res.data', res.data);
+      console.log('res.data>>>>>>>>>>', res.data);
+
       if (res.data.msg) {
         alert(res.data.msg);
-      } else {
-        privateApi({
-          method: 'put',
-          url: res.data,
-          data: file,
-          headers: {
-            'Content-Type': file?.type,
-          },
-        }).then((res) => {
-          console.log(res);
-          alert('업로드 완료!');
-          navigate(`/challengeInProgress/${challenge_id}`);
-        });
       }
+      // } else {
+      //   axios({
+      //     method: 'put',
+      //     url: res.data,
+      //     data: file,
+      //     headers: {
+      //       'Content-Type': file?.type,
+      //     },
+      //   }).then((res) => {
+      //     console.log(res);
+      //     alert('업로드 완료!');
+      //     navigate(`/challengeInProgress/${challenge_id}`);
+      //   });
+      // }
     });
+    if (imgUrl) {
+      URL.revokeObjectURL(imgUrl);
+      setImgUrl(undefined);
+    }
+
+    setFile(undefined);
   }
 
   return (
-    <>
-      <div className="flex-col align-middle">
-        <div>
-          {!cardImage && isCameraOpen && (
-            <CameraAction
-              onCapture={(blob: Blob) => {
-                setCardImage(blob);
-                console.log('blob', blob);
-                setFile(new File([blob], 'image.png', { type: blob.type }));
-              }}
-              onClear={() => setCardImage(undefined)}
-            />
-          )}
+    <div className="mt-12 flex flex-col gap-4">
+      {imgUrl && (
+        <div className="mx-auto text-center">
+          <img src={imgUrl}></img>
+          <Button onClick={upload}>업로드</Button>
         </div>
+      )}
 
-        {cardImage && (
-          <div className="m-auto">
-            {/* <h2>미리보기</h2> */}
-
-            <img className="absolute" src={cardImage && URL.createObjectURL(cardImage)} />
-
-            <div className="absolute">
-              <Button
-                onClick={() => {
-                  setIsCameraOpen(true);
-                  setCardImage(undefined);
-                }}
-              >
-                다시 찍기
-              </Button>
-              <Button onClick={upload}>업로드</Button>
-            </div>
-          </div>
-        )}
-        <div className="fixed bottom-0 left-0 right-0 flex justify-center align-middle">
-          <Button onClick={() => setIsCameraOpen(true)}>Open Camera</Button>
+      <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
+        <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
+        <div className="flex-col bg-white px-8  pb-8 ">
+          <input
+            className="opacity-0"
+            type="file"
+            id="imageFile"
+            capture="environment"
+            accept="image/*"
+            ref={inputRef}
+            onChange={(e) => {
+              if (e.target.files?.length == 1) {
+                console.log(e.target.files[0]);
+                setFile(e.target.files[0]);
+                setImgUrl(URL.createObjectURL(e.target.files[0]));
+              }
+            }}
+          />
           <Button
             onClick={() => {
-              setIsCameraOpen(false);
-              setCardImage(undefined);
-              console.log(isCameraOpen);
+              if (inputRef.current) {
+                inputRef.current.click();
+              }
             }}
+            className="w-full rounded-md p-6"
           >
-            Close Camera
+            인증하기
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

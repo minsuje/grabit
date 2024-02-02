@@ -1,17 +1,13 @@
 import { Label } from '@/components/ui/label';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
-
 import { addDays, format, differenceInDays, addHours } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEffect, useState } from 'react';
 import { privateApi } from '@/api/axios';
@@ -67,6 +63,23 @@ function ChallengeEdit() {
     dispatch(setHeaderInfo({ title: '챌린지 수정', backPath: -1 }));
   }, [dispatch]);
 
+  useEffect(() => {
+    {
+      privateApi
+        .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setChallengeDetail(response.data.challengeDetail[0]);
+          setChallengers(response.data.challengers);
+        })
+        .catch((error) => {
+          console.error('ChallengeEdit에서 오류발생 :', error);
+        });
+    }
+  }, []);
+
   const [challengeDetail, setChallengeDetail] = useState<Challenge>({
     challenge_id: 1,
     userid_num: 1,
@@ -101,7 +114,6 @@ function ChallengeEdit() {
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
   let periodChanged = period;
   console.log('period', period);
-  4;
 
   const handleStartDate = (date: Date | undefined) => {
     setDate(date);
@@ -117,21 +129,6 @@ function ChallengeEdit() {
   for (let i = 0; i < 24; i++) {
     hours.push(i);
   }
-
-  useEffect(() => {
-    {
-      privateApi
-        .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
-        .then((response) => {
-          console.log(response.data);
-          setChallengeDetail(response.data.challengeDetail[0]);
-          setChallengers(response.data.challengers);
-        })
-        .catch((error) => {
-          console.error('ChallengeEdit에서 오류발생 :', error);
-        });
-    }
-  }, []);
 
   return (
     <div className="flex flex-col gap-8">

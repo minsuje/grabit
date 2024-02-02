@@ -12,8 +12,7 @@ interface Emotion {
 
 function ChallengeImage() {
   const dispatch = useDispatch();
-  // const userid_num = Number(localStorage.getItem('userid_num'));
-  const userid_num = 3;
+  const userid_num = Number(localStorage.getItem('userid_num'));
 
   const { challenge_id, authentication_id } = useParams();
   // const emotionList: any = useRef<HTMLInputElement>(null);
@@ -54,6 +53,7 @@ function ChallengeImage() {
               setFirst({ ...first, count: (first.count += 0.5) });
               response.data.emoticon[i].authentication_img_comment_userid_num == userid_num &&
                 setFirst({ ...first, checked: true });
+
               break;
             case 2:
               setSecond({ ...second, count: (second.count += 0.5) });
@@ -169,7 +169,7 @@ function ChallengeImage() {
       <h1> 인증 사진 </h1>
       <p> 이모티콘</p>
       <div className="flex flex-col justify-center">
-        <img className="aspect-square w-full rounded-lg object-cover" src={fileUrl}></img>
+        <img className="aspect-square w-full rounded-lg border-[10px] border-gray-300 object-cover" src={fileUrl}></img>
 
         <div className="flex flex-row justify-around">
           {first.checked ? (
