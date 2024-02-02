@@ -68,10 +68,15 @@ export class FriendService {
           is_friend,
         })
         .returning();
+      const friendNickname = await db
+        .select({ nickname: users.nickname })
+        .from(users)
+        .where(eq(users.userid_num, newFriendRequest[0].userid_num));
       await db.insert(notification).values({
         userid_num: other_userid_num,
         reference_id: newFriendRequest[0].friend_id,
-        type: 'friend_request',
+        type: 'friend',
+        message: `request/${friendNickname[0].nickname}`,
         is_confirm: false,
       });
       return { msg: '친구 신청이 완료되었습니다' };
