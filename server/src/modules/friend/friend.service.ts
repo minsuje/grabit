@@ -79,7 +79,7 @@ export class FriendService {
         type: 'friend',
         message: {
           friendName: friendInfo[0].nickname,
-          userid: friendInfo[0].userid,
+          requestorName: friendInfo[0].userid,
         },
         is_confirm: false,
       });
