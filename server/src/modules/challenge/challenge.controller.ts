@@ -101,13 +101,23 @@ export class ChallengeController {
   // 챌린지 상세 정보 보기
   @UseGuards(JwtAuthGuard)
   @Get('/challengeDetail/:challenge_id')
-  getChallengeDetail(
+  async getChallengeDetail(
     @Param('challenge_id') challenge_id: number,
     @Req() req,
-  ): any {
+  ) {
+    // 로그인한 유저의 정보 찾기
+    const userInfo = req.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
     // console.log('controller', challenge_id);
     console.log('controller challengeDetail req > ', req.file);
-    return this.ChallengeService.challengeDetail(challenge_id, req.file);
+    return this.ChallengeService.challengeDetail(
+      userid_num,
+      challenge_id,
+      req.file,
+    );
   }
 
   // 챌린지 수정 페이지 보기
