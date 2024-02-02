@@ -19,7 +19,7 @@ type MyObjectType = {
 };
 
 export const notification = pgTable('notification', {
-  notification_id: serial('notification_id'),
+  notification_id: serial('notification_id').primaryKey(),
   userid_num: integer('userid_num')
     .notNull()
     .references(() => users.userid_num, { onDelete: 'cascade' }),

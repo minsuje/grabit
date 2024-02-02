@@ -11,3 +11,7 @@
   align-items: center;
   color: white; /* 텍스트 색상은 하얀색으로 설정 */
 }
+
+html {
+  background-color: #f9fafe;
+}

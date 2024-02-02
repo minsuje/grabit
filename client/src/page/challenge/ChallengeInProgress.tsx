@@ -176,27 +176,27 @@ function ChallengeInProgress() {
         총 {challengeDetail?.goal_money * challengers.length}원
       </div>
 
-      <div className="m-10 flex  justify-between p-1 text-center">
+      <div className="grid grid-cols-2 gap-8 text-center ">
         <div className="flex-col">
-          <div className="p-2 text-xl font-black">나</div>
+          <h3 className="w-full text-xl font-bold">나</h3>
           <div className="text-l ">{UrlGroup[0].length}회 성공</div>
         </div>
 
         <div className="flex-col">
-          <div className="p-2 text-xl font-black">{tab[1]}</div>
+          <h3 className="w-full text-xl font-bold">{tab[1]}</h3>
           <div className="text-l ">{UrlGroup[1].length}회 성공</div>
         </div>
 
         {tab[2] && (
           <div className="flex-col">
-            <div className="p-2 text-xl font-black">{tab[2]}</div>
+            <h3 className="w-full text-xl font-bold">{tab[2]}</h3>
             <div className="text-l ">{UrlGroup[2].length}회 성공</div>
           </div>
         )}
 
         {tab[3] && (
           <div className="flex-col">
-            <div className="p-2 text-xl font-black">{tab[3]}</div>
+            <h3 className="w-full text-xl font-bold">{tab[3]}</h3>
             <div className="text-l">{UrlGroup[3].length}회 성공</div>
           </div>
         )}
