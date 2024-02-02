@@ -5,7 +5,7 @@ import {
   authentication,
   authentication_img_emoticon,
 } from './schema';
-import { users } from '../user/schema';
+import { score, users } from '../user/schema';
 import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
 import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
@@ -284,6 +284,7 @@ export class ChallengeService {
     // count 기준으로 내림차순 정렬
     topicCounts.sort((a, b) => b.count - a.count);
     const popularTopic = topicCounts.slice(0, 3);
+    console.log('popularTopic > ', popularTopic);
     const popularTopics = popularTopic.map((topic) => topic.name);
     console.log('s3middleware service popularTopics', popularTopics);
     const top1 = await db
@@ -609,43 +610,102 @@ export class ChallengeService {
   };
 
   // challenge 승자 업데이트
-  async challengeWinner(
-    winner: number[],
-    challenge_id: number,
-    userid_num: number,
-  ) {
-    let visible = 'show';
-    if (winner.length === 0 || winner === undefined) {
-      visible = 'show';
+  async challengeWinner(winner: any, challenge_id: number, userid_num: number) {
+    console.log(typeof winner);
+    let winners = winner.winner_userid_num;
+    let win = 'none';
+    // 이긴 사람이 없을 때
+    if (winners.length === 0 || winners === undefined) {
+      win = 'none';
+      console.log('여기까지1');
     } else {
-      // winner 추가하기
+      // 이긴 사람이 있을 때 winner 추가하기
       const addWinner = await db
         .update(challenge)
-        .set({ winner_userid_num: winner })
+        .set({ winner_userid_num: winners })
         .where(eq(challenge.challenge_id, challenge_id));
 
-      visible = 'hide';
+      console.log('여기까지2');
+
+      win = 'someone';
     }
 
-    // 이긴 유저들을 winner배열에 넣어줌
-    const winnerArray: number[] = [];
+    console.log('여기까지');
+
+    // 챌린지 goal money 찾기
+    const money = await db
+      .select({ goal_money: challenge.goal_money })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+
+    // 몇명이 참가했는지 찾기
+    let totalPeople: any = await db
+      .select({ challenger_userid_num: challenge.challenger_userid_num })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+
+    console.log('totalPeople > ', totalPeople);
+    totalPeople = totalPeople[0].challenger_userid_num;
+    console.log(
+      '🚀 ~ ChallengeService ~ challengeWinner ~ totalPeople:',
+      totalPeople,
+    );
+
+    // 모든 이긴 유저 찾기
     const findWinner = await db
       .select({ winner_userid_num: challenge.winner_userid_num })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
 
-    for (let element of findWinner) {
-      await winnerArray.push(...element.winner_userid_num);
+    console.log('1');
+    console.log('findWinner >> ', findWinner);
+
+    // 내 현재 점수
+    let findMyScore = await db
+      .select({ score_num: users.score_num })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+
+    console.log('2');
+
+    // 모든 승자를 조회
+    let amIWinner: boolean = false;
+    if (winners.includes(userid_num)) {
+      amIWinner = true;
     }
+    // 만먁 내가 승자에 포함된다면
+    if (amIWinner) {
+      // 스코어 증가!
+      const addScoreTable = await db.insert(score).values({
+        userid_num: userid_num,
+        score_description: '챌린지 성공!',
+        score_type: 'win',
+        score: +100,
+      });
+      // + 100점
+      const plus = findMyScore[0].score_num + 100;
 
-    console.log('winnerArray', winnerArray);
+      // 유저의 점수 증가 시키기
+      const addUserTable = await db
+        .update(users)
+        .set({ score_num: plus })
+        .where(eq(users.userid_num, userid_num));
+    } else {
+      const loseScore = await db.insert(score).values({
+        userid_num: userid_num,
+        score_description: '챌린지 실패...',
+        score_type: 'lose',
+        score: -50,
+      });
+      // - 50점
+      const minus = findMyScore[0].score_num - 50;
 
-    // Body로 들어온 winner 마다 score 추가
-    // winner_userid_num에 내 userid_num이 포함되지 않으면 -50점
-    // 먼저 내가 포함 되어 있는지 찾기
-    const score = findWinner[0].winner_userid_num.includes(userid_num);
-
-    const minusScore = await db.select();
+      // 유저의 점수 감소 시키기
+      const addUserTable = await db
+        .update(users)
+        .set({ score_num: minus })
+        .where(eq(users.userid_num, userid_num));
+    }
 
     // if(findWinner[0] === )
   }
