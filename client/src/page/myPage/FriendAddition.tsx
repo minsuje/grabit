@@ -15,18 +15,18 @@ export default function FriendAddition() {
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
-  useEffect(() => {
-    const { id } = useParams();
-    privateApi
-      .get(`http://3.34.122.205:3000/friend/${id}`)
-      .then((response) => {
-        setFriends(response.data.friends_info);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   const { id } = useParams();
+  //   privateApi
+  //     .get(`http://3.34.122.205:3000/friend/${id}`)
+  //     .then((response) => {
+  //       setFriends(response.data.friends_info);
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.error('친구 목록 불러오기 axios 오류', error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     const results = friends.filter((friend) => friend.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -36,7 +36,7 @@ export default function FriendAddition() {
   return (
     <div>
       <div className="flex justify-between">
-        <h1>친구목록</h1>
+        <h1>전체목록</h1>
         <Link to="">
           <button>친구 추가</button>
         </Link>
