@@ -340,12 +340,13 @@ export class ChallengeService {
       .select()
       .from(authentication)
       .where(
+        
         and(
           eq(authentication.challenge_id, challengeDetail[0].challenge_id),
           eq(authentication.userid_num, login_userid_num),
         ),
       );
-    // console.log('service myAuth > ', myAuth);
+    console.log('service myAuth > ', myAuth);
     let today = new Date().toLocaleString('en-US', {
       timeZone: 'Asia/Seoul',
     });

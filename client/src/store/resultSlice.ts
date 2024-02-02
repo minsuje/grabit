@@ -16,6 +16,8 @@ const initialState: ResultState = {
   result: [
     { userid_num: 1, nickname: '닉1', Authcount: 5 },
     { userid_num: 2, nickname: '닉2', Authcount: 10 },
+    { userid_num: 3, nickname: '닉3', Authcount: 8 },
+    { userid_num: 4, nickname: '닉3', Authcount: 8 },
   ],
   winner: [], // 최종 승자 유저 아이디 배열
 };

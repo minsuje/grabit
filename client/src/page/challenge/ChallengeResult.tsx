@@ -20,8 +20,9 @@ export default function ChallengeResult() {
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
 
   const info = useSelector((state: RootState) => state.result);
-  const dispatch = useDispatch();
   console.log(info);
+  const dispatch = useDispatch();
+  // console.log('info console.log >>>>>>', info);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 결과', backPath: -1 }));
@@ -71,7 +72,7 @@ export default function ChallengeResult() {
     let score = currentScore;
     const interval = setInterval(() => {
       if (score < finalScore) {
-        score += 3;
+        score += 5;
         setCurrentScore(score);
       } else if (score > finalScore) {
         // 추가된 부분: 점수가 finalScore보다 크면 감소
@@ -109,32 +110,70 @@ export default function ChallengeResult() {
         </div>
       )}
       <ReactCanvasConfetti />
-      <div className="container">
-        <div className="mb-10 p-3 text-center text-5xl font-extrabold">30,000 원</div>
-        <div className="grid grid-cols-2 gap-4 p-1 text-center">
-          <h1 className="text-2xl font-black">{info.result[0].nickname}</h1>
-          <h1 className="text-2xl font-black">{info.result[1].nickname}</h1>
-          <p>{info.result[0].Authcount}회 성공</p>
-          <p>{info.result[1].Authcount}회 성공</p>
-          <p>+3000 캐럿</p>
-          <p>-3000 캐럿</p>
-          <p>+100P</p>
-          <p>-50P</p>
-        </div>
-        <div className="mt-10 grid grid-cols-2 place-content-center gap-2">
-          <div className="relative text-center">
+      <div className="container ">
+        <div className="mb-10  p-3 text-center text-5xl font-extrabold">30,000 원</div>
+        <div className="flex text-center">
+          <div className="">
+            <div>
+              <h1 className="text-2xl font-black">{info.result[0].nickname}</h1>
+              <p>{info.result[0].Authcount}회 성공</p>
+              <p>+3000 캐럿</p>
+              <p>+100P</p>
+              <h1>총점</h1>
+            </div>
             <div className="text-center">
-              <p>총점</p>
               <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
               <p>{finalScore}</p>
             </div>
           </div>
+
           <div className="text-center">
-            <p>총점</p>
-            <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-            <p>{finalScore}</p>
+            <div>
+              <h1 className="text-2xl font-black">{info.result[1].nickname}</h1>
+              <p>{info.result[1].Authcount}회 성공</p>
+              <p>+3000 캐럿</p>
+              <p>+100P</p>
+              <h1>총점</h1>
+            </div>
+            <div className="text-center">
+              <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
+              <p>{finalScore}</p>
+            </div>
           </div>
+
+          {info.result[2] && (
+            <div className="text-center">
+              <div>
+                <h1 className="text-2xl font-black">{info.result[2].nickname}</h1>
+                <p>{info.result[2].Authcount}회 성공</p>
+                <p>+3000 캐럿</p>
+                <p>+100P</p>
+                <h1>총점</h1>
+              </div>
+              <div className="text-center">
+                <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
+                <p>{finalScore}</p>
+              </div>
+            </div>
+          )}
+
+          {info.result[3] && (
+            <div className="text-center">
+              <div>
+                <h1 className="text-2xl font-black">{info.result[3].nickname}</h1>
+                <p>{info.result[3].Authcount}회 성공</p>
+                <p>+3000 캐럿</p>
+                <p>+100P</p>
+                <h1>총점</h1>
+              </div>
+              <div className="text-center">
+                <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
+                <p>{finalScore}</p>
+              </div>
+            </div>
+          )}
         </div>
+
         <ProgressComponent ProgressName="진행률" total={info.totalAuth} value={info.result[0].Authcount} />
         <div className="text-center ">
           <Link to="/main">
