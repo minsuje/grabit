@@ -25,22 +25,7 @@ export class NotificationService {
 
     console.log('result >>>>>', result);
 
-    const friendJoin = await db
-      .select()
-      .from(notification)
-      .leftJoin(friend, eq(notification.reference_id, friend.friend_id))
-      .leftJoin(
-        challenge,
-        eq(notification.reference_id, challenge.challenge_id),
-      );
-
-    console.log('friendJoin >>>>>', friendJoin);
-
     if (result.length > 0) {
-      const findFriend = await db
-        .select({})
-        .from(friend)
-        .where(eq(friend.userid_num, userid_num));
       return result;
     } else {
       return { msg: '알림 없음' };

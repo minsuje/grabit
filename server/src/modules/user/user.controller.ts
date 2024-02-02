@@ -79,6 +79,12 @@ export class UserController {
     return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 
+  @UseGuards(JwtService)
+  @Get('/profile/:userid')
+  async getProfile(@Param('userid') userid: number) {
+    // return this.userService.getProfile(userid);
+  }
+
   @Get('score/:userid')
   getScore(@Param('userid') userid: number) {
     return this.userService.getScore(userid);

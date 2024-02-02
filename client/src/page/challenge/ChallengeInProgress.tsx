@@ -16,9 +16,9 @@ import { useRef } from 'react';
 import Cta from '@/components/Cta';
 
 interface url {
-  userid_num: string;
+  userid_num?: string;
   url: string;
-  authentication_id: number;
+  authentication_id?: number;
 }
 
 function ChallengeInProgress() {
@@ -100,34 +100,39 @@ function ChallengeInProgress() {
       console.log('aifile >>>>>>', aiFile);
     }
 
-    // await privateApi({
-    //   method: 'post',
-    //   url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
-    //   data: {
-    //     filename: file?.name,
-    //     type: file?.type,
-    //   },
-    // }).then((res) => {
-    //   console.log('res.data', res.data);
-    //   if (res.data.msg) {
-    //     alert(res.data.msg);
-    //   } else {
-    //     axios({
-    //       method: 'put',
-    //       url: res.data,
-    //       data: file,
-    //       headers: {
-    //         'Content-Type': file?.type,
-    //       },
-    //     }).then((res) => {
-    //       console.log(res);
-    //       alert('업로드 완료!');
-    //       navigate(`/challengeInProgress/${challenge_id}`);
-    //     });
-    //   }
-    // });
+    await privateApi({
+      method: 'post',
+      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
+      data: {
+        filename: file?.name,
+        type: file?.type,
+      },
+    }).then((res) => {
+      console.log('res.data>>>>>>>>>>', res.data);
+
+      UrlGroup[0].push({ url: res.data });
+
+      if (res.data.msg) {
+        alert(res.data.msg);
+      }
+      // } else {
+      //   axios({
+      //     method: 'put',
+      //     url: res.data,
+      //     data: file,
+      //     headers: {
+      //       'Content-Type': file?.type,
+      //     },
+      //   }).then((res) => {
+      //     console.log(res);
+      //     alert('업로드 완료!');
+      //     navigate(`/challengeInProgress/${challenge_id}`);
+      //   });
+      // }
+    });
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);
+      setImgUrl(undefined);
     }
 
     setFile(undefined);
@@ -137,7 +142,9 @@ function ChallengeInProgress() {
     console.log('challenge_id', challenge_id);
 
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
+      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response): void => {
         console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);
@@ -257,60 +264,19 @@ function ChallengeInProgress() {
         tab4content={Images[3]}
       />
 
-      {/* <Button onClick={() => {
-            navigate(`/camera/${challenge_id}`);
-            
-          }}>인증하기</Button> */}
-      {/* <Cta
+      <Button
+        onClick={() => {
+          navigate(`/camera/${challenge_id}`);
+        }}
+      >
+        인증하기
+      </Button>
+      <Cta
         text="인증하기"
         onclick={() => {
           navigate(`/camera/${challenge_id}`);
         }}
-      ></Cta> */}
-      {imgUrl && (
-        <div className="mx-auto text-center">
-          <img src={imgUrl}></img>
-          <Button onClick={upload}>업로드</Button>
-        </div>
-      )}
-
-      <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
-        <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
-        <div className="flex-col bg-white px-8  pb-8 ">
-          <input
-            className="opacity-0"
-            type="file"
-            id="imageFile"
-            capture="environment"
-            accept="image/*"
-            ref={inputRef}
-            onChange={(e) => {
-              if (e.target.files?.length == 1) {
-                console.log(e.target.files[0]);
-                setFile(e.target.files[0]);
-                setImgUrl(URL.createObjectURL(e.target.files[0]));
-              }
-            }}
-          />
-          {challengeDetail.authentication_start_time <= new Date().getHours() &&
-          challengeDetail.authentication_end_time > new Date().getHours() ? (
-            <Button
-              onClick={() => {
-                if (inputRef.current) {
-                  inputRef.current.click();
-                }
-              }}
-              className="w-full rounded-md p-6"
-            >
-              인증하기
-            </Button>
-          ) : (
-            <Button className="w-full rounded-md p-6" disabled>
-              인증하기
-            </Button>
-          )}
-        </div>
-      </div>
+      ></Cta>
     </div>
   );
 }

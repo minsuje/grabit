@@ -1,8 +1,9 @@
 import AlarmList from '@/components/AlarmList';
 import { useState, useEffect } from 'react';
 import { privateApi } from '@/api/axios';
+import { Link } from 'react-router-dom';
 
-interface challengeAlarm {
+interface challengeAlarmList {
   title: string;
   content: string;
 }
@@ -12,7 +13,7 @@ interface friendAlarm {
 }
 
 function Alarm() {
-  const [challengeAlarm, setChallengeAlarm] = useState<challengeAlarm[]>([
+  const [challengeAlarm, setChallengeAlarm] = useState<challengeAlarmList[]>([
     {
       title: '알림1',
       content: '챌린지 신청입니다',
@@ -34,16 +35,14 @@ function Alarm() {
   ]);
   useEffect(() => {
     {
-      // privateApi
-      //   .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     setChallengeDetail(response.data.challengeDetail[0]);
-      //     setChallengers(response.data.challengers);
-      //   })
-      //   .catch((error) => {
-      //     console.error('ChallengeEdit에서 오류발생 :', error);
-      //   });
+      privateApi
+        .get(`http://3.34.122.205:3000/Alarm`)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error('ChallengeEdit에서 오류발생 :', error);
+        });
     }
   }, []);
 
@@ -52,7 +51,12 @@ function Alarm() {
       <h1 className="text-2xl font-extrabold">챌린지 알림</h1>
       <div className="list flex flex-col gap-4 p-4">
         {challengeAlarm.map((list, i) => {
-          return <AlarmList key={i} title={list.title} content={list.content} />;
+          return (
+            <Link className="text-black no-underline" to={`/challengeAccept/1`}>
+              {/* reference_id */}
+              <AlarmList key={i} title={list.title} content={list.content} />
+            </Link>
+          );
         })}
       </div>
       <h1 className="text-2xl font-extrabold">친구 알림</h1>

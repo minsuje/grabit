@@ -50,7 +50,6 @@ export default function Main() {
   }
 
   const [userid_num, setUserid_num] = useState<number>(0);
-
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
@@ -96,7 +95,8 @@ export default function Main() {
     <div className="my-8 flex flex-col gap-8">
       <h1>랭킹</h1>
       <Button onClick={refreshAccessToken}>refresh 요청</Button>
-      {/* <Ranking /> */}
+      <p>----------</p>
+      <Ranking />
       <h1>오늘의 미션</h1>
 
       {completed === 'none' ? (

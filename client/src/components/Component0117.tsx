@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { privateApi } from '@/api/axios';
+import axios, { privateApi } from '@/api/axios';
 import { users } from '@/types/types';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -159,9 +159,13 @@ function Ranking() {
   const [ranking, setRanking] = useState<users[]>([]);
   useEffect(() => {
     {
-      privateApi
-        .get('http://3.34.122.205:3000/Ranking')
+      console.log('ranking component 실행');
+      axios
+        .get('http://3.34.122.205:3000/Ranking', {
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+        })
         .then((response) => {
+          console.log('랭킹 axios');
           console.log('ranking axios response', response);
           setRanking(response.data);
         })
@@ -169,10 +173,10 @@ function Ranking() {
           console.error('ranking component에서 axios 에러', error);
         });
     }
-  });
+  }, []);
   return (
     <div className="flex flex-col gap-3 p-2 font-bold ">
-      {ranking.map((rank: users, idx) => {
+      {ranking?.map((rank: users, idx) => {
         return (
           <div key={idx}>
             <div>{idx + 1}위 </div>
