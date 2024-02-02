@@ -25,6 +25,8 @@ async function bootstrap() {
       'https://accounts.kakao.com/login',
       'http://localhost:3000/auth/kakao',
       'https://api.tosspayments.com/v1/payments',
+      'http://localhost:5173/auth/kakao/',
+      'https://kauth.kakao.com',
     ],
     preflightContinue: false,
     credentials: true,

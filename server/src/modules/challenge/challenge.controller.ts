@@ -110,6 +110,30 @@ export class ChallengeController {
     return this.ChallengeService.challengeDetail(challenge_id, req.file);
   }
 
+  // 챌린지 상세 정보 보기 점수 업데이트
+  @UseGuards(JwtAuthGuard)
+  @Post('/challengeDetail/:challenge_id')
+  async postChallengeDetail(
+    @Param('challenge_id') challenge_id: number,
+    @Body() winner,
+    @Req() req: Request,
+  ) {
+    const userInfo = req.headers['authorization'].split(' ')[1];
+
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const userid_num = decodedUserInfo.userid_num;
+
+    // this.ChallengeService.challengeScore(winner);
+    return this.ChallengeService.challengeWinner(
+      winner,
+      challenge_id,
+      userid_num,
+    );
+  }
+
   // 챌린지 수정 페이지 보기
   @Get('/challengeEdit/:challenge_id')
   async getChallengeEdit(@Param('challenge_id') challenge_id: number) {
