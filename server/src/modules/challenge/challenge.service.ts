@@ -5,10 +5,10 @@ import {
   authentication,
   authentication_img_emoticon,
 } from './schema';
-import { score, users } from '../user/schema';
+import { account, score, users } from '../user/schema';
 import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
-import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
+import { eq, not, and, desc, arrayOverlaps, sql } from 'drizzle-orm';
 import {
   isBefore,
   isAfter,
@@ -41,69 +41,91 @@ export class ChallengeService {
       authentication_start_time,
       authentication_end_time,
     } = body;
-    console.log(
-      'service newChallenge body challenger userid_num > ',
-      challenger_userid_num,
-    );
 
-    let challengers = [];
-    for (let i = 0; i < challenger_userid_num.length; i++) {
-      if (Number(challenger_userid_num[i]) !== login_userid_num) {
-        challengers.push({
-          userid_num: challenger_userid_num[i],
-          isAccept: false,
-          resultConfirm: false,
-        });
-      } else {
-        challengers.push({
-          userid_num: challenger_userid_num[i],
-          isAccept: true,
-          resultConfirm: false,
-        });
+    // 챌린지 생성하는 유저 정보 찾아오기
+    let userMoney: any = await db
+      .select({ money: users.money })
+      .from(users)
+      .where(eq(users.userid_num, login_userid_num));
+    userMoney = userMoney[0].money;
+
+    // 내기 금액보다 유저의 잔고가 많아야 챌린지 생성 가능
+    if (userMoney >= goal_money) {
+      let challengers = [];
+      for (let i = 0; i < challenger_userid_num.length; i++) {
+        if (Number(challenger_userid_num[i]) !== login_userid_num) {
+          challengers.push({
+            userid_num: challenger_userid_num[i],
+            isAccept: false,
+            resultConfirm: false,
+          });
+        } else {
+          challengers.push({
+            userid_num: challenger_userid_num[i],
+            isAccept: true,
+            resultConfirm: false,
+          });
+        }
       }
-    }
-    // console.log('service newChallenge challengers', challengers);
 
-    // 챌린지 테이블에 추가하기
-    const newChallenge = await db
-      .insert(challenge)
-      .values({
-        challenge_name,
+      // 챌린지 테이블에 추가하기
+      let newChallenge: any = await db
+        .insert(challenge)
+        .values({
+          challenge_name,
+          userid_num: login_userid_num,
+          is_public,
+          topic,
+          auth_keyword,
+          challenger_userid_num: challengers,
+          goal_money,
+          term,
+          authentication_start_date: new Date(authentication_start_date),
+          authentication_end_date: new Date(authentication_end_date),
+          authentication_start_time,
+          authentication_end_time,
+        })
+        .returning(); // 생성하고 바로 객체로 반환받아서 값 사용할 수 있음
+      newChallenge = newChallenge[0];
+
+      // notification 테이블에 추가하기
+      const challengeNotification = [];
+      let noti: any;
+      for (let i = 0; i < challenger_userid_num.length; i++) {
+        // 챌린지를 생성하는 유저를 제외하고 알람 보내주기
+        if (Number(challenger_userid_num[i]) !== login_userid_num) {
+          noti = await db.insert(notification).values({
+            userid_num: Number(challenger_userid_num[i]),
+            reference_id: newChallenge.challenge_id,
+            message: {
+              challengeName: newChallenge.challenge_name,
+              inviterName: login_nickname,
+            },
+            type: 'challenge/create',
+            is_confirm: false,
+          });
+          challengeNotification.push(noti);
+        }
+      }
+
+      // 챌린지 생성될 때 챌린지 생성하는 유저 money랑 account 계산하기
+      const money = await db
+        .update(users)
+        .set({
+          money: sql`${users.money} - ${newChallenge.goal_money}`,
+        })
+        .where(eq(users.userid_num, login_userid_num));
+
+      const accountInfo = await db.insert(account).values({
+        transaction_description: 'challenge/participation',
+        transaction_type: 'withdraw',
+        transaction_amount: newChallenge.goal_money,
+        status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
         userid_num: login_userid_num,
-        is_public,
-        topic,
-        auth_keyword,
-        challenger_userid_num: challengers,
-        goal_money,
-        term,
-        authentication_start_date: new Date(authentication_start_date),
-        authentication_end_date: new Date(authentication_end_date),
-        authentication_start_time,
-        authentication_end_time,
-      })
-      .returning(); // 생성하고 바로 객체로 반환받아서 값 사용할 수 있음
+      });
 
-    // notification 테이블에 추가하기
-    const challengeNotification = [];
-    let noti: any;
-    for (let i = 0; i < challenger_userid_num.length; i++) {
-      // 챌린지를 생성하는 유저를 제외하고 알람 보내주기
-      if (Number(challenger_userid_num[i]) !== login_userid_num) {
-        noti = await db.insert(notification).values({
-          userid_num: Number(challenger_userid_num[i]),
-          reference_id: newChallenge[0].challenge_id,
-          message: {
-            challengeName: newChallenge[0].challenge_name,
-            inviterName: login_nickname,
-          },
-          type: 'challenge/create',
-          is_confirm: false,
-        });
-        challengeNotification.push(noti);
-      }
-    }
-
-    return { newChallenge, challengeNotification };
+      return { newChallenge, challengeNotification };
+    } else return { msg: '캐럿이 부족합니다.' };
   };
 
   // 챌린지 수락
@@ -119,6 +141,7 @@ export class ChallengeService {
         challengeWait[i].isAccept = true;
       }
     }
+    // 수락하면 유저 테이블에서 money 수정하고 , account 기록 남겨주기
 
     return await db
       .update(challenge)
@@ -844,7 +867,7 @@ export class ChallengeService {
   // challenge 종료 score 올리기
   // async challengeScore(challenge_id: number) {}
 
-  // challenge 테이블에서 challenger_userid_num.length가 0이면서 authentication_start_date로 부터 30일 지났으면 삭제
+  // challenge 테이블에서 authentication_start_date로 부터 30일 지났으면 삭제
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
     const everyChallenge = await db.select().from(challenge);
