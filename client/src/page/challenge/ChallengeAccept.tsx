@@ -75,7 +75,7 @@ function ChallengeAccept() {
   }, []);
 
   return (
-    <div className="container ">
+    <div className="">
       <h1 className="py-4 text-3xl font-bold">챌린지 정보</h1>
 
       <div>
