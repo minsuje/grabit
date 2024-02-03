@@ -5,11 +5,19 @@ import {
   authentication,
   authentication_img_emoticon,
 } from './schema';
-import { users } from '../user/schema';
+import { score, users } from '../user/schema';
 import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
 import { eq, not, and, desc, arrayOverlaps } from 'drizzle-orm';
-import { isBefore, isAfter, addHours, addMonths } from 'date-fns';
+import {
+  isBefore,
+  isAfter,
+  addHours,
+  addMonths,
+  subDays,
+  differenceInDays,
+  addDays,
+} from 'date-fns';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
@@ -284,6 +292,7 @@ export class ChallengeService {
     // count 기준으로 내림차순 정렬
     topicCounts.sort((a, b) => b.count - a.count);
     const popularTopic = topicCounts.slice(0, 3);
+    console.log('popularTopic > ', popularTopic);
     const popularTopics = popularTopic.map((topic) => topic.name);
     console.log('s3middleware service popularTopics', popularTopics);
     const top1 = await db
@@ -308,35 +317,158 @@ export class ChallengeService {
   };
 
   // 챌린지 상세 정보 보기
-  challengeDetail = async (challenge_id: number, urls: any) => {
+  challengeDetail = async (
+    login_userid_num: number,
+    challenge_id: number,
+    file: any,
+  ) => {
+    const { urls, challengers } = file;
     const challengeDetail = await db
       .select()
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
 
-    console.log('service challengeDetail service urls > ', urls);
+    // console.log(
+    //   'service challengeDetail challengeDetail > ',
+    //   challengeDetail[0],
+    // ); // 해당 챌린지에 대한 정보
+
+    // 로그인한 유저가 챌린지 인증 가능한 상태인지 확인
+    let isAcceptable: boolean = true;
+    let auth_num = 0;
+
+    // 해당 챌린지에서 로그인한 유저가 인증한 내역을 모두 찾아서 배열로 저장
+    const myAuth = await db
+      .select()
+      .from(authentication)
+      .where(
+        and(
+          eq(authentication.challenge_id, challengeDetail[0].challenge_id),
+          eq(authentication.userid_num, login_userid_num),
+        ),
+      );
+    console.log('service myAuth > ', myAuth);
+    let today = new Date().toLocaleString('en-US', {
+      timeZone: 'Asia/Seoul',
+    });
+    today = today.split(',')[0];
+    const year: number = Number(today.split('/')[2]);
+    const month: number = Number(today.split('/')[0]);
+    const day: number = Number(today.split('/')[1]);
+    // console.log('service today > ', today);
+
+    const period = differenceInDays(
+      challengeDetail[0].authentication_end_date,
+      challengeDetail[0].authentication_start_date,
+    );
+
+    let firstWeek;
+    let lastWeek;
+    const startDate = challengeDetail[0].authentication_start_date
+      .toLocaleString('en-US', {
+        timeZone: 'Asia/Seoul',
+      })
+      .split(',')[0]
+      .split('/');
+    const endDate = challengeDetail[0].authentication_end_date
+      .toLocaleString('en-US', {
+        timeZone: 'Asia/Seoul',
+      })
+      .split(',')[0];
+
+    // 일주일씩 체크하는 기간이 2주이면 종료날짜가 주가 끝나는 두번째 시점
+    if (period >= 14) {
+      lastWeek = addDays(
+        new Date(
+          Number(startDate[2]),
+          Number(startDate[0]) - 1,
+          Number(startDate[1]),
+        ),
+        14,
+      )
+        .toLocaleString('en-US', {
+          timeZone: 'Asia/Seoul',
+        })
+        .split(',')[0];
+    }
+
+    // 인증 기간이 일주일이거나 두 번째 일 때 첫 번째 인증 체크 시점
+    if (period >= 7) {
+      firstWeek = addDays(
+        new Date(
+          Number(startDate[2]),
+          Number(startDate[0]) - 1,
+          Number(startDate[1]),
+        ),
+        7,
+      )
+        .toLocaleString('en-US', {
+          timeZone: 'Asia/Seoul',
+        })
+        .split(',')[0];
+    }
+
+    // console.log('service firstWeek > ', firstWeek);
+
+    if (challengeDetail[0].term == 7) {
+      // 매일 인증
+      let last = myAuth.length;
+      // 인증 첫 날에 대한 확인
+      if (last > 0) {
+        let lastAuth = myAuth[last - 1].created_at
+          .toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+          })
+          .split(',')[0];
+        let yesterday: any = subDays(new Date(year, month - 1, day), 1);
+        yesterday = yesterday
+          .toLocaleString('en-US', {
+            timeZone: 'Asia/Seoul',
+          })
+          .split(',')[0];
+        if (lastAuth != yesterday) isAcceptable = false;
+      }
+      // console.log('service isAcceptable term 7 > ', isAcceptable);
+    } else if (challengeDetail[0].term == 3) {
+      // 주 3회 인증
+      if (today === firstWeek) {
+        if (myAuth.length < 3) isAcceptable = false;
+      }
+      if (today === lastWeek) {
+        if (myAuth.length < 6) isAcceptable = false;
+      }
+    } else if (challengeDetail[0].term) {
+      // 주 5회 인증
+      if (today === firstWeek) {
+        if (myAuth.length < 5) isAcceptable = false;
+      }
+      if (today === lastWeek) {
+        if (myAuth.length < 10) isAcceptable = false;
+      }
+    }
 
     if (challengeDetail.length !== 0) {
-      let challengers = [];
-      for (
-        let i = 0;
-        i < challengeDetail[0].challenger_userid_num.length;
-        i++
-      ) {
-        let challenger = await db
-          .select()
-          .from(users)
-          .where(
-            eq(
-              users.userid_num,
-              challengeDetail[0].challenger_userid_num[i].userid_num,
-            ),
-          );
+      // let challengers = []; // 챌린지에 참여하고 있는 모든 유저들에 대한 정보
+      // for (
+      //   let i = 0;
+      //   i < challengeDetail[0].challenger_userid_num.length;
+      //   i++
+      // ) {
+      //   let challenger = await db
+      //     .select()
+      //     .from(users)
+      //     .where(
+      //       eq(
+      //         users.userid_num,
+      //         challengeDetail[0].challenger_userid_num[i].userid_num,
+      //       ),
+      //     );
 
-        await challengers.push(challenger[0]);
-      }
+      //   await challengers.push(challenger[0]);
+      // }
+      // console.log('service challengers > ', challengers);
 
-      return { challengeDetail, challengers, urls };
+      return { challengeDetail, challengers, urls, isAcceptable };
     } else return { msg: '존재하지 않는 챌린지입니다.' };
   };
 
@@ -609,43 +741,102 @@ export class ChallengeService {
   };
 
   // challenge 승자 업데이트
-  async challengeWinner(
-    winner: number[],
-    challenge_id: number,
-    userid_num: number,
-  ) {
-    let visible = 'show';
-    if (winner.length === 0 || winner === undefined) {
-      visible = 'show';
+  async challengeWinner(winner: any, challenge_id: number, userid_num: number) {
+    console.log(typeof winner);
+    let winners = winner.winner_userid_num;
+    let win = 'none';
+    // 이긴 사람이 없을 때
+    if (winners.length === 0 || winners === undefined) {
+      win = 'none';
+      console.log('여기까지1');
     } else {
-      // winner 추가하기
+      // 이긴 사람이 있을 때 winner 추가하기
       const addWinner = await db
         .update(challenge)
-        .set({ winner_userid_num: winner })
+        .set({ winner_userid_num: winners })
         .where(eq(challenge.challenge_id, challenge_id));
 
-      visible = 'hide';
+      console.log('여기까지2');
+
+      win = 'someone';
     }
 
-    // 이긴 유저들을 winner배열에 넣어줌
-    const winnerArray: number[] = [];
+    console.log('여기까지');
+
+    // 챌린지 goal money 찾기
+    const money = await db
+      .select({ goal_money: challenge.goal_money })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+
+    // 몇명이 참가했는지 찾기
+    let totalPeople: any = await db
+      .select({ challenger_userid_num: challenge.challenger_userid_num })
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+
+    console.log('totalPeople > ', totalPeople);
+    totalPeople = totalPeople[0].challenger_userid_num;
+    console.log(
+      '🚀 ~ ChallengeService ~ challengeWinner ~ totalPeople:',
+      totalPeople,
+    );
+
+    // 모든 이긴 유저 찾기
     const findWinner = await db
       .select({ winner_userid_num: challenge.winner_userid_num })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
 
-    for (let element of findWinner) {
-      await winnerArray.push(...element.winner_userid_num);
+    console.log('1');
+    console.log('findWinner >> ', findWinner);
+
+    // 내 현재 점수
+    let findMyScore = await db
+      .select({ score_num: users.score_num })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+
+    console.log('2');
+
+    // 모든 승자를 조회
+    let amIWinner: boolean = false;
+    if (winners.includes(userid_num)) {
+      amIWinner = true;
     }
+    // 만먁 내가 승자에 포함된다면
+    if (amIWinner) {
+      // 스코어 증가!
+      const addScoreTable = await db.insert(score).values({
+        userid_num: userid_num,
+        score_description: '챌린지 성공!',
+        score_type: 'win',
+        score: +100,
+      });
+      // + 100점
+      const plus = findMyScore[0].score_num + 100;
 
-    console.log('winnerArray', winnerArray);
+      // 유저의 점수 증가 시키기
+      const addUserTable = await db
+        .update(users)
+        .set({ score_num: plus })
+        .where(eq(users.userid_num, userid_num));
+    } else {
+      const loseScore = await db.insert(score).values({
+        userid_num: userid_num,
+        score_description: '챌린지 실패...',
+        score_type: 'lose',
+        score: -50,
+      });
+      // - 50점
+      const minus = findMyScore[0].score_num - 50;
 
-    // Body로 들어온 winner 마다 score 추가
-    // winner_userid_num에 내 userid_num이 포함되지 않으면 -50점
-    // 먼저 내가 포함 되어 있는지 찾기
-    const score = findWinner[0].winner_userid_num.includes(userid_num);
-
-    const minusScore = await db.select();
+      // 유저의 점수 감소 시키기
+      const addUserTable = await db
+        .update(users)
+        .set({ score_num: minus })
+        .where(eq(users.userid_num, userid_num));
+    }
 
     // if(findWinner[0] === )
   }

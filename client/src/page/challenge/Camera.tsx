@@ -2,7 +2,7 @@ import { Tab } from '@/components/Component0117';
 import { useDispatch, useSelector } from 'react-redux';
 import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
 import { RootState } from '@/store/store';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState, RefObject } from 'react';
 import axios from 'axios';
 import { Challenge, users } from '@/types/types';
@@ -21,6 +21,10 @@ interface url {
   authentication_id?: number;
 }
 function Camera() {
+  const location = useLocation();
+  const { state } = location;
+  const { keyword, name } = state;
+
   const info = useSelector((state: RootState) => state.result);
   console.log(info);
 
@@ -60,6 +64,11 @@ function Camera() {
     if (file) {
       const aiFile = await query(file);
       console.log('aifile >>>>>>', aiFile);
+      if (aiFile.find((list: any) => list.label == keyword)) {
+        console.log('인증 성공 >>>axios 보내세요');
+      } else {
+        console.log('인증 실패 >>>>> 인증 기준에 맞지 않습니다.');
+      }
     }
 
     await privateApi({
@@ -71,25 +80,27 @@ function Camera() {
       },
     }).then((res) => {
       console.log('res.data>>>>>>>>>>', res.data);
-
-      if (res.data.msg) {
-        alert(res.data.msg);
-      }
-      // } else {
-      //   axios({
-      //     method: 'put',
-      //     url: res.data,
-      //     data: file,
-      //     headers: {
-      //       'Content-Type': file?.type,
-      //     },
-      //   }).then((res) => {
-      //     console.log(res);
-      //     alert('업로드 완료!');
-      //     navigate(`/challengeInProgress/${challenge_id}`);
-      //   });
-      // }
     });
+
+    //   if (res.data.msg) {
+    //     alert(res.data.msg);
+    //   }
+    // } else {
+    //   axios({
+    //     method: 'put',
+    //     url: res.data,
+    //     data: file,
+    //     headers: {
+    //       'Content-Type': file?.type,
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //     alert('업로드 완료!');
+    //     navigate(`/challengeInProgress/${challenge_id}`);
+    //   });
+    // }
+    // });
+
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);
       setImgUrl(undefined);
@@ -100,6 +111,7 @@ function Camera() {
 
   return (
     <div className="mt-12 flex flex-col gap-4">
+      <h1>{name}</h1>
       {imgUrl && (
         <div className="mx-auto text-center">
           <img src={imgUrl}></img>
@@ -125,6 +137,7 @@ function Camera() {
               }
             }}
           />
+
           <Button
             onClick={() => {
               if (inputRef.current) {

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { privateApi } from '@/api/axios';
+import axios, { privateApi } from '@/api/axios';
+
 
 function KakaoAuth() {
   const navigate = useNavigate();
-  const [accessTokenFetching, setAccessToskenFetching] = useState(false);
+  const [accessTokenFetching, setAccessTokenFetching] = useState(false);
 
   // Access Token 받아오기
   const getAccessToken = async () => {
@@ -17,9 +18,10 @@ function KakaoAuth() {
     try {
       setAccessTokenFetching(true); // Set fetching to true
 
-      const response = await axios.post('http://localhost:3000/auth/kakao/login', {
+      const response = await axios.get('http://localhost:3000/auth/kakao/', {
         withCredentials: true,
       });
+      console.log('response:', response);
       const accessToken = response.data.accessToken;
       console.log('accessToken:', accessToken);
 

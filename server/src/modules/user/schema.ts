@@ -33,9 +33,10 @@ export const account = pgTable('account', {
   transaction_description: varchar('transaction_description', {
     length: 100,
   }).notNull(),
-  transaction: varchar('transaction', { length: 20 }).notNull(),
-  transaction_name: integer('transaction_name').notNull(),
+  transaction_type: varchar('transaction_type', { length: 30 }).notNull(),
+  transaction_amount: integer('transaction_amount').notNull(),
   status: varchar('status', { length: 20 }).notNull(),
+  account_info: varchar('account_info', { length: 200 }).array(),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   userid_num: integer('userid_num').references(() => users.userid_num, {

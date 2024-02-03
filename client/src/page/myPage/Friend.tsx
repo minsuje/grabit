@@ -2,6 +2,8 @@ import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
+import { useParams, Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 // 친구 객체를 위한 인터페이스 정의
 interface Friend {
@@ -10,15 +12,16 @@ interface Friend {
 }
 
 export default function Friend() {
+  const { userid_num } = useParams();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
   useEffect(() => {
-    const userid = 1; // props 대체 예정
-
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid}`)
+      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         setFriends(response.data.friends_info);
         console.log(response);
@@ -40,7 +43,9 @@ export default function Friend() {
       </div>
       <div>
         <Input placeholder="검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-        <button>친구 추가</button>
+        <Link to="/friend/new">
+          <Button>친구 추가</Button>
+        </Link>
       </div>
       {filteredFriends.length > 0 ? (
         filteredFriends.map((friend, index) => <MyPageFriendList key={index} friends={friend} />)
