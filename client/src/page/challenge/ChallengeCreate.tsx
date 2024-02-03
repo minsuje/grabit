@@ -144,24 +144,6 @@ function ChallengeCreate() {
   );
 
   async function handleSubmit() {
-    console.log('🚀 ~ handleSubmit ~ authEnd:', typeof authEnd);
-    console.log('🚀 ~ handleSubmit ~ authStart:', typeof authStart);
-    console.log('🚀 ~ handleSubmit ~ date:', typeof date);
-    console.log('🚀 ~ handleSubmit ~ authTerm:', typeof authTerm);
-    console.log('🚀 ~ handleSubmit ~ goalMoney:', typeof goalMoney);
-    console.log('🚀 ~ handleSubmit ~ topic:', typeof topic);
-    console.log('🚀 ~ handleSubmit ~ isPublic:', typeof isPublic);
-    console.log('🚀 ~ handleSubmit ~ challengeName:', typeof challengeName);
-    console.log('🚀 ~ handleSubmit ~ authEnd:', authEnd);
-    console.log('🚀 ~ handleSubmit ~ authStart:', authStart);
-    console.log('🚀 ~ handleSubmit ~ date:', date);
-    console.log('🚀 ~ handleSubmit ~ authTerm:', authTerm);
-    console.log('🚀 ~ handleSubmit ~ goalMoney:', goalMoney);
-    console.log('🚀 ~ handleSubmit ~ topic:', topic);
-    console.log('🚀 ~ handleSubmit ~ isPublic:', isPublic);
-    console.log('🚀 ~ handleSubmit ~ challengeName:', challengeName);
-    console.log('🚀 ~ handleSubmit ~ friendList:', friendList);
-
     const friendId: number[] = selectedFriends.map((friend) => friend.id);
 
     const result = await privateApi({
@@ -186,24 +168,45 @@ function ChallengeCreate() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="py-4 text-3xl font-bold">챌린지 생성</h1>
-      <Tab tab1="1:1" tab2="그룹" tab1content={tab1content} tab2content={tab2content} />
+      <div>
+        <div className="user-list flex">
+          <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
+          <div className="flex w-fit items-center space-x-2">
+            <Switch id="public" checked={isPublic} onCheckedChange={setIsPublic} />
+            <Label htmlFor="public" className="w-8">
+              공개
+            </Label>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 pb-4">
+          {friendList.map((friend) => (
+            <div key={friend.id} className="user-list flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span>{friend.name}</span>
+            </div>
+          ))}
+        </div>
+        <Link to={'/friendSelect'}>
+          <Button className="w-full">추가하기</Button>
+        </Link>
+      </div>
 
       <div className="challengeName flex flex-col">
         <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
         <Input onChange={(e) => setChallengeName(e.target.value)} />
-        {/* <Input value={challengeState.challengeName} onChange={handleChallengeNameChange} /> */}
       </div>
-
       <div className="challengeTopic flex flex-col">
         <h2 className="py-4 text-xl font-bold">주제</h2>
         <Input onChange={(e) => setTopic(e.target.value)} />
       </div>
-
       <div className="challengeMoney flex flex-col">
         <h2 className="py-4 text-xl font-bold">목표 금액</h2>
         <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
       </div>
-
       <div className="challengeStartDate flex flex-col">
         <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
         <Popover>
@@ -221,7 +224,6 @@ function ChallengeCreate() {
           </PopoverContent>
         </Popover>
       </div>
-
       <div className="challengeTerm flex flex-col">
         <h2 className="py-4 text-xl font-bold">기간</h2>
         <Select onValueChange={(value) => setTerm(Number(value))}>
@@ -235,7 +237,6 @@ function ChallengeCreate() {
           </SelectContent>
         </Select>
       </div>
-
       <div className="challengeAuthTerm flex flex-col">
         <h2 className="py-4 text-xl font-bold">인증 주기</h2>
         <Select onValueChange={(value) => setAuthTerm(value)}>
@@ -249,7 +250,6 @@ function ChallengeCreate() {
           </SelectContent>
         </Select>
       </div>
-
       <div className="challengeAuthStart flex flex-col">
         <div className="authTime flex w-full gap-4">
           <div className="startTime flex w-full flex-col">
@@ -288,7 +288,6 @@ function ChallengeCreate() {
           </div>
         </div>
       </div>
-
       <Cta text="생성하기" onclick={handleSubmit} />
     </div>
   );
