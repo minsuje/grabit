@@ -34,7 +34,7 @@ export class ChallengeController {
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
-    //  { userid_num: 35,nickname: 'yewon',name: '김예원',iat: 1706841839,exp: 1706928239 }
+    //  { userid_num: 35,nickname: 'yewon',name: '김예원',,,,, }
 
     console.log('controller decodedUserInfo > ', decodedUserInfo);
     const userid_num = decodedUserInfo.userid_num;

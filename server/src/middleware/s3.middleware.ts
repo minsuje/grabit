@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import { authentication, challenge } from '../modules/challenge/schema';
+import { users } from '../modules/user/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
 import * as dotenv from 'dotenv';
@@ -28,11 +29,7 @@ export class s3Middleware implements NestMiddleware {
     });
 
     const body: any = req.body;
-    console.log('s3 middleware req > ', req.originalUrl.split('/'));
-    console.log(
-      's3 middleware req [4] > ',
-      req.originalUrl.split('/')[4] === undefined,
-    );
+    console.log('s3 middleware url >', req.originalUrl.split('/'));
     // console.log('s3 middleware body > ', body);
 
     let { filename, type } = body;
@@ -46,9 +43,52 @@ export class s3Middleware implements NestMiddleware {
     const userid_num = decodedUserInfo.userid_num;
 
     if (req.method === 'GET') {
-      // 인증 사진
+      let url;
+      // 인증 사진 여러개
       if (req.url.split('/')[2] === undefined) {
-        // console.log('s3 middleware get!!', Number(req.url.split('/')[1]));
+        // 챌린지에 참여하고 있는 모든 챌린저 정보 가져오기
+        let challenger: any = await db
+          .select({ challenger_userid_num: challenge.challenger_userid_num })
+          .from(challenge)
+          .where(
+            eq(challenge.challenge_id, Number(req.originalUrl.split('/')[2])),
+          );
+        challenger = challenger[0].challenger_userid_num;
+        let challenger_num = [];
+        for (let i = 0; i < challenger.length; i++) {
+          let id = challenger[i];
+          challenger_num.push(id.userid_num);
+        }
+        console.log('if > ', challenger_num.length);
+        let challengers = [];
+        for (let i = 0; i < challenger_num.length; i++) {
+          let info = await db
+            .select({
+              userid_num: users.userid_num,
+              nickname: users.nickname,
+              profile_img: users.profile_img,
+            })
+            .from(users)
+            .where(eq(users.userid_num, challenger_num[i]));
+          challengers.push(info[0]);
+        }
+
+        for (let i = 0; i < challengers.length; i++) {
+          key = challengers[i].profile_img;
+          const command = new GetObjectCommand({
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: key,
+          });
+
+          url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          challengers[i] = {
+            ...challengers[i],
+            profile_img: url,
+          };
+        }
+
+        console.log('info  >>>>', challengers);
+
         let files = await db
           .select({
             userid_num: authentication.userid_num,
@@ -69,15 +109,16 @@ export class s3Middleware implements NestMiddleware {
             Key: key,
           });
 
-          let url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          url = await getSignedUrl(client, command, { expiresIn: 3600 });
           urls.push({
             authentication_id: files[i].authentication_id,
             userid_num: files[i].userid_num,
             url: url,
           });
         }
-        req['file'] = urls;
+        req['file'] = { urls, challengers };
       } else {
+        // 인증 사진 하나
         let file = await db
           .select()
           .from(authentication)

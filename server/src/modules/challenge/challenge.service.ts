@@ -320,8 +320,9 @@ export class ChallengeService {
   challengeDetail = async (
     login_userid_num: number,
     challenge_id: number,
-    urls: any,
+    file: any,
   ) => {
+    const { urls, challengers } = file;
     const challengeDetail = await db
       .select()
       .from(challenge)
@@ -341,7 +342,6 @@ export class ChallengeService {
       .select()
       .from(authentication)
       .where(
-        
         and(
           eq(authentication.challenge_id, challengeDetail[0].challenge_id),
           eq(authentication.userid_num, login_userid_num),
@@ -448,24 +448,25 @@ export class ChallengeService {
     }
 
     if (challengeDetail.length !== 0) {
-      let challengers = []; // 챌린지에 참여하고 있는 모든 유저들에 대한 정보
-      for (
-        let i = 0;
-        i < challengeDetail[0].challenger_userid_num.length;
-        i++
-      ) {
-        let challenger = await db
-          .select()
-          .from(users)
-          .where(
-            eq(
-              users.userid_num,
-              challengeDetail[0].challenger_userid_num[i].userid_num,
-            ),
-          );
+      // let challengers = []; // 챌린지에 참여하고 있는 모든 유저들에 대한 정보
+      // for (
+      //   let i = 0;
+      //   i < challengeDetail[0].challenger_userid_num.length;
+      //   i++
+      // ) {
+      //   let challenger = await db
+      //     .select()
+      //     .from(users)
+      //     .where(
+      //       eq(
+      //         users.userid_num,
+      //         challengeDetail[0].challenger_userid_num[i].userid_num,
+      //       ),
+      //     );
 
-        await challengers.push(challenger[0]);
-      }
+      //   await challengers.push(challenger[0]);
+      // }
+      // console.log('service challengers > ', challengers);
 
       return { challengeDetail, challengers, urls, isAcceptable };
     } else return { msg: '존재하지 않는 챌린지입니다.' };

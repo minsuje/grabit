@@ -14,8 +14,6 @@ export class NotificationService {
     return 'This action adds a new notification';
   }
 
-  findAll() {}
-
   findOne = async (userid_num: number) => {
     console.log('userid_num >>>>>', userid_num);
     const result = await db
@@ -32,13 +30,14 @@ export class NotificationService {
     }
   };
 
-  update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} notification`;
-  }
+  patchNoti = async (notification_id: number) => {
+    return await db
+      .update(notification)
+      .set({
+        is_confirm: true,
+      })
+      .where(eq(notification.notification_id, notification_id));
+  };
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
