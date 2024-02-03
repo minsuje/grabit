@@ -128,6 +128,7 @@ export class ChallengeController {
     @Body() winner,
     @Req() req: Request,
   ) {
+    // const { winner_user, total_money } = winner;
     const userInfo = req.headers['authorization'].split(' ')[1];
 
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
