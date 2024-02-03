@@ -9,6 +9,9 @@ import { Challenge } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
+import Countdown from '@/components/Countdown';
+import FlipCountdown from '@rumess/react-flip-countdown';
+
 export default function Main() {
   const dispatch = useDispatch();
 
@@ -86,6 +89,15 @@ export default function Main() {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
 
+  const getCurrentDateFormatted = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day + 1} 0:0:0`;
+  };
+
   return (
     <div className="my-8 flex flex-col gap-16">
       <div className="ranking flex flex-col gap-8">
@@ -98,20 +110,31 @@ export default function Main() {
         {completed === 'none' ? (
           <Link to={`/challengeDaily/${dailymission}`} className="text-black no-underline">
             <div>
-              <div className="shadow-grabit-600/10  mb-[5%] flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg">
+              <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
                 <div className="flex justify-between gap-2">
-                  <h2 className="text-grabit-600">{dailymission}</h2>
-                  <p className="text-grabit-400">
-                    {23 - new Date().getHours()}시간 {59 - new Date().getMinutes()}분 남음
+                  <h2 className="font-['JalnanGothic'] text-grabit-600">{dailymission}</h2>
+                  <p className=" text-grabit-400">
+                    <FlipCountdown
+                      // endAt={'2024-12-12 01:2658'}
+                      endAt={getCurrentDateFormatted()}
+                      size="extra-small"
+                      hideYear
+                      hideMonth
+                      hideDay
+                      titlePosition="bottom"
+                      hourTitle="시간"
+                      minuteTitle="분"
+                      secondTitle="초"
+                    />
                   </p>
                 </div>
-                <p className="text-grabit-600 text-2xl font-bold">10P</p>
+                <p className="font-['JalnanGothic'] text-2xl font-bold text-grabit-600">10P</p>
               </div>
             </div>
           </Link>
         ) : (
           <div>
-            <div className="shadow-grabit-600/10  mb-[5%] flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg">
+            <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
               <div className="flex justify-between">
                 <h2>{dailymission}</h2>
                 <p>오늘 미션 완료!!</p>
@@ -146,7 +169,7 @@ export default function Main() {
       <div className="challenge-in-progress flex flex-col gap-8">
         <h1 className="text-grabit-800">진행중인 챌린지</h1>
         {ingMyChallenge.length == 0 ? (
-          <div className="shadow-grabit-600/10 text-grabit-400 flex flex-col gap-4 rounded-xl bg-white p-8 text-center shadow-lg">
+          <div className="flex flex-col gap-4 rounded-xl bg-white p-8 text-center text-grabit-400 shadow-lg shadow-grabit-600/10">
             진행중인 챌린지가 없습니다. <br />
             챌린지를 직접 생성하거나 <br />
             다른 사람이 만든 챌린지에 참여해보세요
@@ -191,7 +214,8 @@ export default function Main() {
         <Link to="/challengeEdit/1">
           <Button>1번 챌린지 수정</Button>
         </Link>
-        <Link to="/mypage/2">
+
+        <Link to={`/mypage/${userid_num}`}>
           <Button>마이페이지 </Button>
         </Link>
       </div>

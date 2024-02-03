@@ -22,8 +22,8 @@ export default function MyPageFriendList({ friends }: any) {
   const tierImageSrc = getTierImage(friends.score_num);
   return (
     <div>
-      <Link to={`/friend/${friends.userid_num}`} className=" text-black no-underline">
-        <div className="mb-[5%] flex  justify-between w-[100%] rounded-lg bg-gray-200 p-6  shadow-md">
+      <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">
+        <div className="mb-[5%] flex  w-[100%] justify-between rounded-lg bg-gray-200 p-6  shadow-md">
           <div className="flex">
             <Avatar>
               <AvatarImage src={friends.profile_img} />
@@ -35,7 +35,7 @@ export default function MyPageFriendList({ friends }: any) {
             </div>
           </div>
 
-          <div className="w-[100%] flex flex-col text-end mr-5">
+          <div className="mr-5 flex w-[100%] flex-col text-end">
             <p>티어</p>
             <p className="text-xs text-gray-400">순위</p>
           </div>

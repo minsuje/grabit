@@ -20,16 +20,6 @@ export class NotificationController {
     private jwtService: JwtService,
   ) {}
 
-  @Post()
-  create(@Body() createNotificationDto: CreateNotificationDto) {
-    return this.notificationService.create(createNotificationDto);
-  }
-
-  // @Get()
-  // findAll() {
-  //   return this.notificationService.findAll();
-  // }
-
   @Get()
   async findOne(@Req() req) {
     // 로그인한 유저의 정보 찾기
@@ -44,14 +34,9 @@ export class NotificationController {
     return this.notificationService.findOne(userid_num);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateNotificationDto: UpdateNotificationDto,
-  ) {
-    return this.notificationService.update(+id, updateNotificationDto);
+  // 알림 확인하기
+  @Patch('/:notification_id')
+  async patchNoti(@Param('notification_id') notification_id: number) {
+    return this.notificationService.patchNoti(notification_id);
   }
-
-  @Delete()
-  async remove() {}
 }

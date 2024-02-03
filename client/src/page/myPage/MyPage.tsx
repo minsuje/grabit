@@ -21,7 +21,7 @@ interface ChallengeHistory {
   goal_money: number;
   is_public: boolean;
   term: number;
-
+  auth_keyword: any;
   authentication_start_date: Date;
   authentication_end_date: Date;
   authentication_start_time: number;
@@ -32,6 +32,11 @@ interface HistoryData {
   win: string;
   lose: string;
   history: ChallengeHistory[];
+}
+interface Friend {
+  id: number;
+  nickname: string;
+  profile_img: string;
 }
 
 export default function MyPage() {
@@ -44,6 +49,7 @@ export default function MyPage() {
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
   const [ranking, setRanking] = useState<string>('');
+  const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
     // 프로필 이미지 요청
@@ -61,23 +67,33 @@ export default function MyPage() {
   }, [proFileImg]);
 
   useEffect(() => {
-    // 챌린지 테이블 요청
+    // 챌린지 테이블정보 요청
     privateApi
       .get(`http://localhost:3000/history`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
+        console.log(response);
         const historyData: HistoryData = response.data;
         console.log('>>>>>', historyData);
         setWin(historyData.win);
         setLose(historyData.lose);
-        setHistory(historyData.history);
+
+        // 데이터 로딩 후 정렬 로직 적용
+        const sortedHistory = historyData.history.sort((a, b) => {
+          const dateA = new Date(a.authentication_start_date).getTime();
+          const dateB = new Date(b.authentication_start_date).getTime();
+          return dateB - dateA; // 내림차순 정렬
+        });
+
+        setHistory(sortedHistory);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
       });
   }, [userid_num]);
 
+  // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
       .get<UserInfo>(`http://localhost:3000/myPage`, {
@@ -106,6 +122,22 @@ export default function MyPage() {
       })
       .catch((error) => {
         console.error(' 랭킹 axios 오류', error);
+      });
+  }, []);
+
+  // 친구 요청
+  useEffect(() => {
+    privateApi
+      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
+        setFriends(friendsData);
+        console.log('친구요청>>>>>>>', response);
+      })
+      .catch((error) => {
+        console.error('친구 목록 불러오기 axios 오류', error);
       });
   }, []);
 
@@ -160,27 +192,16 @@ export default function MyPage() {
       <br />
       <br />
       <div className="user-list rgap-4 flex flex-col">
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
-          <span>홍길동</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/kwonkuwhi.png" alt="@shadcn" />
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
-          <span>홍길동</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="https://github.com/seejnn.png" alt="@shadcn" />
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
-          <span>홍길동</span>
-        </div>
+        {friends.map((friend, index) => (
+          <div className="flex items-center gap-2" key={index}>
+            <Avatar>
+              <AvatarImage src={friend.profile_img} alt={friend.nickname} />
+              <AvatarFallback></AvatarFallback>
+            </Avatar>
+            <span>{friend.nickname}</span>
+          </div>
+        ))}
+        {/* 각각의 친구목록 전체보기 */}
         <Link to={`/mypage/friend/detail/${userid_num}/`}>
           <Button>전체보기</Button>
         </Link>
@@ -209,6 +230,7 @@ export default function MyPage() {
         </div>
         <div>
           <div>
+            {}
             {history?.map((challenge, key) => (
               <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
                 <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
