@@ -1,5 +1,12 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
+@font-face {
+  font-family: 'JalnanGothic';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @layer base {
   html {
@@ -22,7 +29,7 @@
     word-break: keep-all;
   }
   h1 {
-    @apply text-2xl font-bold;
+    @apply font-['JalnanGothic'] text-2xl font-bold;
   }
   h2 {
     @apply text-xl font-bold;

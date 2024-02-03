@@ -141,7 +141,7 @@ function HotChallenge() {
               onClick={() => showHotChallengeList(idx)}
               key={idx}
               value={'운동'}
-              className="bg-grabit-300 flex w-fit gap-4 rounded-full border-solid px-6 text-white"
+              className="flex w-fit gap-4 rounded-full border-solid bg-grabit-300 px-6 text-white"
             >
               {topic}
             </ToggleGroupItem>
@@ -178,13 +178,15 @@ function Ranking() {
     }
   }, []);
   return (
-    <div className="text-grabit-700 flex p-2 text-center">
+    <div className="flex p-2 text-center text-grabit-700">
       {ranking?.map((rank: users, idx) => {
         return (
-          <div key={idx} className="flex w-full flex-col gap-2">
+          <div key={idx} className="flex w-full flex-col items-center justify-center gap-2 font-['JalnanGothic']">
             <span className="w-full text-2xl font-bold">{idx + 1}위</span>
             <span className="w-full text-xl font-bold">{rank.nickname}</span>
-            <span className="w-full text-4xl font-bold">{rank.score_num}</span>
+            <span className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-bold text-transparent">
+              {rank.score_num}
+            </span>
           </div>
         );
       })}
@@ -194,16 +196,16 @@ function Ranking() {
 function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
-      <div className="shadow-grabit-600/10 flex flex-col rounded-lg bg-white p-6 shadow-lg">
+      <div className="flex flex-col rounded-lg bg-white p-6 shadow-lg shadow-grabit-600/10">
         <Link to={`/challengeDetail/${challenge.challenge_id}`} className="flex flex-col gap-2  no-underline">
           <div className="flex justify-between">
-            <p className="text-grabit-700 text-xl font-bold">{challenge.challenge_name}</p>
+            <p className="text-xl font-bold text-grabit-700">{challenge.challenge_name}</p>
             <p className="text-grabit-400">
               {format(challenge.authentication_start_date, 'PP (EEE)', { locale: ko })} ~{' '}
               {format(challenge.authentication_end_date, 'PP (EEE)', { locale: ko })}
             </p>
           </div>
-          <p className="text-grabit-700 text-2xl font-bold">{challenge.goal_money}원</p>
+          <p className="text-2xl font-bold text-grabit-700">{challenge.goal_money}원</p>
         </Link>
       </div>
     </div>

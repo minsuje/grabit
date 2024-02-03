@@ -14,7 +14,7 @@ function Layout() {
   return accessToken ? (
     <div>
       <Header />
-      <div className="container mb-40 mt-12 py-4">
+      <div className="container mb-40 mt-16 min-h-40 py-4">
         <Outlet />
       </div>
     </div>
