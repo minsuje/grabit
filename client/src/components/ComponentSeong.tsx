@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChallengeProp } from '@/types/types';
-import { compareAsc, differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -50,14 +50,7 @@ export function ListComponent2({ challenge }: ChallengeProp) {
 
 // const formattedEndDate = format(new Date(history.authentication_end_date), 'yyyy-MM-dd');
 // const formattedStartDate = format(new Date(history.authentication_start_date), 'yyyy-MM-dd');
-export const ListComponent3 = ({
-  history,
-  scoreNum,
-}: {
-  history: Challenge;
-  scoreNum: number;
-  challenge_name: string;
-}) => {
+export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: number; challenge_name: string }) => {
   const { userid_num } = useParams<any>();
   const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
   const [, setWinnerUseridNum] = useState<number[]>([]);

@@ -1,10 +1,27 @@
 // import { Input } from './ui/input';
+import { privateApi } from '@/api/axios';
 import { Avatar } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { AvatarImage } from '@/components/ui/avatar';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function MyPageFriendList({ friends }: any) {
+  const [ranking, setRanking] = useState<string>('');
+  useEffect(() => {
+    // 랭킹 요청
+    privateApi
+      .get(`http://localhost:3000/myRanking`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        setRanking(response.data);
+      })
+      .catch((error) => {
+        console.error(' 랭킹 axios 오류', error);
+      });
+  }, []);
+
   const tierImages = {
     silver: '/silverTear.png',
     platinum: '/platinumTear.png',
@@ -19,7 +36,16 @@ export default function MyPageFriendList({ friends }: any) {
     return tierImages.silver;
   }
 
+  const getTierName = (score: number) => {
+    if (score >= 2000) return '챌린저';
+    if (score >= 1500) return '다이아';
+    if (score >= 1000) return '플래티넘';
+    return '실버';
+  };
+
   const tierImageSrc = getTierImage(friends.score_num);
+  const tierName = getTierName(friends.score_num);
+
   return (
     <div>
       <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">
@@ -36,8 +62,8 @@ export default function MyPageFriendList({ friends }: any) {
           </div>
 
           <div className="mr-5 flex w-[100%] flex-col text-end">
-            <p>티어</p>
-            <p className="text-xs text-gray-400">순위</p>
+            <p>{tierName}</p>
+            <p className="text-xs text-gray-400">{ranking}위</p>
           </div>
 
           {/* 점수별로 띄워주는 이미지를 다르게 하기 */}

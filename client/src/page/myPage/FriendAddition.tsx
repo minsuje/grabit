@@ -1,6 +1,5 @@
-import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
 
@@ -11,7 +10,7 @@ interface Friend {
 }
 
 export default function FriendAddition() {
-  const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
+  const [friends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 

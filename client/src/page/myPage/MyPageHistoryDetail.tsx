@@ -3,10 +3,10 @@ import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-export default function ListComponent3(props: any) {
-  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
+export default function ListComponent3() {
+  const [winnerUseridNum, setWinnerUseridNum] = useState<[]>([]);
   const { userid_num } = useParams<any>();
-  const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
+  const userIdNum = Number(localStorage.getItem('userid_num')); // 문자열을 숫자로 변환
 
   useEffect(() => {
     // 챌린지 테이블 요청
@@ -15,15 +15,15 @@ export default function ListComponent3(props: any) {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('history Data>>>>>', response);
-        setWinnerUseridNum(response.data.history);
+        console.log(response);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
       });
   }, []);
 
-  console.log(winnerUseridNum);
+  console.log('userIdNum', userIdNum);
+  console.log('userid_num', userid_num);
 
   return (
     <div>
@@ -32,7 +32,7 @@ export default function ListComponent3(props: any) {
       </div>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
         <div className="flex justify-between">
-          <div className="font-bold text-black">{props.challenge_name}</div>
+          <div className="font-bold text-black">{userid_num}</div>
           <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
         </div>
         <div className="flex">
@@ -47,7 +47,7 @@ export default function ListComponent3(props: any) {
             <Badge variant="default">+100P</Badge>
           </div>
           <div className="flex w-[100%] justify-end">
-            <div className="mt-2 text-black ">{winnerUseridNum?.includes(userIdNum) ? '승' : '패배'}</div>
+            <div className="mt-2 text-black ">{winnerUseridNum ? '승' : '패'}</div>
           </div>
         </div>
       </div>
