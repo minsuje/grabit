@@ -117,7 +117,7 @@ function ChallengeInProgress() {
     console.log('challenge_id', challenge_id);
 
     privateApi
-      .get(`http://localhost:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {
@@ -158,7 +158,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, [challengeDetail.authentication_end_date]);
+  }, []);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push

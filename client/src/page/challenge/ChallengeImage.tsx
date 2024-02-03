@@ -4,6 +4,7 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
 import { authentication_img_emotion } from '@/types/types';
+import { motion } from 'framer-motion';
 
 interface Emotion {
   count: number;
@@ -182,96 +183,116 @@ function ChallengeImage() {
       <h1> 인증 사진 </h1>
       <p> 이모티콘</p>
       <div className="flex flex-col justify-center">
-        <img
-          className="aspect-square w-full rounded-lg border-[10px] border-gray-300 object-cover transition-all"
-          src={fileUrl}
-        ></img>
-
+        <img className="aspect-square w-full rounded-lg object-cover" src={fileUrl}></img>
         <div className="flex select-none gap-2">
           {first.checked ? (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white transition-all hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="smile flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-200 px-3 py-2 font-bold text-grabit-700 ring-2 ring-grabit-700 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('first');
               }}
             >
-              <p>😀</p>
+              <p className="text-xl">😀</p>
               <p className="tabular-nums">{first.count}</p>
-            </div>
+            </motion.div>
           ) : (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="smile flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-100 px-3 py-2 font-semibold text-stone-400 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('first');
               }}
             >
-              <p>😀</p>
+              <p className="text-xl">😀</p>
               <p className="tabular-nums">{first.count}</p>
-            </div>
+            </motion.div>
           )}
 
           {second.checked ? (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="thumbs-up flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-200 px-3 py-2 font-bold text-grabit-700 ring-2 ring-grabit-700 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('second');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">👍</p>
               <p className="tabular-nums">{second.count}</p>
-            </div>
+            </motion.div>
           ) : (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="thumbs-up flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-100 px-3 py-2 font-semibold text-stone-400 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('second');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">👍</p>
               <p className="tabular-nums">{second.count}</p>
-            </div>
+            </motion.div>
           )}
           {third.checked ? (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="funny flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-200 px-3 py-2 font-bold text-grabit-700 ring-2 ring-grabit-700 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('third');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">🤪</p>
               <p className="tabular-nums">{third.count}</p>
-            </div>
+            </motion.div>
           ) : (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="funny flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-100 px-3 py-2 font-semibold text-stone-400 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('third');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">🤪</p>
               <p className="tabular-nums">{third.count}</p>
-            </div>
+            </motion.div>
           )}
           {fourth.checked ? (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="mindBlow flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-200 px-3 py-2 font-bold text-grabit-700 ring-2 ring-grabit-700 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('fourth');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">🤯</p>
               <p className="tabular-nums">{fourth.count}</p>
-            </div>
+            </motion.div>
           ) : (
-            <div
-              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
+            <motion.div
+              whileTap={{ scale: 0.85 }}
+              whileHover={{ scale: 1.1 }}
+              initial={false}
+              className="mindBlow flex w-fit items-center justify-center gap-2 rounded-md bg-grabit-100 px-3 py-2 font-semibold text-stone-400 hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('fourth');
               }}
             >
-              <p>🤣</p>
+              <p className="text-xl">🤯</p>
               <p className="tabular-nums">{fourth.count}</p>
-            </div>
+            </motion.div>
           )}
         </div>
         {/* <button onClick={showEmotion}>🔻</button>
