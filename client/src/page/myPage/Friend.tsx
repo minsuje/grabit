@@ -29,7 +29,7 @@ export default function Friend() {
         console.log('>>>>>>>친구???계정', response.data.friends_info[0].userid);
       })
       .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
+        console.error('친구 목록 불러오기? axios 오류', error);
       });
   }, []);
 
