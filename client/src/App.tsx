@@ -94,7 +94,7 @@ function App() {
             <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
             <Route path="/mypage/friend/detail/:userid_num" element={<Friend />} />
 
-            <Route path="/friend/:id" element={<MyPageFriendDetail />} />
+            <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
             <Route path="/mypagehistorydetail/:userid_num" element={<MyPageHistoryDetail />} />

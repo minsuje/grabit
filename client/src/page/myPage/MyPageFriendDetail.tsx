@@ -4,41 +4,35 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 interface FriendDetail {
-  id: number;
+  id: string;
   nickname: string;
   profile_img: string;
   score: number;
 }
 
+// 친구 객체를 위한 인터페이스 정의
+interface Friend {
+  id: string;
+  nickname: string;
+}
+
 export default function MyPageFriendDetail() {
   const [friendDetail, setFriendDetail] = useState<any | FriendDetail | null>('');
-  const { id } = useParams();
-  console.log(id);
-  useEffect(() => {
-    privateApi
-      .get(`http://3.34.122.205:3000/friendDetail/${id}`)
-      .then((response) => {
-        // 상세 정보 설정
-        console.log('>>>>>>>', response.data);
-        const detail = response.data.friends_info[0];
-        setFriendDetail(detail);
-      })
-      .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
-      });
-  }, []);
+  const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
+  const { userid } = useParams();
+  console.log(userid);
 
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+      .get(`http://localhost:3000/profile/${userid}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        setFriends(response.data.friends_info);
-        console.log(response);
+        // setFriends(response.data.friends_info);
+        console.log('mypageDate>>>>>>>>>>', response);
       })
       .catch((error) => {
-        console.error('친구 목록 불러오기 axios 오류', error);
+        console.error('친구 목록 xios 오류', error);
       });
   }, []);
 
