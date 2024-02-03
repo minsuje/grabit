@@ -53,13 +53,16 @@ export class s3Middleware implements NestMiddleware {
           .where(
             eq(challenge.challenge_id, Number(req.originalUrl.split('/')[2])),
           );
+
         challenger = challenger[0].challenger_userid_num;
+
         let challenger_num = [];
         for (let i = 0; i < challenger.length; i++) {
-          let id = challenger[i];
-          challenger_num.push(id.userid_num);
+          let id = challenger[i].userid_num;
+
+          challenger_num.push(id);
         }
-        console.log('if > ', challenger_num.length);
+
         let challengers = [];
         for (let i = 0; i < challenger_num.length; i++) {
           let info = await db
@@ -75,19 +78,19 @@ export class s3Middleware implements NestMiddleware {
 
         for (let i = 0; i < challengers.length; i++) {
           key = challengers[i].profile_img;
-          const command = new GetObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: key,
-          });
+          if (key !== null) {
+            const command = new GetObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: key,
+            });
 
-          url = await getSignedUrl(client, command, { expiresIn: 3600 });
+            url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          } else url = null;
           challengers[i] = {
             ...challengers[i],
             profile_img: url,
           };
         }
-
-        console.log('info  >>>>', challengers);
 
         let files = await db
           .select({
@@ -100,7 +103,7 @@ export class s3Middleware implements NestMiddleware {
           .orderBy(desc(authentication.created_at));
         // .limit(4);
 
-        // console.log('s3 middleware detail files > ', files);
+        console.log('s3 middleware detail files > ', files);
         let urls = [];
         for (let i = 0; i < files.length; i++) {
           key = files[i].authentication_img;
