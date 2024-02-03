@@ -116,13 +116,13 @@ export class ChallengeService {
         })
         .where(eq(users.userid_num, login_userid_num));
 
-      const accountInfo = await db.insert(account).values({
-        transaction_description: 'challenge/participation',
-        transaction_type: 'withdraw',
-        transaction_amount: newChallenge.goal_money,
-        status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
-        userid_num: login_userid_num,
-      });
+      // const accountInfo = await db.insert(account).values({
+      //   transaction_description: 'challenge/participation',
+      //   transaction_type: 'withdraw',
+      //   transaction_amount: newChallenge.goal_money,
+      //   status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
+      //   userid_num: login_userid_num,
+      // });
 
       return { newChallenge, challengeNotification };
     } else return { msg: '캐럿이 부족합니다.' };
