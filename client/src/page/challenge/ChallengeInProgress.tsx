@@ -12,7 +12,6 @@ import { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
 import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import Rive from '@rive-app/react-canvas';
 import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
 
 // Animation
@@ -236,8 +235,8 @@ function ChallengeInProgress() {
 
   return (
     <div className="mt-12 flex flex-col gap-4">
-      <h1 className="text-grabit-700 text-center text-3xl">{challengeDetail?.challenge_name}</h1>
-      <h3 className="text-grabit-400 text-center font-medium">
+      <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
+      <h3 className="text-center font-medium text-grabit-400">
         {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
       </h3>
 
@@ -245,13 +244,13 @@ function ChallengeInProgress() {
         <div className="absolute h-40 w-40 opacity-50">
           <RiveComponent />
         </div>
-        <h2 className="animate-text text-grabit-600 z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-transparent">
+        <h2 className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-grabit-600 text-transparent">
           {challengeDetail?.goal_money * challengers.length} 캐럿
         </h2>
       </div>
 
       <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
-        <h3 className="text-grabit-700 flex w-fit text-xl font-bold">{tab[0]}</h3>
+        <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
         <CircularProgressbarWithChildren
           value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
           strokeWidth={10}
@@ -286,7 +285,7 @@ function ChallengeInProgress() {
 
           return (
             <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
-              <h3 className="text-grabit-700 flex w-fit break-all text-center text-xl font-bold">{nickname}</h3>
+              <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{nickname}</h3>
               <CircularProgressbarWithChildren
                 value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
                 strokeWidth={20}
