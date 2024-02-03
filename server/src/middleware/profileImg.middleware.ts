@@ -115,6 +115,7 @@ export class profileImgMiddleware implements NestMiddleware {
       for (let i = 0; i < friends.length; i++) {
         let friend = await db
           .select({
+            userid: users.userid,
             userid_num: users.userid_num,
             nickname: users.nickname,
             profile_img: users.profile_img,
@@ -134,6 +135,7 @@ export class profileImgMiddleware implements NestMiddleware {
           });
           const url = await getSignedUrl(client, command, { expiresIn: 3600 });
           friends_info.push({
+            userid: friend_info[i].userid,
             userid_num: friend_info[i].userid_num,
             nickname: friend_info[i].nickname,
             profile_img: url,
@@ -141,6 +143,7 @@ export class profileImgMiddleware implements NestMiddleware {
           });
         } else {
           friends_info.push({
+            userid: friend_info[i].userid,
             userid_num: friend_info[i].userid_num,
             nickname: friend_info[i].nickname,
             profile_img: null,
