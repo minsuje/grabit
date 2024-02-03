@@ -19,9 +19,23 @@ export default function MyPageFriendDetail() {
       .get(`http://3.34.122.205:3000/friendDetail/${id}`)
       .then((response) => {
         // 상세 정보 설정
-        console.log(response.data);
+        console.log('>>>>>>>', response.data);
         const detail = response.data.friends_info[0];
         setFriendDetail(detail);
+      })
+      .catch((error) => {
+        console.error('친구 목록 불러오기 axios 오류', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    privateApi
+      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        setFriends(response.data.friends_info);
+        console.log(response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);
