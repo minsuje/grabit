@@ -20,6 +20,7 @@ export default function MyPageFriendDetail() {
   const [friendDetail, setFriendDetail] = useState<any | FriendDetail | null>('');
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const { userid } = useParams();
+
   console.log(userid);
 
   useEffect(() => {
@@ -28,11 +29,10 @@ export default function MyPageFriendDetail() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        // setFriends(response.data.friends_info);
         console.log('mypageDate>>>>>>>>>>', response);
       })
       .catch((error) => {
-        console.error('친구 목록 xios 오류', error);
+        console.error('친구 목록 xios 오류???', error);
       });
   }, []);
 

@@ -230,7 +230,6 @@ export default function MyPage() {
         </div>
         <div>
           <div>
-            {}
             {history?.map((challenge, key) => (
               <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
                 <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
