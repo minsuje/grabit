@@ -15,7 +15,6 @@ function ChallengeImage() {
   const userid_num = Number(localStorage.getItem('userid_num'));
   // const userid_num = 3;
 
-
   const { challenge_id, authentication_id } = useParams();
   // const emotionList: any = useRef<HTMLInputElement>(null);
   const [emoticonArr, setEmoticonArr] = useState<authentication_img_emotion[]>([]);
@@ -89,7 +88,7 @@ function ChallengeImage() {
       case 'first':
         if (first.checked) {
           setFirst({ count: first.count - 1, checked: false });
-          console.log("first -1")
+          console.log('first -1');
           privateApi
             .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/${1}`, {
               headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
@@ -98,7 +97,7 @@ function ChallengeImage() {
             .catch((err) => console.error(err));
         } else {
           setFirst({ count: first.count + 1, checked: true });
-          console.log('frist +1')
+          console.log('frist +1');
           privateApi
             .post(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 1,
@@ -112,7 +111,7 @@ function ChallengeImage() {
         if (second.checked) {
           setSecond({ count: second.count - 1, checked: false });
           privateApi
-            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/2`,{
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/2`, {
               headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
             })
             .then((res) => console.log(res))
@@ -131,7 +130,7 @@ function ChallengeImage() {
         if (third.checked) {
           setThird({ count: third.count - 1, checked: false });
           privateApi
-            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/3`,{
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/3`, {
               headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
             })
             .then((res) => console.log(res))
@@ -150,7 +149,7 @@ function ChallengeImage() {
         if (fourth.checked) {
           setFourth({ count: fourth.count - 1, checked: false });
           privateApi
-            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/4`,{
+            .delete(`http://localhost:3000/challengeAuth/${challenge_id}/${authentication_id}/4`, {
               headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
             })
             .then((res) => console.log(res))
@@ -183,85 +182,96 @@ function ChallengeImage() {
       <h1> 인증 사진 </h1>
       <p> 이모티콘</p>
       <div className="flex flex-col justify-center">
-        <img className="aspect-square w-full rounded-lg border-[10px] border-gray-300 object-cover" src={fileUrl}></img>
+        <img
+          className="aspect-square w-full rounded-lg border-[10px] border-gray-300 object-cover transition-all"
+          src={fileUrl}
+        ></img>
 
-        <div className="flex flex-row justify-around">
+        <div className="flex select-none gap-2">
           {first.checked ? (
-            <p
-              className="my-2 rounded-md bg-fuchsia-200 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white transition-all hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('first');
               }}
             >
-              😀 {first.count}
-            </p>
+              <p>😀</p>
+              <p className="tabular-nums">{first.count}</p>
+            </div>
           ) : (
-            <p
-              className="my-2 rounded-md bg-fuchsia-100 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('first');
               }}
             >
-              😀 {first.count}
-            </p>
+              <p>😀</p>
+              <p className="tabular-nums">{first.count}</p>
+            </div>
           )}
 
           {second.checked ? (
-            <p
-              className="my-2 rounded-md bg-fuchsia-200 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('second');
               }}
             >
-              🤣 {second.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{second.count}</p>
+            </div>
           ) : (
-            <p
-              className="my-2 rounded-md bg-fuchsia-100 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('second');
               }}
             >
-              🤣 {second.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{second.count}</p>
+            </div>
           )}
           {third.checked ? (
-            <p
-              className="my-2 rounded-md bg-fuchsia-200 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('third');
               }}
             >
-              🙄 {third.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{third.count}</p>
+            </div>
           ) : (
-            <p
-              className="my-2 rounded-md bg-fuchsia-100 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('third');
               }}
             >
-              🙄 {third.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{third.count}</p>
+            </div>
           )}
           {fourth.checked ? (
-            <p
-              className="my-2 rounded-md bg-fuchsia-200 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-500 px-3 py-2 font-bold text-white  transition-all  hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('fourth');
               }}
             >
-              😡 {fourth.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{fourth.count}</p>
+            </div>
           ) : (
-            <p
-              className="my-2 rounded-md bg-fuchsia-100 px-2 hover:cursor-pointer"
+            <div
+              className="smile flex w-fit gap-2 rounded-md bg-grabit-100 px-3 py-2 font-bold  transition-all hover:cursor-pointer"
               onClick={() => {
                 uploadEmo('fourth');
               }}
             >
-              😡 {fourth.count}
-            </p>
+              <p>🤣</p>
+              <p className="tabular-nums">{fourth.count}</p>
+            </div>
           )}
         </div>
         {/* <button onClick={showEmotion}>🔻</button>

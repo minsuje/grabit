@@ -219,7 +219,7 @@ function ChallengeInProgress() {
           <RiveComponent />
         </div>
         <h2 className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-grabit-600 text-transparent">
-          {challengeDetail?.goal_money * challengers.length} 캐릿
+          {challengeDetail?.goal_money * challengers.length} 캐럿
         </h2>
       </div>
 
