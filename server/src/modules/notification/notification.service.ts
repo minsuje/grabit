@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { db } from 'db/db';
-import { eq, gt } from 'drizzle-orm';
+import { eq, gt, desc } from 'drizzle-orm';
 import { notification } from './schema';
 import { friend } from '../friend/schema';
 import { challenge } from '../challenge/schema';
@@ -19,7 +19,8 @@ export class NotificationService {
     const result = await db
       .select()
       .from(notification)
-      .where(eq(notification.userid_num, userid_num));
+      .where(eq(notification.userid_num, userid_num))
+      .orderBy(desc(notification.created_at));
 
     console.log('result >>>>>', result);
 

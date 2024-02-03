@@ -254,14 +254,14 @@ function ChallengeInProgress() {
       </div>
 
       <div className="progress grid grid-cols-3 gap-6 p-2">
-        {UrlGroup.map((group, index) => {
+        {challengers.map((group, index) => {
           if (index === 0) return null;
 
           return (
             <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
               <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{tab[index]}</h3>
               <CircularProgressbarWithChildren
-                value={group.length > 0 ? totalAuthCount / group.length : 0}
+                value={UrlGroup[index].length > 0 ? totalAuthCount / UrlGroup[index].length : 0}
                 strokeWidth={20}
                 styles={buildStyles({
                   trailColor: '#e9ecf6',
@@ -285,7 +285,7 @@ function ChallengeInProgress() {
                   }}
                 />
               </CircularProgressbarWithChildren>
-              <span className="text-center text-lg font-semibold text-stone-600">{group.length}회 성공</span>
+              <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[index].length}회 성공</span>
             </div>
           );
         })}
