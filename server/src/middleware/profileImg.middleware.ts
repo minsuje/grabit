@@ -16,6 +16,7 @@ import { friend } from '../modules/friend/schema';
 import { db } from '../../db/db';
 import { v1 as uuid } from 'uuid';
 import * as dotenv from 'dotenv';
+import { fromUnixTime } from 'date-fns';
 dotenv.config();
 
 @Injectable()
@@ -72,6 +73,7 @@ export class profileImgMiddleware implements NestMiddleware {
       }
       // '/profile/:userid'
       else if ('profile' === req.originalUrl.split('/')[1]) {
+        console.log('profile 요청 옴');
         friend = await db
           .select({
             userid_num: users.userid_num,
@@ -82,15 +84,22 @@ export class profileImgMiddleware implements NestMiddleware {
           .from(users)
           .where(eq(users.userid, req.originalUrl.split('/')[2]));
       }
+      friend = friend[0];
+      console.log('friend > ', friend);
 
-      const command = new GetObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET,
-        Key: friend[0].profile_img,
-      });
-      const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-      friend[0].profile_img = url;
+      let url: string;
+      if (friend.profile_img !== null) {
+        const command = new GetObjectCommand({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: friend.profile_img,
+        });
+        url = await getSignedUrl(client, command, { expiresIn: 3600 });
+      } else url = null;
+      friend.profile_img = url;
 
-      req['file'] = friend[0];
+      console.log('friend url  > ', friend);
+
+      req['file'] = friend;
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
@@ -174,11 +183,14 @@ export class profileImgMiddleware implements NestMiddleware {
             .where(eq(users.userid_num, userid_num));
           key = file[0].profile_img;
           // console.log('middleware profileImg key > ', key);
-          const command = new GetObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: key,
-          });
-          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          let url: string;
+          if (file[0].profile_img !== null) {
+            const command = new GetObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: key,
+            });
+            url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          } else url = null;
           console.log('middleware profileImg url > ', url);
           req['file'] = url;
         } else if (req.method === 'POST') {
