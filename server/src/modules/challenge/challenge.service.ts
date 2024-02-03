@@ -116,13 +116,13 @@ export class ChallengeService {
         })
         .where(eq(users.userid_num, login_userid_num));
 
-      // const accountInfo = await db.insert(account).values({
-      //   transaction_description: 'challenge/participation',
-      //   transaction_type: 'withdraw',
-      //   transaction_amount: newChallenge.goal_money,
-      //   status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
-      //   userid_num: login_userid_num,
-      // });
+      const accountInfo = await db.insert(account).values({
+        transaction_description: 'challenge/participation',
+        transaction_type: 'carrot/withdraw',
+        transaction_amount: newChallenge.goal_money,
+        status: false,
+        userid_num: login_userid_num,
+      });
 
       return { newChallenge, challengeNotification };
     } else return { msg: '캐럿이 부족합니다.' };
@@ -130,25 +130,53 @@ export class ChallengeService {
 
   // 챌린지 수락
   challengeAccept = async (userid_num: number, challenge_id: number) => {
-    let challengeWait: any = await db
-      .select({ challenger_userid_num: challenge.challenger_userid_num })
+    // 챌린지 생성하는 유저 정보 찾아오기
+    let userMoney: any = await db
+      .select({ money: users.money })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    userMoney = userMoney[0].money;
+    const challengeWait: any = await db
+      .select({
+        goal_money: challenge.goal_money,
+        challenger_userid_num: challenge.challenger_userid_num,
+      })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
-    challengeWait = challengeWait[0].challenger_userid_num;
 
-    for (let i = 0; i < challengeWait.length; i++) {
-      if (challengeWait[i].userid_num === userid_num) {
-        challengeWait[i].isAccept = true;
+    if (userMoney >= challengeWait[0].goal_money) {
+      for (let i = 0; i < challengeWait.length; i++) {
+        if (challengeWait[i].userid_num === userid_num) {
+          challengeWait[i].isAccept = true;
+        }
       }
-    }
-    // 수락하면 유저 테이블에서 money 수정하고 , account 기록 남겨주기
+      // 수락하면 유저 테이블에서 money 수정하고 , account 기록 남겨주기
+      // 챌린지 수락할 때 챌린지 유저 money랑 account 계산하기
+      const money = await db
+        .update(users)
+        .set({
+          money: sql`${users.money} - ${challengeWait[0].goal_money}`,
+        })
+        .where(eq(users.userid_num, userid_num));
 
-    return await db
-      .update(challenge)
-      .set({
-        challenger_userid_num: challengeWait,
-      })
-      .where(eq(challenge.challenge_id, challenge_id));
+      const accountInfo = await db.insert(account).values({
+        transaction_description: 'challenge/participation',
+        transaction_type: 'carrot/withdraw',
+        transaction_amount: challengeWait[0].goal_money,
+        status: false,
+        userid_num: userid_num,
+      });
+
+      return await db
+        .update(challenge)
+        .set({
+          challenger_userid_num: challengeWait[0].challenger_userid_num,
+        })
+        .where(eq(challenge.challenge_id, challenge_id));
+    } else
+      return {
+        msg: '캐럿이 부족합니다.',
+      };
   };
 
   // 챌린지 거절
@@ -871,8 +899,8 @@ export class ChallengeService {
         // account 에 내역 추가
         const getMoney = await db.insert(account).values({
           userid_num: userid_num,
-          transaction_description: '챌린지 성공!',
-          transaction_type: 'in',
+          transaction_description: 'challenge/success',
+          transaction_type: 'carrot/deposit',
           transaction_amount: originalMoney,
           status: false,
         });
@@ -905,8 +933,8 @@ export class ChallengeService {
           console.log('이긴 사람 만큼 돈 나누기 결과 >>> ', divMoney);
           const money = await db.insert(account).values({
             userid_num: userid_num,
-            transaction_description: '챌린지 성공!',
-            transaction_type: 'in',
+            transaction_description: 'challenge/success',
+            transaction_type: 'carrot/deposit',
             transaction_amount: divMoney,
             status: false,
           });
