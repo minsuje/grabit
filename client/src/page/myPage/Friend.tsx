@@ -17,6 +17,8 @@ export default function Friend() {
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
+
+  // 친구 정보 요청
   useEffect(() => {
     privateApi
       .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
@@ -31,6 +33,7 @@ export default function Friend() {
       });
   }, []);
 
+  // 친구 검색 목록
   useEffect(() => {
     const results = friends.filter((friend) => friend.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredFriends(results);
@@ -43,6 +46,7 @@ export default function Friend() {
       </div>
       <div>
         <Input placeholder="검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        {/* 각각의 친구목록 상세 페이지 */}
         <Link to="/friend/new">
           <Button>친구 추가</Button>
         </Link>

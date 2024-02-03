@@ -68,7 +68,6 @@ export const ListComponent3 = ({
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('>>>>>', response);
         setWinnerUseridNum(response.data.history[0].winner_userid_num);
       })
       .catch((error) => {
@@ -79,21 +78,23 @@ export const ListComponent3 = ({
   // history를 배열로 변환
   const historyArray = [history];
 
-  // history 배열을 날짜 기준으로 정렬
+  // history 배열을 날짜 기준으로 오름차순으로 정렬
   const sortedHistory = historyArray.slice().sort((a, b) => {
     const startDateA = new Date(a.authentication_start_date).getTime();
     const startDateB = new Date(b.authentication_start_date).getTime();
-    return startDateB - startDateA; // 날짜를 내림차순으로 정렬
+    return startDateB - startDateA; // 날짜를 오름차순으로 정렬
   });
+  // 정렬 후 결과 확인
+
   return (
     <>
-      {sortedHistory.map((item) => (
-        <div className="w-100 mb-10 rounded-lg bg-gray-200 p-6 shadow-md">
+      {sortedHistory.map((item, key) => (
+        <div key={key} className="w-100 mb-10 rounded-lg bg-gray-200 p-6 shadow-md">
           <div className="flex justify-between">
             <div className="font-bold text-black">{item.challenge_name}</div>
             <div className="text-gray-400">
               {format(new Date(item.authentication_start_date), 'yyyy-MM-dd')}~
-              {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')}
+              {/* {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')} */}
             </div>
           </div>
           <div className="flex ">

@@ -11,6 +11,7 @@ export default function MyPageFriendList({ friends }: any) {
     diamond: '/diamondTear.png',
     challenger: '/challengerTear.png',
   };
+  
 
   function getTierImage(score: any) {
     if (score >= 2000) return tierImages.challenger;
