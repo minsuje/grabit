@@ -125,16 +125,16 @@ export class AuthController {
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
     console.log('set cookie?????');
-    await res.redirect('http://localhost:5173/auth/kakao/');
+    // await res.redirect('http://localhost:3000/auth/kakao/');
     // console.log('여기는?');
 
-    // await res.send({
-    //   accessToken: loginToken,
-    //   refreshToken: loginRefreshToken,
-    //   userid_num: id,
-    //   nickname: username,
-    //   name: username,
-    // });
+    res.send({
+      accessToken: loginToken,
+      refreshToken: loginRefreshToken,
+      userid_num: id,
+      nickname: username,
+      name: username,
+    });
     // console.log('wwwww');
   }
 

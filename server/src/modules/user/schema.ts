@@ -6,6 +6,7 @@ import {
   serial,
   varchar,
   text,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { notification } from '../notification/schema';
 
@@ -35,7 +36,7 @@ export const account = pgTable('account', {
   }).notNull(),
   transaction_type: varchar('transaction_type', { length: 30 }).notNull(),
   transaction_amount: integer('transaction_amount').notNull(),
-  status: varchar('status', { length: 20 }).notNull(),
+  status: boolean('status').notNull(),
   account_info: varchar('account_info', { length: 200 }).array(),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
