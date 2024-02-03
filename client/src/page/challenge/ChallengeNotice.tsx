@@ -3,6 +3,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import Cta from '@/components/Cta';
+import { text } from 'drizzle-orm/pg-core';
 
 function ChallengeNotice() {
   const dispatch = useDispatch();
@@ -25,14 +27,14 @@ function ChallengeNotice() {
   }
 
   return (
-    <div className="container flex flex-col">
+    <div className="flex flex-col">
       <div className="text flex flex-col">
-        <h1 className="text-grabit-600 font-bold">챌린지 참여 주의사항</h1>
+        <h1 className="font-bold text-grabit-600">챌린지 참여 주의사항</h1>
         <p className="text-grabit-500">챌린지 참여 시 수수료 3%가 적용됩니다</p>
         <p className="text-grabit-500">수수료 3%는 서비스 운영에 이용됩니다</p>
       </div>
 
-      <div className="bottom fixed bottom-0 left-0 right-0 p-4">
+      <div className="bottom fixed bottom-24 left-0 right-0 p-4">
         <div className="check flex gap-2">
           <Checkbox id="terms" checked={confirm} onCheckedChange={handleCheckboxChange} />
           <label
@@ -42,11 +44,9 @@ function ChallengeNotice() {
             확인했습니다
           </label>
         </div>
-        <br />
-        <Button className="w-full" onClick={handleSubmit} disabled={!confirm}>
-          챌린지 참여
-        </Button>
       </div>
+      <br />
+      <Cta text={'챌린지 참여'} onclick={handleSubmit} disabled={!confirm} />
     </div>
   );
 }
