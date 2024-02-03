@@ -792,7 +792,19 @@ export class ChallengeService {
   };
 
   // challenge 승자 업데이트
-  async challengeWinner(winner: any, challenge_id: number, userid_num: number) {
+  async challengeWinner(
+    winner: any,
+    challenge_id: number,
+    userid_num: number,
+    challengerInfo: any,
+  ) {
+    // 챌린지에 대한 정보 조회
+    let challengeInfo: any = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+    challengeInfo = challengeInfo[0];
+
     let winners = winner.winner_userid_num;
 
     // 총 상금
@@ -820,9 +832,11 @@ export class ChallengeService {
     const userMoney = checkMoney[0].money;
 
     let win = 'none';
+    let carrot: number;
 
     // 이긴 사람이 없을 때
-    if (winners.length === 0 || winners === undefined) {
+    if (winners === undefined || winners.length === 0) {
+      console.log('no winner');
       win = 'none';
       const loseScore = await db.insert(score).values({
         userid_num: userid_num,
@@ -836,6 +850,15 @@ export class ChallengeService {
         .update(users)
         .set({ score_num: sql`${users.score_num} - 50` })
         .where(eq(users.userid_num, userid_num));
+
+      // challengerInfo 내역 업데이트(캐럿 추가)
+      for (let i = 0; i < challengerInfo.length; i++) {
+        challengerInfo[i] = {
+          ...challengerInfo[i],
+          carrot: -challengeInfo.goal_money,
+          score: -50,
+        };
+      }
     } else {
       win = 'someone';
 
@@ -860,8 +883,6 @@ export class ChallengeService {
         .from(challenge)
         .where(eq(challenge.challenge_id, challenge_id));
 
-      console.log('findWinner >> ', findWinner);
-
       findWinner = findWinner[0].winner_userid_num;
 
       // 모든 승자를 조회
@@ -869,8 +890,6 @@ export class ChallengeService {
       if (winners.includes(userid_num)) {
         amIWinner = true;
       }
-
-      console.log('here');
 
       // case 1. 참여한 모든 유저가 이겼다.
       // 원래 돈을 그대로 입금
@@ -883,15 +902,11 @@ export class ChallengeService {
           score: +100,
         });
 
-        console.log('here case1');
-
         // 유저의 점수 증가 시키기
         const addUserTable = await db
           .update(users)
           .set({ score_num: sql`${users.score_num} + ${100}` })
           .where(eq(users.userid_num, userid_num));
-
-        console.log('here 222');
 
         // 내가 원래 참가 신청한 돈
         const originalMoney: any = totalMoney / findWinner.length;
@@ -910,7 +925,17 @@ export class ChallengeService {
           .update(users)
           .set({ money: sql`${users.money} + ${originalMoney}` })
           .where(eq(users.userid_num, userid_num));
+
+        // challengerInfo 내역 업데이트(캐럿 추가)
+        for (let i = 0; i < challengerInfo.length; i++) {
+          challengerInfo[i] = {
+            ...challengerInfo[i],
+            carrot: challengeInfo.goal_money,
+            score: 100,
+          };
+        }
       } else {
+        let divMoney: any;
         if (amIWinner) {
           // case 2. 모든 유저가 이기지 못했다. (but! 나는 이김 )
           // 스코어 증가!
@@ -929,7 +954,7 @@ export class ChallengeService {
 
           // 챌린저 수 만큼 돈을 나눠서 입금
           // account 내역 추가
-          const divMoney: any = Math.round(leftMoney / findWinner.length);
+          divMoney = Math.round(leftMoney / findWinner.length);
           console.log('이긴 사람 만큼 돈 나누기 결과 >>> ', divMoney);
           const money = await db.insert(account).values({
             userid_num: userid_num,
@@ -938,11 +963,11 @@ export class ChallengeService {
             transaction_amount: divMoney,
             status: false,
           });
-
+          console.log('이긴 사람 만큼 돈 나누기 결과 2 >>> ', typeof divMoney);
           // user 잔고에 돈 입금
           const newMoney = await db
             .update(users)
-            .set({ money: users.money + divMoney })
+            .set({ money: sql`${users.money} + ${divMoney}` }) //sql`${users.money} + ${divMoney}`
             .where(eq(users.userid_num, userid_num));
         } else {
           // case 3. 이긴 사람이 존재 한다. (but! 나는 짐)
@@ -960,8 +985,29 @@ export class ChallengeService {
             .set({ score_num: sql`${users.score_num} - 50` })
             .where(eq(users.userid_num, userid_num));
         }
+        console.log('winners >>> ', winners);
+        // challengerInfo 내역 업데이트(캐럿 추가)
+        for (let i = 0; i < winners.length; i++) {
+          for (let j = 0; j < challengerInfo.length; j++) {
+            if (winners[i] === challengerInfo[j].userid_num) {
+              challengerInfo[j] = {
+                ...challengerInfo[j],
+                carrot: divMoney,
+                score: 100,
+              };
+            } else {
+              challengerInfo[j] = {
+                ...challengerInfo[j],
+                carrot: -challengeInfo.goal_money,
+                score: -50,
+              };
+            }
+          }
+        }
       }
     }
+    // console.log('challengerInfo >> ', challengerInfo);
+    return { challengeInfo, challengerInfo };
   }
 
   // challenge 테이블에서 authentication_start_date로 부터 30일 지났으면 삭제
