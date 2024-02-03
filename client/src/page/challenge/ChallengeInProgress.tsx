@@ -5,7 +5,7 @@ import { RootState } from '@/store/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Challenge, users } from '@/types/types';
-import { setTotalAuth, setResult, setWinner } from '@/store/resultSlice';
+import { setTotalAuth, setResult, setWinner, setTotalMoney } from '@/store/resultSlice';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { differenceInDays, differenceInCalendarDays } from 'date-fns';
 import { privateApi } from '@/api/axios';
@@ -28,20 +28,22 @@ interface url {
   authentication_id?: number;
 }
 
-function Example(props) {
-  return (
-    <div style={{ marginBottom: 80 }}>
-      <hr style={{ border: '2px solid #ddd' }} />
-      <div style={{ marginTop: 30, display: 'flex' }}>
-        <div style={{ width: '30%', paddingRight: 30 }}>{props.children}</div>
-        <div style={{ width: '70%' }}>
-          <h3 className="h5">{props.label}</h3>
-          <p>{props.description}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+type profiles = string | null;
+
+// function Example(props) {
+//   return (
+//     <div style={{ marginBottom: 80 }}>
+//       <hr style={{ border: '2px solid #ddd' }} />
+//       <div style={{ marginTop: 30, display: 'flex' }}>
+//         <div style={{ width: '30%', paddingRight: 30 }}>{props.children}</div>
+//         <div style={{ width: '70%' }}>
+//           <h3 className="h5">{props.label}</h3>
+//           <p>{props.description}</p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 function ChallengeInProgress() {
   const info = useSelector((state: RootState) => state.result);
@@ -55,8 +57,27 @@ function ChallengeInProgress() {
   const { challenge_id } = useParams();
   const tab: string[] = ['나'];
   const tabId: number[] = [userid_num];
-  const UrlGroup: url[][] = [[], [], [], []];
+  const UrlGroup: url[][] = [
+    [
+      {
+        userid_num: '1',
+        url: '1',
+        authentication_id: 1,
+      },
+    ],
+    [
+      {
+        userid_num: '1',
+        url: '1',
+        authentication_id: 1,
+      },
+    ],
+    [],
+    [],
+  ];
   const Images: JSX.Element[] = [];
+  const profiles: profiles[] = [];
+  const [isAcceptable, setIsAcceptable] = useState<boolean>(true);
   const [urls, setUrls] = useState<url[]>([]);
 
   useEffect(() => {
@@ -117,15 +138,19 @@ function ChallengeInProgress() {
     console.log('challenge_id', challenge_id);
 
     privateApi
-      .get(`http://localhost:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {
         console.log('response', response.data);
         if (response.data.challengeDetail) {
-          setChallengeDetail(response.data.challengeDetail[0]);
-          setChallengers(response.data.challengers);
-          setUrls(response.data.urls);
+          const { challengeDetail, challengers, urls, isAcceptable } = response.data;
+          setChallengeDetail(challengeDetail[0]);
+          setChallengers(challengers);
+          setUrls(urls);
+          setIsAcceptable(isAcceptable);
+          const myProfile = challengers.filter((challenger: users) => challenger.userid_num === userid_num);
+          profiles.push(myProfile[0].profile_img);
         } else if (response.data.msg) {
           alert(response.data.msg);
           navigate('/main');
@@ -151,6 +176,7 @@ function ChallengeInProgress() {
     dispatch(setTotalAuth(totalAuthCount));
     dispatch(setResult(resultArr));
     dispatch(setWinner(winnerArr));
+    dispatch(setTotalMoney(challengeDetail.goal_money * challengers.length));
 
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
@@ -158,7 +184,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, [challengeDetail.authentication_end_date]);
+  }, []);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
@@ -171,6 +197,7 @@ function ChallengeInProgress() {
       //jwt로 수정
       tab.push(challengers[i].nickname);
       tabId.push(challengers[i].userid_num);
+      profiles.push(challengers[i].profile_img);
     }
   }
 
@@ -209,8 +236,8 @@ function ChallengeInProgress() {
 
   return (
     <div className="mt-12 flex flex-col gap-4">
-      <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
-      <h3 className="text-center font-medium text-grabit-400">
+      <h1 className="text-grabit-700 text-center text-3xl">{challengeDetail?.challenge_name}</h1>
+      <h3 className="text-grabit-400 text-center font-medium">
         {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
       </h3>
 
@@ -218,15 +245,15 @@ function ChallengeInProgress() {
         <div className="absolute h-40 w-40 opacity-50">
           <RiveComponent />
         </div>
-        <h2 className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-grabit-600 text-transparent">
+        <h2 className="animate-text text-grabit-600 z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-transparent">
           {challengeDetail?.goal_money * challengers.length} 캐럿
         </h2>
       </div>
 
       <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
-        <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
+        <h3 className="text-grabit-700 flex w-fit text-xl font-bold">{tab[0]}</h3>
         <CircularProgressbarWithChildren
-          value={UrlGroup[0].length > 0 ? totalAuthCount / UrlGroup[0].length : 0}
+          value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
           strokeWidth={10}
           styles={buildStyles({
             trailColor: '#e9ecf6',
@@ -236,7 +263,7 @@ function ChallengeInProgress() {
           <div className="profile-img relative aspect-square w-full">
             <img
               style={{ borderRadius: '100%', width: '70%' }}
-              src={challengers[0]?.profile_img ? challengers[0]?.profile_img : '/grabit_profile.png'}
+              src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
               className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
             />
           </div>
@@ -254,14 +281,14 @@ function ChallengeInProgress() {
       </div>
 
       <div className="progress grid grid-cols-3 gap-6 p-2">
-        {challengers.map((group, index) => {
+        {tab.map((nickname, index) => {
           if (index === 0) return null;
 
           return (
             <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
-              <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{tab[index]}</h3>
+              <h3 className="text-grabit-700 flex w-fit break-all text-center text-xl font-bold">{nickname}</h3>
               <CircularProgressbarWithChildren
-                value={UrlGroup[index].length > 0 ? totalAuthCount / UrlGroup[index].length : 0}
+                value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
                 strokeWidth={20}
                 styles={buildStyles({
                   trailColor: '#e9ecf6',
@@ -271,7 +298,7 @@ function ChallengeInProgress() {
                 <div className="profile-img relative aspect-square w-full">
                   <img
                     style={{ borderRadius: '100%', width: '50%' }}
-                    src={challengers[index]?.profile_img ? challengers[index]?.profile_img : '/grabit_profile.png'}
+                    src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
                     className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
                   />
                 </div>
@@ -320,6 +347,7 @@ function ChallengeInProgress() {
             },
           });
         }}
+        disabled={!isAcceptable}
       ></Cta>
     </div>
   );

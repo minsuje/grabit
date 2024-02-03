@@ -93,6 +93,8 @@ export default function MyPage() {
       });
   }, [userid_num]);
 
+  
+
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
@@ -191,11 +193,14 @@ export default function MyPage() {
       </div>
       <br />
       <br />
-      <div className="user-list rgap-4 flex flex-col">
+      <div className="user-list rga-4 flex flex-col">
         {friends.map((friend, index) => (
           <div className="flex items-center gap-2" key={index}>
             <Avatar>
-              <AvatarImage src={friend.profile_img} alt={friend.nickname} />
+              <AvatarImage
+                src={friend.profile_img ? friend.profile_img : '/grabit_profile.png'}
+                alt={friend.nickname}
+              />
               <AvatarFallback></AvatarFallback>
             </Avatar>
             <span>{friend.nickname}</span>
@@ -230,7 +235,6 @@ export default function MyPage() {
         </div>
         <div>
           <div>
-            {}
             {history?.map((challenge, key) => (
               <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
                 <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
