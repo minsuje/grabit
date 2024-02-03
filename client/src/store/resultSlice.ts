@@ -9,6 +9,7 @@ interface ResultState {
   totalAuth: number;
   result: challengers[];
   winner: number[];
+  totalMoney: number;
 }
 
 const initialState: ResultState = {
@@ -20,6 +21,7 @@ const initialState: ResultState = {
     { userid_num: 4, nickname: '닉3', Authcount: 8 },
   ],
   winner: [], // 최종 승자 유저 아이디 배열
+  totalMoney: 0, // 총 돈 수량
 };
 
 export const resultSlice = createSlice({
@@ -35,9 +37,12 @@ export const resultSlice = createSlice({
     setWinner: (state, action: PayloadAction<number[]>) => {
       state.winner = action.payload;
     },
+    setTotalMoney: (state, action: PayloadAction<number>) => {
+      state.totalMoney = action.payload;
+    },
   },
 });
 
-export const { setTotalAuth, setResult, setWinner } = resultSlice.actions;
+export const { setTotalAuth, setResult, setWinner, setTotalMoney } = resultSlice.actions;
 
 export default resultSlice.reducer;
