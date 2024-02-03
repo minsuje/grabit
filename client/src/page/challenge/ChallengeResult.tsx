@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
 import { ProgressComponent } from '@/components/ComponentSeong';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ReactCanvasConfetti from '@/components/ReactCanvasConfetti';
 import '@/App.css';
 import axios from '@/api/axios';
@@ -13,14 +13,14 @@ import { Button } from '@/components/ui/button';
 
 export default function ChallengeResult() {
   const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
-  const [earnedScore, setEarnedScore] = useState<number>(-50); // 사용자가 획득한 점수
+  const [earnedScore, setEarnedScore] = useState<number>(+50); // 사용자가 획득한 점수
   const [finalScore, setFinalScore] = useState<number>(currentScore + earnedScore); // 최종 점수
   const [tierName, setTierName] = useState<string>('');
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
+  const { challenge_id } = useParams<any>();
 
   const info = useSelector((state: RootState) => state.result);
-  console.log(info);
   const dispatch = useDispatch();
   // console.log('info console.log >>>>>>', info);
 
@@ -28,17 +28,34 @@ export default function ChallengeResult() {
     dispatch(setHeaderInfo({ title: '챌린지 결과', backPath: -1 }));
   }, [dispatch]);
 
+  // 마이페이지
   useEffect(() => {
     privateApi
       .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('res>>>>>>', response);
         setFinalScore(response.data.userInfo[0].score_num + earnedScore);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
+      });
+  }, []);
+
+  // 챌린지 상세 정보 보기 점수 업데이트
+  useEffect(() => {
+    privateApi
+      .post(`http://localhost:3000/challengeDetail/${challenge_id}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+        winner_userid_num: info.winner,
+        total_money: info.totalMoney,
+        challenge_id,
+      })
+      .then((response) => {
+        console.log('점수업데이트~~~>>>>>>', response);
+      })
+      .catch((error) => {
+        console.error('점수업데이트에러', error);
       });
   }, []);
 
@@ -85,7 +102,6 @@ export default function ChallengeResult() {
 
     return () => clearInterval(interval);
   }, [finalScore]);
-  // 현재 점수에 따른 티어 정보 추출
 
   return (
     <>

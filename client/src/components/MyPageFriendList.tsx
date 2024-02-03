@@ -26,7 +26,7 @@ export default function MyPageFriendList({ friends }: any) {
         <div className="mb-[5%] flex  w-[100%] justify-between rounded-lg bg-gray-200 p-6  shadow-md">
           <div className="flex">
             <Avatar>
-              <AvatarImage src={friends.profile_img} />
+              <AvatarImage src={friends.profile_img ? friends.profile_img : '/grabit_profile.png'} />
               <AvatarFallback></AvatarFallback>
             </Avatar>
             <div>
