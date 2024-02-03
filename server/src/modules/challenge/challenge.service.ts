@@ -8,7 +8,7 @@ import {
 import { account, score, users } from '../user/schema';
 import { notification } from '../notification/schema';
 import { db } from '../../../db/db';
-import { eq, not, and, desc, arrayOverlaps, sql } from 'drizzle-orm';
+import { eq, not, and, desc, arrayOverlaps, sql, AnyTable } from 'drizzle-orm';
 import {
   isBefore,
   isAfter,
@@ -19,6 +19,7 @@ import {
   addDays,
 } from 'date-fns';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { datetime } from 'drizzle-orm/mysql-core';
 
 @Injectable()
 export class ChallengeService {
@@ -116,13 +117,13 @@ export class ChallengeService {
         })
         .where(eq(users.userid_num, login_userid_num));
 
-      const accountInfo = await db.insert(account).values({
-        transaction_description: 'challenge/participation',
-        transaction_type: 'withdraw',
-        transaction_amount: newChallenge.goal_money,
-        status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
-        userid_num: login_userid_num,
-      });
+      // const accountInfo = await db.insert(account).values({
+      //   transaction_description: 'challenge/participation',
+      //   transaction_type: 'withdraw',
+      //   transaction_amount: newChallenge.goal_money,
+      //   status: 'false', // false?   // varchar로 할건지 boolean으로 할건지
+      //   userid_num: login_userid_num,
+      // });
 
       return { newChallenge, challengeNotification };
     } else return { msg: '캐럿이 부족합니다.' };
@@ -940,7 +941,7 @@ export class ChallengeService {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
     const everyChallenge = await db.select().from(challenge);
-    console.log('everyChallenge', everyChallenge);
+    // console.log('everyChallenge', everyChallenge);
 
     const dateNow = addHours(new Date(), 9);
 
@@ -956,8 +957,8 @@ export class ChallengeService {
       const year = Number(time.split('/')[2]);
 
       const timeNow = addMonths(new Date(year, month - 1, day), 1);
-      console.log(`timeNow${i} >>> `, timeNow);
-      console.log('dateNow >>> ', dateNow);
+      // console.log(`timeNow${i} >>> `, timeNow);
+      // console.log('dateNow >>> ', dateNow);
 
       if (dateNow === timeNow || dateNow > timeNow) {
         await db
@@ -966,5 +967,77 @@ export class ChallengeService {
       }
     }
     console.log('30일이 지난 챌린지 삭제');
+  }
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async hendleCron() {
+    // 챌린지 시작 날짜 찾기
+    const Challenges = await db.select().from(challenge);
+
+    const dateNow = new Date()
+      .toLocaleString('en-US', {
+        timeZone: 'Asia/Seoul',
+      })
+      .split(',');
+
+    for (let i = 0; i < Challenges.length; i++) {
+      const challenge_time = Challenges[i].authentication_start_date
+        .toLocaleString('en-US', {
+          timeZone: 'Asia/Seoul',
+        })
+        .split(',');
+
+      // 챌린지 생성자 아이디
+      let myNumber: number = Challenges[i].userid_num;
+
+      //현재 챌린지 Number
+      let Challenge_num = Challenges[i].challenge_id;
+
+      // 챌린지의 돈이 얼마인지 확인하기
+      let Challenge_money = Challenges[i].goal_money;
+
+      // let findMyChallengeNumber = await db.select({challenge_id: challenge.challenge_id}).from(challenge).where(eq(challenge.userid_num, myNumber))
+      if (challenge_time === dateNow || challenge_time < dateNow) {
+        for (let p = 0; p < Challenges[i].challenger_userid_num.length; p++) {
+          let needDelete = true;
+
+          // 생성자가 아닌 유저가 아닌 유저가 isAccept가 하나라도 true 이면
+          if (
+            Challenges[i].challenger_userid_num[p].isAccept === true &&
+            Challenges[i].challenger_userid_num[p].userid_num !== myNumber
+          ) {
+            needDelete = false;
+          }
+
+          if (needDelete === true) {
+            const sendNotification = await db.insert(notification).values({
+              userid_num: myNumber,
+              reference_id: Challenge_num,
+              type: 'challenge/delete/noChallenger',
+              message: { challengeName: Challenges[i].challenge_name },
+              is_confirm: false,
+            });
+
+            // 돈 재입금
+            const goBackMoney = await db
+              .update(users)
+              .set({ money: sql`${users.money} + ${Challenge_money}` })
+              .where(eq(users.userid_num, myNumber));
+
+            // account 계좌 전적 추가
+            const intoAccount = await db.insert(account).values({
+              transaction_description: 'challenge/deleted',
+              transaction_type: 'carrot/deposit',
+              transaction_amount: Challenge_money,
+              status: false,
+            });
+
+            // challenge Delete
+            const deleteColumn = await db
+              .delete(challenge)
+              .where(eq(challenge.challenge_id, Challenge_num));
+          }
+        }
+      }
+    }
   }
 }
