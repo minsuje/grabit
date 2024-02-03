@@ -11,6 +11,7 @@ import { ko } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { setHeaderInfo } from '@/store/headerSlice';
+import Cta from '@/components/Cta';
 
 function ChallengeDetail() {
   const { userid_num } = useSelector((state: RootState) => state.login);
@@ -46,7 +47,7 @@ function ChallengeDetail() {
   };
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '챌린지 상세', backPath: -1 }));
+    dispatch(setHeaderInfo({ title: '챌린지 정보', backPath: -1 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -67,72 +68,89 @@ function ChallengeDetail() {
   }, []);
 
   return (
-    <div className="container ">
+    <div className="flex flex-col gap-8">
       <h1 className="py-4 text-3xl font-bold">챌린지 정보</h1>
 
       <div>
-        <div className="user-list flex">
-          <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
+        <div className="user-list mb-4 flex gap-2">
+          <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
-            <Label className="w-8">{challengeDetail?.is_public ? '공개' : '비공개'}</Label>
+            <Label className="rounded-md bg-grabit-200 px-3 py-2 font-semibold text-grabit-700">
+              {challengeDetail?.is_public ? '공개' : '비공개'}
+            </Label>
           </div>
         </div>
 
         <div className="user-list flex flex-col gap-4">
-          <div className="flex items-center gap-2">
+          {/* <div className="flex flex-col items-center gap-2"> */}
+          <div
+            className={`grid grid-cols-${challengers.length} items-start justify-center gap-4 break-all text-center`}
+          >
             {challengers.map((challenger: users, idx) => {
               return (
-                <div className="flex items-center gap-2 " key={idx}>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
+                <div className="flex w-full flex-col items-center gap-2" key={idx}>
+                  <Avatar className="flex h-16 w-16 flex-col">
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" className="flex" />
+                    <AvatarFallback className="flex">CN</AvatarFallback>
                   </Avatar>
-                  <span>{challenger.nickname}</span>
+                  <span className="font-semibold text-stone-600">{challenger.nickname}</span>
                 </div>
               );
             })}
           </div>
         </div>
       </div>
-      <h2 className="py-4 text-xl font-bold">챌린지명</h2>
-      <div>{challengeDetail != undefined && challengeDetail.challenge_name}</div>
-      <h2 className="py-4 text-xl font-bold">주제</h2>
-      <div>{challengeDetail != undefined && challengeDetail.topic}</div>
 
-      <h2 className="py-4 text-xl font-bold">시작날짜</h2>
-      <div>
-        {challengeDetail != undefined && format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}
-      </div>
-      <h2 className="py-4 text-xl font-bold">끝날짜</h2>
-      <div>
-        {challengeDetail != undefined && format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}
+      <div className="challengeName">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">챌린지명</h2>
+        <p className="text-lg font-medium text-stone-600">
+          {challengeDetail != undefined && challengeDetail.challenge_name}
+        </p>
       </div>
 
-      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
-      <div>주 {challengeDetail != undefined && challengeDetail.term}일</div>
-
-      <h2 className="py-4 text-xl font-bold">인증 시간</h2>
-      <div>
-        {challengeDetail != undefined &&
-          challengeDetail.authentication_start_time + '시 ~ ' + challengeDetail.authentication_end_time + '시 '}
+      <div className="topic">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">주제</h2>
+        <p className="text-lg font-medium text-stone-600">{challengeDetail != undefined && challengeDetail.topic}</p>
       </div>
 
-      <div className="user-list flex flex-col gap-4 pt-4">
-        {challengeDetail?.is_public &&
-          challengers.length < 4 &&
-          challengers.find((challenger) => challenger.userid_num == userid_num) == undefined && (
-            <Button onClick={() => participate}>참가하기</Button>
-          )}
-
-        {challengeDetail?.is_public && challengers.length == 4 && <Button disabled>정원 초과</Button>}
-        <Button
-          onClick={() => {
-            navigate('/challengeList');
-          }}
-        >
-          확인
-        </Button>
+      <div className="startDate">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">시작날짜</h2>
+        <p className="text-lg font-medium text-stone-600">
+          {challengeDetail != undefined && format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}
+        </p>
       </div>
+
+      <div className="endDate">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">끝날짜</h2>
+        <p className="text-lg font-medium text-stone-600">
+          {challengeDetail != undefined && format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}
+        </p>
+      </div>
+
+      <div className="term">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">인증 주기</h2>
+        <p className="text-lg font-medium text-stone-600">
+          주 {challengeDetail != undefined && challengeDetail.term}일
+        </p>
+      </div>
+
+      <div className="authTime">
+        <h2 className="flex w-full py-4 font-['JalnanGothic'] text-xl font-bold text-grabit-700">인증 시간</h2>
+        <p className="text-lg font-medium text-stone-600">
+          {challengeDetail != undefined &&
+            challengeDetail.authentication_start_time + '시 ~ ' + challengeDetail.authentication_end_time + '시 '}
+        </p>
+      </div>
+
+      {challengeDetail?.is_public &&
+        challengers.length < 4 &&
+        challengers.find((challenger) => challenger.userid_num == userid_num) == undefined && (
+          <Cta text={'참가하기'} onclick={() => participate} />
+        )}
+
+      {challengeDetail?.is_public && challengers.length == 4 && (
+        <Cta text={'참가하기'} disabled onclick={() => participate} />
+      )}
     </div>
   );
 }

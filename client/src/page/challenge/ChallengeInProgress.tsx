@@ -184,7 +184,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, [challengeDetail.authentication_end_date]);
+  }, []);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
