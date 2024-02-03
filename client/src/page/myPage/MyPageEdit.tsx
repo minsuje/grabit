@@ -4,18 +4,15 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 
-import * as yup from 'yup';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+// import * as yup from 'yup';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
-import { Value } from '@radix-ui/react-select';
-import { setNickname } from '@/store/loginSlice';
 
 export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
-  const [passwordErr, setPasswordErr] = useState<string>('');
+  const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
   const [file, setFile] = useState<File>();
 
@@ -31,24 +28,24 @@ export default function MyPageEdit() {
   }
 
   // yup 스키마 정의
-  const schema = yup
-    .object({
-      nickname: yup?.string().nullable(),
+  // const schema = yup
+  //   .object({
+  //     nickname: yup?.string().nullable(),
 
-      password: yup.string().required('현재 비밀번호는 필수입니다.'),
-      // changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
-      // confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
-    })
-    .required();
+  //     password: yup.string().required('현재 비밀번호는 필수입니다.'),
+  //     // changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
+  //     // confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
+  //   })
+  //   .required();
 
   // useForm 사용
   const {
     register,
     handleSubmit,
-    watch,
+
     setError,
-    clearErrors,
-    formState: { errors },
+
+    // formState: { errors },
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {

@@ -11,14 +11,9 @@ interface FriendDetail {
 }
 
 // 친구 객체를 위한 인터페이스 정의
-interface Friend {
-  id: string;
-  nickname: string;
-}
 
 export default function MyPageFriendDetail() {
-  const [friendDetail, setFriendDetail] = useState<any | FriendDetail | null>('');
-  const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
+  const [friendDetail] = useState<any | FriendDetail | null>('');
   const { userid } = useParams();
   const [nickname, setNickname] = useState();
   const [myRank, setMyRank] = useState();
