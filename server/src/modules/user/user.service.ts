@@ -26,7 +26,7 @@ export class UserService {
       nickname,
       profile_img,
       score_num,
-      money,
+      carrot,
     } = createUserDto;
 
     const hash: string = await bcrypt.hash(password, 10);
@@ -40,7 +40,7 @@ export class UserService {
       nickname: nickname,
       profile_img: profile_img,
       score_num: score_num,
-      money: money,
+      carrot: carrot,
     };
     const checkUser = await db
       .select()
@@ -75,7 +75,7 @@ export class UserService {
       .select({
         nickname: users.nickname,
         score_num: users.score_num,
-        money: users.money,
+        carrot: users.carrot,
       })
       .from(users)
       .where(eq(users.userid_num, userid_num));
@@ -324,7 +324,7 @@ export class UserService {
 
   payment = async (userid_num: number) => {
     const user = await db
-      .select({ userid: users.userid, name: users.name, money: users.money })
+      .select({ userid: users.userid, name: users.name, carrot: users.carrot })
       .from(users)
       .where(eq(users.userid_num, userid_num));
     return { user };
@@ -355,19 +355,19 @@ export class UserService {
   };
 
   updateMoney = async (amount: number, userid_num: number) => {
-    let carrot: number;
+    let carrots: number;
     if (Number(amount) === 1000) {
-      carrot = 850;
+      carrots = 850;
     } else if (Number(amount) === 2000) {
-      carrot = 1700;
+      carrots = 1700;
     } else if (Number(amount) === 5000) {
-      carrot = 4800;
+      carrots = 4800;
     } else if (Number(amount) === 10000) {
-      carrot = 10000;
+      carrots = 10000;
     }
     const userInfo = await db
       .update(users)
-      .set({ money: sql`${users.money} + ${carrot}` })
+      .set({ carrot: sql`${users.carrot} + ${carrots}` })
       .where(eq(users.userid_num, userid_num))
       .returning();
 
@@ -376,7 +376,7 @@ export class UserService {
       .values({
         transaction_description: 'charge/carrot',
         transaction_type: 'carrot/deposit',
-        transaction_amount: carrot,
+        transaction_amount: carrots,
         status: false,
         userid_num: userid_num,
       })
@@ -420,16 +420,16 @@ export class UserService {
     const { money, bank_num, bank_name, name } = change;
     // 유저 정보 확인
     const checkMoney = await db
-      .select({ money: users.money, name: users.name })
+      .select({ carrot: users.carrot, name: users.name })
       .from(users)
       .where(eq(users.userid_num, userid_num));
     if (checkMoney[0].name === name) {
-      let myAccountMoney = checkMoney[0].money;
+      let myAccountMoney = checkMoney[0].carrot;
       // 1만원 이상 출금 가능
       if (myAccountMoney >= 10000) {
         const withdraw = await db
           .update(users)
-          .set({ money: sql`${users.money} - ${money}` })
+          .set({ carrot: sql`${users.carrot} - ${money}` })
           .where(eq(users.userid_num, userid_num))
           .returning();
 
