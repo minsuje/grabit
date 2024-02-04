@@ -103,24 +103,24 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
-      console.log('else if /friend originalUrl > ', req.originalUrl.split('/'));
-      let friend_num: any = await db
-        .select({ userid_num: users.userid_num })
-        .from(users)
-        .where(eq(users.userid, req.originalUrl.split('/')[2]));
-
-      friend_num = friend_num[0].userid_num;
+      // 내 친구 목록 조회
+      console.log(
+        'else if /friend originalUrl > ',
+        req.originalUrl.split('/')[2],
+      );
 
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
         .select({ friends_num: friend.other_userid_num })
         .from(friend)
-        .where(eq(friend.userid_num, friend_num));
+        .where(eq(friend.userid_num, Number(req.originalUrl.split('/')[2])));
       const friends2 = await db
         .select({ friends_num: friend.userid_num })
         .from(friend)
-        .where(eq(friend.other_userid_num, friend_num));
+        .where(
+          eq(friend.other_userid_num, Number(req.originalUrl.split('/')[2])),
+        );
       for (let i = 0; i < friends1.length; i++) {
         friends.push(friends1[i].friends_num);
       }
