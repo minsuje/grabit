@@ -136,6 +136,7 @@ export default function ChallengeResult() {
       }
     }
   }, [challengerInfo]);
+
   return (
     <>
       {showTierResult && (
@@ -164,48 +165,42 @@ export default function ChallengeResult() {
       {showConfetti && <ReactCanvasConfetti />}
 
       <div className="container ">
-        <div className="mb-10  p-3 text-center text-5xl font-extrabold">30,000 원</div>
+        <h1 className="mb-10  p-3 text-center text-3xl font-extrabold">30,000 원</h1>
         <div className="flex text-center">
-          <div className="">
+          <div className="text-center">
             <div>
-              <h1 className="text-2xl font-black">{info.result[0].nickname}</h1>
+              <span className="text-2xl font-black">{info.result[0].nickname}</span>
               <p>{info.result[0].Authcount}회 성공</p>
               <p>{challengerInfo[0]?.carrot}캐럿</p>
-              <p>{challengerInfo[0]?.score}</p>
-              <h1>총점</h1>
+              <p>{challengerInfo[0]?.score} P </p>
             </div>
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-              <p>{}??</p>
+              <img src={tierImageSrc} alt="tear" className="mx-auto " />
             </div>
           </div>
 
           <div className="text-center">
             <div>
-              <h1 className="text-2xl font-black">{info.result[1].nickname}</h1>
+              <span className="text-2xl font-black">{info.result[1].nickname}</span>
               <p>{info.result[1].Authcount}회 성공</p>
-              <p>{challengerInfo[1]?.carrot}</p>
-              <p>{challengerInfo[1]?.score}</p>
-              <h1>총점</h1>
+              <p>{challengerInfo[1]?.carrot}캐럿</p>
+              <p>{challengerInfo[1]?.score} P </p>
             </div>
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-              <p>{}</p>
+              <img src={tierImageSrc} alt="tear" className="mx-auto " />
             </div>
           </div>
 
           {info.result[2] && (
             <div className="text-center">
               <div>
-                <h1 className="text-2xl font-black">{info.result[2].nickname}</h1>
+                <span className="text-2xl font-black">{info.result[2].nickname}</span>
                 <p>{info.result[2].Authcount}회 성공</p>
-                <p>{challengerInfo[2]?.carrot}</p>
-                <p>{challengerInfo[2]?.score}</p>
-                <h1>총점</h1>
+                <p>{challengerInfo[2]?.carrot}캐럿</p>
+                <p>{challengerInfo[2]?.score} P</p>
               </div>
               <div className="text-center">
-                <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-                <p>{}</p>
+                <img src={tierImageSrc} alt="tear" className="mx-auto " />
               </div>
             </div>
           )}
@@ -213,15 +208,13 @@ export default function ChallengeResult() {
           {info.result[3] && (
             <div className="text-center">
               <div>
-                <h1 className="text-2xl font-black">{info.result[3].nickname}</h1>
+                <span className="text-2xl font-black">{info.result[3].nickname}</span>
                 <p>{info.result[3].Authcount}회 성공</p>
-                <p>{challengerInfo[3]?.carrot}</p>
-                <p>{challengerInfo[3]?.score}</p>
-                <h1>총점</h1>
+                <p>{challengerInfo[3]?.carrot}캐럿</p>
+                <p>{challengerInfo[3]?.score} P</p>
               </div>
               <div className="text-center">
-                <img src={tierImageSrc} alt="tear" className="mx-auto w-[30%]" />
-                <p>{}</p>
+                <img src={tierImageSrc} alt="tear" className="mx-auto" />
               </div>
             </div>
           )}

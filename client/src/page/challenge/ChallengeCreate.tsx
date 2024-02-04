@@ -29,17 +29,77 @@ const schema = yup
       .min(2, '이름은 2글자 이상 8글자 이하로 작성해주세요.')
       .max(8, '이름은 2글자 이상 8글자 이하로 작성해주세요.')
       .matches(/^[가-힣]+$/, '* 이름은 한글로만 작성해주세요.'),
-    topic: yup.string().required('* 주제는 필수입니다.'),
+    topic: yup.string().notOneOf([''], '주제를 선택하세요.'),
+    keyword: yup
+      .string()
+      .required('* 키워드작성은 필수입니다.')
+      .matches(/^[A-Za-z]{2,15}$/, {
+        message:
+          '키워드는 영어로만 작성해야 하며, 특수문자를 사용할 수 없습니다. 최소 2글자 이상 15글자 이하로 작성해주세요.',
+      }),
+    auth: yup.string().required('인증 주기를 선택하세요.'),
+    goalMoney: yup.number().required('* 금액을 작성해주세요.').min(1000, '* 최소 금액은 1000원 이상이어야 합니다.'),
+    startDate: yup.string().required('날짜를 입력해주세요'),
+    term: yup.string().required('기간을 선택하세요.'),
+    authTerm: yup.string().required('주기를 선택하세요'),
+    authStart: yup.string().required('인증 시작 시간을 선택하세요'),
+    authEnd: yup.string().required('인증 마감 시간을 선택하세요'),
   })
-
   .required();
 
 function ChallengeCreate() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+
+  const handleTopicChange = (value: string) => {
+    setValue('topic', value, { shouldValidate: true });
+    setTopic(value);
+  };
+
+  const handleTermChange = (value: string) => {
+    setValue('term', value, { shouldValidate: true });
+    setTerm(Number(value));
+  };
+
+  const handleAuthTermChange = (value: string) => {
+    setValue('authTerm', value, { shouldValidate: true });
+    setAuthTerm(value);
+  };
+
+  const handleAuthStartChange = (value: string) => {
+    setValue('authStart', value, { shouldValidate: true });
+    setAuthStart(value);
+  };
+
+  const handleAuthEndChange = (value: string) => {
+    setValue('authEnd', value, { shouldValidate: true });
+    setAuthEnd(value);
+  };
+
+  // const handleSelectChange = (value) => {
+  //   setTopic(value);
+  //   setAuthTerm(value);
+  //   setAuthStart(value);
+  //   setValue('topic', value, { shouldValidate: true });
+  //   setValue('term', value, { shouldValidate: true });
+  //   setValue('authTerm', value, { shouldValidate: true });
+  //   setValue('authStart', value, { shouldValidate: true });
+  // };
+
+  const handleDateChange = (selectedDate: any) => {
+    // 선택된 날짜를 'yyyy-MM-dd' 형식의 문자열로 포맷합니다.
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+    // `setValue` 함수를 사용하여 폼의 'startDate' 필드 값을 업데이트합니다.
+    setValue('startDate', formattedDate, { shouldValidate: true });
+    setDate(selectedDate);
+  };
+  useEffect(() => {
+    register('startDate');
+  }, [register]);
 
   const dispatch = useDispatch();
   const challengeState = useSelector((state: RootState) => state.challenge);
@@ -91,6 +151,9 @@ function ChallengeCreate() {
   // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   dispatch(setChallengeName(e.target.value));
   // };
+
+  console.log('authTerm', authTerm);
+  console.log('authStart', authStart);
 
   async function onSubmit() {
     const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
@@ -170,12 +233,7 @@ function ChallengeCreate() {
 
         <div className="challengeTopic flex flex-col">
           <h2 className="py-4 text-xl font-bold">주제</h2>
-          <Select
-            {...register('topic')}
-            onValueChange={(value) => {
-              setTopic(value);
-            }}
-          >
+          <Select onValueChange={handleTopicChange}>
             <SelectTrigger className="w-[180px]" {...register('topic')}>
               <SelectValue placeholder="주제" {...register('topic')} />
             </SelectTrigger>
@@ -194,11 +252,19 @@ function ChallengeCreate() {
         <div className="challengeMoney flex flex-col">
           <h2 className="py-4 text-xl font-bold">인증 키워드</h2>
           <span className="text-gray-500">영어로 입력해주세요</span>
-          <Input type="text" onChange={(e) => setAuthKeyword(e.target.value)} />
+          <Input type="text" {...register('keyword')} onChange={(e) => setAuthKeyword(e.target.value)} />
+          {errors.keyword && <p className=" p-1 text-xs text-red-500">{errors.keyword.message}</p>}
         </div>
         <div className="challengeMoney flex flex-col">
           <h2 className="py-4 text-xl font-bold">목표 금액</h2>
-          <Input type="number" onChange={(e) => setGoalMoney(Number(e.target.value))} />
+          <Input
+            type="number"
+            {...register('goalMoney', {
+              setValueAs: (value) => (value === '' ? 0 : parseInt(value, 10)),
+            })}
+            onChange={(e) => setGoalMoney(Number(e.target.value))}
+          />
+          {errors.goalMoney && <p className=" p-1 text-xs text-red-500">{errors.goalMoney.message}</p>}
         </div>
         <div className="challengeStartDate flex flex-col">
           <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
@@ -216,14 +282,15 @@ function ChallengeCreate() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+              <Calendar mode="single" selected={date} onSelect={handleDateChange} initialFocus />
             </PopoverContent>
           </Popover>
+          {errors.startDate && <p className=" p-1 text-xs text-red-500">{errors.startDate.message}</p>}
         </div>
         <div className="challengeTerm flex flex-col">
           <h2 className="py-4 text-xl font-bold">기간</h2>
-          <Select onValueChange={(value) => setTerm(Number(value))}>
-            <SelectTrigger className="w-full">
+          <Select onValueChange={handleTermChange}>
+            <SelectTrigger className="w-full" {...register('term')}>
               <SelectValue placeholder="인증 주기" />
             </SelectTrigger>
             <SelectContent>
@@ -232,11 +299,12 @@ function ChallengeCreate() {
               <SelectItem value="13">2주일</SelectItem>
             </SelectContent>
           </Select>
+          {errors.term && <p className="p-1 text-xs text-red-500">{errors.term.message}</p>}
         </div>
         <div className="challengeAuthTerm flex flex-col">
           <h2 className="py-4 text-xl font-bold">인증 주기</h2>
-          <Select onValueChange={(value) => setAuthTerm(value)}>
-            <SelectTrigger className="w-full">
+          <Select onValueChange={handleAuthTermChange}>
+            <SelectTrigger className="w-full" {...register('authTerm')}>
               <SelectValue placeholder="인증 주기" />
             </SelectTrigger>
             <SelectContent>
@@ -245,13 +313,14 @@ function ChallengeCreate() {
               <SelectItem value="7">매일</SelectItem>
             </SelectContent>
           </Select>
+          {errors.authTerm && <p className="text-xs text-red-500">{errors.authTerm.message}</p>}
         </div>
         <div className="challengeAuthStart flex flex-col">
           <div className="authTime flex w-full gap-4">
             <div className="startTime flex w-full flex-col">
               <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
-              <Select onValueChange={(value) => setAuthStart(value)}>
-                <SelectTrigger className="w-full">
+              <Select onValueChange={handleAuthStartChange}>
+                <SelectTrigger className="w-full" {...register('authStart')}>
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
                 <SelectContent>
@@ -264,10 +333,11 @@ function ChallengeCreate() {
                   })}
                 </SelectContent>
               </Select>
+              {errors.authStart && <p className="text-xs text-red-500">{errors.authStart.message}</p>}
             </div>
             <div className="endTime flex w-full flex-col">
               <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
-              <Select onValueChange={(value) => setAuthEnd(value)}>
+              <Select onValueChange={handleAuthEndChange}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
@@ -281,6 +351,7 @@ function ChallengeCreate() {
                   })}
                 </SelectContent>
               </Select>
+              {errors.authEnd && <p className="text-xs text-red-500">{errors.authEnd.message}</p>}
             </div>
           </div>
         </div>
