@@ -116,7 +116,7 @@ export class ChallengeService {
           money: sql`${users.money} - ${newChallenge.goal_money}`,
         })
         .where(eq(users.userid_num, login_userid_num));
-      
+
       const accountInfo = await db.insert(account).values({
         transaction_description: 'challenge/participation',
         transaction_type: 'carrot/withdraw',
@@ -752,6 +752,7 @@ export class ChallengeService {
         }
       }
     }
+
     let history = [];
     let today = new Date()
       .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
@@ -776,6 +777,25 @@ export class ChallengeService {
         );
       history.push(myChallenge[i]);
     }
+    console.log('history >> ', history);
+    for (let i = 0; i < history.length; i++) {
+      let challenger = history[i].challenger_userid_num;
+      for (let j = 0; j < challenger.length; j++) {
+        let nickname: any = await db
+          .select({ nickname: users.nickname })
+          .from(users)
+          .where(eq(users.userid_num, challenger[j].userid_num));
+        nickname = nickname[0].nickname;
+        history[i].challenger_userid_num[j] = {
+          ...challenger[j],
+          nickname: nickname,
+        };
+        // console.log(
+        //   'history challenger_userid_num > ',
+        //   history[i].challenger_userid_num,
+        // );
+      }
+    }
     let win = 0, // 승리 횟수
       lose = 0; // 패배 횟수
     const total = history.length; // 총 챌린지 횟수
@@ -787,8 +807,6 @@ export class ChallengeService {
         win++;
       else lose++;
     }
-
-    console.log('history >> ', history);
     return { history, total, win, lose };
   };
 
