@@ -122,3 +122,12 @@ export type Capture_options = {
 export interface ChallengeProp {
   challenge: Challenge;
 }
+
+export interface FriendSelect {
+  nickname: string;
+  profile_img: string;
+  rank: number;
+  score_num: number;
+  userid: string;
+  userid_num: number;
+}

@@ -138,7 +138,7 @@ function ChallengeEdit() {
         <div className="user-list flex">
           <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
           <div className="flex w-fit items-center space-x-2">
-            <Label className="w-8">공개</Label>
+            <Label className="w-8">{challengeDetail.is_public ? '공개' : '비공개'}</Label>
           </div>
         </div>
 
@@ -147,11 +147,23 @@ function ChallengeEdit() {
             {challengers.map((challenger: users, idx) => {
               return (
                 <div className="flex items-center gap-2 " key={idx}>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <span>{challenger.nickname}</span>
+                  {challenger.profile_img ? (
+                    <>
+                      <Avatar>
+                        <AvatarImage src={challenger.profile_img} />
+                        <AvatarFallback>{challenger.nickname}</AvatarFallback>
+                      </Avatar>
+                      <span>{challenger.nickname}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Avatar>
+                        <AvatarImage src="/grabit_profile.png" />
+                        <AvatarFallback>{challenger.nickname}</AvatarFallback>
+                      </Avatar>
+                      <span>{challenger.nickname}</span>
+                    </>
+                  )}
                 </div>
               );
             })}
