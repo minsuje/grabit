@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 
-
 function KakaoAuth() {
   const navigate = useNavigate();
   const [accessTokenFetching, setAccessTokenFetching] = useState(false);

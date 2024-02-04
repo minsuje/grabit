@@ -7,7 +7,7 @@ export class CreateUserDto {
   nickname?: string;
   profile_img?: string;
   score_num: number;
-  money: number;
+  carrot: number;
 }
 
 export class LoginDto {

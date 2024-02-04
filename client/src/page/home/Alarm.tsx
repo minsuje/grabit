@@ -2,7 +2,12 @@ import AlarmList from '@/components/AlarmList';
 import { useState, useEffect } from 'react';
 import { privateApi } from '@/api/axios';
 import { Link } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
+
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
+
 
 interface message {
   friendName?: string;
@@ -22,6 +27,8 @@ interface challengeAlarmList {
 }
 
 function Alarm() {
+  const dispatch = useDispatch();
+
   const [challengeAlarm, setChallengeAlarm] = useState<challengeAlarmList[]>([]);
   const [isAlarm, setIsAlarm] = useState<boolean>(true);
   const [deleteButton, setDeleteButton] = useState<boolean>(false);
@@ -47,6 +54,7 @@ function Alarm() {
     }
   }, []);
 
+
   let content: JSX.Element;
   let type: string;
   let link: string;
@@ -61,6 +69,7 @@ function Alarm() {
       </div>
 
       <div className="list flex flex-col gap-4 p-4">
+
         {isAlarm ? (
           challengeAlarm.map((list) => {
             switch (list.type) {
@@ -146,6 +155,8 @@ function Alarm() {
         ) : (
           <div className=" flex  items-center justify-center text-xl text-gray-500">알림이 없습니다.</div>
         )}
+
+       
       </div>
     </div>
   );

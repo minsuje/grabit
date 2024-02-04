@@ -99,7 +99,7 @@ function HotChallenge() {
       privateApi
         .get('http://3.34.122.205:3000/popularChallenge')
         .then((response) => {
-          console.log('HotTopicData', response.data);
+          // console.log('HotTopicData', response.data);
           setHotTopic(response.data.popularTopics);
           setTop1(response.data.top1);
           setTop2(response.data.top2);

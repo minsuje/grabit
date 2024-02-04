@@ -55,7 +55,7 @@ function ReactCanvasConfetti() {
       //     colors: ['#ff0000', '#00ff00', '#0000ff'],
       // });
     }
-  });
+  }, []);
 
   return <div className="canvas-confetti-container" ref={confettiRef}></div>;
 }

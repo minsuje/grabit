@@ -43,7 +43,7 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
-import CheckoutPage from './page/CheckoutPage';
+import CheckoutPages from './page/CheckoutPage';
 import CheckoutSuccess from './page/CheckoutSuccess';
 import CheckoutFail from './page/CheckoutFail';
 import Payment from './page/Payment';
@@ -87,17 +87,16 @@ function App() {
 
             <Route path="/challengetier" element={<ChallengeTier />} />
 
-            {/* mypage */}
-            <Route path="/myPage/:userid_num" element={<MyPage />} />
-            <Route path="/:userid_num/mypageedit" element={<MyPageEdit />} />
-            <Route path="/mypage/myPagewithdraw" element={<MypageWithdraw />} />
-            <Route path="/mypage/mypagecharge" element={<MypageCharge />} />
-            <Route path="/mypage/friend/detail/:userid_num" element={<Friend />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/edit" element={<MyPageEdit />} />
+            <Route path="/mypage/withdraw" element={<MypageWithdraw />} />
+            <Route path="/mypage/charge" element={<MypageCharge />} />
+            <Route path="/mypage/friend" element={<Friend />} />
 
             <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
             <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-            <Route path="/mypagehistorydetail/:userid_num" element={<MyPageHistoryDetail />} />
+            <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
             <Route path="/friend/new/:userid" element={<FriendAddition />} />
 
             <Route path="/friend/new" element={<FriendAddition />} />
@@ -105,7 +104,7 @@ function App() {
 
           {/* 테스트 용 */}
           <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
-          <Route path="/checkout" element={<CheckoutPage price={price} />} />
+          <Route path="/checkout" element={<CheckoutPages price={price} />} />
           <Route path="/checkout/success" element={<CheckoutSuccess />} />
           <Route path="/checkout/fail" element={<CheckoutFail />} />
         </Routes>

@@ -45,10 +45,10 @@ export class ChallengeService {
 
     // 챌린지 생성하는 유저 정보 찾아오기
     let userMoney: any = await db
-      .select({ money: users.money })
+      .select({ carrot: users.carrot })
       .from(users)
       .where(eq(users.userid_num, login_userid_num));
-    userMoney = userMoney[0].money;
+    userMoney = userMoney[0].carrot;
 
     // 내기 금액보다 유저의 잔고가 많아야 챌린지 생성 가능
     if (userMoney >= goal_money) {
@@ -113,10 +113,10 @@ export class ChallengeService {
       const money = await db
         .update(users)
         .set({
-          money: sql`${users.money} - ${newChallenge.goal_money}`,
+          carrot: sql`${users.carrot} - ${newChallenge.goal_money}`,
         })
         .where(eq(users.userid_num, login_userid_num));
-      
+
       const accountInfo = await db.insert(account).values({
         transaction_description: 'challenge/participation',
         transaction_type: 'carrot/withdraw',
@@ -133,10 +133,10 @@ export class ChallengeService {
   challengeAccept = async (userid_num: number, challenge_id: number) => {
     // 챌린지 생성하는 유저 정보 찾아오기
     let userMoney: any = await db
-      .select({ money: users.money })
+      .select({ carrot: users.carrot })
       .from(users)
       .where(eq(users.userid_num, userid_num));
-    userMoney = userMoney[0].money;
+    userMoney = userMoney[0].carrot;
     const challengeWait: any = await db
       .select({
         goal_money: challenge.goal_money,
@@ -156,7 +156,7 @@ export class ChallengeService {
       const money = await db
         .update(users)
         .set({
-          money: sql`${users.money} - ${challengeWait[0].goal_money}`,
+          carrot: sql`${users.carrot} - ${challengeWait[0].goal_money}`,
         })
         .where(eq(users.userid_num, userid_num));
 
@@ -752,6 +752,7 @@ export class ChallengeService {
         }
       }
     }
+
     let history = [];
     let today = new Date()
       .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
@@ -776,6 +777,25 @@ export class ChallengeService {
         );
       history.push(myChallenge[i]);
     }
+    console.log('history >> ', history);
+    for (let i = 0; i < history.length; i++) {
+      let challenger = history[i].challenger_userid_num;
+      for (let j = 0; j < challenger.length; j++) {
+        let nickname: any = await db
+          .select({ nickname: users.nickname })
+          .from(users)
+          .where(eq(users.userid_num, challenger[j].userid_num));
+        nickname = nickname[0].nickname;
+        history[i].challenger_userid_num[j] = {
+          ...challenger[j],
+          nickname: nickname,
+        };
+        // console.log(
+        //   'history challenger_userid_num > ',
+        //   history[i].challenger_userid_num,
+        // );
+      }
+    }
     let win = 0, // 승리 횟수
       lose = 0; // 패배 횟수
     const total = history.length; // 총 챌린지 횟수
@@ -787,8 +807,6 @@ export class ChallengeService {
         win++;
       else lose++;
     }
-
-    console.log('history >> ', history);
     return { history, total, win, lose };
   };
 
@@ -826,11 +844,11 @@ export class ChallengeService {
 
     // Check the user table money
     let checkMoney = await db
-      .select({ money: users.money })
+      .select({ carrot: users.carrot })
       .from(users)
       .where(eq(users.userid_num, userid_num));
 
-    const userMoney = checkMoney[0].money;
+    const userMoney = checkMoney[0].carrot;
 
     let win = 'none';
     let carrot: number;
@@ -924,7 +942,7 @@ export class ChallengeService {
         // user 잔고에 돈 입금
         const newMoney = await db
           .update(users)
-          .set({ money: sql`${users.money} + ${originalMoney}` })
+          .set({ carrot: sql`${users.carrot} + ${originalMoney}` })
           .where(eq(users.userid_num, userid_num));
 
         // challengerInfo 내역 업데이트(캐럿 추가)
@@ -968,7 +986,7 @@ export class ChallengeService {
           // user 잔고에 돈 입금
           const newMoney = await db
             .update(users)
-            .set({ money: sql`${users.money} + ${divMoney}` }) //sql`${users.money} + ${divMoney}`
+            .set({ carrot: sql`${users.carrot} + ${divMoney}` }) //sql`${users.money} + ${divMoney}`
             .where(eq(users.userid_num, userid_num));
         } else {
           // case 3. 이긴 사람이 존재 한다. (but! 나는 짐)
@@ -1094,7 +1112,7 @@ export class ChallengeService {
             // 돈 재입금
             const goBackMoney = await db
               .update(users)
-              .set({ money: sql`${users.money} + ${Challenge_money}` })
+              .set({ carrot: sql`${users.carrot} + ${Challenge_money}` })
               .where(eq(users.userid_num, myNumber));
 
             // account 계좌 전적 추가
@@ -1103,6 +1121,7 @@ export class ChallengeService {
               transaction_type: 'carrot/deposit',
               transaction_amount: Challenge_money,
               status: false,
+              userid_num: myNumber,
             });
 
             // challenge Delete

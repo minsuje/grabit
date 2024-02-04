@@ -31,11 +31,6 @@ export class profileImgMiddleware implements NestMiddleware {
       },
     });
 
-    console.log(
-      'profileImg middleware originalUrl > ',
-      req.originalUrl.split('/')[1],
-    );
-
     let userInfo: string, decodedUserInfo: any, userid_num: number;
 
     // 로그인한 유저의 userid_num 찾아오기
@@ -46,7 +41,6 @@ export class profileImgMiddleware implements NestMiddleware {
       });
       userid_num = decodedUserInfo.userid_num;
     }
-    console.log('userid_num > ', userid_num);
 
     // '/friend/detail', '/profile/:userid' 경로로 요청 온 경우
     if (
@@ -54,7 +48,6 @@ export class profileImgMiddleware implements NestMiddleware {
         `${req.originalUrl.split('/')[1]}/${req.originalUrl.split('/')[2]}` ||
       'profile' === req.originalUrl.split('/')[1]
     ) {
-      console.log('friend/detail 요청 옴');
       let friend: any;
       // '/friend/detail'
       if (
@@ -73,7 +66,6 @@ export class profileImgMiddleware implements NestMiddleware {
       }
       // '/profile/:userid'
       else if ('profile' === req.originalUrl.split('/')[1]) {
-        console.log('profile 요청 옴');
         friend = await db
           .select({
             userid_num: users.userid_num,
@@ -85,7 +77,6 @@ export class profileImgMiddleware implements NestMiddleware {
           .where(eq(users.userid, req.originalUrl.split('/')[2]));
       }
       friend = friend[0];
-      console.log('friend > ', friend);
 
       let url: string;
       if (friend.profile_img !== null) {
@@ -97,18 +88,11 @@ export class profileImgMiddleware implements NestMiddleware {
       } else url = null;
       friend.profile_img = url;
 
-      console.log('friend url  > ', friend);
-
       req['file'] = friend;
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
       // 내 친구 목록 조회
-      console.log(
-        'else if /friend originalUrl > ',
-        req.originalUrl.split('/')[2],
-      );
-
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
@@ -193,19 +177,15 @@ export class profileImgMiddleware implements NestMiddleware {
           };
         }
       }
-
-      console.log('friends_info > ', friend_info);
       req['file'] = friend_info;
     }
     // '/myPage', '/profileUpload' 경로로 요청 온 경우
     else {
-      console.log('else req.url', req.url);
       if (
         req.url.split('/')[1] === 'normal' ||
         req.originalUrl.split('/')[1] === 'myPage' // myPage 조회
       ) {
         const body: any = req.body;
-        console.log('myPage? ', req.originalUrl.split('/')[1]);
         let { filename, type } = body;
 
         let key;
@@ -225,7 +205,6 @@ export class profileImgMiddleware implements NestMiddleware {
             });
             url = await getSignedUrl(client, command, { expiresIn: 3600 });
           } else url = null;
-          console.log('middleware profileImg url > ', url);
           req['file'] = url;
         } else if (req.method === 'POST') {
           if (filename) {
@@ -241,13 +220,10 @@ export class profileImgMiddleware implements NestMiddleware {
             req['file'] = url;
           }
         } else {
-          // console.log('profileImg middleware body patch> ', req.body);
           let file = await db
             .select()
             .from(users)
             .where(eq(users.userid_num, userid_num));
-
-          // console.log('patch file >> ', file[0].profile_img);
 
           key = file[0].profile_img;
           if (req.method === 'DELETE' || req.method === 'PATCH') {
@@ -271,8 +247,6 @@ export class profileImgMiddleware implements NestMiddleware {
               const url = await getSignedUrl(client, command, {
                 expiresIn: 3600,
               });
-
-              console.log(url);
               req['file'] = url;
             }
           }

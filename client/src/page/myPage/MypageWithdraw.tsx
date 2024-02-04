@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { privateApi } from '@/api/axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function MypageWithdraw() {
+  const dispatch = useDispatch();
   const [amount, setAmount] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -10,6 +13,10 @@ export default function MypageWithdraw() {
   console.log(amount);
   console.log(accountNumber);
   console.log(password);
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
+  }, [dispatch]);
 
   const handleSubmit = async () => {
     try {
