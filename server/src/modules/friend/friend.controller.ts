@@ -50,6 +50,7 @@ export class FriendController {
     @Body() createFriendDto: CreateFriendDto,
     @Param('userid') userid: number,
   ) {
+    console.log('DELETE FRIEND BODY', createFriendDto);
     return this.friendService.remove(createFriendDto, userid);
   }
 

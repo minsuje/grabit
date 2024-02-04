@@ -17,7 +17,8 @@ export default function Friend() {
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
-  // 친구 정보 요청
+  // 내 친구 목록 불러오기
+
   useEffect(() => {
     privateApi
       .get(`http://localhost:3000/friend/${userid_num}`, {
@@ -26,7 +27,6 @@ export default function Friend() {
       .then((response) => {
         setFriends(response.data.friends_info);
         console.log('>>>>>친구계정', response);
-        console.log('>>>>>>>친구???계정', response.data.friends_info[0].userid);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기? axios 오류', error);
