@@ -1,10 +1,11 @@
-import { HotChallenge, Ranking } from '@/components/Component0117';
+import { HotChallenge } from '@/components/Component0117';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { privateApi } from '@/api/axios';
 import { Challenge, dailyMission } from '@/types/types';
+import MainRanking from '@/components/MainRanking';
 
 export default function Main() {
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
@@ -18,7 +19,7 @@ export default function Main() {
     <div className="container">
       <h1>랭킹</h1>
 
-      <Ranking />
+      <MainRanking />
       <div>
         <button>로그아웃</button>
       </div>

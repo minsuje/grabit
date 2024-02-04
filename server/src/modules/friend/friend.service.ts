@@ -151,8 +151,14 @@ export class FriendService {
       .delete(friend)
       .where(
         and(
-          eq(friend.userid_num, userid),
-          eq(friend.other_userid_num, other_userid_num),
+          or(
+            eq(friend.userid_num, userid),
+            eq(friend.other_userid_num, userid),
+          ),
+          or(
+            eq(friend.other_userid_num, other_userid_num),
+            eq(friend.userid_num, other_userid_num),
+          ),
         ),
       );
   }
