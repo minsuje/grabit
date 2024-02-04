@@ -3,7 +3,7 @@ import { privateApi } from '@/api/axios';
 import { Avatar } from '@/components/ui/avatar';
 import { AvatarFallback } from '@/components/ui/avatar';
 import { AvatarImage } from '@/components/ui/avatar';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function MyPageFriendList({ friends }: any) {
@@ -13,7 +13,7 @@ export default function MyPageFriendList({ friends }: any) {
       .get(`http://localhost:3000/myRanking`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
-      .then((response) => {})
+      .then(() => {})
       .catch((error) => {
         console.error(' 랭킹 axios 오류', error);
       });
@@ -44,8 +44,6 @@ export default function MyPageFriendList({ friends }: any) {
   const tierImageSrc = getTierImage(friends.score_num);
   const tierName = getTierName(friends.score_num);
 
-
-  
   return (
     <div>
       <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">

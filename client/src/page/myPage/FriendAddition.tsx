@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { privateApi } from '@/api/axios';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import MyPageFriendDetail from './MyPageFriendDetail';
+
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
@@ -33,10 +33,9 @@ export default function FriendAddition() {
   const dispatch = useDispatch();
   const [friends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
-  const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
+  const [, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
-  const [scoreNum, setScoreNum] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [scoreNum] = useState<number>(0);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '친구 추가', backPath: `-1` }));

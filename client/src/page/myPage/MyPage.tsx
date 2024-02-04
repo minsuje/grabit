@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -167,6 +167,7 @@ export default function MyPage() {
   return (
     <div className="">
       <h1>마이페이지</h1>
+      <div></div>
 
       <Avatar>
         <AvatarImage src={proFileImg} />
@@ -180,11 +181,13 @@ export default function MyPage() {
       </Link>
 
       <div>
+        <h2>닉네임</h2>
         <p>{nickName}</p>
       </div>
 
       <div className="mt-10 flex content-center">
         <div className="flex  w-[100%] flex-col justify-center">
+          <h2>점수</h2>
           <p>{scoreNum}</p>
         </div>
         <div className="mr-5 w-[10%] text-end">
@@ -197,6 +200,8 @@ export default function MyPage() {
       </div>
       <br />
       <br />
+
+      <h2>친구 목록</h2>
       <div className="user-list rga-4 flex flex-col">
         {friends.map((friend, index) => (
           <div className="flex items-center gap-2" key={index}>

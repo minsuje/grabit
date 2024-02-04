@@ -2,7 +2,7 @@ import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
-import { useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
