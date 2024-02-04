@@ -28,24 +28,19 @@ export class DailyMissionService {
     let random_mission = mission_content[random_index];
 
     switch (random_index) {
-      case random_index:
-        0;
+      case 0:
         topic = ['water', 'glass', 'cup'];
         break;
-      case random_index:
-        1;
+      case 1:
         topic = ['book', 'study', 'desk', 'table'];
         break;
-      case random_index:
-        2;
+      case 2:
         topic = ['book', 'read', 'desk', 'table', 'word'];
         break;
-      case random_index:
-        3;
+      case 3:
         topic = ['person', 'people', 'relax', 'rest', 'stretching'];
         break;
-      case random_index:
-        4;
+      case 4:
         topic = [
           'brush',
           'teeth',
@@ -55,24 +50,19 @@ export class DailyMissionService {
           'mouse',
         ];
         break;
-      case random_index:
-        5;
+      case 5:
         topic = ['sky', 'cloud', 'blue'];
         break;
-      case random_index:
-        6;
+      case 6:
         topic = ['brush', 'clean', 'cleaning', 'vacuum cleaner', 'cleaner'];
         break;
-      case random_index:
-        7;
+      case 7:
         topic = ['clean', 'blanket', 'bedding', 'covers', 'blankets'];
         break;
-      case random_index:
-        8;
+      case 8:
         topic = ['cup', 'tumbler', 'stainless', 'steel', 'bag'];
         break;
-      case random_index:
-        9;
+      case 9:
         topic = [
           'news',
           'TV',
