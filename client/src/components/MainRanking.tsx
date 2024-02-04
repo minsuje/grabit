@@ -18,14 +18,13 @@ export default function Ranking() {
 
   useEffect(() => {
     {
-      console.log('ranking component 실행');
       axios
         .get('http://3.34.122.205:3000/Ranking', {
           headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         })
         .then((response) => {
-          console.log('랭킹 axios');
-          console.log('ranking axios response', response);
+          // console.log('랭킹 axios');
+          // console.log('ranking axios response', response);
           setRanking(response.data);
           setTopScore(response.data[0].score_num);
         })
@@ -42,7 +41,7 @@ export default function Ranking() {
           <div key={idx} className="flex w-full flex-col items-center justify-center gap-2 font-['JalnanGothic']">
             <span className="w-full text-2xl font-bold">{idx + 1}위</span>
             <span className="w-full text-xl font-bold">{rank.nickname}</span>
-            <span className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-bold text-transparent">
+            <span className="z-10 flex animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-bold text-transparent">
               {rank.score_num}
             </span>
             <motion.div

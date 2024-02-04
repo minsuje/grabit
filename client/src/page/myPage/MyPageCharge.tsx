@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { privateApi } from '@/api/axios';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function MypageCharge() {
+  const dispatch = useDispatch();
   const [chargeAmount, setChargeAmount] = useState<number | null>(null);
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '캐럿 충전', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+  }, [dispatch]);
 
   const handleChargeClick = (amount: number) => {
     setChargeAmount(amount);

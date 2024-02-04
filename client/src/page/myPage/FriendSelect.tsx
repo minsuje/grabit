@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import {} from 'react-redux';
 import { RootState } from '@/store/store';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 const friends: Friend[] = [
   {
@@ -27,8 +28,8 @@ const friends: Friend[] = [
 ];
 
 function FriendSelect() {
-  const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
   const dispatch = useDispatch();
+  const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
 
   const handleCheckboxChange = (friend: Friend, isChecked: boolean) => {
     if (isChecked) {
@@ -38,12 +39,16 @@ function FriendSelect() {
     }
   };
 
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '친구 선택', backPath: `-1` }));
+  }, [dispatch]);
+
   return (
     <div>
       <h1>친구 목록</h1>
       <form>
         {friends.map((friend) => (
-          <div key={friend.id} className="friendItem flex gap-2 items-center">
+          <div key={friend.id} className="friendItem flex items-center gap-2">
             <Checkbox
               id={'FriendItem' + friend.id}
               checked={selectedFriends.some((selected) => selected.id === friend.id)}
