@@ -169,4 +169,18 @@ export class UserController {
 
     return res.send(String(rank));
   }
+
+  @UseGuards(JwtService)
+  @Post('/requsetWithdraw')
+  async requestWithdraw(@Req() req: Request, @Body() change) {
+    const myInfo = req.headers['authorization'].split(' ')[1];
+
+    const decodedUserInfo = await this.jwtService.verify(myInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const userid_num = decodedUserInfo.userid_num;
+
+    return this.userService.requestWithdraw(userid_num, change);
+  }
 }

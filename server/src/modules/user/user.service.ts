@@ -427,4 +427,44 @@ export class UserService {
 
     return myRank;
   }
+
+  async requestWithdraw(userid_num: number, change: any) {
+    const { money, bank_num, bank_name, name } = change;
+    // 유저 정보 확인
+    const checkMoney = await db
+      .select({ money: users.money, name: users.name })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    if (checkMoney[0].name === name) {
+      let myAccountMoney = checkMoney[0].money;
+      // 1만원 이상 출금 가능
+      if (myAccountMoney >= 10000) {
+        const withdraw = await db
+          .update(users)
+          .set({ money: sql`${users.money} - ${money}` })
+          .where(eq(users.userid_num, userid_num))
+          .returning();
+
+        const account_insert = await db
+          .insert(account)
+          .values({
+            transaction_amount: money,
+            transaction_description: 'money/withdarw',
+            transaction_type: 'carrot/withdraw',
+            status: false,
+            account_info: [bank_name, bank_num],
+            userid_num: userid_num,
+          })
+          .returning();
+
+        return { withdraw, account_insert, msg: '출금 신청 완료' };
+      } else {
+        return { msg: '캐럿이 부족합니다.' };
+      }
+    } else {
+      return {
+        msg: '예금주 명이 계정과 일치하지 않습니다. 다시 한번 확인해 주세요',
+      };
+    }
+  }
 }
