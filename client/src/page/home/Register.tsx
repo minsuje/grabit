@@ -170,7 +170,7 @@ export default function Register() {
           <Input type="password" id="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-≈2">
+        <div className="gap-≈2 mt-10 flex grid w-full max-w-sm items-center">
           <Label htmlFor="confirmPassword">비밀번호 확인</Label>
           <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
           {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}

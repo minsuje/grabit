@@ -4,6 +4,8 @@ import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ListComponent3 } from '@/components/ComponentSeong';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 interface UserInfo {
   nickname: string;
@@ -40,6 +42,7 @@ interface Friend {
 }
 
 export default function MyPage() {
+  const dispatch = useDispatch();
   const { userid_num } = useParams();
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
@@ -50,6 +53,10 @@ export default function MyPage() {
   const [proFileImg, setProfileImg] = useState<string>('');
   const [ranking, setRanking] = useState<string>('');
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '마이페이지', backPath: `/main` }));
+  }, [dispatch]);
 
   useEffect(() => {
     // 프로필 이미지 요청

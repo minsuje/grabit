@@ -9,8 +9,11 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function MyPageEdit() {
+  const dispatch = useDispatch();
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
@@ -47,6 +50,10 @@ export default function MyPageEdit() {
 
     // formState: { errors },
   } = useForm<FormData>();
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '회원 정보 수정', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+  }, [dispatch]);
 
   const onSubmit = async (data: FormData) => {
     const { nickname, password: currentPassword, changePassword, confirmPassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.

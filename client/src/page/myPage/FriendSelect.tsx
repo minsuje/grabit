@@ -6,6 +6,28 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import {} from 'react-redux';
 import { RootState } from '@/store/store';
+
+import { setHeaderInfo } from '@/store/headerSlice';
+
+const friends: Friend[] = [
+  {
+    id: 1,
+    name: '라마',
+    profile_img: 'https://github.com/shadcn.png',
+  },
+  {
+    id: 2,
+    name: '람마',
+    profile_img: 'https://github.com/shadcn.png',
+  },
+  {
+    id: 3,
+    name: '마라',
+    profile_img: 'https://github.com/shadcn.png',
+  },
+];
+
+function FriendSelect() {
 import { privateApi } from '@/api/axios';
 import { useState, useEffect } from 'react';
 import { FriendSelect } from '@/types/types';
@@ -13,7 +35,9 @@ import { FriendSelect } from '@/types/types';
 function FriendSelect() {
   const [friends, setFriends] = useState<FriendSelect[]>([]);
   const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
+
   const dispatch = useDispatch();
+  const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
 
   const handleCheckboxChange = (friend: FriendSelect, isChecked: boolean) => {
     if (isChecked) {
@@ -22,6 +46,11 @@ function FriendSelect() {
       dispatch(removeFriend(friend));
     }
   };
+
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '친구 선택', backPath: `-1` }));
+  }, [dispatch]);
 
   const userid_num = Number(localStorage.getItem('userid_num'));
 
@@ -39,12 +68,17 @@ function FriendSelect() {
       });
   }, []);
 
+
   return (
     <div>
       <h1>친구 목록</h1>
       <form>
         {friends.map((friend) => (
+
+          <div key={friend.id} className="friendItem flex items-center gap-2">
+
           <div key={friend.userid_num} className="friendItem flex items-center gap-2">
+
             <Checkbox
               id={'FriendItem' + friend.userid_num}
               checked={selectedFriends.some((selected) => selected.userid_num === friend.userid_num)}

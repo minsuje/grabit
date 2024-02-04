@@ -3,8 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { format } from 'date-fns';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function ListComponent3() {
+  const dispatch = useDispatch();
   const [winnerUseridNum, setWinnerUseridNum] = useState<[]>([]);
   const { userid_num } = useParams<any>();
   const userIdNum = Number(localStorage.getItem('userid_num')); // 문자열을 숫자로 변환
@@ -21,6 +24,11 @@ export default function ListComponent3() {
     win: string;
     lose: string;
   }
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '히스토리', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+  }, [dispatch]);
+
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
