@@ -86,18 +86,20 @@ export default function FriendAddition() {
       {searchResult ? (
         // 검색 결과가 있을 때 렌더링
 
-        <div>
-          <Avatar>
-            <AvatarImage src={searchResult.file.profile_img} />
-            <AvatarFallback />
-          </Avatar>
-          <div>{searchResult.nickname}</div>
-          <p>점수: {searchResult.file.score_num}</p>
-          <p>순위: {searchResult.myRank}</p>
-          <img src={`${tierImageSrc}`} alt="" />
-          <p>{tierName}</p>
-          {/* 기타 필요한 정보 렌더링 */}
-        </div>
+        <Link to={`/friend/${searchTerm}`}>
+          <div>
+            <Avatar>
+              <AvatarImage src={searchResult.file.profile_img} />
+              <AvatarFallback />
+            </Avatar>
+            <div>{searchResult.nickname}</div>
+            <p>점수: {searchResult.file.score_num}</p>
+            <p>순위: {searchResult.myRank}</p>
+            <img src={`${tierImageSrc}`} alt="" />
+            <p>{tierName}</p>
+            {/* 기타 필요한 정보 렌더링 */}
+          </div>
+        </Link>
       ) : (
         <p>존재하지 않는 닉네임입니다.</p>
       )}
