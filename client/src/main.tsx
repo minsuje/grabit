@@ -8,13 +8,13 @@ import { CookiesProvider } from 'react-cookie';
 import { AuthProvider } from '@/context/AuthProvider';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <CookiesProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </CookiesProvider>
-    </Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Provider store={store}>
+    <CookiesProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </CookiesProvider>
+  </Provider>,
+  // </React.StrictMode>,
 );

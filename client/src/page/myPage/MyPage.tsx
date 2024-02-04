@@ -58,7 +58,6 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log(response);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -92,8 +91,6 @@ export default function MyPage() {
         console.error(' 히스토리 오류 axios 오류', error);
       });
   }, [userid_num]);
-
-  
 
   // 닉네임 스코어 점수 돈
   useEffect(() => {
@@ -130,13 +127,12 @@ export default function MyPage() {
   // 친구 요청
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+      .get(`http://localhost:3000/friend/${userid_num}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);
-        console.log('친구요청>>>>>>>', response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);
