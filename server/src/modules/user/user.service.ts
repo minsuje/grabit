@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
-import { users } from './schema';
+import { account, users } from './schema';
 import { db } from 'db/db';
 import { desc, eq, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
@@ -282,8 +282,16 @@ export class UserService {
   private readonly tossUrl = 'https://api.tosspayments.com/v1/payments/';
   private readonly secretKey = process.env.TOSS_SECRET_KEY;
 
+  payment = async (userid_num: number) => {
+    console.log('payment userid >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', userid_num);
+    const user = await db
+      .select({ userid: users.userid, name: users.name, money: users.money })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    return { user };
+  };
+
   tossPayment = async (paymentDTO: PaymentDTO) => {
-    // console.log('service > ', response);
     const { orderId, amount, paymentKey } = paymentDTO;
     try {
       const response = await axios.post(
@@ -296,14 +304,46 @@ export class UserService {
           },
         },
       );
+
       return {
         title: '결제 성공',
         body: response.data,
-        // amount: response.data. totalAmount,
+        amount: response.data.totalAmount,
       };
     } catch (e) {
       console.log('토스페이먼츠 에러', e);
     }
+  };
+
+  updateMoney = async (amount: number, userid_num: number) => {
+    let carrot: number;
+    if (Number(amount) === 1000) {
+      carrot = 850;
+    } else if (Number(amount) === 2000) {
+      carrot = 1700;
+    } else if (Number(amount) === 5000) {
+      carrot = 4800;
+    } else if (Number(amount) === 10000) {
+      carrot = 10000;
+    }
+    console.log('carrot > ', carrot);
+    const userInfo = await db
+      .update(users)
+      .set({ money: sql`${users.money} + ${carrot}` })
+      .where(eq(users.userid_num, userid_num))
+      .returning();
+
+    const userAccount = await db
+      .insert(account)
+      .values({
+        transaction_description: 'charge/carrot',
+        transaction_type: 'carrot/deposit',
+        transaction_amount: carrot,
+        status: false,
+        userid_num: userid_num,
+      })
+      .returning();
+    return { userInfo, userAccount };
   };
 
   async rank() {
