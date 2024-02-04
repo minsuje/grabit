@@ -30,7 +30,7 @@ function Alarm() {
   useEffect(() => {
     {
       privateApi
-        .get(`http://3.34.122.205:3000/notification`)
+        .get(`http://52.79.228.200:3000/notification`)
         .then((response) => {
           console.log(response.data);
           setChallengeAlarm(response.data);

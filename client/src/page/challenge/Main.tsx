@@ -50,7 +50,7 @@ export default function Main() {
     setUserid_num(Number(localStorage.getItem('userid_num')));
 
     privateApi
-      .get('http://3.34.122.205:3000/dailyMission', {
+      .get('http://52.79.228.200:3000/dailyMission', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -63,7 +63,7 @@ export default function Main() {
       });
 
     privateApi
-      .get('http://3.34.122.205:3000/challengeList', {
+      .get('http://52.79.228.200:3000/challengeList', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {

@@ -97,7 +97,7 @@ function HotChallenge() {
   useEffect(() => {
     {
       privateApi
-        .get('http://3.34.122.205:3000/popularChallenge')
+        .get('http://52.79.228.200:3000/popularChallenge')
         .then((response) => {
           // console.log('HotTopicData', response.data);
           setHotTopic(response.data.popularTopics);

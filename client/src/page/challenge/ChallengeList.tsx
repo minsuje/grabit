@@ -28,7 +28,7 @@ function ChallengeList() {
   useEffect(() => {
     // {
     //   axios
-    //     .get('http://3.34.122.205:3000/challengeList')
+    //     .get('http://52.79.228.200:3000/challengeList')
     //     .then((response) => {
     //       console.log(response.data);
     //       setIngMyChallenge(response.data.ingMyChallenge);

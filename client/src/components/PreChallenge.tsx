@@ -30,9 +30,11 @@ function ListComponentWithButton({ challenge }: ChallengeProp) {
           </Button>
           <Button
             onClick={() => {
-              privateApi.delete(`http://3.34.122.205:3000/challengeEdit/${challenge.challenge_id}`).then((response) => {
-                console.log('challengeEdit에서 chal', response.data);
-              });
+              privateApi
+                .delete(`http://52.79.228.200:3000/challengeEdit/${challenge.challenge_id}`)
+                .then((response) => {
+                  console.log('challengeEdit에서 chal', response.data);
+                });
             }}
           >
             삭제

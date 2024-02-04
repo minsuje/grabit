@@ -111,7 +111,7 @@ function ChallengeInProgress() {
 
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {

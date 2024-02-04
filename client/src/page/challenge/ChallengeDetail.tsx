@@ -38,7 +38,7 @@ function ChallengeDetail() {
 
   const participate = () => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeAccept/${challengeDetail?.challenge_id}`)
+      .get(`http://52.79.228.200:3000/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -54,7 +54,7 @@ function ChallengeDetail() {
   useEffect(() => {
     console.log(challenge_id);
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
 

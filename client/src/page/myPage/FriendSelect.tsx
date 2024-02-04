@@ -34,7 +34,7 @@ function FriendSelect() {
 
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+      .get(`http://52.79.228.200:3000/friend/${userid_num}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {

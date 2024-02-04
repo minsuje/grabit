@@ -74,7 +74,7 @@ export default function MyPageEdit() {
 
     await axios({
       method: 'patch',
-      url: 'http://3.34.122.205:3000/myPage',
+      url: 'http://52.79.228.200:3000/myPage',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       data: {
         filename: file?.name,
@@ -104,7 +104,7 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/myPage`)
+      .get(`http://52.79.228.200:3000/myPage`)
       .then((response) => {
         console.log('>>>>', response.data.userInfo[0]);
         setNickName(response.data.userInfo[0].nickname);

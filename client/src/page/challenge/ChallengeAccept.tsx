@@ -36,7 +36,7 @@ function ChallengeAccept() {
 
   const accept = () => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeAccept/${challengeDetail?.challenge_id}`)
+      .get(`http://52.79.228.200:3000/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -47,7 +47,7 @@ function ChallengeAccept() {
 
   const refuse = () => {
     privateApi
-      .get(`http://3.34.122.205:3000/challengeRefuse/${challengeDetail?.challenge_id}`)
+      .get(`http://52.79.228.200:3000/challengeRefuse/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -63,7 +63,7 @@ function ChallengeAccept() {
   useEffect(() => {
     console.log(challenge_id);
     privateApi
-      .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`)
+      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);

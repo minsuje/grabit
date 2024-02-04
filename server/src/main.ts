@@ -18,7 +18,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: [
-      'http://3.34.122.205:5173',
+      'http://52.79.228.200:5173',
       'http://localhost:5173',
       'https://localhost:5173',
       'https://accounts.kakao.com',
