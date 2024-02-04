@@ -2,13 +2,35 @@ import { useSearchParams } from 'react-router-dom';
 
 export default function CheckoutFail() {
   const [searchParams] = useSearchParams();
-
-  // 고객에게 실패 사유 알려주고 다른 페이지로 이동
+  const errorCode = searchParams.get("code");
+  const errorMessage = searchParams.get("message");
 
   return (
-    <div>
-      <h1>결제 실패</h1>
-      <div>{`사유: ${searchParams.get('message')}`}</div>
+    <div className="wrapper w-100">
+      <div className="flex-column align-center w-100 max-w-540">
+        <img
+          src="https://static.toss.im/lotties/error-spot-apng.png"
+          width="120"
+          height="120"
+        />
+        <h2 className="title">결제를 실패했어요</h2>
+        <div className="response-section w-100">
+          <div className="flex justify-between">
+            <span className="response-label">code</span>
+            <span id="error-code" className="response-text">
+              {errorCode}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="response-label">message</span>
+            <span id="error-message" className="response-text">
+              {errorMessage}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
+
+ 
 }
