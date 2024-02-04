@@ -139,33 +139,32 @@ export default function Register() {
   };
 
   return (
-    <div className="container flex justify-center">
-      <HeaderTitle />
+    <div className="flex justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="mt-20 flex max-w-sm flex-col items-center justify-center gap-4"
       >
         <h1>회원가입</h1>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
           <Label htmlFor="name">이름</Label>
           <Input id="name" {...register('name')} />
           {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
           <Label htmlFor="userid">아이디</Label>
           <Input id="userid" {...register('userid')} />
           {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
           <Label htmlFor="profile_img">프로필 사진</Label>
           <Input type="file" id="profile_img" onChange={handleFile} />
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
           <Label htmlFor="nickname">닉네임</Label>
           <Input id="nickname" {...register('nickname')} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-2">
+        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
           <Label htmlFor="password">비밀번호</Label>
           <Input type="password" id="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}

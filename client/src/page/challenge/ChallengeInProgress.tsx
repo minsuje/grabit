@@ -138,8 +138,8 @@ function ChallengeInProgress() {
     return challenger.userid_num === userid_num;
   });
 
-  if (myprofile && myprofile[0].profile_img) {
-    profiles.push(myprofile[0].profile_img);
+  if (myprofile && myprofile[0]?.profile_img) {
+    profiles.push(myprofile[0]?.profile_img);
   } else {
     profiles.push('/grabit_profile.png');
   }

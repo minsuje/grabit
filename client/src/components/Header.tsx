@@ -52,9 +52,9 @@ function Header() {
     <header className="flex flex-col transition-all">
       {menuOpen ? (
         <div className={`fixed left-0 right-0 top-0 z-[999] flex items-center justify-end bg-white px-4 py-3`}>
-          <div onClick={handleMenu} className="flex p-2">
+          <motion.div onClick={handleMenu} className="flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
             <LuMenu size={28} />
-          </div>
+          </motion.div>
         </div>
       ) : (
         <div
@@ -76,9 +76,9 @@ function Header() {
             </h1>
           ) : null}
 
-          <div onClick={handleMenu} className="flex p-2">
+          <motion.div onClick={handleMenu} className="flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
             <LuMenu size={28} />
-          </div>
+          </motion.div>
         </div>
       )}
       <AnimatePresence>
@@ -106,9 +106,14 @@ function Header() {
               >
                 <span>마이페이지</span>
               </Link>
-              <div onClick={handleLogout} className="flex w-fit py-2 text-lg font-medium text-stone-600 no-underline">
-                <span>로그아웃</span>
-              </div>
+
+              {accessToken ? (
+                <div className="flex items-center gap-3 ">
+                  <Button onClick={handleLogout}>로그아웃</Button>
+                </div>
+              ) : (
+                <Button onClick={handleLogin}>로그인</Button>
+              )}
             </motion.div>
             <motion.div
               className="fixed top-16 z-[997] h-screen w-full bg-black/80 backdrop-blur-md"

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
 import Main2 from './page/challenge/Main2';
@@ -49,67 +49,73 @@ import CheckoutFail from './page/CheckoutFail';
 import Payment from './page/Payment';
 import { useState } from 'react';
 import ScrollToTop from './components/ScrollTop';
+import { motion, AnimatePresence } from 'framer-motion';
+import AnimatedRootRoutes from './page/AnimatedRootRoutes';
 
-function App() {
+function AnimatedRoutes() {
   const [price, setPrice] = useState<number>(0);
+  const location = useLocation();
 
   return (
-    <div className="App">
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
+    <AnimatePresence mode="wait">
+      <Routes>
+        <Route element={<AnimatedRootRoutes />}>
+          <Route path="/" element={<Home />} />
           <Route element={<CommonLayout />}>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
             <Route path="/auth/kakao" element={<KakaoAuth />} />
           </Route>
-          <Route element={<Layout />}>
-            <Route index path="/main" element={<Main />} />
-            <Route path="/main2" element={<Main2 />} />
-            <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
-            <Route path="/camera/:challenge_id" element={<Camera />} />
+        </Route>
+        <Route element={<Layout />}>
+          <Route index path="/main" element={<Main />} />
+          <Route path="/main2" element={<Main2 />} />
+          <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
+          <Route path="/camera/:challenge_id" element={<Camera />} />
+          {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
+          <Route path="/challengeresult" element={<ChallengeResult />} />
+          <Route path="/challengeImage/:challenge_id/:authentication_id" element={<ChallengeImage />} />
+          <Route path="/challengeList" element={<ChallengeList />} />
+          <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
+          <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
+          <Route path="/challengeDaily/:mission_content" element={<ChallengeDaily />} />
+          <Route path="/alarm" element={<Alarm />} />
+          <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
+          <Route path="/fileupload" element={<FileUploadTest />} />
+          <Route path="/friendSelect" element={<FriendSelect />} />
+          <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
+          <Route path="/challengeNotice" element={<ChallengeNotice />} />
+          <Route path="/challengeCreate" element={<ChallengeCreate />} />
+          <Route path="/refresh" element={<Refresh />} />
+          <Route path="/challengetier" element={<ChallengeTier />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/edit" element={<MyPageEdit />} />
+          <Route path="/mypage/withdraw" element={<MypageWithdraw />} />
+          <Route path="/mypage/charge" element={<MypageCharge />} />
+          <Route path="/mypage/friend" element={<Friend />} />
+          <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
+          <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
+          <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
+          <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
+          <Route path="/friend/new/:userid" element={<FriendAddition />} />
+          <Route path="/friend/new" element={<FriendAddition />} />
+        </Route>
+        {/* 테스트 용 */}
+        <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
+        <Route path="/checkout" element={<CheckoutPages price={price} />} />
+        <Route path="/checkout/success" element={<CheckoutSuccess />} />
+        <Route path="/checkout/fail" element={<CheckoutFail />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
-            {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
-            <Route path="/challengeresult" element={<ChallengeResult />} />
-            <Route path="/challengeImage/:challenge_id/:authentication_id" element={<ChallengeImage />} />
-            <Route path="/challengeList" element={<ChallengeList />} />
-            <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
-            <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
-            <Route path="/challengeDaily/:mission_content" element={<ChallengeDaily />} />
-            <Route path="/alarm" element={<Alarm />} />
-            <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
-            <Route path="/fileupload" element={<FileUploadTest />} />
-            <Route path="/friendSelect" element={<FriendSelect />} />
-            <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
-            <Route path="/challengeNotice" element={<ChallengeNotice />} />
-            <Route path="/challengeCreate" element={<ChallengeCreate />} />
-
-            <Route path="/refresh" element={<Refresh />} />
-
-            <Route path="/challengetier" element={<ChallengeTier />} />
-
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/edit" element={<MyPageEdit />} />
-            <Route path="/mypage/withdraw" element={<MypageWithdraw />} />
-            <Route path="/mypage/charge" element={<MypageCharge />} />
-            <Route path="/mypage/friend" element={<Friend />} />
-
-            <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
-            <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
-            <Route path="/mypage/mypagehistory" element={<MyPageHistory />} />
-            <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
-            <Route path="/friend/new/:userid" element={<FriendAddition />} />
-
-            <Route path="/friend/new" element={<FriendAddition />} />
-          </Route>
-
-          {/* 테스트 용 */}
-          <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
-          <Route path="/checkout" element={<CheckoutPages price={price} />} />
-          <Route path="/checkout/success" element={<CheckoutSuccess />} />
-          <Route path="/checkout/fail" element={<CheckoutFail />} />
-        </Routes>
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <ScrollToTop />
+        <AnimatedRoutes />
       </BrowserRouter>
     </div>
   );
