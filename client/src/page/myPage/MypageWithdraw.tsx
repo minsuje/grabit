@@ -20,11 +20,13 @@ export default function MypageWithdraw() {
 
   const handleSubmit = async () => {
     try {
-      const response = await privateApi.post('', {
-        amount,
-        accountNumber,
-        password,
-      });
+      const response = await privateApi
+        .post('http://localhost:3000/requsetWithdraw', {
+          amount,
+          accountNumber,
+          password,
+        })
+        .then();
       console.log(response.data);
     } catch (error) {
       console.error('Error during API call', error);

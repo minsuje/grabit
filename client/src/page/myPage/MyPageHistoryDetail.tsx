@@ -8,7 +8,7 @@ import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function ListComponent3() {
   const dispatch = useDispatch();
-  const [winnerUseridNum, setWinnerUseridNum] = useState<[]>([]);
+  // const [winnerUseridNum, setWinnerUseridNum] = useState<[]>([]);
   const { userid_num } = useParams<any>();
   const userIdNum = Number(localStorage.getItem('userid_num')); // 문자열을 숫자로 변환
   const [challengeDetail, setChallengeDetail] = useState<ChallengeDetail>();
