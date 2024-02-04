@@ -88,10 +88,6 @@ function ChallengeCreate() {
     }
   });
 
-  // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   dispatch(setChallengeName(e.target.value));
-  // };
-
   async function onSubmit() {
     const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
@@ -176,8 +172,8 @@ function ChallengeCreate() {
               setTopic(value);
             }}
           >
-            <SelectTrigger className="w-[180px]" {...register('topic')}>
-              <SelectValue placeholder="주제" {...register('topic')} />
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="주제" />
             </SelectTrigger>
             <SelectContent {...register('topic')}>
               <SelectItem value="운동">운동</SelectItem>
