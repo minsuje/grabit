@@ -103,17 +103,24 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
-      console.log('else if /friend', req.baseUrl.split('/')[1]);
+      console.log('else if /friend originalUrl > ', req.originalUrl.split('/'));
+      let friend_num: any = await db
+        .select({ userid_num: users.userid_num })
+        .from(users)
+        .where(eq(users.userid, req.originalUrl.split('/')[2]));
+
+      friend_num = friend_num[0].userid_num;
+
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
         .select({ friends_num: friend.other_userid_num })
         .from(friend)
-        .where(eq(friend.userid_num, Number(req.url.split('/')[1])));
+        .where(eq(friend.userid_num, friend_num));
       const friends2 = await db
         .select({ friends_num: friend.userid_num })
         .from(friend)
-        .where(eq(friend.other_userid_num, Number(req.url.split('/')[1])));
+        .where(eq(friend.other_userid_num, friend_num));
       for (let i = 0; i < friends1.length; i++) {
         friends.push(friends1[i].friends_num);
       }
@@ -135,33 +142,43 @@ export class profileImgMiddleware implements NestMiddleware {
         friend_info.push(friend[0]);
       }
 
-      let friends_info = [];
-      for (let i = 0; i < friends.length; i++) {
+      const allRank = await db
+        .select({
+          userid_num: users.userid_num,
+          score_num: users.score_num,
+        })
+        .from(users)
+        .orderBy(desc(users.score_num));
+
+      for (let i = 0; i < friend_info.length; i++) {
+        // 몇 번 째 인덱스에 있는지
+        const findMe = allRank.findIndex(
+          (rank) => rank.userid_num === friend_info[i].userid_num,
+        );
+
+        const myRank = findMe + 1;
         if (friend_info[i].profile_img) {
           const command = new GetObjectCommand({
             Bucket: process.env.AWS_S3_BUCKET,
             Key: friend_info[i].profile_img,
           });
           const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          friends_info.push({
-            userid: friend_info[i].userid,
-            userid_num: friend_info[i].userid_num,
-            nickname: friend_info[i].nickname,
+          friend_info[i] = {
+            ...friend_info[i],
             profile_img: url,
-            score_num: friend_info[i].score_num,
-          });
+            rank: myRank,
+          };
         } else {
-          friends_info.push({
-            userid: friend_info[i].userid,
-            userid_num: friend_info[i].userid_num,
-            nickname: friend_info[i].nickname,
+          friend_info[i] = {
+            ...friend_info[i],
             profile_img: null,
-            score_num: friend_info[i].score_num,
-          });
+            rank: myRank,
+          };
         }
       }
-      // console.log('friends_info > ', friends_info);
-      req['file'] = friends_info;
+
+      console.log('friends_info > ', friend_info);
+      req['file'] = friend_info;
     }
     // '/myPage', '/profileUpload' 경로로 요청 온 경우
     else {
