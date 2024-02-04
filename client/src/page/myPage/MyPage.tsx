@@ -7,13 +7,16 @@ import { ListComponent3 } from '@/components/ComponentSeong';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
-interface UserInfo {
-  nickname: string;
-  score_num: number;
-  money: string;
-  userInfo: any;
-  id: number;
-}
+// interface account {}
+
+// interface UserInfo {
+//   nickname: string;
+//   score_num: number;
+//   money: string;
+//   userInfo: any;
+//   id: number;
+//   carrot: number;
+// }
 interface ChallengeHistory {
   challenge_id?: number;
   userid_num?: number;
@@ -103,15 +106,15 @@ export default function MyPage() {
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://localhost:3000/myPage`, {
+      .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        const userInfo: UserInfo = response.data.userInfo[0];
+        const userInfo = response.data.userInfo[0];
 
         setNickName(userInfo.nickname);
         setScoreNum(userInfo.score_num);
-        setMoney(userInfo.money);
+        setMoney(userInfo.carrot);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);

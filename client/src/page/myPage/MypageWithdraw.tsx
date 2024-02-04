@@ -3,16 +3,19 @@ import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function MypageWithdraw() {
   const dispatch = useDispatch();
-  const [amount, setAmount] = useState<string>('');
-  const [accountNumber, setAccountNumber] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [money, setMoney] = useState<string>('');
+  const [bank_num, setBank_num] = useState<string>('');
+  const [bank_name, setBank_name] = useState<string>('');
+  const [userid, setUserId] = useState<string>('');
 
-  console.log(amount);
-  console.log(accountNumber);
-  console.log(password);
+  console.log(money);
+  console.log(bank_num);
+  console.log(bank_name);
+  console.log(userid);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
@@ -22,15 +25,20 @@ export default function MypageWithdraw() {
     try {
       const response = await privateApi
         .post('http://localhost:3000/requsetWithdraw', {
-          amount,
-          accountNumber,
-          password,
+          money,
+          bank_num,
+          bank_name,
+          userid,
         })
         .then();
       console.log(response.data);
     } catch (error) {
       console.error('Error during API call', error);
     }
+  };
+
+  const handleSelectChange = (selectedValue: any) => {
+    setBank_name(selectedValue);
   };
 
   return (
@@ -42,10 +50,10 @@ export default function MypageWithdraw() {
         <div>
           <input
             type="text"
-            name="amount"
+            name="money"
             placeholder="금액입력"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={money}
+            onChange={(e) => setMoney(e.target.value)}
           />
           <p>출금 신청은 10,000원부터 가능합니다.</p>
         </div>
@@ -54,25 +62,40 @@ export default function MypageWithdraw() {
           <h1>계좌번호</h1>
           <input
             type="text"
-            name="accountNumber"
+            name="bank_num"
             placeholder="게좌번호를 입력하세요"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
+            value={bank_num}
+            onChange={(e) => setBank_num(e.target.value)}
           />
         </div>
 
         <div>
-          <h1>비밀번호</h1>
+          <h1>계정</h1>
           <input
-            type="password"
-            name="password"
-            placeholder="비밀번호를 입력하세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            name="userId"
+            placeholder="계정을 입력하세요"
+            value={userid}
+            onChange={(e) => setUserId(e.target.value)}
           />
         </div>
+
+        <Select onValueChange={handleSelectChange}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="출금은행" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="카카오">카카오</SelectItem>
+            <SelectItem value="토스">토스</SelectItem>
+            <SelectItem value="국민">국민</SelectItem>
+            <SelectItem value="케이뱅크">케이뱅크</SelectItem>
+            <SelectItem value="농협">농협</SelectItem>
+          </SelectContent>
+        </Select>
       </form>
-      <Button type="submit">출금 신청</Button>
+      <Button type="submit" onClick={handleSubmit}>
+        출금 신청
+      </Button>
     </div>
   );
 }
