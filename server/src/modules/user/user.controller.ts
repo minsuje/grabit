@@ -71,9 +71,14 @@ export class UserController {
     @Req() req,
     @Req() request: Request,
   ) {
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const login_userid_num = decodedUserInfo.userid_num;
     console.log('myPage controller req.file > ', req.file);
     const file = req.file;
-    return this.userService.getProfilePage(userid, file);
+    return this.userService.getProfilePage(login_userid_num, userid, file);
   }
 
   // 마이페이지 수정

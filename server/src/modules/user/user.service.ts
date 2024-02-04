@@ -3,12 +3,13 @@ import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
 import { account, users } from './schema';
 import { db } from 'db/db';
-import { desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, or, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import axios from 'axios';
 import { response } from 'express';
 import { challenge } from '../challenge/schema';
 import { isAfter } from 'date-fns';
+import { friend } from '../friend/schema';
 
 // const got = require('got');
 // import * as got from 'got';
@@ -92,8 +93,12 @@ export class UserService {
   };
 
   // 다른 사람 프로필 조회
-  getProfilePage = async (userid: string, file: object) => {
-    // 로그인한 userid로 userid_num 찾기
+  getProfilePage = async (
+    login_userid_num: number,
+    userid: string,
+    file: object,
+  ) => {
+    // userid로 userid_num 찾기
     let userid_num: any = await db
       .select({ userid_num: users.userid_num })
       .from(users)
@@ -161,7 +166,52 @@ export class UserService {
       lose: lose,
     };
 
-    return { userid, file, myRank, finalHistory };
+    // 친구 상태 조회
+    let friendStatus = '친구 신청';
+    let friends = [];
+    const friendStatus1 = await db
+      .select()
+      .from(friend)
+      .where(
+        or(
+          eq(friend.userid_num, userid_num),
+          eq(friend.other_userid_num, userid_num),
+        ),
+      );
+    for (let i = 0; i < friendStatus1.length; i++) {
+      friends.push(friendStatus1[i]);
+    }
+    const friendStatus2 = await db
+      .select()
+      .from(friend)
+      .where(
+        or(
+          eq(friend.userid_num, login_userid_num),
+          eq(friend.other_userid_num, login_userid_num),
+        ),
+      );
+    for (let i = 0; i < friendStatus2.length; i++) {
+      friends.push(friendStatus2[i]);
+    }
+    // console.log('friends > ', friends);
+
+    for (let i = 0; i < friends.length; i++) {
+      if (friends[i].userid_num === login_userid_num) {
+        if (friends[i].other_userid_num === userid_num) {
+          if (friends[i].is_friend === true) {
+            friendStatus = '친구입니다.';
+          } else friendStatus = '친구 신청 해놓고 대기 중';
+        }
+      } else if (friends[i].other_userid_num === login_userid_num) {
+        if (friends[i].userid_num === userid_num) {
+          if (friends[i].is_friend === true) {
+            friendStatus = '친구입니다.';
+          } else friendStatus = '상대가 친구 신청 해놓은거 수락바람';
+        }
+      }
+    }
+    console.log('friendStatus > ', friendStatus);
+    return { userid, file, myRank, finalHistory, friendStatus };
   };
 
   // 프로필 수정
