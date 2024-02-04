@@ -15,7 +15,8 @@ interface Friend {
 
 export default function Friend() {
   const dispatch = useDispatch();
-  const { userid_num } = useParams();
+  // const { userid_num } = useParams();
+  const userid_num = localStorage.getItem('userid_num');
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
@@ -23,7 +24,7 @@ export default function Friend() {
   // 내 친구 목록 불러오기
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '친구 목록', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+    dispatch(setHeaderInfo({ title: '친구 목록', backPath: `/mypage` }));
   }, [dispatch]);
 
   useEffect(() => {

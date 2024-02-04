@@ -12,7 +12,7 @@ export default function MypageCharge() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '캐럿 충전', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+    dispatch(setHeaderInfo({ title: '캐럿 충전', backPath: `/mypage` }));
   }, [dispatch]);
 
   const handleChargeClick = (amount: number) => {

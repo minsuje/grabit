@@ -52,7 +52,7 @@ export default function MyPageEdit() {
   } = useForm<FormData>();
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '회원 정보 수정', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+    dispatch(setHeaderInfo({ title: '회원 정보 수정', backPath: `/mypage` }));
   }, [dispatch]);
 
   const onSubmit = async (data: FormData) => {
@@ -96,7 +96,7 @@ export default function MyPageEdit() {
         },
       }).then((res) => {
         console.log('>>>>', res);
-        Navigate(`/myPage/${userid_num}`);
+        Navigate(`/mypage`);
       });
     });
   };

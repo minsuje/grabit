@@ -43,7 +43,8 @@ interface Friend {
 
 export default function MyPage() {
   const dispatch = useDispatch();
-  const { userid_num } = useParams();
+  // const { userid_num } = useParams();
+  const userid_num = localStorage.getItem('userid_num');
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [money, setMoney] = useState<string>('');
@@ -172,7 +173,7 @@ export default function MyPage() {
         <AvatarFallback></AvatarFallback>
       </Avatar>
 
-      <Link to={`/${userid_num}/mypageedit`}>
+      <Link to={`/mypage/edit`}>
         <Button type="submit" variant="outline">
           프로필 수정
         </Button>
@@ -210,7 +211,7 @@ export default function MyPage() {
           </div>
         ))}
         {/* 각각의 친구목록 전체보기 */}
-        <Link to={`/mypage/friend/detail/${userid_num}/`}>
+        <Link to={`/mypage/friend`}>
           <Button>전체보기</Button>
         </Link>
       </div>
@@ -218,13 +219,13 @@ export default function MyPage() {
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
           <span>{money}</span>
-          <Link to="/mypage/myPagewithdraw">
+          <Link to="/mypage/withdraw">
             <span>출금하기</span>
           </Link>
         </div>
         <div className="flex justify-between">
           <button className="text-xs text-gray-400">내역보기</button>
-          <Link to="/mypage/mypagecharge">
+          <Link to="/mypage/charge">
             <span>충전하기</span>
           </Link>
         </div>
@@ -239,7 +240,11 @@ export default function MyPage() {
         <div>
           <div>
             {history?.map((challenge, key) => (
-              <Link to={`/mypagehistorydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
+              <Link
+                to={`/mypage/historydetail/${challenge.challenge_id}`}
+                key={key}
+                className="text-black no-underline"
+              >
                 <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
               </Link>
             ))}
