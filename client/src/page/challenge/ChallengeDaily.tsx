@@ -34,7 +34,7 @@ function ChallengeDaily() {
     }
 
     // privateApi
-    //   .patch(`http://3.34.122.205:3000/dailyMissionAuth`)
+    //   .patch(`http://52.79.228.200:3000/dailyMissionAuth`)
     //   .then((response): void => {
     //     console.log('response', response.data);
     //     if (response.data.msg) {

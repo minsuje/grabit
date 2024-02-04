@@ -48,6 +48,7 @@ import CheckoutSuccess from './page/CheckoutSuccess';
 import CheckoutFail from './page/CheckoutFail';
 import Payment from './page/Payment';
 import { useState } from 'react';
+import ScrollToTop from './components/ScrollTop';
 
 function App() {
   const [price, setPrice] = useState<number>(0);
@@ -55,6 +56,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<CommonLayout />}>
             <Route path="/" element={<Home />} />

@@ -160,7 +160,7 @@ function ChallengeCreate() {
 
     const result = await privateApi({
       method: 'POST',
-      url: 'http://3.34.122.205:3000/challengeCreate',
+      url: 'http://52.79.228.200:3000/challengeCreate',
       data: {
         challenge_name: challengeName,
         is_public: isPublic,

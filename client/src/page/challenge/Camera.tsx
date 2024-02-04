@@ -74,7 +74,7 @@ function Camera() {
 
     await privateApi({
       method: 'post',
-      url: `http://3.34.122.205:3000/challengeAuth/${challenge_id}`,
+      url: `http://52.79.228.200:3000/challengeAuth/${challenge_id}`,
       data: {
         filename: file?.name,
         type: file?.type,
