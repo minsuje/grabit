@@ -43,7 +43,7 @@ import ChallengeTier from './page/challenge/ChallengeTier';
 import MyPageFriendDetail from './page/myPage/MyPageFriendDetail';
 import FriendAddition from './page/myPage/FriendAddition';
 
-import CheckoutPage from './page/CheckoutPage';
+import CheckoutPages from './page/CheckoutPage';
 import CheckoutSuccess from './page/CheckoutSuccess';
 import CheckoutFail from './page/CheckoutFail';
 import Payment from './page/Payment';
