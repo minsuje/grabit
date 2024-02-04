@@ -13,7 +13,7 @@ function CheckoutPage({ price }: Props) {
 
   useEffect(() => {
     (async () => {
-      const paymentWidget = await loadPaymentWidget(import.meta.env.VITE_TOSS_CLIENT_KEY, '1456ssd'); // 1 ->     userid_num
+      const paymentWidget = await loadPaymentWidget(import.meta.env.VITE_TOSS_CLIENT_KEY, import.meta.env.VITE_TOSS_USER_KEY); // 1 ->     userid_num
 
       paymentWidget.renderPaymentMethods('#payment-widget', price);
 

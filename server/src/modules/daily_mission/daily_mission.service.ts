@@ -10,21 +10,89 @@ export class DailyMissionService {
   getDailyMission = async (userid_num: number) => {
     //미션 성공 여부
     let completed = 'none';
+    let topic: string[];
 
     let mission_content = [
       '물 한잔 마시기',
       '공부하기',
       '책 읽기',
       '스트레칭하기',
-      '친구/가족에게 문자 보내기',
+      '양치하기',
       '하늘 보기',
-      '산책하기',
-      '감사한 일 3가지 적기',
-      '외출하기',
+      '청소하기',
+      '이불 정리하기',
+      '텀블러 챙기기',
       '뉴스 보기',
     ];
     let random_index = Math.floor(Math.random() * mission_content.length);
     let random_mission = mission_content[random_index];
+
+    switch (random_index) {
+      case random_index:
+        0;
+        topic = ['water', 'glass', 'cup'];
+        break;
+      case random_index:
+        1;
+        topic = ['book', 'study', 'desk', 'table'];
+        break;
+      case random_index:
+        2;
+        topic = ['book', 'read', 'desk', 'table', 'word'];
+        break;
+      case random_index:
+        3;
+        topic = ['person', 'people', 'relax', 'rest', 'stretching'];
+        break;
+      case random_index:
+        4;
+        topic = [
+          'brush',
+          'teeth',
+          'teeth brush',
+          'toothpaste',
+          'bathroom',
+          'mouse',
+        ];
+        break;
+      case random_index:
+        5;
+        topic = ['sky', 'cloud', 'blue'];
+        break;
+      case random_index:
+        6;
+        topic = ['brush', 'clean', 'cleaning', 'vacuum cleaner', 'cleaner'];
+        break;
+      case random_index:
+        7;
+        topic = ['clean', 'blanket', 'bedding', 'covers', 'blankets'];
+        break;
+      case random_index:
+        8;
+        topic = ['cup', 'tumbler', 'stainless', 'steel', 'bag'];
+        break;
+      case random_index:
+        9;
+        topic = [
+          'news',
+          'TV',
+          'television',
+          'smart phone',
+          'cell phone',
+          'phone',
+          'blue screen',
+          'people',
+          'person',
+        ];
+        break;
+    }
+
+    // if ((random_index = 0)) {
+    //   topic = ['water', 'glass', 'cup'];
+    // } else if ((random_index = 1)) {
+    //   topic = ['book', 'study', 'desk', 'table'];
+    // } else if ((random_index = 2)) {
+    // }
 
     //DB있는지 확인하기
     const checkDB = await db.select().from(dailyMission);
@@ -51,7 +119,7 @@ export class DailyMissionService {
         completed = 'success';
       }
     }
-    return { completed, mission_name };
+    return { completed, mission_name, topic };
   };
 
   // @Cron을 사용하여 매일 23:59.59 에 초기화 실행
