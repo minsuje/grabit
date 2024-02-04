@@ -1121,6 +1121,7 @@ export class ChallengeService {
               transaction_type: 'carrot/deposit',
               transaction_amount: Challenge_money,
               status: false,
+              userid_num: myNumber,
             });
 
             // challenge Delete
