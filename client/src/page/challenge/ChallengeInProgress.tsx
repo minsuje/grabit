@@ -21,13 +21,13 @@ import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
 
 // Radial separators
 import RadialSeparators from '@/components/progress/Seperator.tsx';
+
+type profiles = string;
 interface url {
   userid_num?: string;
   url: string;
   authentication_id?: number;
 }
-
-type profiles = string | null;
 
 // function Example(props) {
 //   return (
@@ -46,45 +46,28 @@ type profiles = string | null;
 
 function ChallengeInProgress() {
   const info = useSelector((state: RootState) => state.result);
-  console.log(info);
+  console.log('결과페이지로 보내는 값', info);
 
   const userid_num = Number(localStorage.getItem('userid_num'));
-  console.log('user', userid_num);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { challenge_id } = useParams();
   const tab: string[] = ['나'];
   const tabId: number[] = [userid_num];
-  const UrlGroup: url[][] = [
-    [
-      {
-        userid_num: '1',
-        url: '1',
-        authentication_id: 1,
-      },
-    ],
-    [
-      {
-        userid_num: '1',
-        url: '1',
-        authentication_id: 1,
-      },
-    ],
-    [],
-    [],
-  ];
+  const UrlGroup: url[][] = [[], [], [], []];
   const Images: JSX.Element[] = [];
   const profiles: profiles[] = [];
   const [isAcceptable, setIsAcceptable] = useState<boolean>(true);
   const [urls, setUrls] = useState<url[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
   }, [dispatch]);
 
   const [challengeDetail, setChallengeDetail] = useState<Challenge>({
-    challenge_id: 1,
+    challenge_id: 0,
     userid_num: 1,
     challenge_name: '임시 데이터',
     topic: '',
@@ -95,7 +78,7 @@ function ChallengeInProgress() {
     auth_keyword: '',
     winner_userid_num: null,
     authentication_start_date: new Date(2024, 1, 1),
-    authentication_end_date: new Date(2024, 1, 3),
+    authentication_end_date: new Date(2100, 10, 3),
     authentication_start_time: 9,
     authentication_end_time: 23,
   });
@@ -113,7 +96,7 @@ function ChallengeInProgress() {
       money: 1000,
     },
     {
-      userid_num: 2,
+      userid_num: userid_num,
       login_type: 'normal',
       userid: 'userid',
       social_userid: 'userid',
@@ -126,16 +109,7 @@ function ChallengeInProgress() {
     },
   ]);
 
-  const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
-
-  let totalAuthCount = 3;
-  if (period !== 2) {
-    totalAuthCount = ((period + 1) / 7) * challengeDetail.term;
-  }
-
   useEffect(() => {
-    console.log('challenge_id', challenge_id);
-
     privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
@@ -148,8 +122,8 @@ function ChallengeInProgress() {
           setChallengers(challengers);
           setUrls(urls);
           setIsAcceptable(isAcceptable);
-          const myProfile = challengers.filter((challenger: users) => challenger.userid_num === userid_num);
-          profiles.push(myProfile[0].profile_img);
+          setLoading(true);
+          console.log(isAcceptable);
         } else if (response.data.msg) {
           alert(response.data.msg);
           navigate('/main');
@@ -159,6 +133,25 @@ function ChallengeInProgress() {
         console.error('Challengeinprogress에서 axios 오류:', error);
       });
   }, []);
+
+  const myprofile = challengers.filter((challenger) => {
+    return challenger.userid_num === userid_num;
+  });
+
+  if (myprofile && myprofile[0].profile_img) {
+    profiles.push(myprofile[0].profile_img);
+  } else {
+    profiles.push('/grabit_profile.png');
+  }
+
+  // 챌린지 기간
+  const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+
+  // 인증해야하는 총 횟수
+  let totalAuthCount = 3;
+  if (period !== 2) {
+    totalAuthCount = ((period + 1) / 7) * challengeDetail.term;
+  }
 
   useEffect(() => {
     const resultArr = [];
@@ -183,7 +176,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, []);
+  }, [challengeDetail]);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
@@ -193,19 +186,28 @@ function ChallengeInProgress() {
       challengeDetail.challenger_userid_num[i].userid_num !== userid_num &&
       challengeDetail.challenger_userid_num[i].isAccept
     ) {
-      //jwt로 수정
       tab.push(challengers[i].nickname);
       tabId.push(challengers[i].userid_num);
-      profiles.push(challengers[i].profile_img);
+
+      let thisProfile = challengers.filter((challenger) => {
+        return challenger.userid_num === challengers[i].userid_num;
+      });
+
+      if (thisProfile && thisProfile[0].profile_img) {
+        profiles.push(thisProfile[0].profile_img);
+      } else {
+        profiles.push('/grabit_profile.png');
+      }
     }
   }
 
+  // 각각의 참여자들의 사진을 모으기
   for (let j = 0; j < tabId.length; j++) {
     for (let i = 0; i < urls.length; i++) {
       Number(urls[i].userid_num) === tabId[j] ? UrlGroup[j].push(urls[i]) : '';
     }
   }
-
+  // 해당 이미지의 HTML 요소를 배열에 push
   for (let i = 0; i < UrlGroup.length; i++) {
     Images.push(
       <div key={i} className="grid grid-cols-2 gap-2">
@@ -222,11 +224,6 @@ function ChallengeInProgress() {
     );
   }
 
-  console.log('URLGROUP>>>:>>', UrlGroup);
-  console.log('tab >>>>>>>>', tab);
-  console.log('challengers >>>>>>', challengers);
-  console.log('challengeDetail .>>>>>>>', challengeDetail);
-
   const { RiveComponent } = useRive({
     src: '/diamond.riv',
     stateMachines: ['Rotate', 'Flash', 'Timeline1', 'Hover'],
@@ -240,82 +237,92 @@ function ChallengeInProgress() {
         {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
       </h3>
 
-      <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
-        <div className="absolute h-40 w-40 opacity-50">
-          <RiveComponent />
-        </div>
-        <h2 className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-grabit-600 text-transparent">
-          {challengeDetail?.goal_money * challengers.length} 캐럿
-        </h2>
-      </div>
 
-      <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
-        <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
-        <CircularProgressbarWithChildren
-          value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
-          strokeWidth={10}
-          styles={buildStyles({
-            trailColor: '#e9ecf6',
-            pathColor: '#726cb0',
-          })}
-        >
-          <div className="profile-img relative aspect-square w-full">
-            <img
-              style={{ borderRadius: '100%', width: '70%' }}
-              src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
-              className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
-            />
-          </div>
-          <RadialSeparators
-            count={totalAuthCount}
-            style={{
-              background: '#fff',
-              width: '10px',
-              borderRadius: '0px',
-              height: `${0}%`,
-            }}
-          />
-        </CircularProgressbarWithChildren>
-        <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
-      </div>
-
-      <div className="progress grid grid-cols-3 gap-6 p-2">
-        {tab.map((nickname, index) => {
-          if (index === 0) return null;
-
-          return (
-            <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
-              <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{nickname}</h3>
-              <CircularProgressbarWithChildren
-                value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
-                strokeWidth={20}
-                styles={buildStyles({
-                  trailColor: '#e9ecf6',
-                  pathColor: '#726cb0',
-                })}
-              >
-                <div className="profile-img relative aspect-square w-full">
-                  <img
-                    style={{ borderRadius: '100%', width: '50%' }}
-                    src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
-                    className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
-                  />
-                </div>
-                <RadialSeparators
-                  count={totalAuthCount}
-                  style={{
-                    background: '#fff',
-                    width: '20px',
-                    borderRadius: '0px',
-                    height: `${0}%`,
-                  }}
-                />
-              </CircularProgressbarWithChildren>
-              <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[index].length}회 성공</span>
+      {loading && (
+        <>
+          <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
+            <div className="absolute h-40 w-40 opacity-50">
+              <RiveComponent />
             </div>
-          );
-        })}
-      </div>
+            <h2 className="z-10 flex animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-grabit-600 text-transparent">
+              {challengeDetail?.goal_money * challengers.length} 캐럿
+            </h2>
+          </div>
+
+          <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
+            <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
+            <CircularProgressbarWithChildren
+              value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
+              strokeWidth={10}
+              styles={buildStyles({
+                trailColor: '#e9ecf6',
+                pathColor: '#726cb0',
+              })}
+            >
+              <div className="profile-img relative aspect-square w-full">
+                <img
+                  style={{ borderRadius: '100%', width: '70%' }}
+                  src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
+                  className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                />
+              </div>
+              <RadialSeparators
+                count={totalAuthCount}
+                style={{
+                  background: '#fff',
+                  width: '10px',
+                  borderRadius: '0px',
+                  height: `${0}%`,
+                }}
+              />
+            </CircularProgressbarWithChildren>
+            <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
+
+          </div>
+
+          <div className="progress grid grid-cols-3 gap-6 p-2">
+            {tab.map((nickname, index) => {
+              if (index === 0) return null;
+
+
+              return (
+                <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
+                  <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{nickname}</h3>
+                  <CircularProgressbarWithChildren
+                    value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
+                    strokeWidth={20}
+                    styles={buildStyles({
+                      trailColor: '#e9ecf6',
+                      pathColor: '#726cb0',
+                    })}
+                  >
+                    <div className="profile-img relative aspect-square w-full">
+                      <img
+                        style={{ borderRadius: '100%', width: '50%' }}
+                        src={profiles[index]}
+                        className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                      />
+                    </div>
+                    <RadialSeparators
+                      count={totalAuthCount}
+                      style={{
+                        background: '#fff',
+                        width: '20px',
+                        borderRadius: '0px',
+                        height: `${0}%`,
+                      }}
+                    />
+                  </CircularProgressbarWithChildren>
+                  <span className="text-center text-lg font-semibold text-stone-600">
+                    {UrlGroup[index].length}회 성공
+                  </span>
+
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
 
       <ProgressComponent ProgressName={'진행률'} total={totalAuthCount} value={UrlGroup[0].length} />
       <ProgressComponent
