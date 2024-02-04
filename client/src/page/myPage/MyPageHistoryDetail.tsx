@@ -2,12 +2,25 @@ import { privateApi } from '@/api/axios';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { format } from 'date-fns';
 
-export default function ListComponent3(props: any) {
-  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
+export default function ListComponent3() {
+  const [winnerUseridNum, setWinnerUseridNum] = useState<[]>([]);
   const { userid_num } = useParams<any>();
-  const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
+  const userIdNum = Number(localStorage.getItem('userid_num')); // 문자열을 숫자로 변환
+  const [challengeDetail, setChallengeDetail] = useState<ChallengeDetail>();
+  const [record, setRecord] = useState<ChallengeDetail>();
 
+  interface ChallengeDetail {
+    challenge_name: string;
+    goal_money: string;
+    winner_userid_num: string;
+    userIdNum: string;
+    authentication_start_date: string;
+    authentication_end_date: string;
+    win: string;
+    lose: string;
+  }
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
@@ -15,15 +28,24 @@ export default function ListComponent3(props: any) {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('history Data>>>>>', response);
-        setWinnerUseridNum(response.data.history);
+        console.log(response);
+        const detail = response.data.history.find((item: any) => item.challenge_id.toString() === userid_num);
+        setChallengeDetail(detail);
+
+        setRecord(response.data);
+        console.log('>>>>>>>>>', record);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
       });
-  }, []);
+  }, [userid_num]);
 
-  console.log(winnerUseridNum);
+  const formattedStartDate = challengeDetail?.authentication_start_date
+    ? format(new Date(challengeDetail.authentication_start_date), 'yyyy-MM-dd')
+    : '';
+  const formattedEndDate = challengeDetail?.authentication_end_date
+    ? format(new Date(challengeDetail.authentication_end_date), 'yyyy-MM-dd')
+    : '';
 
   return (
     <div>
@@ -32,22 +54,22 @@ export default function ListComponent3(props: any) {
       </div>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
         <div className="flex justify-between">
-          <div className="font-bold text-black">{props.challenge_name}</div>
-          <div className="text-gray-400 ">2024.01.02~2024.01.03</div>
-        </div>
-        <div className="flex">
-          <div className="mr-3 mt-2 text-black">15,000</div>
-          <div className="mt-2 text-black">
-            <Badge variant="default">+1000원</Badge>
+          <div className="font-bold text-black">{challengeDetail?.challenge_name}</div>
+          <div className="text-gray-400 ">
+            {formattedStartDate}~{formattedEndDate}
+            {/* {format(new Date(authentication_start_date), 'yyyy-MM-dd')}~ */}
+            {/* {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')} */}
           </div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">1000P</div>
+          <div className="mr-3 mt-2 text-black">{challengeDetail?.goal_money}원</div>
           <div className="mt-2 text-black">
-            <Badge variant="default">+100P</Badge>
+            <Badge variant="default">
+              {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}
+            </Badge>
           </div>
           <div className="flex w-[100%] justify-end">
-            <div className="mt-2 text-black ">{winnerUseridNum?.includes(userIdNum) ? '승' : '패배'}</div>
+            <div className="mt-2 text-black ">{challengeDetail?.winner_userid_num ? '승' : '패배'}</div>
           </div>
         </div>
       </div>
@@ -55,21 +77,27 @@ export default function ListComponent3(props: any) {
         <h1>상대</h1>
         <p>admin</p>
       </div>
-      <div>
+      {/* <div>
         <h1>날짜</h1>
         <p>2024</p>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <h1>챌린지명</h1>
         <p>챌린지</p>
-      </div>
+      </div> */}
       <div>
         <h1>금액</h1>
-        <p>금액</p>
+        <p>{challengeDetail?.goal_money} 캐럿</p>
       </div>
       <div>
         <h1>포인트 결과</h1>
-        <p>포인트</p>
+        <p> {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}</p>
+      </div>
+      <div>
+        <h1>전적</h1>
+        <span>
+          {record?.win}승 {record?.lose}패
+        </span>
       </div>
     </div>
   );

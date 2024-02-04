@@ -43,7 +43,7 @@ export class s3Middleware implements NestMiddleware {
     const userid_num = decodedUserInfo.userid_num;
 
     if (req.method === 'GET') {
-      let url;
+      let url: string = null;
       // 인증 사진 여러개
       if (req.url.split('/')[2] === undefined) {
         // 챌린지에 참여하고 있는 모든 챌린저 정보 가져오기
@@ -85,7 +85,7 @@ export class s3Middleware implements NestMiddleware {
             });
 
             url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          } else url = null;
+          }
           challengers[i] = {
             ...challengers[i],
             profile_img: url,
@@ -140,60 +140,97 @@ export class s3Middleware implements NestMiddleware {
         req['file'] = url;
       }
     } else if (req.method === 'POST') {
-      // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
-      // let today = `${(new Date().getMonth() + 1).toString()}/${new Date().getDate()}/${new Date().getFullYear()}`;
-      let today = new Date()
-        .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
-        .split(',')[0];
-      // console.log('today', today);
-      let auths = await db
-        .select({
-          created_at: authentication.created_at,
-          userid_num: authentication.userid_num,
-        })
-        .from(authentication)
-        .where(
-          and(eq(authentication.challenge_id, Number(req.url.split('/')[1]))),
-        );
-
-      let todayAuth = [];
-      for (let i = 0; i < auths.length; i++) {
-        let date = auths[i].created_at
-          .toLocaleString('en-US', {
-            timeZone: 'Asia/Seoul',
-          })
+      if (req.originalUrl.split('/')[1] === 'challengeAuth') {
+        // '/challlengeAuth' 경로 요청에 대한 처리
+        // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
+        let today = new Date()
+          .toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
           .split(',')[0];
-        if (today === date) todayAuth.push(auths[i]);
-      }
-      // console.log('todayAuth', todayAuth);
 
-      let already = false;
-      for (let i = 0; i < todayAuth.length; i++) {
-        if (todayAuth[i].userid_num === userid_num) already = true;
-      }
-      // console.log('s3 middleware post body > ', body);
+        let auths = await db
+          .select({
+            created_at: authentication.created_at,
+            userid_num: authentication.userid_num,
+          })
+          .from(authentication)
+          .where(
+            and(eq(authentication.challenge_id, Number(req.url.split('/')[1]))),
+          );
 
-      // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
-      // let today = `${(new Date().getMonth() + 1).toString()}
-      // console.log('already > ', already);
-      if (!already) {
-        if (filename) {
-          filename = uuid() + '.' + filename.split('.')[1];
+        let todayAuth = [];
+        for (let i = 0; i < auths.length; i++) {
+          let date = auths[i].created_at
+            .toLocaleString('en-US', {
+              timeZone: 'Asia/Seoul',
+            })
+            .split(',')[0];
+          if (today === date) todayAuth.push(auths[i]);
+        }
 
-          const command = new PutObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: filename,
-            ContentType: type,
-          });
+        let already = false;
+        for (let i = 0; i < todayAuth.length; i++) {
+          if (todayAuth[i].userid_num === userid_num) already = true;
+        }
 
-          const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          //  https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIASXWMWIHFRIO5NU3B%2F20240123%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20240123T011109Z&X-Amz-Expires=900&X-Amz-Signature=dd763b4858cb3c4b3c80d034b3378ad61b32764e02fb8f9c5e729b13cdf4919d&X-Amz-SignedHeaders=host&x-id=PutObject
-          // 여기서 필요로 하는 값은 https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png
-          // 여기서 필요한 db에 저장하는 값은 abc.png
+        // 오늘 이미 인증한 사진 있으면 더 이상 사진 올리지 못하도록 막기
+        if (!already) {
+          if (filename) {
+            filename = uuid() + '.' + filename.split('.')[1];
 
-          // 컨트롤러로 req 값 전달하기
-          req['file'] = url;
-        } else req['file'] = null;
+            const command = new PutObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: filename,
+              ContentType: type,
+            });
+
+            const url = await getSignedUrl(client, command, {
+              expiresIn: 3600,
+            });
+            //  https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIASXWMWIHFRIO5NU3B%2F20240123%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20240123T011109Z&X-Amz-Expires=900&X-Amz-Signature=dd763b4858cb3c4b3c80d034b3378ad61b32764e02fb8f9c5e729b13cdf4919d&X-Amz-SignedHeaders=host&x-id=PutObject
+            // 여기서 필요로 하는 값은 https://awsbucket-grabit.s3.ap-northeast-2.amazonaws.com/abc.png
+            // 여기서 필요한 db에 저장하는 값은 abc.png
+
+            // 컨트롤러로 req 값 전달하기
+            req['file'] = url;
+          } else req['file'] = null;
+        }
+      } else if (req.originalUrl.split('/')[1] === 'challengeDetail') {
+        // '/challengeDetail' 경로에 대한 요청 처리
+        const challenge_id = Number(req.originalUrl.split('/')[2]);
+        let url: string = null;
+        let challenger: any = await db
+          .select({ challenger_userid_num: challenge.challenger_userid_num })
+          .from(challenge)
+          .where(eq(challenge.challenge_id, challenge_id));
+        challenger = challenger[0].challenger_userid_num;
+        for (let i = 0; i < challenger.length; i++) {
+          challenger[i] = challenger[i].userid_num;
+          let info = await db
+            .select({
+              userid_num: users.userid_num,
+              userid: users.userid,
+              nickname: users.nickname,
+              profile_img: users.profile_img,
+            })
+            .from(users)
+            .where(eq(users.userid_num, challenger[i]));
+          challenger[i] = info[0];
+          key = challenger[i].profile_img;
+          if (key !== null) {
+            const command = new GetObjectCommand({
+              Bucket: process.env.AWS_S3_BUCKET,
+              Key: key,
+            });
+
+            url = await getSignedUrl(client, command, { expiresIn: 3600 });
+          }
+          challenger[i] = {
+            ...challenger[i],
+            profile_img: url,
+          };
+        }
+        console.log('middleware > ', challenger);
+        req['file'] = challenger;
       }
     } else {
       // 이모티콘 DELETE 요청은 가지 않도록 하기
