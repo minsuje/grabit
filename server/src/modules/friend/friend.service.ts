@@ -145,8 +145,17 @@ export class FriendService {
 
   //# 친구 삭제
   async remove(createFriendDto: CreateFriendDto, userid: number) {
-    console.log(createFriendDto, userid);
-    const { other_userid_num } = createFriendDto;
+    console.log('친구 삭제 시작', createFriendDto, userid);
+    const { other_userid } = createFriendDto;
+    console.log(other_userid);
+
+    const friend_id_num = await db
+      .select()
+      .from(users)
+      .where(eq(users.userid, other_userid));
+
+    console.log('friend_id_num', friend_id_num);
+
     return await db
       .delete(friend)
       .where(
@@ -156,8 +165,8 @@ export class FriendService {
             eq(friend.other_userid_num, userid),
           ),
           or(
-            eq(friend.other_userid_num, other_userid_num),
-            eq(friend.userid_num, other_userid_num),
+            eq(friend.other_userid_num, friend_id_num[0].userid_num),
+            eq(friend.userid_num, friend_id_num[0].userid_num),
           ),
         ),
       );

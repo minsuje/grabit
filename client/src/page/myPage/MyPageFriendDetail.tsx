@@ -3,6 +3,8 @@ import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+
 interface FriendDetail {
   id: string;
   nickname: string;
@@ -22,6 +24,7 @@ export default function MyPageFriendDetail() {
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [proFileImg, setProFileImg] = useState();
 
+  const navigate = useNavigate();
   const userid_num = localStorage.getItem('userid_num');
 
   console.log(userid_num);
@@ -77,18 +80,24 @@ export default function MyPageFriendDetail() {
   // }, []);
 
   const handleDeleteFriend = () => {
-    privateApi
-      .delete(`http://localhost:3000/friend/${userid}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-        userid:userid
-      })
+    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
+    // privateApi
+    //   .delete(`http://localhost:3000/friend/${userid_num}`, {
+    //     headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken'), data: userid },
+    //   })
+    privateApi({
+      method: 'DELETE',
+      url: `http://localhost:3000/friend/${userid_num}`,
+      data: { other_userid: userid },
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+    })
       .then((response) => {
         console.log('친구 삭제 성공:', response);
-        // 성공적으로 친구를 삭제한 후의 로직을 여기에 추가...
+
+        // navigate(`/mypage/friend/detail/${userid_num}`);
       })
       .catch((error) => {
         console.error('친구 끊기 에러:', error);
-        // 에러 처리 로직을 여기에 추가...
       });
   };
 

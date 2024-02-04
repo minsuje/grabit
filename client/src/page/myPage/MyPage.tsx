@@ -124,7 +124,7 @@ export default function MyPage() {
       });
   }, []);
 
-  // 친구 요청
+  // 내 친구목록 불러오기
   useEffect(() => {
     privateApi
       .get(`http://localhost:3000/friend/${userid_num}`, {
