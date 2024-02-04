@@ -1,23 +1,30 @@
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-
-type Friend = {
-  id: number;
-  name: string;
-  profile_img: string;
-};
+import { FriendSelect } from '@/types/types';
 
 type FriendListProps = {
-  friend: Friend;
+  friend: FriendSelect;
 };
 
 function FriendList({ friend }: FriendListProps) {
   return (
-    <div className="flex gap-2 items-center">
-      <Avatar>
-        <AvatarImage src={friend.profile_img} />
-        <AvatarFallback>{friend.name}</AvatarFallback>
-      </Avatar>
-      <p>{friend.name}</p>
+    <div className="flex items-center gap-2">
+      {friend.profile_img ? (
+        <>
+          <Avatar>
+            <AvatarImage src={friend.profile_img} />
+            <AvatarFallback>{friend.nickname}</AvatarFallback>
+          </Avatar>
+          <span>{friend.nickname}</span>
+        </>
+      ) : (
+        <>
+          <Avatar>
+            <AvatarImage src="/grabit_profile.png" />
+            <AvatarFallback>{friend.nickname}</AvatarFallback>
+          </Avatar>
+          <span>{friend.nickname}</span>
+        </>
+      )}
     </div>
   );
 }
