@@ -87,10 +87,6 @@ export class AuthController {
     const users = JSON.parse(user);
 
     const { username, profile_image, id } = users;
-    console.log(
-      '🚀 ~ AuthController ~ kakaoLogin ~ profile_image:',
-      profile_image,
-    );
 
     // searchUser service 값 보내기
     let searchUser = await this.authService.searchUser(
@@ -98,7 +94,6 @@ export class AuthController {
       profile_image,
       username,
     );
-    console.log('🚀 ~ AuthController ~ kakaoLogin ~ searchUser:', searchUser);
 
     const { loginToken, loginRefreshToken } = searchUser;
 
@@ -107,17 +102,15 @@ export class AuthController {
       'Bearer ' + [loginToken, loginRefreshToken].join(' '),
     );
 
-    console.log('controller searchUser > ', searchUser);
-
     res.cookie('accessToken', loginToken, {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
       // maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
     });
     res.cookie('refreshToken', loginRefreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
       // maxAge: 40 * 1000,
       secure: true,
@@ -135,7 +128,6 @@ export class AuthController {
       nickname: username,
       name: username,
     });
-    // console.log('wwwww');
   }
 
   @UseGuards(JwtAuthGuard)
@@ -168,7 +160,7 @@ export class AuthController {
         const loginToken = await this.authService.refresh(loginRefreshToken);
 
         await res.cookie('accessToken', loginToken, {
-          httpOnly: true,
+          httpOnly: false,
           maxAge: 24 * 60 * 60 * 1000,
           secure: true,
           sameSite: 'none',
