@@ -28,23 +28,23 @@ function ChallengeDaily() {
   }
 
   async function upload() {
-    // if (file) {
-    //   const aiFile = await query(file);
-    //   console.log('aifile >>>>>>', aiFile);
-    // }
+    if (file) {
+      const aiFile = await query(file);
+      console.log('aifile >>>>>>', aiFile);
+    }
 
-    privateApi
-      .patch(`http://3.34.122.205:3000/dailyMissionAuth`)
-      .then((response): void => {
-        console.log('response', response.data);
-        if (response.data.msg) {
-          alert(response.data.msg);
-          window.location.href = '/main';
-        }
-      })
-      .catch((error): void => {
-        console.error('Challengeinprogress에서 axios 오류:', error);
-      });
+    // privateApi
+    //   .patch(`http://3.34.122.205:3000/dailyMissionAuth`)
+    //   .then((response): void => {
+    //     console.log('response', response.data);
+    //     if (response.data.msg) {
+    //       alert(response.data.msg);
+    //       window.location.href = '/main';
+    //     }
+    //   })
+    //   .catch((error): void => {
+    //     console.error('Challengeinprogress에서 axios 오류:', error);
+    //   });
 
     if (imgUrl) {
       URL.revokeObjectURL(imgUrl);

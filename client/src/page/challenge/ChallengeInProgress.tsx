@@ -47,10 +47,9 @@ interface url {
 
 function ChallengeInProgress() {
   const info = useSelector((state: RootState) => state.result);
-  console.log(info);
+  console.log('결과페이지로 보내는 값', info);
 
   const userid_num = Number(localStorage.getItem('userid_num'));
-  console.log('user', userid_num);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ function ChallengeInProgress() {
   }, [dispatch]);
 
   const [challengeDetail, setChallengeDetail] = useState<Challenge>({
-    challenge_id: 1,
+    challenge_id: 0,
     userid_num: 1,
     challenge_name: '임시 데이터',
     topic: '',
@@ -80,7 +79,7 @@ function ChallengeInProgress() {
     auth_keyword: '',
     winner_userid_num: null,
     authentication_start_date: new Date(2024, 1, 1),
-    authentication_end_date: new Date(2024, 1, 3),
+    authentication_end_date: new Date(2100, 10, 3),
     authentication_start_time: 9,
     authentication_end_time: 23,
   });
@@ -98,7 +97,7 @@ function ChallengeInProgress() {
       money: 1000,
     },
     {
-      userid_num: 30,
+      userid_num: userid_num,
       login_type: 'normal',
       userid: 'userid',
       social_userid: 'userid',
@@ -112,8 +111,6 @@ function ChallengeInProgress() {
   ]);
 
   useEffect(() => {
-    // console.log('challenge_id', challenge_id);
-
     privateApi
       .get(`http://3.34.122.205:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
@@ -127,6 +124,7 @@ function ChallengeInProgress() {
           setUrls(urls);
           setIsAcceptable(isAcceptable);
           setLoading(true);
+          console.log(isAcceptable);
         } else if (response.data.msg) {
           alert(response.data.msg);
           navigate('/main');
@@ -137,6 +135,16 @@ function ChallengeInProgress() {
       });
   }, []);
 
+  const myprofile = challengers.filter((challenger) => {
+    return challenger.userid_num === userid_num;
+  });
+
+  if (myprofile && myprofile[0].profile_img) {
+    profiles.push(myprofile[0].profile_img);
+  } else {
+    profiles.push('/grabit_profile.png');
+  }
+
   // 챌린지 기간
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
 
@@ -144,20 +152,6 @@ function ChallengeInProgress() {
   let totalAuthCount = 3;
   if (period !== 2) {
     totalAuthCount = ((period + 1) / 7) * challengeDetail.term;
-    console.log(totalAuthCount);
-  }
-
-  const myprofile = challengers.filter((challenger) => {
-    return challenger.userid_num === userid_num;
-  });
-  console.log('myprofile', myprofile[0]);
-
-  if (myprofile && myprofile[0].profile_img) {
-    console.log(1);
-  } else {
-    console.log(2);
-    profiles.push('/grabit_profile.png');
-    console.log(profiles);
   }
 
   useEffect(() => {
@@ -196,9 +190,13 @@ function ChallengeInProgress() {
       tab.push(challengers[i].nickname);
       tabId.push(challengers[i].userid_num);
 
-      if (challengers[i] && challengers[i].profile_img) {
-        profiles.push(challengers[i].profile_img!);
-      } else if (challengers[i]) {
+      let thisProfile = challengers.filter((challenger) => {
+        return challenger.userid_num === challengers[i].userid_num;
+      });
+
+      if (thisProfile && thisProfile[0].profile_img) {
+        profiles.push(thisProfile[0].profile_img);
+      } else {
         profiles.push('/grabit_profile.png');
       }
     }
@@ -226,12 +224,6 @@ function ChallengeInProgress() {
       </div>,
     );
   }
-
-  console.log('URLGROUP>>>:>>', UrlGroup);
-  console.log('tab >>>>>>>>', tab);
-  console.log('challengers >>>>>>', challengers);
-  console.log('challengeDetail .>>>>>>>', challengeDetail);
-  console.log('profiles', profiles);
 
   const { RiveComponent } = useRive({
     src: '/diamond.riv',
