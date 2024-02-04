@@ -90,12 +90,11 @@ export default function Login() {
   };
 
   return (
-    <div className="container flex justify-center">
-      <HeaderTitle />
-      <div className="container mt-20 flex flex-col items-center justify-center">
-        <h1>로그인</h1>
-        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-2 ">
-          <Label className="flex" htmlFor="username">
+    <div className="flex justify-center">
+      <div className="mt-20 flex w-full flex-col items-center justify-center">
+        <h1 className="w-full">로그인</h1>
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="username">
             아이디
           </Label>
           <Input
@@ -107,8 +106,8 @@ export default function Login() {
             onChange={(e) => setUserid(e.target.value)}
           />
         </div>
-        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-2">
-          <Label className="flex" htmlFor="password">
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="password">
             비밀번호
           </Label>
           <Input

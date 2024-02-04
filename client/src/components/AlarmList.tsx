@@ -1,6 +1,6 @@
 import { differenceInCalendarDays, differenceInHours, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Cross1Icon } from '@radix-ui/react-icons';
+// import { Cross1Icon } from '@radix-ui/react-icons';
 import { Link } from 'react-router-dom';
 import { privateApi } from '@/api/axios';
 

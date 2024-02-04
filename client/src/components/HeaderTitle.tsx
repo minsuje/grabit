@@ -20,8 +20,8 @@ function HeaderTitle() {
     <header
       className={
         scrollPosition > 50
-          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white/50 px-4 py-3 backdrop-blur-md transition-all'
-          : 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white px-4 py-3 transition-all'
+          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-grabit-50/50 px-4 py-3 backdrop-blur-md'
+          : 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-grabit-50 px-4 py-3'
       }
     >
       <div onClick={() => navigate(backPath)} className="flex p-2">
