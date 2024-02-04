@@ -86,9 +86,6 @@ export class UserService {
       .from(users)
       .where(eq(users.userid_num, userid_num));
 
-    console.log('loginType', loginType);
-    console.log('getMyPage service userInfo > ', userInfo);
-    console.log('getMyPage service file > ', file);
     return { userInfo, file, loginType };
   };
 
@@ -210,7 +207,7 @@ export class UserService {
         }
       }
     }
-    console.log('friendStatus > ', friendStatus);
+
     return { userid, file, myRank, finalHistory, friendStatus };
   };
 
@@ -222,7 +219,6 @@ export class UserService {
     login_type: string,
   ) => {
     const { nickname, currentPassword, changePassword } = body;
-    console.log('file >>>> ', file);
     const filename = file.split('/')[3].split('?')[0];
     let isUser = false;
     const myDbPassword = await db
@@ -240,7 +236,6 @@ export class UserService {
       if (checkPassword) {
         // 비밀번호 O, 이미지 O
         if (changePassword) {
-          console.log('비밀번호 O, 이미지 O');
           const newPassword = await bcrypt.hash(changePassword, 10);
           const userInfo = await db
             .update(users)
@@ -255,7 +250,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else if (changePassword.length !== 0 && file.length == 0) {
           // 비밀번호 O, 프로필 이미지 X
-          console.log('비밀번호 O, 이미지 X');
 
           const newPassword = await bcrypt.hash(changePassword, 10);
           const userInfo = await db
@@ -266,7 +260,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else if (changePassword.length == 0 && file.length !== 0) {
           // 비밀번호 X, 프로필 이미지 O
-          console.log('비밀번호 X, 이미지 O');
 
           const userInfo = await db
             .update(users)
@@ -279,7 +272,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else {
           // 비밀번호 X, 프로필 X
-          console.log('비밀번호 x, 이미지 x');
 
           const userInfo = await db
             .update(users)
@@ -297,7 +289,6 @@ export class UserService {
 
     if (login_type === 'kakao') {
       if (file.length !== 0) {
-        console.log('이미지 O');
         const userInfo = await db
           .update(users)
           .set({
@@ -308,7 +299,6 @@ export class UserService {
         isUser = true;
         return { userInfo, file, isUser };
       } else {
-        console.log('이미지 X');
         const userInfo = await db
           .update(users)
           .set({
@@ -333,7 +323,6 @@ export class UserService {
   private readonly secretKey = process.env.TOSS_SECRET_KEY;
 
   payment = async (userid_num: number) => {
-    console.log('payment userid >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', userid_num);
     const user = await db
       .select({ userid: users.userid, name: users.name, money: users.money })
       .from(users)
@@ -376,7 +365,6 @@ export class UserService {
     } else if (Number(amount) === 10000) {
       carrot = 10000;
     }
-    console.log('carrot > ', carrot);
     const userInfo = await db
       .update(users)
       .set({ money: sql`${users.money} + ${carrot}` })

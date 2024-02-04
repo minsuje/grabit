@@ -55,11 +55,15 @@ export default function Home() {
       >
         a 태그 카카오
       </a> */}
-      <a
+      {/* <a
         href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
+      > */}
+      <Link
+        to={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
       >
         <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
-      </a>
+        {/* </a> */}
+      </Link>
     </div>
   );
 }

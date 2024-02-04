@@ -29,8 +29,6 @@ export class s3Middleware implements NestMiddleware {
     });
 
     const body: any = req.body;
-    console.log('s3 middleware url >', req.originalUrl.split('/'));
-    // console.log('s3 middleware body > ', body);
 
     let { filename, type } = body;
     let key;
@@ -101,9 +99,7 @@ export class s3Middleware implements NestMiddleware {
           .from(authentication)
           .where(eq(authentication.challenge_id, Number(req.url.split('/')[1])))
           .orderBy(desc(authentication.created_at));
-        // .limit(4);
 
-        console.log('s3 middleware detail files > ', files);
         let urls = [];
         for (let i = 0; i < files.length; i++) {
           key = files[i].authentication_img;
@@ -229,13 +225,12 @@ export class s3Middleware implements NestMiddleware {
             profile_img: url,
           };
         }
-        console.log('middleware > ', challenger);
+
         req['file'] = challenger;
       }
     } else {
       // 이모티콘 DELETE 요청은 가지 않도록 하기
       if (req.originalUrl.split('/')[4] === undefined) {
-        console.log('이모티콘 삭제 아님');
         let file = await db
           .select()
           .from(authentication)
