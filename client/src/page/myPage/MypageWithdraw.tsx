@@ -15,7 +15,7 @@ export default function MypageWithdraw() {
   console.log(password);
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+    dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
   }, [dispatch]);
 
   const handleSubmit = async () => {

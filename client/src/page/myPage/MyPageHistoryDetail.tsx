@@ -26,7 +26,7 @@ export default function ListComponent3() {
   }
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '히스토리', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+    dispatch(setHeaderInfo({ title: '히스토리', backPath: `/mypage` }));
   }, [dispatch]);
 
   useEffect(() => {

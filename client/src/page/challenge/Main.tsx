@@ -221,7 +221,7 @@ export default function Main() {
           <Button>1번 챌린지 수정</Button>
         </Link>
 
-        <Link to={`/mypage/${userid_num}`}>
+        <Link to={`/mypage`}>
           <Button>마이페이지 </Button>
         </Link>
 
