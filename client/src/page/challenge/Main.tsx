@@ -16,6 +16,8 @@ import FlipCountdown from '@rumess/react-flip-countdown';
 import OpenAI from 'openai';
 import { Input } from '@/components/ui/input';
 
+import { OpenAIStream } from 'ai';
+
 export default function Main() {
   const dispatch = useDispatch();
 
@@ -57,6 +59,27 @@ export default function Main() {
   const [completed, setCompleted] = useState<string>('none');
   const [gptInput, setGptInput] = useState<string>('');
   const [gptAnswer, setGptAnswer] = useState<string>();
+  const [imageBase64, setImageBase64] = useState('');
+
+  // Function to convert image to base64
+  const convertToBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImageBase64(reader.result as string);
+    };
+    reader.onerror = (error) => {
+      console.error('Error converting image to Base64', error);
+    };
+  };
+
+  // Handle file input change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      convertToBase64(file);
+    }
+  };
 
   useEffect(() => {
     setUserid_num(Number(localStorage.getItem('userid_num')));
@@ -116,11 +139,14 @@ export default function Main() {
         {
           role: 'user',
           content: [
-            { type: 'text', text: '이 사진에서 하늘이 보여? true 아니면 false로 대답해줘' },
+            {
+              type: 'text',
+              text: `${gptInput} 라는 주제에서 키워드를 추출해서, 이미지에 해당 키워드가 존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
+            },
             {
               type: 'image_url',
               image_url: {
-                url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg',
+                url: imageBase64,
               },
             },
           ],
@@ -128,22 +154,8 @@ export default function Main() {
       ],
     });
     console.log('openai >>>>>>>>>>', response.choices[0]);
+    setGptAnswer(response?.choices[0].message.content);
   }
-
-  // async function openaiFunction() {
-  //   const completion = await openai.chat.completions.create({
-  //     messages: [
-  //       { role: 'system', content: '너는 도움이 되는 조수야' },
-  //       { role: 'user', content: '좋은 습관을 키우려면 어떻게 해야할까?' },
-  //       { role: 'assistant', content: '뭔가를 꾸준히 해보세요' },
-  //       { role: 'user', content: gptInput },
-  //     ],
-  //     model: 'gpt-3.5-turbo',
-  //   });
-
-  //   console.log('openai >>>>>>>>>>', completion.choices[0]);
-  //   setGptAnswer(completion.choices[0].message.content);
-  // }
 
   return (
     <div className="my-8 flex flex-col gap-16">
@@ -166,6 +178,7 @@ export default function Main() {
                     hideMonth
                     hideDay
                     titlePosition="bottom"
+                    s
                     hourTitle="시간"
                     minuteTitle="분"
                     secondTitle="초"
@@ -267,6 +280,8 @@ export default function Main() {
         </Link>
 
         <Input onChange={(e) => setGptInput(e.target.value)} />
+
+        <input type="file" capture="environment" onChange={handleFileChange} />
 
         <Button onClick={openaiFunction} className="bg-grabit-400 p-4">
           OPENAI
