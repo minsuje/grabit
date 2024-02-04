@@ -112,24 +112,34 @@ export class profileImgMiddleware implements NestMiddleware {
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
-        .select({ friends_num: friend.other_userid_num })
+        .select({
+          friends_num: friend.other_userid_num,
+          is_friend: friend.is_friend,
+        })
         .from(friend)
         .where(eq(friend.userid_num, Number(req.originalUrl.split('/')[2])));
       const friends2 = await db
-        .select({ friends_num: friend.userid_num })
+        .select({ friends_num: friend.userid_num, is_friend: friend.is_friend })
         .from(friend)
         .where(
           eq(friend.other_userid_num, Number(req.originalUrl.split('/')[2])),
         );
       for (let i = 0; i < friends1.length; i++) {
-        friends.push(friends1[i].friends_num);
+        friends.push({
+          userid_num: friends1[i].friends_num,
+          is_friend: friends1[i].is_friend,
+        });
       }
       for (let i = 0; i < friends2.length; i++) {
-        friends.push(friends2[i].friends_num);
+        friends.push({
+          userid_num: friends2[i].friends_num,
+          is_friend: friends2[i].is_friend,
+        });
       }
+
       let friend_info = [];
       for (let i = 0; i < friends.length; i++) {
-        let friend = await db
+        let friend: any = await db
           .select({
             userid: users.userid,
             userid_num: users.userid_num,
@@ -138,8 +148,15 @@ export class profileImgMiddleware implements NestMiddleware {
             score_num: users.score_num,
           })
           .from(users)
-          .where(eq(users.userid_num, friends[i]));
-        friend_info.push(friend[0]);
+          .where(eq(users.userid_num, friends[i].userid_num));
+
+        friend = friend[0];
+        friend = {
+          ...friend,
+          is_friend: friends[i].is_friend,
+        };
+
+        friend_info.push(friend);
       }
 
       const allRank = await db
