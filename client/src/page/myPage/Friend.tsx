@@ -4,6 +4,8 @@ import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 // 친구 객체를 위한 인터페이스 정의
 interface Friend {
@@ -12,12 +14,18 @@ interface Friend {
 }
 
 export default function Friend() {
-  const { userid_num } = useParams();
+  const dispatch = useDispatch();
+  // const { userid_num } = useParams();
+  const userid_num = localStorage.getItem('userid_num');
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
   // 내 친구 목록 불러오기
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '친구 목록', backPath: `/mypage` }));
+  }, [dispatch]);
 
   useEffect(() => {
     privateApi

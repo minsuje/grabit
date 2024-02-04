@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Calendar } from '@/components/ui/calendar';
-import { addDays, format, differenceInDays, addHours } from 'date-fns';
+import { addDays, format, differenceInDays, addHours, differenceInCalendarDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -58,6 +58,9 @@ function ChallengeEdit() {
   const dispatch = useDispatch();
   const { challenge_id } = useParams();
   const [date, setDate] = useState<Date | undefined>();
+  const [checkDate, setcheckDate] = useState<boolean>(true);
+  const [checkStartTime, setCheckStartTime] = useState<boolean>(true);
+  const [checkEndTime, setCheckEndTime] = useState<boolean>(true);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 수정', backPath: -1 }));
@@ -112,7 +115,10 @@ function ChallengeEdit() {
     },
   ]);
 
-  const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+  const period = differenceInCalendarDays(
+    challengeDetail.authentication_end_date,
+    challengeDetail.authentication_start_date,
+  );
   let periodChanged = period;
   console.log('period', period);
 
@@ -120,8 +126,10 @@ function ChallengeEdit() {
     setDate(date);
     if (date) {
       if (addDays(date, 1) < new Date()) {
-        alert('오늘 이전 날짜는 선택할 수 없습니다.');
+        setcheckDate(false);
         setDate(new Date());
+      } else {
+        setcheckDate(true);
       }
     }
   };
@@ -143,10 +151,10 @@ function ChallengeEdit() {
         </div>
 
         <div className="user-list flex flex-col gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex-col items-center gap-2">
             {challengers.map((challenger: users, idx) => {
               return (
-                <div className="flex items-center gap-2 " key={idx}>
+                <div className=" flex  items-center gap-2 " key={idx}>
                   {challenger.profile_img ? (
                     <>
                       <Avatar>
@@ -251,6 +259,8 @@ function ChallengeEdit() {
         </PopoverContent>
       </Popover>
 
+      {!checkDate && <span className="text-xs text-red-500">오늘 이전 날짜는 선택할 수 없습니다.</span>}
+
       <h2 className="py-4 text-xl font-bold">끝 날짜</h2>
 
       <Popover>
@@ -301,7 +311,7 @@ function ChallengeEdit() {
             value={challengeDetail.authentication_start_time.toString()}
             onValueChange={(value) => {
               if (Number(value) >= challengeDetail.authentication_end_time) {
-                alert('인증 마감 시간보다 빠르게 설정할 수 없습니다.');
+                setCheckStartTime(false);
                 setChallengeDetail((challengeDetail) => {
                   return {
                     ...challengeDetail,
@@ -309,6 +319,7 @@ function ChallengeEdit() {
                   };
                 });
               } else {
+                setCheckStartTime(true);
                 setChallengeDetail((challengeDetail) => {
                   return { ...challengeDetail, authentication_start_time: Number(value) };
                 });
@@ -335,7 +346,7 @@ function ChallengeEdit() {
             value={challengeDetail.authentication_end_time.toString()}
             onValueChange={(value) => {
               if (Number(value) <= challengeDetail.authentication_start_time) {
-                alert('인증 시작 시간보다 늦게 설정할 수 없습니다.');
+                setCheckEndTime(false);
                 setChallengeDetail((challengeDetail) => {
                   return {
                     ...challengeDetail,
@@ -343,6 +354,7 @@ function ChallengeEdit() {
                   };
                 });
               } else {
+                setCheckEndTime(true);
                 setChallengeDetail((challengeDetail) => {
                   return { ...challengeDetail, authentication_end_time: Number(value) };
                 });
@@ -364,6 +376,12 @@ function ChallengeEdit() {
           </Select>
         </div>
       </div>
+      {!checkStartTime || !checkEndTime ? (
+        <span className="text-xs text-red-500">마감시간은 시작시간 이후로 설정해주세요</span>
+      ) : (
+        <></>
+      )}
+
       <div className="mt-3 flex flex-col gap-3">
         <Button className="bg-slate-100 text-black hover:bg-slate-200" onClick={() => deleteChallenge(challenge_id)}>
           삭제

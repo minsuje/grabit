@@ -233,6 +233,7 @@ function ChallengeCreate() {
 
         <div className="challengeTopic flex flex-col">
           <h2 className="py-4 text-xl font-bold">주제</h2>
+
           <Select onValueChange={handleTopicChange}>
             <SelectTrigger className="w-[180px]" {...register('topic')}>
               <SelectValue placeholder="주제" {...register('topic')} />

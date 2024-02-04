@@ -71,9 +71,14 @@ export class UserController {
     @Req() req,
     @Req() request: Request,
   ) {
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const login_userid_num = decodedUserInfo.userid_num;
     console.log('myPage controller req.file > ', req.file);
     const file = req.file;
-    return this.userService.getProfilePage(userid, file);
+    return this.userService.getProfilePage(login_userid_num, userid, file);
   }
 
   // 마이페이지 수정
@@ -103,33 +108,44 @@ export class UserController {
 
   //결제페이지
   @UseGuards(JwtService)
-  @Get('/checkout/success')
-  success(@Res() res: Response, @Req() req: Request) {
-    console.log('controller success');
-    console.log('/checkout/success res >>>>>>>>>', res.req.url);
-    // res.sendFile('./../../../../client/src/page/CheckoutSuccess.tsx');
-    return res.send('success');
-    // Redirect('/checkout/success');
+  @Post('/userInfo')
+  async payment(@Req() request: Request) {
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+
+    return this.userService.payment(userid_num);
   }
 
   @UseGuards(JwtService)
-  @Post('/checkout')
-  tossPayment(@Body() paymentDTO: PaymentDTO, @Req() req: Request) {
-    console.log('/checkout req >>>>>>>>>');
-    console.log('/checkout res >>>>>>>>>');
+  @Post('/checkout/confirm')
+  async confirm(@Body() paymentDTO: PaymentDTO) {
     return this.userService.tossPayment(paymentDTO);
   }
-  // async success(
-  //   @Body() body: PaymentDTO,
-  //   @Res() res: Response,
-  //   @Req() req: Request,
-  // ) {
-  //   console.log('controller body > ', body);
-  //   console.log('controller res > ', res);
-  //   console.log('controller req > ', req);
-  //   return await this.userService.successPay(body, res);
-  //   return;
-  // }
+
+  @UseGuards(JwtService)
+  @Post('/updpateMoney')
+  async updateMoney(@Body() body, @Req() request: Request) {
+    const amount = body.amount;
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const userid_num = decodedUserInfo.userid_num;
+
+    return this.userService.updateMoney(amount, userid_num);
+  }
+
+  @UseGuards(JwtService)
+  @Get('/checkout/success')
+  success(@Res() res: Response, @Req() req: Request, @Req() request) {
+    console.log('controller success');
+    console.log('/checkout/success res >>>>>>>>>', res.req.url);
+
+    return res.send('success');
+  }
 
   @UseGuards(JwtService)
   @Get('/ranking')
@@ -152,5 +168,19 @@ export class UserController {
     const rank = await this.userService.myRank(userid_num);
 
     return res.send(String(rank));
+  }
+
+  @UseGuards(JwtService)
+  @Post('/requsetWithdraw')
+  async requestWithdraw(@Req() req: Request, @Body() change) {
+    const myInfo = req.headers['authorization'].split(' ')[1];
+
+    const decodedUserInfo = await this.jwtService.verify(myInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+
+    const userid_num = decodedUserInfo.userid_num;
+
+    return this.userService.requestWithdraw(userid_num, change);
   }
 }

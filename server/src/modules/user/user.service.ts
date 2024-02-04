@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { PaymentDTO } from './dto/paymentsDto';
-import { users } from './schema';
+import { account, users } from './schema';
 import { db } from 'db/db';
-import { desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, or, sql } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import axios from 'axios';
 import { response } from 'express';
 import { challenge } from '../challenge/schema';
 import { isAfter } from 'date-fns';
+import { friend } from '../friend/schema';
 
 // const got = require('got');
 // import * as got from 'got';
@@ -25,7 +26,7 @@ export class UserService {
       nickname,
       profile_img,
       score_num,
-      money,
+      carrot,
     } = createUserDto;
 
     const hash: string = await bcrypt.hash(password, 10);
@@ -39,7 +40,7 @@ export class UserService {
       nickname: nickname,
       profile_img: profile_img,
       score_num: score_num,
-      money: money,
+      carrot: carrot,
     };
     const checkUser = await db
       .select()
@@ -74,7 +75,7 @@ export class UserService {
       .select({
         nickname: users.nickname,
         score_num: users.score_num,
-        money: users.money,
+        carrot: users.carrot,
       })
       .from(users)
       .where(eq(users.userid_num, userid_num));
@@ -85,15 +86,16 @@ export class UserService {
       .from(users)
       .where(eq(users.userid_num, userid_num));
 
-    console.log('loginType', loginType);
-    console.log('getMyPage service userInfo > ', userInfo);
-    console.log('getMyPage service file > ', file);
     return { userInfo, file, loginType };
   };
 
   // 다른 사람 프로필 조회
-  getProfilePage = async (userid: string, file: object) => {
-    // 로그인한 userid로 userid_num 찾기
+  getProfilePage = async (
+    login_userid_num: number,
+    userid: string,
+    file: object,
+  ) => {
+    // userid로 userid_num 찾기
     let userid_num: any = await db
       .select({ userid_num: users.userid_num })
       .from(users)
@@ -161,7 +163,52 @@ export class UserService {
       lose: lose,
     };
 
-    return { userid, file, myRank, finalHistory };
+    // 친구 상태 조회
+    let friendStatus = '친구 신청';
+    let friends = [];
+    const friendStatus1 = await db
+      .select()
+      .from(friend)
+      .where(
+        or(
+          eq(friend.userid_num, userid_num),
+          eq(friend.other_userid_num, userid_num),
+        ),
+      );
+    for (let i = 0; i < friendStatus1.length; i++) {
+      friends.push(friendStatus1[i]);
+    }
+    const friendStatus2 = await db
+      .select()
+      .from(friend)
+      .where(
+        or(
+          eq(friend.userid_num, login_userid_num),
+          eq(friend.other_userid_num, login_userid_num),
+        ),
+      );
+    for (let i = 0; i < friendStatus2.length; i++) {
+      friends.push(friendStatus2[i]);
+    }
+    // console.log('friends > ', friends);
+
+    for (let i = 0; i < friends.length; i++) {
+      if (friends[i].userid_num === login_userid_num) {
+        if (friends[i].other_userid_num === userid_num) {
+          if (friends[i].is_friend === true) {
+            friendStatus = '친구입니다.';
+          } else friendStatus = '친구 신청 해놓고 대기 중';
+        }
+      } else if (friends[i].other_userid_num === login_userid_num) {
+        if (friends[i].userid_num === userid_num) {
+          if (friends[i].is_friend === true) {
+            friendStatus = '친구입니다.';
+          } else friendStatus = '상대가 친구 신청 해놓은거 수락바람';
+        }
+      }
+    }
+
+    return { userid, file, myRank, finalHistory, friendStatus };
   };
 
   // 프로필 수정
@@ -172,7 +219,6 @@ export class UserService {
     login_type: string,
   ) => {
     const { nickname, currentPassword, changePassword } = body;
-    console.log('file >>>> ', file);
     const filename = file.split('/')[3].split('?')[0];
     let isUser = false;
     const myDbPassword = await db
@@ -190,7 +236,6 @@ export class UserService {
       if (checkPassword) {
         // 비밀번호 O, 이미지 O
         if (changePassword) {
-          console.log('비밀번호 O, 이미지 O');
           const newPassword = await bcrypt.hash(changePassword, 10);
           const userInfo = await db
             .update(users)
@@ -205,7 +250,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else if (changePassword.length !== 0 && file.length == 0) {
           // 비밀번호 O, 프로필 이미지 X
-          console.log('비밀번호 O, 이미지 X');
 
           const newPassword = await bcrypt.hash(changePassword, 10);
           const userInfo = await db
@@ -216,7 +260,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else if (changePassword.length == 0 && file.length !== 0) {
           // 비밀번호 X, 프로필 이미지 O
-          console.log('비밀번호 X, 이미지 O');
 
           const userInfo = await db
             .update(users)
@@ -229,7 +272,6 @@ export class UserService {
           return { userInfo, file, isUser };
         } else {
           // 비밀번호 X, 프로필 X
-          console.log('비밀번호 x, 이미지 x');
 
           const userInfo = await db
             .update(users)
@@ -247,7 +289,6 @@ export class UserService {
 
     if (login_type === 'kakao') {
       if (file.length !== 0) {
-        console.log('이미지 O');
         const userInfo = await db
           .update(users)
           .set({
@@ -258,7 +299,6 @@ export class UserService {
         isUser = true;
         return { userInfo, file, isUser };
       } else {
-        console.log('이미지 X');
         const userInfo = await db
           .update(users)
           .set({
@@ -282,8 +322,15 @@ export class UserService {
   private readonly tossUrl = 'https://api.tosspayments.com/v1/payments/';
   private readonly secretKey = process.env.TOSS_SECRET_KEY;
 
+  payment = async (userid_num: number) => {
+    const user = await db
+      .select({ userid: users.userid, name: users.name, carrot: users.carrot })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    return { user };
+  };
+
   tossPayment = async (paymentDTO: PaymentDTO) => {
-    // console.log('service > ', response);
     const { orderId, amount, paymentKey } = paymentDTO;
     try {
       const response = await axios.post(
@@ -296,14 +343,45 @@ export class UserService {
           },
         },
       );
+
       return {
         title: '결제 성공',
         body: response.data,
-        // amount: response.data. totalAmount,
+        amount: response.data.totalAmount,
       };
     } catch (e) {
       console.log('토스페이먼츠 에러', e);
     }
+  };
+
+  updateMoney = async (amount: number, userid_num: number) => {
+    let carrots: number;
+    if (Number(amount) === 1000) {
+      carrots = 850;
+    } else if (Number(amount) === 2000) {
+      carrots = 1700;
+    } else if (Number(amount) === 5000) {
+      carrots = 4800;
+    } else if (Number(amount) === 10000) {
+      carrots = 10000;
+    }
+    const userInfo = await db
+      .update(users)
+      .set({ carrot: sql`${users.carrot} + ${carrots}` })
+      .where(eq(users.userid_num, userid_num))
+      .returning();
+
+    const userAccount = await db
+      .insert(account)
+      .values({
+        transaction_description: 'charge/carrot',
+        transaction_type: 'carrot/deposit',
+        transaction_amount: carrots,
+        status: false,
+        userid_num: userid_num,
+      })
+      .returning();
+    return { userInfo, userAccount };
   };
 
   async rank() {
@@ -336,5 +414,45 @@ export class UserService {
     const myRank = findMe + 1;
 
     return myRank;
+  }
+
+  async requestWithdraw(userid_num: number, change: any) {
+    const { money, bank_num, bank_name, name } = change;
+    // 유저 정보 확인
+    const checkMoney = await db
+      .select({ carrot: users.carrot, name: users.name })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    if (checkMoney[0].name === name) {
+      let myAccountMoney = checkMoney[0].carrot;
+      // 1만원 이상 출금 가능
+      if (myAccountMoney >= 10000) {
+        const withdraw = await db
+          .update(users)
+          .set({ carrot: sql`${users.carrot} - ${money}` })
+          .where(eq(users.userid_num, userid_num))
+          .returning();
+
+        const account_insert = await db
+          .insert(account)
+          .values({
+            transaction_amount: money,
+            transaction_description: 'money/withdarw',
+            transaction_type: 'carrot/withdraw',
+            status: false,
+            account_info: [bank_name, bank_num],
+            userid_num: userid_num,
+          })
+          .returning();
+
+        return { withdraw, account_insert, msg: '출금 신청 완료' };
+      } else {
+        return { msg: '캐럿이 부족합니다.' };
+      }
+    } else {
+      return {
+        msg: '예금주 명이 계정과 일치하지 않습니다. 다시 한번 확인해 주세요',
+      };
+    }
   }
 }

@@ -19,7 +19,7 @@ export const users = pgTable('users', {
   nickname: varchar('nickname', { length: 50 }),
   profile_img: varchar('profile_img', { length: 200 }),
   score_num: integer('score_num').default(0),
-  money: integer('money').default(0),
+  carrot: integer('carrot').default(0),
   created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updated_at: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   refreshToken: text('refreshToken').array(),

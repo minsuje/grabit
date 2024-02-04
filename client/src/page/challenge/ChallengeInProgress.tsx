@@ -176,7 +176,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, [challengeDetail]);
+  }, []);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
@@ -237,7 +237,6 @@ function ChallengeInProgress() {
         {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
       </h3>
 
-
       {loading && (
         <>
           <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
@@ -277,13 +276,11 @@ function ChallengeInProgress() {
               />
             </CircularProgressbarWithChildren>
             <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
-
           </div>
 
           <div className="progress grid grid-cols-3 gap-6 p-2">
             {tab.map((nickname, index) => {
               if (index === 0) return null;
-
 
               return (
                 <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
@@ -316,7 +313,6 @@ function ChallengeInProgress() {
                   <span className="text-center text-lg font-semibold text-stone-600">
                     {UrlGroup[index].length}회 성공
                   </span>
-
                 </div>
               );
             })}
