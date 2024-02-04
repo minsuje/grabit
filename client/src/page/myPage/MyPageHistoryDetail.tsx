@@ -13,6 +13,7 @@ export default function ListComponent3() {
   const userIdNum = Number(localStorage.getItem('userid_num')); // 문자열을 숫자로 변환
   const [challengeDetail, setChallengeDetail] = useState<ChallengeDetail>();
   const [record, setRecord] = useState<ChallengeDetail>();
+  const [opponent, setOpponent] = useState<Array<{ nickname: string }>>([]);
 
   interface ChallengeDetail {
     challenge_name: string;
@@ -23,6 +24,7 @@ export default function ListComponent3() {
     authentication_end_date: string;
     win: string;
     lose: string;
+    nickname: string;
   }
 
   useEffect(() => {
@@ -39,9 +41,13 @@ export default function ListComponent3() {
         console.log(response);
         const detail = response.data.history.find((item: any) => item.challenge_id.toString() === userid_num);
         setChallengeDetail(detail);
-
         setRecord(response.data);
-        console.log('>>>>>>>>>', record);
+
+        // 모든 상대방 정보 추출
+        const allOpponents = detail.challenger_userid_num
+          .filter((challenger: any) => challenger.userid_num !== userIdNum)
+          .map((challenger: any) => ({ nickname: challenger.nickname }));
+        setOpponent(allOpponents);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
@@ -55,6 +61,7 @@ export default function ListComponent3() {
     ? format(new Date(challengeDetail.authentication_end_date), 'yyyy-MM-dd')
     : '';
 
+  console.log(opponent);
   return (
     <div>
       <div>
@@ -70,7 +77,7 @@ export default function ListComponent3() {
           </div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">{challengeDetail?.goal_money}원</div>
+          <div className="mr-3 mt-2 text-black">{}원</div>
           <div className="mt-2 text-black">
             <Badge variant="default">
               {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}
@@ -82,8 +89,11 @@ export default function ListComponent3() {
         </div>
       </div>
       <div>
-        <h1>상대</h1>
-        <p>admin</p>
+        <h1>상대닉네임</h1>
+        {/* 모든 상대방의 닉네임을 출력 */}
+        {opponent.map((opponent, index) => (
+          <p key={index}>{opponent.nickname}</p>
+        ))}
       </div>
       {/* <div>
         <h1>날짜</h1>
