@@ -4,6 +4,8 @@ import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ListComponent3 } from '@/components/ComponentSeong';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 interface UserInfo {
   nickname: string;
@@ -40,6 +42,7 @@ interface Friend {
 }
 
 export default function MyPage() {
+  const dispatch = useDispatch();
   const { userid_num } = useParams();
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
@@ -52,13 +55,16 @@ export default function MyPage() {
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
+    dispatch(setHeaderInfo({ title: '마이페이지', backPath: `/main` }));
+  }, [dispatch]);
+
+  useEffect(() => {
     // 프로필 이미지 요청
     privateApi
       .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log(response);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -93,8 +99,6 @@ export default function MyPage() {
       });
   }, [userid_num]);
 
-  
-
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
@@ -127,16 +131,15 @@ export default function MyPage() {
       });
   }, []);
 
-  // 친구 요청
+  // 내 친구목록 불러오기
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+      .get(`http://localhost:3000/friend/${userid_num}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);
-        console.log('친구요청>>>>>>>', response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);

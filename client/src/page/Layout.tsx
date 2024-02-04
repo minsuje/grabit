@@ -10,6 +10,7 @@ function Layout() {
   // const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
   // const isLoggedIn = true;
   const accessToken = localStorage.getItem('accessToken');
+  // console.log('Layout accessToken >>>>>', accessToken);
 
   return accessToken ? (
     <div>

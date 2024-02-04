@@ -7,21 +7,19 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function MyPageFriendList({ friends }: any) {
-  const [ranking, setRanking] = useState<string>('');
   useEffect(() => {
     // 랭킹 요청
     privateApi
       .get(`http://localhost:3000/myRanking`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
-      .then((response) => {
-        setRanking(response.data);
-      })
+      .then((response) => {})
       .catch((error) => {
         console.error(' 랭킹 axios 오류', error);
       });
   }, []);
 
+  console.log(',friends', friends);
   const tierImages = {
     silver: '/silverTear.png',
     platinum: '/platinumTear.png',
@@ -46,6 +44,8 @@ export default function MyPageFriendList({ friends }: any) {
   const tierImageSrc = getTierImage(friends.score_num);
   const tierName = getTierName(friends.score_num);
 
+
+  
   return (
     <div>
       <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">
@@ -63,7 +63,7 @@ export default function MyPageFriendList({ friends }: any) {
 
           <div className="mr-5 flex w-[100%] flex-col text-end">
             <p>{tierName}</p>
-            <p className="text-xs text-gray-400">{ranking}위</p>
+            <p className="text-xs text-gray-400">{friends.rank}위</p>
           </div>
 
           {/* 점수별로 띄워주는 이미지를 다르게 하기 */}

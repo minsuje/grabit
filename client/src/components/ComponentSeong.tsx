@@ -87,7 +87,7 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
             <div className="font-bold text-black">{item.challenge_name}</div>
             <div className="text-gray-400">
               {format(new Date(item.authentication_start_date), 'yyyy-MM-dd')}~
-              {/* {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')} */}
+              {format(new Date(item.authentication_end_date), 'yyyy-MM-dd')}
             </div>
           </div>
           <div className="flex ">

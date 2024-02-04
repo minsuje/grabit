@@ -3,6 +3,8 @@ import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+
 interface FriendDetail {
   id: string;
   nickname: string;
@@ -22,7 +24,10 @@ export default function MyPageFriendDetail() {
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [proFileImg, setProFileImg] = useState();
 
-  console.log(userid);
+  const navigate = useNavigate();
+  const userid_num = localStorage.getItem('userid_num');
+
+  console.log(userid_num);
 
   useEffect(() => {
     privateApi
@@ -61,18 +66,39 @@ export default function MyPageFriendDetail() {
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
-  useEffect(() => {
-    privateApi
-      .get(`http://localhost:3000/friend/2`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+  // useEffect(() => {
+  //   privateApi
+  //     .get(`http://localhost:3000/friend/${userid_num}`, {
+  //       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+  //     })
+  //     .then((response) => {
+  //       console.log('mypageDate>>>>>>>>>>???', response);
+  //     })
+  //     .catch((error) => {
+  //       console.error('친구 목록 axios 오류???', error);
+  //     });
+  // }, []);
+
+  const handleDeleteFriend = () => {
+    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
+    // privateApi
+    //   .delete(`http://localhost:3000/friend/${userid_num}`, {
+    //     headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken'), data: userid },
+    //   })
+    privateApi({
+      method: 'DELETE',
+      url: `http://localhost:3000/friend/${userid_num}`,
+      data: { other_userid: userid },
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+    })
       .then((response) => {
-        console.log('mypageDate>>>>>>>>>>???', response);
+        console.log('친구 삭제 성공:', response);
+        navigate(`/mypage/friend/detail/${userid_num}`);
       })
       .catch((error) => {
-        console.error('친구 목록 axios 오류???', error);
+        console.error('친구 끊기 에러:', error);
       });
-  }, []);
+  };
 
   console.log('>>>>>', win);
   console.log(friendDetail);
@@ -119,7 +145,7 @@ export default function MyPageFriendDetail() {
         </div>
       </div>
       <div>
-        <Button>친구 끊기</Button>
+        <Button onClick={handleDeleteFriend}>친구 끊기</Button>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import { HotChallenge, Ranking } from '@/components/Component0117';
+import { HotChallenge } from '@/components/Component0117';
+import MainRanking from '@/components/MainRanking';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -9,48 +10,41 @@ import { Challenge } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
-import Countdown from '@/components/Countdown';
-import FlipCountdown from '@rumess/react-flip-countdown';
+import OpenAI from 'openai';
+import { Input } from '@/components/ui/input';
 
 export default function Main() {
+  console.log('main mounted !!!');
   const dispatch = useDispatch();
-
-  const accessToken = localStorage.getItem('accessToken');
-  const refreshToken = localStorage.getItem('refreshToken');
-  // console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
-  // console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
-
-  async function refreshAccessToken() {
-    // console.log('🚀 ~ refreshAccessToken ~ refreshToken:', refreshToken);
-    // console.log('🚀 ~ refreshAccessToken ~ accessToken:', accessToken);
-
-    await privateApi(
-      // .get('http://localhost:3000/refresh', {
-      //   withCredentials: true,
-      //   headers: { Authorization: `Bearer ${accessToken}` },
-      // })
-      {
-        method: 'POST',
-        url: 'http://localhost:3000/refresh',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    )
-      // .get('http://localhost:3000/refresh', { withCredentials: true })
-      .then((response) => {
-        console.log('Refresh token success', response);
-      })
-      .catch((error) => {
-        console.error('Refresh token error', error);
-      });
-  }
 
   const [userid_num, setUserid_num] = useState<number>(0);
   const [ingMyChallenge, setIngMyChallenge] = useState<Challenge[]>([]);
   const [endedMyChallenge, setEndedMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
+  const [gptInput, setGptInput] = useState<string>('');
+  const [gptAnswer, setGptAnswer] = useState<string>();
+  const [imageBase64, setImageBase64] = useState('');
+
+  // Function to convert image to base64
+  const convertToBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setImageBase64(reader.result as string);
+    };
+    reader.onerror = (error) => {
+      console.error('Error converting image to Base64', error);
+    };
+  };
+
+  // Handle file input change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      convertToBase64(file);
+    }
+  };
 
   useEffect(() => {
     setUserid_num(Number(localStorage.getItem('userid_num')));
@@ -60,19 +54,20 @@ export default function Main() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('dailyMission >>>>>>>', response.data);
+        // console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission_name[0].mission_content);
         setCompleted(response.data.completed);
       })
       .catch((error) => {
         console.error('main에서 일일미션 오류발생 :', error);
       });
+
     privateApi
       .get('http://3.34.122.205:3000/challengeList', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('challengeList >>>>>>>>>', response.data);
+        // console.log('challengeList >>>>>>>>>', response.data);
         setIngMyChallenge(response.data.ingMyChallenge);
         setEndedMyChallenge(response.data.endedMyChallenge);
       })
@@ -80,29 +75,50 @@ export default function Main() {
         console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
       });
 
-    console.log('dailyMission', dailymission);
-    console.log('completed', completed);
-    console.log('ingMyChallenge', ingMyChallenge);
+    // console.log('dailyMission', dailymission);
+    // console.log('completed', completed);
+    // console.log('ingMyChallenge', ingMyChallenge);
   }, [userid_num]);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
 
-  const getCurrentDateFormatted = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
+  const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_KEY,
+    dangerouslyAllowBrowser: true,
+  });
 
-    return `${year}-${month}-${day + 1} 0:0:0`;
-  };
+  async function openaiFunction() {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4-vision-preview',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: `${gptInput} 라는 주제에서 키워드를 추출해서, 이미지에 해당 키워드가 존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
+            },
+            {
+              type: 'image_url',
+              image_url: {
+                url: imageBase64,
+              },
+            },
+          ],
+        },
+      ],
+    });
+    // console.log('openai >>>>>>>>>>', response.choices[0]);
+    setGptAnswer(response?.choices[0].message.content);
+  }
 
   return (
     <div className="my-8 flex flex-col gap-16">
       <div className="ranking flex flex-col gap-8">
         <h1 className="text-grabit-800">랭킹</h1>
-        <Ranking />
+        <MainRanking />
       </div>
 
       <div className="today-mission flex flex-col gap-6">
@@ -111,22 +127,10 @@ export default function Main() {
           <Link to={`/challengeDaily/${dailymission}`} className="text-black no-underline">
             <div>
               <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
+                <div className="counter w-4"></div>
                 <div className="flex justify-between gap-2">
                   <h2 className="font-['JalnanGothic'] text-grabit-600">{dailymission}</h2>
-                  <p className=" text-grabit-400">
-                    <FlipCountdown
-                      // endAt={'2024-12-12 01:2658'}
-                      endAt={getCurrentDateFormatted()}
-                      size="extra-small"
-                      hideYear
-                      hideMonth
-                      hideDay
-                      titlePosition="bottom"
-                      hourTitle="시간"
-                      minuteTitle="분"
-                      secondTitle="초"
-                    />
-                  </p>
+                  <p className=" text-grabit-400"></p>
                 </div>
                 <p className="font-['JalnanGothic'] text-2xl font-bold text-grabit-600">10P</p>
               </div>
@@ -148,10 +152,14 @@ export default function Main() {
       {endedMyChallenge.length !== 0 && (
         <>
           <h1>완료된 챌린지</h1>
-          {endedMyChallenge.map((challenge: Challenge) => {
+          {endedMyChallenge.map((challenge: Challenge, index) => {
             return (
-              <Link to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
-                <div key={challenge.challenge_id}>
+              <Link
+                key={index}
+                to={`/challengeInProgress/${challenge.challenge_id}`}
+                className="text-black no-underline"
+              >
+                <div>
                   <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
                     <div className="flex justify-between">
                       <p>{challenge.challenge_name}</p>
@@ -180,11 +188,9 @@ export default function Main() {
         ) : (
           ingMyChallenge.map((challenge: Challenge, idx: number) => {
             return (
-              <>
-                <Link to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
-                  <ListComponent1 key={idx} challenge={challenge} />
-                </Link>
-              </>
+              <Link key={idx} to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
+                <ListComponent1 challenge={challenge} />
+              </Link>
             );
           })
         )}
@@ -218,6 +224,15 @@ export default function Main() {
         <Link to={`/mypage/${userid_num}`}>
           <Button>마이페이지 </Button>
         </Link>
+
+        <Input onChange={(e) => setGptInput(e.target.value)} />
+
+        <input type="file" capture="environment" onChange={handleFileChange} />
+
+        <Button onClick={openaiFunction} className="bg-grabit-400 p-4">
+          OPENAI
+        </Button>
+        <p>{gptAnswer}</p>
       </div>
     </div>
   );

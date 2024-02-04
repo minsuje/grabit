@@ -4,6 +4,8 @@ import MyPageFriendList from '../../components/MyPageFriendList';
 import { Input } from '@/components/ui/input';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 // 친구 객체를 위한 인터페이스 정의
 interface Friend {
@@ -12,12 +14,18 @@ interface Friend {
 }
 
 export default function Friend() {
+  const dispatch = useDispatch();
   const { userid_num } = useParams();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
 
-  // 친구 정보 요청
+  // 내 친구 목록 불러오기
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '친구 목록', backPath: `/myPage/${localStorage.getItem('userid_num')}` }));
+  }, [dispatch]);
+
   useEffect(() => {
     privateApi
       .get(`http://localhost:3000/friend/${userid_num}`, {
@@ -26,7 +34,6 @@ export default function Friend() {
       .then((response) => {
         setFriends(response.data.friends_info);
         console.log('>>>>>친구계정', response);
-        console.log('>>>>>>>친구???계정', response.data.friends_info[0].userid);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기? axios 오류', error);
@@ -45,9 +52,9 @@ export default function Friend() {
         <h1>친구목록</h1>
       </div>
       <div>
-        <Input placeholder="검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <Input placeholder="닉네임을 입력해주세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         {/* 각각의 친구목록 상세 페이지 */}
-        <Link to="/friend/new">
+        <Link to="/friend/new/">
           <Button>친구 추가</Button>
         </Link>
       </div>

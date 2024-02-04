@@ -103,26 +103,43 @@ export class profileImgMiddleware implements NestMiddleware {
     }
     // '/friend' 경로로 요청 온 경우
     else if (req.baseUrl.split('/')[1] === 'friend') {
-      console.log('else if /friend', req.baseUrl.split('/')[1]);
+      // 내 친구 목록 조회
+      console.log(
+        'else if /friend originalUrl > ',
+        req.originalUrl.split('/')[2],
+      );
+
       let friends = [];
       // 양방향으로 친구 관계 확인
       const friends1 = await db
-        .select({ friends_num: friend.other_userid_num })
+        .select({
+          friends_num: friend.other_userid_num,
+          is_friend: friend.is_friend,
+        })
         .from(friend)
-        .where(eq(friend.userid_num, Number(req.url.split('/')[1])));
+        .where(eq(friend.userid_num, Number(req.originalUrl.split('/')[2])));
       const friends2 = await db
-        .select({ friends_num: friend.userid_num })
+        .select({ friends_num: friend.userid_num, is_friend: friend.is_friend })
         .from(friend)
-        .where(eq(friend.other_userid_num, Number(req.url.split('/')[1])));
+        .where(
+          eq(friend.other_userid_num, Number(req.originalUrl.split('/')[2])),
+        );
       for (let i = 0; i < friends1.length; i++) {
-        friends.push(friends1[i].friends_num);
+        friends.push({
+          userid_num: friends1[i].friends_num,
+          is_friend: friends1[i].is_friend,
+        });
       }
       for (let i = 0; i < friends2.length; i++) {
-        friends.push(friends2[i].friends_num);
+        friends.push({
+          userid_num: friends2[i].friends_num,
+          is_friend: friends2[i].is_friend,
+        });
       }
+
       let friend_info = [];
       for (let i = 0; i < friends.length; i++) {
-        let friend = await db
+        let friend: any = await db
           .select({
             userid: users.userid,
             userid_num: users.userid_num,
@@ -131,37 +148,54 @@ export class profileImgMiddleware implements NestMiddleware {
             score_num: users.score_num,
           })
           .from(users)
-          .where(eq(users.userid_num, friends[i]));
-        friend_info.push(friend[0]);
+          .where(eq(users.userid_num, friends[i].userid_num));
+
+        friend = friend[0];
+        friend = {
+          ...friend,
+          is_friend: friends[i].is_friend,
+        };
+
+        friend_info.push(friend);
       }
 
-      let friends_info = [];
-      for (let i = 0; i < friends.length; i++) {
+      const allRank = await db
+        .select({
+          userid_num: users.userid_num,
+          score_num: users.score_num,
+        })
+        .from(users)
+        .orderBy(desc(users.score_num));
+
+      for (let i = 0; i < friend_info.length; i++) {
+        // 몇 번 째 인덱스에 있는지
+        const findMe = allRank.findIndex(
+          (rank) => rank.userid_num === friend_info[i].userid_num,
+        );
+
+        const myRank = findMe + 1;
         if (friend_info[i].profile_img) {
           const command = new GetObjectCommand({
             Bucket: process.env.AWS_S3_BUCKET,
             Key: friend_info[i].profile_img,
           });
           const url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          friends_info.push({
-            userid: friend_info[i].userid,
-            userid_num: friend_info[i].userid_num,
-            nickname: friend_info[i].nickname,
+          friend_info[i] = {
+            ...friend_info[i],
             profile_img: url,
-            score_num: friend_info[i].score_num,
-          });
+            rank: myRank,
+          };
         } else {
-          friends_info.push({
-            userid: friend_info[i].userid,
-            userid_num: friend_info[i].userid_num,
-            nickname: friend_info[i].nickname,
+          friend_info[i] = {
+            ...friend_info[i],
             profile_img: null,
-            score_num: friend_info[i].score_num,
-          });
+            rank: myRank,
+          };
         }
       }
-      // console.log('friends_info > ', friends_info);
-      req['file'] = friends_info;
+
+      console.log('friends_info > ', friend_info);
+      req['file'] = friend_info;
     }
     // '/myPage', '/profileUpload' 경로로 요청 온 경우
     else {

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { Friend } from '@/types/types';
+import type { FriendSelect } from '@/types/types';
 
 interface FriendState {
-  selectedFriends: Friend[];
+  selectedFriends: FriendSelect[];
 }
 
 const initialState: FriendState = {
@@ -13,14 +13,14 @@ export const friendSlice = createSlice({
   name: 'friend',
   initialState,
   reducers: {
-    addFriend: (state, action: PayloadAction<Friend>) => {
-      const friendExists = state.selectedFriends.some((friend) => friend.id === action.payload.id);
+    addFriend: (state, action: PayloadAction<FriendSelect>) => {
+      const friendExists = state.selectedFriends.some((friend) => friend.userid_num === action.payload.userid_num);
       if (!friendExists) {
         state.selectedFriends.push(action.payload);
       }
     },
-    removeFriend: (state, action: PayloadAction<Friend>) => {
-      state.selectedFriends = state.selectedFriends.filter((friend) => friend.id !== action.payload.id);
+    removeFriend: (state, action: PayloadAction<FriendSelect>) => {
+      state.selectedFriends = state.selectedFriends.filter((friend) => friend.userid_num !== action.payload.userid_num);
     },
   },
 });
