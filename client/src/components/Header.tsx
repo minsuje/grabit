@@ -44,8 +44,8 @@ function Header() {
     <header
       className={
         scrollPosition > 50
-          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white/50 px-4 py-3 backdrop-blur-md transition-all'
-          : 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-white px-4 py-3 transition-all'
+          ? 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-grabit-50/50 px-4 py-3 backdrop-blur-md'
+          : 'fixed left-0 right-0 top-0 z-[999] flex items-center justify-between bg-grabit-50 px-4 py-3'
       }
     >
       <div onClick={() => navigate(backPath)} className="flex p-2">
@@ -53,7 +53,7 @@ function Header() {
       </div>
 
       {scrollPosition > 50 ? (
-        <h1 className="text-grabit-700 absolute left-0 right-0 z-[-1] w-full text-center text-lg transition-all">
+        <h1 className="absolute left-0 right-0 z-[-1] w-full text-center text-lg text-grabit-700 transition-all">
           {title}
         </h1>
       ) : null}

@@ -58,7 +58,6 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log(response);
         setProfileImg(response.data.file);
       })
       .catch((error) => {
@@ -128,13 +127,12 @@ export default function MyPage() {
   // 친구 요청
   useEffect(() => {
     privateApi
-      .get(`http://3.34.122.205:3000/friend/${userid_num}`, {
+      .get(`http://localhost:3000/friend/${userid_num}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);
-        console.log('친구요청>>>>>>>', response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기 axios 오류', error);
@@ -191,11 +189,14 @@ export default function MyPage() {
       </div>
       <br />
       <br />
-      <div className="user-list rgap-4 flex flex-col">
+      <div className="user-list rga-4 flex flex-col">
         {friends.map((friend, index) => (
           <div className="flex items-center gap-2" key={index}>
             <Avatar>
-              <AvatarImage src={friend.profile_img} alt={friend.nickname} />
+              <AvatarImage
+                src={friend.profile_img ? friend.profile_img : '/grabit_profile.png'}
+                alt={friend.nickname}
+              />
               <AvatarFallback></AvatarFallback>
             </Avatar>
             <span>{friend.nickname}</span>

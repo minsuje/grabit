@@ -126,22 +126,27 @@ export class ChallengeController {
   async postChallengeDetail(
     @Param('challenge_id') challenge_id: number,
     @Body() winner,
-    @Req() req: Request,
+    @Req() request: Request,
+    @Req() req,
   ) {
     // const { winner_user, total_money } = winner;
-    const userInfo = req.headers['authorization'].split(' ')[1];
+    const userInfo = request.headers['authorization'].split(' ')[1];
 
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
 
     const userid_num = decodedUserInfo.userid_num;
+    const challengerInfo = req.file;
+
+    console.log('controller postChallengeDetail >  ', req.file);
 
     // this.ChallengeService.challengeScore(winner);
     return this.ChallengeService.challengeWinner(
       winner,
       challenge_id,
       userid_num,
+      challengerInfo,
     );
   }
 

@@ -3,14 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import axios, { privateApi } from '@/api/axios';
-import { users } from '@/types/types';
+import { privateApi } from '@/api/axios';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ChallengeProp, Challenge } from '@/types/types';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { ListComponent1 } from './ComponentSeong';
-import { ToggleGroupDemo } from './ToggleGroupSingle';
 
 function CreateChallenge() {
   return (
@@ -158,41 +155,6 @@ function HotChallenge() {
   );
 }
 
-function Ranking() {
-  const [ranking, setRanking] = useState<users[]>([]);
-  useEffect(() => {
-    {
-      console.log('ranking component 실행');
-      axios
-        .get('http://3.34.122.205:3000/Ranking', {
-          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-        })
-        .then((response) => {
-          console.log('랭킹 axios');
-          console.log('ranking axios response', response);
-          setRanking(response.data);
-        })
-        .catch((error) => {
-          console.error('ranking component에서 axios 에러', error);
-        });
-    }
-  }, []);
-  return (
-    <div className="flex p-2 text-center text-grabit-700">
-      {ranking?.map((rank: users, idx) => {
-        return (
-          <div key={idx} className="flex w-full flex-col items-center justify-center gap-2 font-['JalnanGothic']">
-            <span className="w-full text-2xl font-bold">{idx + 1}위</span>
-            <span className="w-full text-xl font-bold">{rank.nickname}</span>
-            <span className="animate-text z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-bold text-transparent">
-              {rank.score_num}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
@@ -211,4 +173,4 @@ function ListComponentWithPeriod({ challenge }: ChallengeProp) {
     </div>
   );
 }
-export { CreateChallenge, Tab, Record, HotChallenge, Ranking, ListComponentWithPeriod };
+export { CreateChallenge, Tab, Record, HotChallenge, ListComponentWithPeriod };

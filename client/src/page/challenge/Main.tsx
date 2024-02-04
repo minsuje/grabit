@@ -1,4 +1,5 @@
-import { HotChallenge, Ranking } from '@/components/Component0117';
+import { HotChallenge } from '@/components/Component0117';
+import MainRanking from '@/components/MainRanking';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -11,6 +12,9 @@ import { setHeaderInfo } from '@/store/headerSlice';
 
 import Countdown from '@/components/Countdown';
 import FlipCountdown from '@rumess/react-flip-countdown';
+
+import OpenAI from 'openai';
+import { Input } from '@/components/ui/input';
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -51,6 +55,8 @@ export default function Main() {
   const [endedMyChallenge, setEndedMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
+  const [gptInput, setGptInput] = useState<string>('');
+  const [gptAnswer, setGptAnswer] = useState<string>();
 
   useEffect(() => {
     setUserid_num(Number(localStorage.getItem('userid_num')));
@@ -98,11 +104,52 @@ export default function Main() {
     return `${year}-${month}-${day + 1} 0:0:0`;
   };
 
+  const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
+  async function openaiFunction() {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4-vision-preview',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: '이 사진에서 하늘이 보여? true 아니면 false로 대답해줘' },
+            {
+              type: 'image_url',
+              image_url: {
+                url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg',
+              },
+            },
+          ],
+        },
+      ],
+    });
+    console.log('openai >>>>>>>>>>', response.choices[0]);
+  }
+
+  // async function openaiFunction() {
+  //   const completion = await openai.chat.completions.create({
+  //     messages: [
+  //       { role: 'system', content: '너는 도움이 되는 조수야' },
+  //       { role: 'user', content: '좋은 습관을 키우려면 어떻게 해야할까?' },
+  //       { role: 'assistant', content: '뭔가를 꾸준히 해보세요' },
+  //       { role: 'user', content: gptInput },
+  //     ],
+  //     model: 'gpt-3.5-turbo',
+  //   });
+
+  //   console.log('openai >>>>>>>>>>', completion.choices[0]);
+  //   setGptAnswer(completion.choices[0].message.content);
+  // }
+
   return (
     <div className="my-8 flex flex-col gap-16">
       <div className="ranking flex flex-col gap-8">
         <h1 className="text-grabit-800">랭킹</h1>
-        <Ranking />
+        <MainRanking />
       </div>
 
       <div className="today-mission flex flex-col gap-6">
@@ -111,22 +158,22 @@ export default function Main() {
           <Link to={`/challengeDaily/${dailymission}`} className="text-black no-underline">
             <div>
               <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
+                <div className="counter w-4">
+                  <FlipCountdown
+                    endAt={getCurrentDateFormatted()}
+                    size="medium"
+                    hideYear
+                    hideMonth
+                    hideDay
+                    titlePosition="bottom"
+                    hourTitle="시간"
+                    minuteTitle="분"
+                    secondTitle="초"
+                  />
+                </div>
                 <div className="flex justify-between gap-2">
                   <h2 className="font-['JalnanGothic'] text-grabit-600">{dailymission}</h2>
-                  <p className=" text-grabit-400">
-                    <FlipCountdown
-                      // endAt={'2024-12-12 01:2658'}
-                      endAt={getCurrentDateFormatted()}
-                      size="extra-small"
-                      hideYear
-                      hideMonth
-                      hideDay
-                      titlePosition="bottom"
-                      hourTitle="시간"
-                      minuteTitle="분"
-                      secondTitle="초"
-                    />
-                  </p>
+                  <p className=" text-grabit-400"></p>
                 </div>
                 <p className="font-['JalnanGothic'] text-2xl font-bold text-grabit-600">10P</p>
               </div>
@@ -218,6 +265,13 @@ export default function Main() {
         <Link to={`/mypage/${userid_num}`}>
           <Button>마이페이지 </Button>
         </Link>
+
+        <Input onChange={(e) => setGptInput(e.target.value)} />
+
+        <Button onClick={openaiFunction} className="bg-grabit-400 p-4">
+          OPENAI
+        </Button>
+        <p>{gptAnswer}</p>
       </div>
     </div>
   );
