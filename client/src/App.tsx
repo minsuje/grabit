@@ -101,7 +101,7 @@ function App() {
 
             <Route path="/friend/new" element={<FriendAddition />} />
           </Route>
-          ss
+
           {/* 테스트 용 */}
           <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
           <Route path="/checkout" element={<CheckoutPages price={price} />} />
