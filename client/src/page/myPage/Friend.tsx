@@ -47,7 +47,7 @@ export default function Friend() {
       <div>
         <Input placeholder="검색" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
         {/* 각각의 친구목록 상세 페이지 */}
-        <Link to="/friend/new">
+        <Link to="/friend/new/">
           <Button>친구 추가</Button>
         </Link>
       </div>

@@ -93,8 +93,7 @@ export default function MyPageFriendDetail() {
     })
       .then((response) => {
         console.log('친구 삭제 성공:', response);
-
-        // navigate(`/mypage/friend/detail/${userid_num}`);
+        navigate(`/mypage/friend/detail/${userid_num}`);
       })
       .catch((error) => {
         console.error('친구 끊기 에러:', error);

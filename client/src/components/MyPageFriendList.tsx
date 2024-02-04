@@ -44,6 +44,8 @@ export default function MyPageFriendList({ friends }: any) {
   const tierImageSrc = getTierImage(friends.score_num);
   const tierName = getTierName(friends.score_num);
 
+
+  
   return (
     <div>
       <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">
