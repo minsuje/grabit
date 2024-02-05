@@ -23,6 +23,10 @@ import { stringify } from 'querystring';
 import { db } from 'db/db';
 import { users } from '../user/schema';
 import { eq } from 'drizzle-orm';
+import { get } from 'http';
+import axios from 'axios';
+
+let data;
 
 @Controller('/')
 export class AuthController {
@@ -30,6 +34,7 @@ export class AuthController {
     private authService: AuthService,
     private jwtService: JwtService,
   ) {}
+
   @Post('login')
   @UseGuards(localGuard)
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
@@ -103,22 +108,42 @@ export class AuthController {
     );
 
     res.cookie('accessToken', loginToken, {
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       // maxAge: 10 * 1000,
       secure: true,
       sameSite: 'none',
     });
     res.cookie('refreshToken', loginRefreshToken, {
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       // maxAge: 40 * 1000,
       secure: true,
       sameSite: 'none',
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
-    console.log('set cookie?????');
-    res.redirect('http://localhost:5173');
+
+    data = {
+      accessToken: loginToken,
+      refreshToken: loginRefreshToken,
+      userid_num: id,
+      nickname: username,
+      name: username,
+    };
+    res.redirect('http://localhost:5173/auth/kakao/login');
+
+    // const datasend = await axios.post(
+    //   'http://localhost:3000/auth/kakao/redirect',
+    //   {
+    //     data: {
+    //       accessToken: loginToken,
+    //       refreshToken: loginRefreshToken,
+    //       userid_num: id,
+    //       nickname: username,
+    //       name: username,
+    //     },
+    //   },
+    // );
 
     // console.log('여기는?');
 
@@ -129,6 +154,11 @@ export class AuthController {
     //   nickname: username,
     //   name: username,
     // });
+  }
+
+  @Get('/auth/kakao/redirect')
+  async redirect(@Req() req: Request, @Res() res) {
+    res.send(data);
   }
 
   @UseGuards(JwtAuthGuard)

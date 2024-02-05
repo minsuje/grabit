@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Body, Injectable, Req, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/create-auth-dto';
 import { users } from '../user/schema';
 import { db } from 'db/db';
@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import { UserService } from '../user/user.service';
+import { Request } from 'express';
 dotenv.config();
 
 interface IPayload {

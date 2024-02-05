@@ -9,7 +9,7 @@ const cookies = new Cookies();
 
 function KakaoAuth() {
   const navigate = useNavigate();
-  // const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  const [accessTokenFetching, setAccessTokenFetching] = useState(false);
   const getCookie = (name: string) => {
     return cookies.get(name);
   };
@@ -19,12 +19,14 @@ function KakaoAuth() {
     if (accessTokenFetching) return; // Return early if fetching
 
     console.log('getAccessToken 호출');
+    console.log(getCookie("accessToken"));
 
     try {
       setAccessTokenFetching(true); // Set fetching to true
       
+      console.log("들어오긴 함?")
 
-      const response = await axios.post('http://localhost:5173/auth/kakao/', {
+      const response = await axios.get('http://localhost:3000/auth/kakao/redirect', {
         withCredentials: true,
       });
       console.log('response:', response);
@@ -39,12 +41,12 @@ function KakaoAuth() {
     }
 
 
-    const response = await axios.post(`http://localhost:3000/auth/kakao`, { withCredentials: true });
+    // const response = await axios.post(`http://localhost:3000/auth/kakao`, { withCredentials: true });
   };
 
-  // useEffect(() => {
-  //   getAccessToken();
-  // }, []);
+  useEffect(() => {
+    getAccessToken();
+  }, []);
 
   return <div>Loading...</div>;
 }
