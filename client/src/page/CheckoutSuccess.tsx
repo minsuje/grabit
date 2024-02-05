@@ -2,9 +2,10 @@
 import axios, { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function CheckoutSuccess() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const paymentKey = searchParams.get('paymentKey');
@@ -46,34 +47,40 @@ export default function CheckoutSuccess() {
     }).then((res) => {
       console.log('post 요청에 대한 > ', res.data);
     });
+  }
 
+  function handleNavigate() {
+    navigate('/mypage');
   }
 
   return (
-    <div className="wrapper h-screen w-full">
+    <div className="wrapper container h-screen w-full">
       {isConfirmed ? (
-        <div
-          className="flex-column align-center confirm-success w-100 max-w-540"
-          style={{
-            display: 'flex',
-          }}
-        >
-          <img src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" width="120" height="120" />
-          <h2 className="title">결제 완료</h2>
-          <div className="response-section w-100">
+        <div className="align-center confirm-success w-full flex-col items-center justify-center">
+          <div className="flex min-h-[400px] w-full flex-col items-center justify-center">
+            <img
+              src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png"
+              width="120"
+              height="120"
+              className="flex"
+            />
+            <h2 className="title flex">결제 완료</h2>
+          </div>
+          <div className="response-section absolute bottom-28 left-8 right-8 flex flex-col gap-2 ">
             <div className="flex justify-between">
-              <span className="response-label">결제 금액</span>
-              <span id="amount" className="response-text">
+              <span className="response-label text-stone-500">결제 금액</span>
+              <span id="amount" className="response-text font-bold text-stone-700 ">
                 {amount}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="response-label">주문번호</span>
-              <span id="orderId" className="response-text">
+              <span className="response-label text-stone-500">주문번호</span>
+              <span id="orderId" className="response-text font-bold text-stone-700 ">
                 {orderId}
               </span>
             </div>
           </div>
+          <Cta text={'마이페이지로'} onclick={handleNavigate} />
         </div>
       ) : (
         <div className="confirm-loading flex h-screen w-full flex-col items-center justify-center">
