@@ -49,7 +49,16 @@ export class AuthController {
       name,
       login_type,
       isLogin,
+      validate,
     } = tokens;
+
+    let none = 'true';
+
+    console.log('tokens>>>>>> ', tokens);
+
+    if (tokens === 'none') {
+      none = 'none';
+    }
 
     // console.log('login controller >>>>>>>>>.', req.user);
     await res.setHeader(
@@ -88,6 +97,8 @@ export class AuthController {
       name,
       login_type: login_type,
       isLogin,
+      validate,
+      none,
     });
 
     // return this.authService.loginUser(req.body);
