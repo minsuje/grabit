@@ -24,24 +24,29 @@ function KakaoAuth() {
     try {
       setAccessTokenFetching(true); // Set fetching to true
       
-      console.log("들어오긴 함?")
-
       const response = await axios.get('http://localhost:3000/auth/kakao/redirect', {
         withCredentials: true,
       });
       console.log('response:', response);
-      const accessToken = response.data;
-      console.log('accessToken:', accessToken);
+
+      const {accessToken, refreshToken, nickname, userid_num, login_type } = response.data
+
+      localStorage.setItem('accessToken', accessToken),
+      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('userid_num', userid_num);
+      localStorage.setItem('login_type', login_type);
+
 
       setAccessTokenFetching(false); // Reset fetching to false
-      navigate('/');
+
+
+
+      navigate('/main');
     } catch (error) {
       console.error('Error:', error);
       setAccessTokenFetching(false); // Reset fetching even in case of error
     }
-
-
-    // const response = await axios.post(`http://localhost:3000/auth/kakao`, { withCredentials: true });
   };
 
   useEffect(() => {
