@@ -5,6 +5,12 @@ import { Cron } from '@nestjs/schedule';
 import { arrayOverlaps, eq } from 'drizzle-orm';
 import { score, users } from '../user/schema';
 
+type MyObjectType = {
+  /* object structure */
+  title: string;
+  topic: string[];
+};
+
 @Injectable()
 export class DailyMissionService {
   getDailyMission = async (userid_num: number) => {
@@ -13,57 +19,40 @@ export class DailyMissionService {
     let topic: string[];
 
     let mission_content = [
-      '물 한잔 마시기',
-      '공부하기',
-      '책 읽기',
-      '스트레칭하기',
-      '양치하기',
-      '하늘 보기',
-      '청소하기',
-      '이불 정리하기',
-      '텀블러 챙기기',
-      '뉴스 보기',
-    ];
-    let random_index = Math.floor(Math.random() * mission_content.length);
-    let random_mission = mission_content[random_index];
-
-    switch (random_index) {
-      case 0:
-        topic = ['water', 'glass', 'cup'];
-        break;
-      case 1:
-        topic = ['book', 'study', 'desk', 'table'];
-        break;
-      case 2:
-        topic = ['book', 'read', 'desk', 'table', 'word'];
-        break;
-      case 3:
-        topic = ['person', 'people', 'relax', 'rest', 'stretching'];
-        break;
-      case 4:
-        topic = [
+      { title: '물 한잔 마시기', topic: ['water', 'glass', 'cup'] },
+      { title: '공부하기', topic: ['book', 'study', 'desk', 'table'] },
+      { title: '책 읽기', topic: ['book', 'read', 'desk', 'table', 'word'] },
+      {
+        title: '스트레칭하기',
+        topic: ['person', 'people', 'relax', 'rest', 'stretching'],
+      },
+      {
+        title: '양치하기',
+        topic: [
           'brush',
           'teeth',
           'teeth brush',
           'toothpaste',
           'bathroom',
           'mouse',
-        ];
-        break;
-      case 5:
-        topic = ['sky', 'cloud', 'blue'];
-        break;
-      case 6:
-        topic = ['brush', 'clean', 'cleaning', 'vacuum cleaner', 'cleaner'];
-        break;
-      case 7:
-        topic = ['clean', 'blanket', 'bedding', 'covers', 'blankets'];
-        break;
-      case 8:
-        topic = ['cup', 'tumbler', 'stainless', 'steel', 'bag'];
-        break;
-      case 9:
-        topic = [
+        ],
+      },
+      { title: '하늘 보기', topic: ['sky', 'cloud', 'blue'] },
+      {
+        title: '청소하기',
+        topic: ['clean', 'blanket', 'bedding', 'covers', 'blankets'],
+      },
+      {
+        title: '이불 정리하기',
+        topic: ['clean', 'blanket', 'bedding', 'covers', 'blankets'],
+      },
+      {
+        title: '텀블러 챙기기',
+        topic: ['cup', 'tumbler', 'stainless', 'steel', 'bag'],
+      },
+      {
+        title: '뉴스 보기',
+        topic: [
           'news',
           'TV',
           'television',
@@ -73,23 +62,18 @@ export class DailyMissionService {
           'blue screen',
           'people',
           'person',
-        ];
-        break;
-    }
-
-    // if ((random_index = 0)) {
-    //   topic = ['water', 'glass', 'cup'];
-    // } else if ((random_index = 1)) {
-    //   topic = ['book', 'study', 'desk', 'table'];
-    // } else if ((random_index = 2)) {
-    // }
+        ],
+      },
+    ];
+    let random_index = Math.floor(Math.random() * mission_content.length);
+    let random_mission: any = mission_content[random_index];
 
     //DB있는지 확인하기
     const checkDB = await db.select().from(dailyMission);
 
     // DB 만들기 > 없다면
     if (checkDB.length == 0) {
-      const createMission = await db
+      let createMission = await db
         .insert(dailyMission)
         .values({ mission_content: random_mission });
     }
@@ -98,6 +82,8 @@ export class DailyMissionService {
     const mission_name = await db
       .select({ mission_content: dailyMission.mission_content })
       .from(dailyMission);
+
+    console.log('미션 이름 >> ', mission_name);
 
     // 성공한 유저 확인
     const checkUser = await db
@@ -109,7 +95,9 @@ export class DailyMissionService {
         completed = 'success';
       }
     }
-    return { completed, mission_name, topic };
+
+    let mission = mission_name[0].mission_content;
+    return { completed, mission };
   };
 
   // @Cron을 사용하여 매일 23:59.59 에 초기화 실행
