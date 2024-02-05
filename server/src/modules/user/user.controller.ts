@@ -57,9 +57,11 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
+    console.log('userid_num type > ', userid_num);
 
     // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
+
     return this.userService.getMyPage(userid_num, file);
   }
 
@@ -142,16 +144,12 @@ export class UserController {
   @UseGuards(JwtService)
   @Get('/checkout/success')
   success(@Res() res: Response, @Req() req: Request, @Req() request) {
-    console.log('controller success');
-    console.log('/checkout/success res >>>>>>>>>', res.req.url);
-
     return res.send('success');
   }
 
   @UseGuards(JwtService)
   @Get('/ranking')
   async getRank() {
-    console.log('현재 랭킹');
     const rank = await this.userService.rank();
     return rank;
   }
