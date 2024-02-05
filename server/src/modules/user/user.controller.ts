@@ -92,6 +92,7 @@ export class UserController {
     const userid_num = decodedUserInfo.userid_num;
     const login_type = decodedUserInfo.login_type;
     const file = req.file;
+    console.log(userid_num);
     return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 
@@ -126,7 +127,7 @@ export class UserController {
   }
 
   @UseGuards(JwtService)
-  @Post('/updpateMoney')
+  @Post('/updateMoney')
   async updateMoney(@Body() body, @Req() request: Request) {
     const amount = body.amount;
     const userInfo = request.headers['authorization'].split(' ')[1];
