@@ -354,6 +354,6 @@ function ChallengeInProgress() {
     } else {
       return <Error403 />;
     }
-  else return <Error404 />;
+  else return;
 }
 export default ChallengeInProgress;

@@ -20,6 +20,7 @@ import { FriendSelect } from '@/types/types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 const schema = yup
   .object({
@@ -48,6 +49,7 @@ const schema = yup
   .required();
 
 function ChallengeCreate() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -188,33 +190,33 @@ function ChallengeCreate() {
     try {
       const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
-
-    const result = await privateApi({
-      method: 'POST',
-      url: 'http://52.79.228.200:3000/challengeCreate',
-      data: {
-        challenge_name: challengeName,
-        is_public: isPublic,
-        topic,
-        challenger_userid_num: friendId,
-        auth_keyword: authKeyword,
-        goal_money: goalMoney,
-        term: authTerm,
-        authentication_start_date: date ? date : null,
-        authentication_end_date: date ? addDays(date, term) : null,
-        authentication_start_time: authStart,
-        authentication_end_time: authEnd,
-      },
-    });
-    console.log(result);
-    if (result.data.msg) {
-      alert(result.data.msg);
-
-     
-    } }catch (error) {
+      const result = await privateApi({
+        method: 'POST',
+        url: 'http://52.79.228.200:3000/challengeCreate',
+        data: {
+          challenge_name: challengeName,
+          is_public: isPublic,
+          topic,
+          challenger_userid_num: friendId,
+          auth_keyword: authKeyword,
+          goal_money: goalMoney,
+          term: authTerm,
+          authentication_start_date: date ? date : null,
+          authentication_end_date: date ? addDays(date, term) : null,
+          authentication_start_time: authStart,
+          authentication_end_time: authEnd,
+        },
+      });
+      console.log(result);
+      if (result.data.msg) {
+        alert(result.data.msg);
+      } else {
+        alert('정상적으로 생성되었습니다.');
+        navigate('/challengeList');
+      }
+    } catch (error) {
       // 오류 처리 로직
       console.error('Challenge creation failed:', error);
-
     }
   }
 

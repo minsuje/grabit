@@ -52,6 +52,7 @@ import ScrollToTop from './components/ScrollTop';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedRootRoutes from './page/AnimatedRootRoutes';
 import TestKakao from './page/home/testKakao';
+import Error404 from './page/Error404';
 
 function AnimatedRoutes() {
   const [price, setPrice] = useState<number>(0);
@@ -108,6 +109,7 @@ function AnimatedRoutes() {
         </Route>
         <Route path="/checkout/success" element={<CheckoutSuccess />} />
         <Route path="/checkout/fail" element={<CheckoutFail />} />
+        <Route path={'*'} element={<Error404 />} />
       </Routes>
     </AnimatePresence>
   );
