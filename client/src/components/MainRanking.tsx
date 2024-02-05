@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import axios from '@/api/axios';
 import { users } from '@/types/types';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
-import { response } from 'express';
+import { motion, useMotionValue, animate } from 'framer-motion';
 
 export default function Ranking() {
   const [ranking, setRanking] = useState<users[]>([]);
   const [topScore, setTopScore] = useState<number>(0);
-  const [load, setLoad] = useState<boolean>(false);
+  // const [load, setLoad] = useState<boolean>(false);
 
   const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
+  // const rounded = useTransform(count, (latest) => Math.round(latest));
 
   useEffect(() => {
     const controls = animate(count, 100);
@@ -27,14 +26,14 @@ export default function Ranking() {
         .then((response) => {
           // console.log('랭킹 axios');
           // console.log('ranking axios response', response);
-          response.data?.sort((a, b) => b.score_num - a.score_num);
+          response.data?.sort((a: { score_num: number }, b: { score_num: number }) => b.score_num - a.score_num);
           const reorderedData = [response.data[1], response.data[0], response.data[2]];
 
           setRanking(reorderedData);
           console.log('ranking', ranking);
 
           setTopScore(response.data[0].score_num);
-          setLoad(true);
+          // setLoad(true);
         })
         .catch((error) => {
           console.error('ranking component에서 axios 에러', error);

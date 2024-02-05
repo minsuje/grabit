@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '@/store/store';
 import { Outlet, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
