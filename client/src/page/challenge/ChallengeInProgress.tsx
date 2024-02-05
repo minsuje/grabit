@@ -165,7 +165,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, []);
+  }, [challengeDetail.authentication_end_date]);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push
@@ -225,8 +225,8 @@ function ChallengeInProgress() {
         <div className="mt-4 flex flex-col gap-4">
           <div>
             <div className="title flex flex-col gap-1">
-              <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
-              <h3 className="text-center font-medium text-grabit-400">
+              <h1 className="text-grabit-700 text-center text-3xl">{challengeDetail?.challenge_name}</h1>
+              <h3 className="text-grabit-400 text-center font-medium">
                 {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
               </h3>
             </div>
@@ -235,7 +235,7 @@ function ChallengeInProgress() {
               <div className="absolute h-60 w-60 opacity-70">
                 <RiveComponent />
               </div>
-              <h2 className="font-['SUITE Variable'] z-10 flex animate-text flex-col bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-black text-grabit-600 text-transparent">
+              <h2 className="font-['SUITE Variable'] animate-text text-grabit-600 z-10 flex flex-col bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-black text-transparent">
                 {challengeDetail?.goal_money * challengers.length} <span className="text-xl">캐럿</span>
               </h2>
             </div>
@@ -267,7 +267,7 @@ function ChallengeInProgress() {
                 />
               </CircularProgressbarWithChildren>
               <div className="flex flex-col items-center justify-center gap-1">
-                <h3 className="flex w-fit text-xl font-extrabold text-grabit-700">{tab[0]}</h3>
+                <h3 className="text-grabit-700 flex w-fit text-xl font-extrabold">{tab[0]}</h3>
                 <span className="text-md text-center font-extrabold text-stone-400">{UrlGroup[0].length}회 성공</span>
               </div>
             </div>
@@ -302,7 +302,7 @@ function ChallengeInProgress() {
                       />
                     </CircularProgressbarWithChildren>
                     <div className="flex flex-col items-center justify-center gap-1">
-                      <h3 className="text-md flex w-fit truncate break-all text-center font-extrabold text-grabit-700">
+                      <h3 className="text-md text-grabit-700 flex w-fit truncate break-all text-center font-extrabold">
                         {nickname}
                       </h3>
                       <span className="text-center text-sm font-semibold text-stone-400">
