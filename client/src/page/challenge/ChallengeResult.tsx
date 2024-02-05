@@ -47,7 +47,7 @@ export default function ChallengeResult() {
   // 마이페이지
   useEffect(() => {
     axios
-      .get(`http://52.79.228.200:3000/myPage`, {
+      .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -63,7 +63,7 @@ export default function ChallengeResult() {
   // 챌린지 상세 정보 보기 점수 업데이트
   useEffect(() => {
     privateApi
-      .post(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
+      .post(`http://localhost:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         winner_userid_num: info.winner,
         total_money: info.totalMoney,
