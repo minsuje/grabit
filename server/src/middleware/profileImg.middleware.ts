@@ -226,28 +226,35 @@ export class profileImgMiddleware implements NestMiddleware {
             .where(eq(users.userid_num, userid_num));
 
           key = file[0].profile_img;
+          console.log('middleware profileImg key > ', key);
+          console.log('middleware profileImg filename > ', filename);
           if (req.method === 'DELETE' || req.method === 'PATCH') {
             if (key != null) {
-              const params = {
-                Bucket: process.env.AWS_S3_BUCKET,
-                Key: key,
-              };
-              let command = new DeleteObjectCommand(params);
-              await client.send(command);
+              if (filename) {
+                const params = {
+                  Bucket: process.env.AWS_S3_BUCKET,
+                  Key: key,
+                };
+                let command = new DeleteObjectCommand(params);
+                await client.send(command);
+              }
             }
             if (req.method === 'PATCH') {
-              // console.log('filename', filename);
-              filename = uuid() + '.' + filename.split('.')[1];
-              let command = new PutObjectCommand({
-                Bucket: process.env.AWS_S3_BUCKET,
-                Key: filename,
-                ContentType: type,
-              });
+              console.log('patch filename           >   ', filename);
+              if (filename) {
+                console.log('patch if ');
+                filename = uuid() + '.' + filename.split('.')[1];
+                let command = new PutObjectCommand({
+                  Bucket: process.env.AWS_S3_BUCKET,
+                  Key: filename,
+                  ContentType: type,
+                });
 
-              const url = await getSignedUrl(client, command, {
-                expiresIn: 3600,
-              });
-              req['file'] = url;
+                const url = await getSignedUrl(client, command, {
+                  expiresIn: 3600,
+                });
+                req['file'] = url;
+              } else req['file'] = null;
             }
           }
         }

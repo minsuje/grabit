@@ -73,7 +73,8 @@ export default function MyPageEdit() {
 
     await axios({
       method: 'patch',
-      url: 'http://52.79.228.200:3000/myPage',
+      // url: 'http://52.79.228.200:3000/myPage',
+      url: 'http://localhost:3000/myPage',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       data: {
         filename: file?.name,
