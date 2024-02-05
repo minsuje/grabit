@@ -7,6 +7,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'SBAggroB';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @layer base {
   html {
@@ -29,7 +36,7 @@
     word-break: keep-all;
   }
   h1 {
-    @apply font-['JalnanGothic'] text-2xl font-bold;
+    @apply font-['SBAggroB'] text-2xl font-light;
   }
   h2 {
     @apply text-xl font-bold;

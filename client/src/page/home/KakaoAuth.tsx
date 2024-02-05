@@ -6,7 +6,7 @@ import axios, { privateApi } from '@/api/axios';
 
 function KakaoAuth() {
   const navigate = useNavigate();
-  const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  // const [accessTokenFetching, setAccessTokenFetching] = useState(false);
 
   // Access Token 받아오기
   const getAccessToken = async () => {
@@ -31,11 +31,14 @@ function KakaoAuth() {
       console.error('Error:', error);
       setAccessTokenFetching(false); // Reset fetching even in case of error
     }
+
+
+    const response = await axios.post(`http://localhost:3000/auth/kakao`, { withCredentials: true });
   };
 
-  useEffect(() => {
-    getAccessToken();
-  }, []);
+  // useEffect(() => {
+  //   getAccessToken();
+  // }, []);
 
   return <div>Loading...</div>;
 }

@@ -154,28 +154,33 @@ function ChallengeCreate() {
 
   console.log('authTerm', authTerm);
   console.log('authStart', authStart);
-
   async function onSubmit() {
-    const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
+    console.log('test');
+    try {
+      const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
-    const result = await privateApi({
-      method: 'POST',
-      url: 'http://52.79.228.200:3000/challengeCreate',
-      data: {
-        challenge_name: challengeName,
-        is_public: isPublic,
-        topic,
-        challenger_userid_num: friendId,
-        auth_keyword: authKeyword,
-        goal_money: goalMoney,
-        term: authTerm,
-        authentication_start_date: date ? date : null,
-        authentication_end_date: date ? addDays(date, term) : null,
-        authentication_start_time: authStart,
-        authentication_end_time: authEnd,
-      },
-    });
-    console.log(result);
+      const result = await privateApi({
+        method: 'POST',
+        url: 'http://localhost:3000/challengeCreate',
+        data: {
+          challenge_name: challengeName,
+          is_public: isPublic,
+          topic,
+          challenger_userid_num: friendId,
+          auth_keyword: authKeyword,
+          goal_money: goalMoney,
+          term: authTerm,
+          authentication_start_date: date ? date : null,
+          authentication_end_date: date ? addDays(date, term) : null,
+          authentication_start_time: authStart,
+          authentication_end_time: authEnd,
+        },
+      });
+      console.log(result);
+    } catch (error) {
+      // 오류 처리 로직
+      console.error('Challenge creation failed:', error);
+    }
   }
 
   return (
@@ -359,7 +364,7 @@ function ChallengeCreate() {
         <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
           <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
           <div className="flex bg-white px-8  pb-8 ">
-            <Button type="submit" className="w-full rounded-md p-6">
+            <Button onClick={onSubmit} className="w-full rounded-md p-6">
               생성하기
             </Button>
           </div>

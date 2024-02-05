@@ -119,15 +119,16 @@ export class AuthController {
     res.cookie('isLoggedIn', true, { httpOnly: false });
     console.log('set cookie?????');
     res.redirect('http://localhost:5173');
+
     // console.log('여기는?');
 
-    res.send({
-      accessToken: loginToken,
-      refreshToken: loginRefreshToken,
-      userid_num: id,
-      nickname: username,
-      name: username,
-    });
+    // res.send({
+    //   accessToken: loginToken,
+    //   refreshToken: loginRefreshToken,
+    //   userid_num: id,
+    //   nickname: username,
+    //   name: username,
+    // });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -176,7 +177,7 @@ export class AuthController {
         console.log('실패');
         res.clearCookie('login Token');
         res.clearCookie('refreshToken');
-        // res.clearCookie('accessToken');
+        res.clearCookie('accessToken');
         res.clearCookie('isLoggedIn');
         throw new UnauthorizedException();
       }
