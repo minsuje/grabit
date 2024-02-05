@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { privateApi } from '@/api/axios';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useRive } from '@rive-app/react-canvas';
 import { motion, useMotionValue, useTransform, animate, inView } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
+
 interface UserInfo {
   nickname: string;
   score_num: number;
@@ -18,6 +19,7 @@ interface UserInfo {
   userInfo: any;
   id: number;
 }
+
 interface ChallengeHistory {
   challenge_id?: number;
   userid_num?: number;
@@ -109,7 +111,7 @@ export default function MyPage() {
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
-      .get<UserInfo>(`http://localhost:3000/myPage`, {
+      .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -120,6 +122,7 @@ export default function MyPage() {
         setNickName(userInfo?.nickname);
         setScoreNum(userInfo?.score_num);
         setMoney(userInfo?.carrot);
+
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
@@ -195,6 +198,8 @@ export default function MyPage() {
   return (
     <div className="">
       <h1>마이페이지</h1>
+      <div></div>
+
 
       <div className="section flex">
         <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
@@ -218,6 +223,7 @@ export default function MyPage() {
           <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
           <p className="text-2xl font-bold text-stone-700">{tierName}</p>
           {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
+
         </div>
         <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
           <p className="font-['SBAggroB'] text-2xl">{scoreNum}</p>
@@ -235,6 +241,7 @@ export default function MyPage() {
           </p>
         </div>
       </div>
+
 
       <div className="friend flex flex-col items-center justify-center gap-4 ">
         <div className="flex w-full items-center">

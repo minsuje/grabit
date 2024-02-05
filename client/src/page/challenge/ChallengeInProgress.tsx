@@ -219,6 +219,7 @@ function ChallengeInProgress() {
     autoplay: true,
   });
 
+
   if (loading)
     if (isValid) {
       return (
@@ -237,6 +238,7 @@ function ChallengeInProgress() {
                 {challengeDetail?.goal_money * challengers.length} 캐럿
               </h2>
             </div>
+
             <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
               <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
               <CircularProgressbarWithChildren
@@ -295,6 +297,7 @@ function ChallengeInProgress() {
                           borderRadius: '0px',
                           height: `${0}%`,
                         }}
+
                       />
                     </CircularProgressbarWithChildren>
                     <span className="text-center text-lg font-semibold text-stone-600">

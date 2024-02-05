@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 
 // import * as yup from 'yup';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -20,7 +20,7 @@ export default function MyPageEdit() {
   const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
-  const { userid_num } = useParams();
+
   // FormData 인터페이스 정의
   interface FormData {
     nickname?: string | null;

@@ -25,9 +25,14 @@ export default function MyPageFriendDetail() {
   const [lose, setLose] = useState();
   const [scoreNum, setScoreNum] = useState<number>(0);
   const [proFileImg, setProFileImg] = useState();
+  const [friendStatus, setFriendStatus] = useState<string>();
+  const [friendUserNum, setFriendUserNum] = useState<number>();
+
+  // const [addFriendButtonText, setAddFriendButtonText] = useState<string>('친구추가');
+  // const [deleteFriendButtonText, setDeleteFriendButtonText] = useState<string>('친구삭제');
 
   const navigate = useNavigate();
-  const userid_num = localStorage.getItem('userid_num');
+  const userid_num = Number(localStorage.getItem('userid_num'));
 
   console.log(userid_num);
 
@@ -48,6 +53,8 @@ export default function MyPageFriendDetail() {
         setLose(response.data.finalHistory.lose);
         setScoreNum(response.data.file.score_num);
         setProFileImg(response.data.file.profile_img);
+        setFriendStatus(response.data.friendStatus);
+        setFriendUserNum(response.data.file.userid_num);
       })
       .catch((error) => {
         console.error('친구 목록 xios 오류???', error);
@@ -72,25 +79,9 @@ export default function MyPageFriendDetail() {
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
-  // useEffect(() => {
-  //   privateApi
-  //     .get(`http://localhost:3000/friend/${userid_num}`, {
-  //       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-  //     })
-  //     .then((response) => {
-  //       console.log('mypageDate>>>>>>>>>>???', response);
-  //     })
-  //     .catch((error) => {
-  //       console.error('친구 목록 axios 오류???', error);
-  //     });
-  // }, []);
-
+  // 친구 삭제 요청
   const handleDeleteFriend = () => {
     console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
-    // privateApi
-    //   .delete(`http://localhost:3000/friend/${userid_num}`, {
-    //     headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken'), data: userid },
-    //   })
     privateApi({
       method: 'DELETE',
       url: `http://localhost:3000/friend/${userid_num}`,
@@ -99,10 +90,51 @@ export default function MyPageFriendDetail() {
     })
       .then((response) => {
         console.log('친구 삭제 성공:', response);
+        alert('친구 삭제 완료');
         navigate(`/mypage/friend`);
       })
       .catch((error) => {
         console.error('친구 끊기 에러:', error);
+      });
+  };
+
+  console.log('userid', typeof userid);
+
+  console.log('userid_num', typeof userid_num);
+  // 친구 추가 요청
+  const handleAddFriend = () => {
+    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
+    privateApi({
+      method: 'POST',
+      url: `http://localhost:3000/friend/${userid_num}`,
+      data: { other_userid_num: friendUserNum, is_friend: false },
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+    })
+      .then((response) => {
+        console.log('친구 추가 요청 성공:', response);
+        alert(response.data.msg);
+        navigate(`/mypage/`);
+      })
+      .catch((error) => {
+        console.error('친구 추가 요청 에러:', error);
+      });
+  };
+  // 유저 친구 요청 수락
+  const handleAcceptFriend = () => {
+    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
+    privateApi({
+      method: 'Patch',
+      url: `http://localhost:3000/friend/${userid_num}`,
+      data: { other_userid_num: friendUserNum, is_friend: false },
+      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+    })
+      .then((response) => {
+        console.log('친구 추가 요청 성공:', response);
+        alert(response.data.msg);
+        navigate(`/mypage/`);
+      })
+      .catch((error) => {
+        console.error('친구 추가 요청 에러:', error);
       });
   };
 
@@ -142,9 +174,28 @@ export default function MyPageFriendDetail() {
         </div>
       </div>
 
-      <div className="flex w-full items-center justify-center">
-        <Button onClick={handleDeleteFriend}>친구 끊기</Button>
-      </div>
+      {/* 친구 상태에 따라 조건부 렌더링 */}
+      {friendStatus === '친구 신청' && (
+        <div>
+          <Button onClick={handleAddFriend}>친구 신청</Button>
+        </div>
+      )}
+      {friendStatus === '친구입니다.' && (
+        <div>
+          <Button onClick={handleDeleteFriend}>친구 삭제</Button>
+        </div>
+      )}
+      {friendStatus === '친구 신청 해놓고 대기 중' && (
+        <div>
+          <Button disabled>친구 신청 해놓고 대기 중</Button>
+        </div>
+      )}
+      {friendStatus === '상대가 친구 신청 해놓은거 수락바람' && (
+        <div>
+          <Button onClick={handleAcceptFriend}>수락완료</Button>
+        </div>
+      )}
+
     </div>
   );
 }
