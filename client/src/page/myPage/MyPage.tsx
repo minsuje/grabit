@@ -193,6 +193,7 @@ export default function MyPage() {
     threshold: 0.1, // Adjust this value based on when you want the animation to start (0.1 means 10% of the element should be visible)
   });
 
+  
   console.log('>>>>>>>proFileImg', proFileImg);
   return (
     <div className="">
@@ -202,7 +203,7 @@ export default function MyPage() {
       <div className="section flex">
         <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
           <Avatar className="aspect-square h-20 w-20">
-            <AvatarImage src={proFileImg === '' ? proFileImg : `/grabit_profile.png`} />
+            <AvatarImage src={proFileImg ? proFileImg : `/grabit_profile.png`} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
           {nickName === '' ? (
