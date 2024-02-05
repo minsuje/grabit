@@ -144,6 +144,8 @@ export class AuthService {
       userid_num: isClear[0].userid_num,
     };
 
+    let login_type = isClear[0].login_type;
+
     console.log('kakaoToken>>> ', kakaoTokenInfo);
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
     // DB에 유저가 있다면 토큰 생성
@@ -171,7 +173,7 @@ export class AuthService {
         refreshToken: [currentRefreshToken, String(isClear[0].userid_num)],
       })
       .where(eq(users.userid, String(kakaoId)));
-    return { loginToken, loginRefreshToken };
+    return { loginToken, loginRefreshToken, login_type };
   };
 
   // refresh 토큰을 통해 재발급

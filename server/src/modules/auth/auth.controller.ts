@@ -100,7 +100,7 @@ export class AuthController {
       username,
     );
 
-    const { loginToken, loginRefreshToken } = searchUser;
+    const { loginToken, loginRefreshToken, login_type } = searchUser;
 
     const header = await res.setHeader(
       'Authorization',
@@ -129,31 +129,9 @@ export class AuthController {
       userid_num: id,
       nickname: username,
       name: username,
+      login_type: login_type,
     };
     res.redirect('http://localhost:5173/auth/kakao/login');
-
-    // const datasend = await axios.post(
-    //   'http://localhost:3000/auth/kakao/redirect',
-    //   {
-    //     data: {
-    //       accessToken: loginToken,
-    //       refreshToken: loginRefreshToken,
-    //       userid_num: id,
-    //       nickname: username,
-    //       name: username,
-    //     },
-    //   },
-    // );
-
-    // console.log('여기는?');
-
-    // res.send({
-    //   accessToken: loginToken,
-    //   refreshToken: loginRefreshToken,
-    //   userid_num: id,
-    //   nickname: username,
-    //   name: username,
-    // });
   }
 
   @Get('/auth/kakao/redirect')
