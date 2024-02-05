@@ -48,6 +48,7 @@ export class AuthController {
       nickname,
       name,
       login_type,
+      isLogin,
     } = tokens;
 
     // console.log('login controller >>>>>>>>>.', req.user);
@@ -86,6 +87,7 @@ export class AuthController {
       nickname,
       name,
       login_type: login_type,
+      isLogin,
     });
 
     // return this.authService.loginUser(req.body);
