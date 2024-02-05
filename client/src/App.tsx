@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
-// import Main2 from './page/challenge/Main2';
+
+
+
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import Home from './page/home/Home';
 import Register from './page/home/Register';
@@ -71,7 +73,7 @@ function AnimatedRoutes() {
         </Route>
         <Route element={<Layout />}>
           <Route index path="/main" element={<Main />} />
-          {/* <Route path="/main2" element={<Main2 />} /> */}
+
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
           <Route path="/camera/:challenge_id" element={<Camera />} />
           {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
