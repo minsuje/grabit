@@ -2,7 +2,6 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-
 import { useForm } from 'react-hook-form';
 
 // import * as yup from 'yup';
@@ -20,6 +19,10 @@ export default function MyPageEdit() {
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
   const [file, setFile] = useState<File | null>();
+
+  const loginType = localStorage.getItem('login_type');
+  // kakao 로그인 타입일 경우 true, 그 외 경우(여기서는 normal) false
+  const isDisabled = loginType === 'kakao';
 
   const Navigate = useNavigate();
 
@@ -82,6 +85,7 @@ export default function MyPageEdit() {
       url: 'http://localhost:3000/myPage',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       data: {
+        login_type: `${loginType}`,
         filename: file?.name,
         type: file?.type,
         nickname,
@@ -89,38 +93,36 @@ export default function MyPageEdit() {
         changePassword,
       },
     }).then((res) => {
-      console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
+      console.log('res>>>카카오어딨음?>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
 
       console.log('patch res.data>>', res.data.file);
       // alert(res.data.msg);
-      if(res.data.file){
-      axios({
-        method: 'put',
-        url: res.data.file,
-        data: file,
-        headers: {
-          'Content-Type': file?.type,
-        },
-      }).then((res) => {
-        console.log('>>>>', res);
-        Navigate(`/mypage`);
-      });
-    }
+      if (res.data.file) {
+        axios({
+          method: 'put',
+          url: res.data.file,
+          data: file,
+          headers: {
+            'Content-Type': file?.type,
+          },
+        }).then((res) => {
+          console.log('>>>>', res);
+          Navigate(`/mypage`);
+        });
+      }
     });
-    
   };
 
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://52.79.228.200:3000/myPage`)
+      .get(`http://localhost:3000/myPage`)
       .then((response) => {
         const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);
 
         setValue('nickname', nickname); // 폼 필드 업데이트
-
         setNickName(response.data.userInfo[0].nickname);
 
         console.log('nickname', nickName);
@@ -129,10 +131,9 @@ export default function MyPageEdit() {
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-
   }, [setValue]);
 
-
+  console.log(loginType);
   return (
     <div>
       {/* <input type="file" onChange={handleChange} />
@@ -177,21 +178,20 @@ export default function MyPageEdit() {
             <span className="text-xs text-red-500">* </span>
             현재 비밀번호
           </Label>
-          <Input id="password" type="password" {...register('password')} />
+          <Input id="password" type="password" {...register('password')} disabled={isDisabled} />
           {/* {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>} */}
           {passwordErr && <p className="text-xs text-red-500">{passwordErr}</p>}
         </div>
         <div>
           <Label htmlFor="changePassword">변경비밀번호</Label>
-          <Input id="changePassword" type="password" {...register('changePassword')} />
+          <Input id="changePassword" type="password" {...register('changePassword')} disabled={isDisabled} />
           {/* 에러 메시지를 표시하는 로직을 추가할 수 있습니다. */}
         </div>
         <div>
           <Label htmlFor="confirmPassword">비밀번호확인</Label>
-          <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
+          <Input id="confirmPassword" type="password" {...register('confirmPassword')} disabled={isDisabled} />
           {/* {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>} */}
         </div>
-        <Button onClick={(e) => checkNickname(e)}>확인하기</Button>
       </form>
       <Cta text={'수정하기'} onclick={handleSubmit(onSubmit)} />
     </div>
