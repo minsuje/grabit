@@ -308,7 +308,7 @@ export class UserService {
     }
 
     if (login_type === 'kakao') {
-      if (file.length !== 0) {
+      if (file.length !== 0 || file !== null) {
         // 이미지 O, 닉네임 O
         const userInfo = await db
           .update(users)
@@ -319,7 +319,7 @@ export class UserService {
           .where(eq(users.userid_num, userid_num));
         isUser = true;
         return { userInfo, file, isUser };
-      } else {
+      } else if (file.length === 0 || file === null) {
         // 이미지 X
         const userInfo = await db
           .update(users)
