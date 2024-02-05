@@ -1046,7 +1046,6 @@ export class ChallengeService {
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
     challengeInfo = challengeInfo[0];
-    console.log('challengeInfo  return 전 >> ', challengeInfo[0]);
     return { challengeInfo, challengerInfo };
   }
 
