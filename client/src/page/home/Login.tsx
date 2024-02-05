@@ -61,7 +61,7 @@ export default function Login() {
       } else {
         setErrorMessage('로그인에 성공했습니다.');
 
-        const { nickname, userid_num, accessToken, refreshToken } = response.data;
+        const { nickname, userid_num, accessToken, refreshToken, login_type } = response.data;
 
         // console.log('cookies get accessToken', cookies.get('accessToken'));
 
@@ -69,6 +69,8 @@ export default function Login() {
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
+        localStorage.setItem('accessToken', login_type);
+
 
         console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
         console.log('🚀 ~ handleLogin ~ nickname:', nickname);
