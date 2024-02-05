@@ -798,33 +798,41 @@ export class ChallengeService {
     challengerInfo: any,
   ) {
     // "resultConfirm : true"로 바꿔주기
-    let confirmData: any = await db
+    let challengeInfo: any;
+    let preConfirmData: any = await db
       .select({ challenger_userid_num: challenge.challenger_userid_num })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
-    confirmData = confirmData[0].challenger_userid_num;
-    console.log('confirmData > ', confirmData);
-    for (let i = 0; i < confirmData.length; i++) {
-      if (confirmData[i].userid_num === userid_num) {
-        confirmData[i].isAccept = true;
-      }
+    preConfirmData = preConfirmData[0].challenger_userid_num;
+    let confirmData: any = [];
+    for (let i = 0; i < preConfirmData.length; i++) {
+      if (preConfirmData[i].userid_num === userid_num) {
+        confirmData.push({
+          ...preConfirmData[i],
+          resultConfirm: true,
+        });
+      } else
+        confirmData.push({
+          ...preConfirmData[i],
+        });
     }
-    let challengeInfo: any;
-    for (let i = 0; i < confirmData.length; i++) {
-      if (confirmData[i].userid_num === userid_num) {
-        if (confirmData[i].isAccept === false) {
+    // 챌린지에 대한 정보 조회
+    challengeInfo = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+    challengeInfo = challengeInfo[0];
+
+    let user: any = {};
+    for (let i = 0; i < preConfirmData.length; i++) {
+      user = preConfirmData[i];
+      if (user.userid_num === userid_num) {
+        if (user.resultConfirm === false) {
           let updateConfirm = await db
             .update(challenge)
             .set({ challenger_userid_num: confirmData })
             .where(eq(challenge.challenge_id, challenge_id))
             .returning();
-          // console.log('confirmData > ', updateConfirm[0].challenger_userid_num);
-          // 챌린지에 대한 정보 조회
-          challengeInfo = await db
-            .select()
-            .from(challenge)
-            .where(eq(challenge.challenge_id, challenge_id));
-          challengeInfo = challengeInfo[0];
 
           let winners = winner.winner_userid_num;
 
@@ -1030,10 +1038,15 @@ export class ChallengeService {
               }
             }
           }
-          // console.log('challengerInfo >> ', challengerInfo);
         }
       }
     }
+    challengeInfo = await db
+      .select()
+      .from(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
+    challengeInfo = challengeInfo[0];
+    console.log('challengeInfo  return 전 >> ', challengeInfo[0]);
     return { challengeInfo, challengerInfo };
   }
 

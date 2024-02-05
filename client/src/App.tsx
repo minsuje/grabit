@@ -2,8 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
 
-
-
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import Home from './page/home/Home';
 import Register from './page/home/Register';
@@ -53,7 +51,6 @@ import { useState } from 'react';
 import ScrollToTop from './components/ScrollTop';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedRootRoutes from './page/AnimatedRootRoutes';
-// import TestKakao from './page/home/testKakao';
 import Error404 from './page/Error404';
 
 function AnimatedRoutes() {
@@ -68,12 +65,10 @@ function AnimatedRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
             <Route path="/auth/kakao/login" element={<KakaoAuth />} />
-            {/* <Route path="/auth/kakao/test" element={<TestKakao />} /> */}
           </Route>
         </Route>
         <Route element={<Layout />}>
           <Route index path="/main" element={<Main />} />
-
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
           <Route path="/camera/:challenge_id" element={<Camera />} />
           {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
