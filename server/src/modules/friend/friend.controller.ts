@@ -35,12 +35,13 @@ export class FriendController {
     return this.friendService.create(createFriendDto, userid);
   }
 
-  //# 유저 친구 수락
+  //# 유저 친구 수락 / 거절
   @Patch(':userid')
   update(
     @Body() updateFriendDto: UpdateFriendDto,
     @Param('userid') userid: number,
   ) {
+    console.log('updateFriendDto', updateFriendDto);
     return this.friendService.update(userid, updateFriendDto);
   }
 
