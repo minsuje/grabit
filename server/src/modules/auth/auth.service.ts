@@ -88,8 +88,8 @@ export class AuthService {
         const userid_num = loginAccess[0].userid_num;
         const nickname = loginAccess[0].nickname;
         const name = loginAccess[0].name;
-        const login_type = loginAccess[0].login_type,
-          isLogin = 'true';
+        const login_type = loginAccess[0].login_type;
+        isLogin = 'true';
         validate = 'true';
         return {
           loginToken,
@@ -100,11 +100,6 @@ export class AuthService {
           login_type,
           isLogin,
         };
-      } else {
-        console.log('비밀번호가 틀렸습니다.');
-        validate = 'noPassword';
-        isLogin = 'false';
-        return { validate, isLogin };
       }
     }
   };
