@@ -1,10 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import Cta from '@/components/Cta';
-import { text } from 'drizzle-orm/pg-core';
 
 function ChallengeNotice() {
   const dispatch = useDispatch();

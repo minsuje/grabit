@@ -2,7 +2,7 @@ import { ListComponent1 } from '@/components/ComponentSeong';
 import { Link } from 'react-router-dom';
 
 import { ListComponentWithButton, ListComponentWithoutButton } from '@/components/PreChallenge';
-import { ListComponentWithPeriod } from '@/components/Component0117';
+
 import { privateApi } from '@/api/axios';
 import { RootState } from '@/store/store';
 import { useEffect, useState } from 'react';

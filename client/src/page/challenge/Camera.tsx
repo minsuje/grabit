@@ -8,14 +8,8 @@ import { privateApi } from '@/api/axios';
 // import Cta from '@/components/Cta';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
-import Cta from '@/components/Cta';
 import axios from '@/api/axios';
 
-interface url {
-  userid_num?: string;
-  url: string;
-  authentication_id?: number;
-}
 function Camera() {
   const location = useLocation();
   const { state } = location;
@@ -38,65 +32,6 @@ function Camera() {
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
   }, [dispatch]);
-
-  // async function query(file: File) {
-  //   const response = await fetch('https://api-inference.huggingface.co/models/facebook/detr-resnet-50', {
-  //     headers: { Authorization: import.meta.env.VITE_HUGGING_FACE_TOKEN },
-  //     method: 'POST',
-  //     body: file,
-  //   });
-  //   const result = await response.json();
-  //   return result;
-  // }
-
-  // async function upload() {
-  //   if (file) {
-  //     const aiFile = await query(file);
-  //     console.log('aifile >>>>>>', aiFile);
-  //     if (aiFile.find((list: any) => list.label == keyword)) {
-  //       console.log('인증 성공 >>>axios 보내세요');
-  //     } else {
-  //       console.log('인증 실패 >>>>> 인증 기준에 맞지 않습니다.');
-  //     }
-  //   }
-
-  //   await privateApi({
-  //     method: 'post',
-  //     url: `http://52.79.228.200:3000/challengeAuth/${challenge_id}`,
-  //     data: {
-  //       filename: file?.name,
-  //       type: file?.type,
-  //     },
-  //   }).then((res) => {
-  //     console.log('res.data>>>>>>>>>>', res.data);
-  //   });
-
-  //   if (res.data.msg) {
-  //     alert(res.data.msg);
-  //   }
-  // } else {
-  //   axios({
-  //     method: 'put',
-  //     url: res.data,
-  //     data: file,
-  //     headers: {
-  //       'Content-Type': file?.type,
-  //     },
-  //   }).then((res) => {
-  //     console.log(res);
-  //     alert('업로드 완료!');
-  //     navigate(`/challengeInProgress/${challenge_id}`);
-  //   });
-  // }
-  // });
-
-  //   if (imgUrl) {
-  //     URL.revokeObjectURL(imgUrl);
-  //     setImgUrl(undefined);
-  //   }
-
-  //   setFile(undefined);
-  // }
 
   const convertToBase64 = (file: File) => {
     const reader = new FileReader();

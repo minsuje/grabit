@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { addDays, format } from 'date-fns';
-import { fr, ko } from 'date-fns/locale';
+import { ko } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
