@@ -15,9 +15,9 @@ import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+// import { useForm } from 'react-hook-form';
+// import { yupResolver } from '@hookform/resolvers/yup';
+// import * as yup from 'yup';
 
 async function patchChallenge(
   challenge_id: string | undefined,
@@ -35,6 +35,7 @@ async function patchChallenge(
       authentication_end_date: addDays(startDay, period),
     };
   }
+  console.log('수정 전 데이터', challengeData);
 
   const result = await privateApi({
     method: 'PATCH',
@@ -134,256 +135,242 @@ function ChallengeEdit() {
     hours.push(i);
   }
 
-  // 유효성 검사
-  const schema = yup.object({
-    challenge_name: yup.string().required('* 챌린지명'),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
   return (
     <div className="flex flex-col gap-8">
-      <form>
-        <h1 className="py-4 text-3xl font-bold">챌린지 수정</h1>
-        <div>
-          <div className="user-list flex">
-            <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
-            <div className="flex w-fit items-center space-x-2">
-              <Label className="w-8">{challengeDetail.is_public ? '공개' : '비공개'}</Label>
-            </div>
+      <h1 className="py-4 text-3xl font-bold">챌린지 수정</h1>
+      <div>
+        <div className="user-list flex">
+          <h2 className="flex w-full py-4 text-xl font-bold">참여자</h2>
+          <div className="flex w-fit items-center space-x-2">
+            <Label className="w-8">{challengeDetail.is_public ? '공개' : '비공개'}</Label>
           </div>
+        </div>
 
-          <div className="user-list flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              {challengers.map((challenger: users, idx) => {
+        <div className="user-list flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            {challengers.map((challenger: users, idx) => {
+              return (
+                <div className="flex items-center gap-2 " key={idx}>
+                  {challenger.profile_img ? (
+                    <>
+                      <Avatar>
+                        <AvatarImage src={challenger.profile_img} />
+                        <AvatarFallback>{challenger.nickname}</AvatarFallback>
+                      </Avatar>
+                      <span>{challenger.nickname}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Avatar>
+                        <AvatarImage src="/grabit_profile.png" />
+                        <AvatarFallback>{challenger.nickname}</AvatarFallback>
+                      </Avatar>
+                      <span>{challenger.nickname}</span>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <h2 className="py-4 text-xl font-bold">챌린지명</h2>
+      <Input
+        // {...register('challenge_name')}
+        value={challengeDetail.challenge_name}
+        onChange={(e) => {
+          setChallengeDetail((challengeDetail) => {
+            return { ...challengeDetail, challenge_name: e.target.value };
+          });
+        }}
+      />
+      {/* {errors.challenge_name && <p className="text-xs text-red-500">{errors.challenge_name.message}</p>} */}
+
+      <h2 className="py-4 text-xl font-bold">주제</h2>
+      <Select
+        onValueChange={(value) => {
+          setChallengeDetail((challengeDetail) => {
+            return { ...challengeDetail, topic: value };
+          });
+        }}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder={challengeDetail.topic} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="운동">운동</SelectItem>
+          <SelectItem value="셀프케어">셀프케어</SelectItem>
+          <SelectItem value="독서">독서</SelectItem>
+          <SelectItem value="학습">학습</SelectItem>
+          <SelectItem value="취미">취미</SelectItem>
+          <SelectItem value="생활습관">생활습관</SelectItem>
+          <SelectItem value="저축">저축</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <h2 className="py-4 text-xl font-bold">기간</h2>
+      <Select
+        value={period.toString()}
+        onValueChange={(value) => {
+          periodChanged = Number(value);
+
+          setChallengeDetail((challengeDetail) => {
+            return {
+              ...challengeDetail,
+              authentication_end_date: addDays(challengeDetail.authentication_start_date, periodChanged),
+            };
+          });
+        }}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="2">3일</SelectItem>
+          <SelectItem value="6">1주</SelectItem>
+          <SelectItem value="13">2주</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={'outline'}
+            className={cn(
+              'w-[280px] justify-start text-left font-normal',
+              !challengeDetail.authentication_start_date && 'text-muted-foreground',
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? (
+              format(date, 'PPP EEE', { locale: ko })
+            ) : (
+              <span>{format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
+        </PopoverContent>
+      </Popover>
+
+      <h2 className="py-4 text-xl font-bold">끝 날짜</h2>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={'outline'}
+            className={cn(
+              'w-[280px] justify-start text-left font-normal',
+              !challengeDetail.authentication_end_date && 'text-muted-foreground',
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+
+            {date ? (
+              format(addDays(date, period), 'PPP EEE', { locale: ko })
+            ) : (
+              <span>{format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+      </Popover>
+
+      <h2 className="py-4 text-xl font-bold">인증 주기</h2>
+      <Select
+        onValueChange={(value) => {
+          setChallengeDetail((challengeDetail) => {
+            return { ...challengeDetail, term: Number(value) };
+          });
+        }}
+      >
+        <SelectTrigger className="w-[180px]">
+          {challengeDetail.term != 7 ? (
+            <SelectValue placeholder={'주 ' + challengeDetail.term + '일'} />
+          ) : (
+            <SelectValue placeholder="매일" />
+          )}
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="3">주 3회</SelectItem>
+          <SelectItem value="5">주 5회</SelectItem>
+          <SelectItem value="7">매일</SelectItem>
+        </SelectContent>
+      </Select>
+      <div className="authTime flex gap-8">
+        <div className="startTime flex flex-col">
+          <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
+          <Select
+            value={challengeDetail.authentication_start_time.toString()}
+            onValueChange={(value) => {
+              if (Number(value) >= challengeDetail.authentication_end_time) {
+                alert('인증 마감 시간보다 빠르게 설정할 수 없습니다.');
+                setChallengeDetail((challengeDetail) => {
+                  return {
+                    ...challengeDetail,
+                    authentication_start_time: challengeDetail.authentication_end_time - 1,
+                  };
+                });
+              } else {
+                setChallengeDetail((challengeDetail) => {
+                  return { ...challengeDetail, authentication_start_time: Number(value) };
+                });
+              }
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder={challengeDetail.authentication_start_time + '시'} />
+            </SelectTrigger>
+            <SelectContent>
+              {hours.map((hour, i) => {
                 return (
-                  <div className="flex items-center gap-2 " key={idx}>
-                    {challenger.profile_img ? (
-                      <>
-                        <Avatar>
-                          <AvatarImage src={challenger.profile_img} />
-                          <AvatarFallback>{challenger.nickname}</AvatarFallback>
-                        </Avatar>
-                        <span>{challenger.nickname}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Avatar>
-                          <AvatarImage src="/grabit_profile.png" />
-                          <AvatarFallback>{challenger.nickname}</AvatarFallback>
-                        </Avatar>
-                        <span>{challenger.nickname}</span>
-                      </>
-                    )}
-                  </div>
+                  <SelectItem key={i} value={hour.toString()}>
+                    {hour}시
+                  </SelectItem>
                 );
               })}
-            </div>
-          </div>
+            </SelectContent>
+          </Select>
         </div>
-
-        <h2 className="py-4 text-xl font-bold">챌린지명</h2>
-        <Input
-          {...register('challenge_name')}
-          value={challengeDetail.challenge_name}
-          onChange={(e) => {
-            setChallengeDetail((challengeDetail) => {
-              return { ...challengeDetail, challenge_name: e.target.value };
-            });
-          }}
-        />
-        {errors.challenge_name && <p className="text-xs text-red-500">{errors.challenge_name.message}</p>}
-
-        <h2 className="py-4 text-xl font-bold">주제</h2>
-        <Select
-          onValueChange={(value) => {
-            setChallengeDetail((challengeDetail) => {
-              return { ...challengeDetail, topic: value };
-            });
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={challengeDetail.topic} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="운동">운동</SelectItem>
-            <SelectItem value="셀프케어">셀프케어</SelectItem>
-            <SelectItem value="독서">독서</SelectItem>
-            <SelectItem value="학습">학습</SelectItem>
-            <SelectItem value="취미">취미</SelectItem>
-            <SelectItem value="생활습관">생활습관</SelectItem>
-            <SelectItem value="저축">저축</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <h2 className="py-4 text-xl font-bold">기간</h2>
-        <Select
-          value={period.toString()}
-          onValueChange={(value) => {
-            periodChanged = Number(value);
-
-            setChallengeDetail((challengeDetail) => {
-              return {
-                ...challengeDetail,
-                authentication_end_date: addDays(challengeDetail.authentication_start_date, periodChanged),
-              };
-            });
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2">3일</SelectItem>
-            <SelectItem value="6">1주</SelectItem>
-            <SelectItem value="13">2주</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <h2 className="py-4 text-xl font-bold">시작 날짜</h2>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={'outline'}
-              className={cn(
-                'w-[280px] justify-start text-left font-normal',
-                !challengeDetail.authentication_start_date && 'text-muted-foreground',
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? (
-                format(date, 'PPP EEE', { locale: ko })
-              ) : (
-                <span>{format(challengeDetail.authentication_start_date, 'PPP EEE', { locale: ko })}</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar mode="single" selected={date} onSelect={handleStartDate} initialFocus />
-          </PopoverContent>
-        </Popover>
-
-        <h2 className="py-4 text-xl font-bold">끝 날짜</h2>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={'outline'}
-              className={cn(
-                'w-[280px] justify-start text-left font-normal',
-                !challengeDetail.authentication_end_date && 'text-muted-foreground',
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-
-              {date ? (
-                format(addDays(date, period), 'PPP EEE', { locale: ko })
-              ) : (
-                <span>{format(challengeDetail.authentication_end_date, 'PPP EEE', { locale: ko })}</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-        </Popover>
-
-        <h2 className="py-4 text-xl font-bold">인증 주기</h2>
-        <Select
-          onValueChange={(value) => {
-            setChallengeDetail((challengeDetail) => {
-              return { ...challengeDetail, term: Number(value) };
-            });
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            {challengeDetail.term != 7 ? (
-              <SelectValue placeholder={'주 ' + challengeDetail.term + '일'} />
-            ) : (
-              <SelectValue placeholder="매일" />
-            )}
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="3">주 3회</SelectItem>
-            <SelectItem value="5">주 5회</SelectItem>
-            <SelectItem value="7">매일</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="authTime flex gap-8">
-          <div className="startTime flex flex-col">
-            <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
-            <Select
-              value={challengeDetail.authentication_start_time.toString()}
-              onValueChange={(value) => {
-                if (Number(value) >= challengeDetail.authentication_end_time) {
-                  alert('인증 마감 시간보다 빠르게 설정할 수 없습니다.');
-                  setChallengeDetail((challengeDetail) => {
-                    return {
-                      ...challengeDetail,
-                      authentication_start_time: challengeDetail.authentication_end_time - 1,
-                    };
-                  });
-                } else {
-                  setChallengeDetail((challengeDetail) => {
-                    return { ...challengeDetail, authentication_start_time: Number(value) };
-                  });
-                }
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={challengeDetail.authentication_start_time + '시'} />
-              </SelectTrigger>
-              <SelectContent>
-                {hours.map((hour, i) => {
-                  return (
-                    <SelectItem key={i} value={hour.toString()}>
-                      {hour}시
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="endTime flex flex-col">
-            <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
-            <Select
-              value={challengeDetail.authentication_end_time.toString()}
-              onValueChange={(value) => {
-                if (Number(value) <= challengeDetail.authentication_start_time) {
-                  alert('인증 시작 시간보다 늦게 설정할 수 없습니다.');
-                  setChallengeDetail((challengeDetail) => {
-                    return {
-                      ...challengeDetail,
-                      authentication_end_time: challengeDetail.authentication_start_time + 1,
-                    };
-                  });
-                } else {
-                  setChallengeDetail((challengeDetail) => {
-                    return { ...challengeDetail, authentication_end_time: Number(value) };
-                  });
-                }
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={challengeDetail.authentication_end_time + '시'} />
-              </SelectTrigger>
-              <SelectContent>
-                {hours.map((hour, i) => {
-                  return (
-                    <SelectItem key={i} value={hour.toString()}>
-                      {hour}시
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="endTime flex flex-col">
+          <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
+          <Select
+            value={challengeDetail.authentication_end_time.toString()}
+            onValueChange={(value) => {
+              if (Number(value) <= challengeDetail.authentication_start_time) {
+                alert('인증 시작 시간보다 늦게 설정할 수 없습니다.');
+                setChallengeDetail((challengeDetail) => {
+                  return {
+                    ...challengeDetail,
+                    authentication_end_time: challengeDetail.authentication_start_time + 1,
+                  };
+                });
+              } else {
+                setChallengeDetail((challengeDetail) => {
+                  return { ...challengeDetail, authentication_end_time: Number(value) };
+                });
+              }
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder={challengeDetail.authentication_end_time + '시'} />
+            </SelectTrigger>
+            <SelectContent>
+              {hours.map((hour, i) => {
+                return (
+                  <SelectItem key={i} value={hour.toString()}>
+                    {hour}시
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
         </div>
-      </form>
+      </div>
+
       <div className="mt-3 flex flex-col gap-3">
         <Button className="bg-slate-100 text-black hover:bg-slate-200" onClick={() => deleteChallenge(challenge_id)}>
           삭제

@@ -23,29 +23,29 @@ function ChallengeList() {
   const [preMyChallenge, setPreMyChallenge] = useState<Challenge[]>([]);
   const [publicChallenge, setPublicChallenge] = useState<Challenge[]>([]);
 
-  const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
+  // const { accessToken, refreshToken } = useSelector((state: RootState) => state.login);
 
   useEffect(() => {
-    // {
-    //   axios
-    //     .get('http://52.79.228.200:3000/challengeList')
-    //     .then((response) => {
-    //       console.log(response.data);
-    //       setIngMyChallenge(response.data.ingMyChallenge);
-    //       setPreMyChallenge(response.data.preMyChallenge);
-    //       setPublicChallenge(response.data.prePublicChallenge);
-    //     })
-    //     .catch((error) => {
-    //       console.error('ChallengeList에서  오류발생 :', error);
-    //     });
-    // }
-    privateApi({
-      method: 'GET',
-      url: 'http://localhost:3000/challengeList',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    {
+      privateApi
+        .get('http://52.79.228.200:3000/challengeList')
+        .then((response) => {
+          console.log(response.data);
+          setIngMyChallenge(response.data.ingMyChallenge);
+          setPreMyChallenge(response.data.preMyChallenge);
+          setPublicChallenge(response.data.prePublicChallenge);
+        })
+        .catch((error) => {
+          console.error('ChallengeList에서  오류발생 :', error);
+        });
+    }
+    // privateApi({
+    //   method: 'GET',
+    //   url: 'http://localhost:3000/challengeList',
+    //   headers: {
+    //     Authorization: `Bearer ${accessToken}`,
+    //   },
+    // });
   }, []);
 
   return (
