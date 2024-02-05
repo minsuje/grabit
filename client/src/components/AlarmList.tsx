@@ -28,9 +28,7 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
   function deleteNoti(notification_id: number): void {
     console.log(notification_id);
     privateApi
-      .patch(`http://52.79.228.200:3000/notification/${notification_id}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .patch(`/notification/${notification_id}`)
       .then((response) => {
         console.log('알림 삭제 >>>>>>>>>', response);
       })

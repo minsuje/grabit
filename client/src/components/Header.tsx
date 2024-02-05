@@ -51,11 +51,7 @@ function Header() {
     console.log('location', location.pathname);
 
     privateApi
-      .get(`http://52.79.228.200:3000/notification`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-      })
+      .get(`/notification`)
       .then((response) => {
         console.log(response.data);
         // const confirm = response.data.filter((alarm: challengeAlarmList) => {

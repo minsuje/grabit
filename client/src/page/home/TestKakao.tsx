@@ -15,7 +15,7 @@ function TestKakao() {
     // setAccessTokenFetching(true); // Set fetching to true
     console.log('들어오긴 함?');
 
-    const response = axios.get('http://localhost:3000/auth/kakao', {
+    const response = axios.get('/auth/kakao', {
       withCredentials: true,
     });
     console.log('response:', response);

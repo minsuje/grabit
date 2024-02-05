@@ -39,7 +39,7 @@ async function patchChallenge(
 
   const result = await privateApi({
     method: 'PATCH',
-    url: `http://localhost:3000/challengeEdit/${challenge_id}`,
+    url: `/challengeEdit/${challenge_id}`,
     data: challengeData,
   });
   console.log(result);
@@ -53,7 +53,7 @@ async function patchChallenge(
 async function deleteChallenge(challenge_id: string | undefined) {
   const result = await privateApi({
     method: 'DELETE',
-    url: `http://52.79.228.200:3000/challengeEdit/${challenge_id}`,
+    url: `/challengeEdit/${challenge_id}`,
   });
   console.log(result);
 }
@@ -70,9 +70,7 @@ function ChallengeEdit() {
   useEffect(() => {
     {
       privateApi
-        .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
-          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-        })
+        .get(`/challengeDetail/${challenge_id}`)
         .then((response) => {
           console.log(response.data);
           setChallengeDetail(response.data.challengeDetail[0]);

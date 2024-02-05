@@ -32,7 +32,7 @@ function ChallengeAccept() {
 
   const accept = () => {
     privateApi
-      .patch(`http://52.79.228.200:3000/challengeAccept/${challengeDetail?.challenge_id}`)
+      .patch(`/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -43,7 +43,7 @@ function ChallengeAccept() {
 
   const refuse = () => {
     privateApi
-      .patch(`http://52.79.228.200:3000/challengeReject/${challengeDetail?.challenge_id}`)
+      .patch(`/challengeReject/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -59,7 +59,7 @@ function ChallengeAccept() {
   useEffect(() => {
     console.log(challenge_id);
     privateApi
-      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`)
+      .get(`/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);

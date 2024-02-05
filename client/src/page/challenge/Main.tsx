@@ -23,9 +23,7 @@ export default function Main() {
     setUserid_num(Number(localStorage.getItem('userid_num')));
 
     privateApi
-      .get('http://52.79.228.200:3000/dailyMission', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get('/dailyMission')
       .then((response) => {
         console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission.title);
@@ -36,9 +34,7 @@ export default function Main() {
       });
 
     privateApi
-      .get('http://52.79.228.200:3000/challengeList', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get('/challengeList')
       .then((response) => {
         // console.log('challengeList >>>>>>>>>', response.data);
         setIngMyChallenge(response.data.ingMyChallenge);

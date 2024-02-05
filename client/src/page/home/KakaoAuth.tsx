@@ -24,7 +24,7 @@ function KakaoAuth() {
     try {
       setAccessTokenFetching(true); // Set fetching to true
 
-      const response = await axios.get('http://localhost:3000/auth/kakao/redirect', {
+      const response = await axios.get('/auth/kakao/redirect', {
         withCredentials: true,
       });
       console.log('response:', response);

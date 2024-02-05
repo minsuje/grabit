@@ -14,7 +14,7 @@ function FileUploadTest() {
 
     await privateApi({
       method: 'post',
-      url: 'http://localhost:3000/challengeAuth/1',
+      url: '/challengeAuth/1',
       data: {
         filename: file?.name,
         type: file?.type,
@@ -36,7 +36,7 @@ function FileUploadTest() {
   async function handleUpdate() {
     await privateApi({
       method: 'patch',
-      url: 'http://localhost:3000/challengeAuth/1/77',
+      url: '/challengeAuth/1/77',
       data: {
         filename: file?.name,
         type: file?.type,
@@ -57,7 +57,7 @@ function FileUploadTest() {
   async function handleGet() {
     await privateApi({
       method: 'get',
-      url: 'http://localhost:3000/challengeAuth/1/77',
+      url: '/challengeAuth/1/77',
     }).then((res) => {
       console.log(res.data);
       setProfile(res.data.fileUrl);
@@ -72,7 +72,7 @@ function FileUploadTest() {
   async function handleDelete() {
     await privateApi({
       method: 'delete',
-      url: 'http://localhost:3000/challengeAuth/1/77',
+      url: '/challengeAuth/1/77',
     }).then(() => {
       alert('삭제 완료!');
     });

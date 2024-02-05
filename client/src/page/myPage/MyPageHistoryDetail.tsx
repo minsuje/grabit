@@ -34,9 +34,7 @@ export default function ListComponent3() {
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://localhost:3000/history`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/history`)
       .then((response) => {
         console.log(response);
         const detail = response.data.history.find((item: any) => item.challenge_id.toString() === userid_num);
