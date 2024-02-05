@@ -71,7 +71,6 @@ export default function Login() {
         localStorage.setItem('userid_num', userid_num);
         localStorage.setItem('login_type', login_type);
 
-
         console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
         console.log('🚀 ~ handleLogin ~ nickname:', nickname);
         console.log('🚀 ~ handleLogin ~ refreshToken:', refreshToken);

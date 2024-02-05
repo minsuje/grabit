@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 import { useEffect, useState } from 'react';
-import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
   name: string;
