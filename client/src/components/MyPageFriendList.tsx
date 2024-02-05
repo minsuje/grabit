@@ -45,36 +45,30 @@ export default function MyPageFriendList({ friends }: any) {
   const tierName = getTierName(friends.score_num);
 
   return (
-    <div>
-      <Link to={`/friend/${friends.userid}`} className=" text-black no-underline">
-        <div className="mb-[5%] flex  w-[100%] justify-between rounded-lg bg-gray-200 p-6  shadow-md">
-          <div className="flex">
-            <Avatar>
-              <AvatarImage src={friends.profile_img ? friends.profile_img : '/grabit_profile.png'} />
-              <AvatarFallback></AvatarFallback>
-            </Avatar>
-            <div>
-              {friends.nickname}
-              <p>{friends.score_num}</p>
-            </div>
-          </div>
-
-          <div className="mr-5 flex w-[100%] flex-col text-end">
-            <p>{tierName}</p>
-            <p className="text-xs text-gray-400">{friends.rank}위</p>
-          </div>
-
-          {/* 점수별로 띄워주는 이미지를 다르게 하기 */}
-          <div className="flex">
-            <Avatar>
-              <img src={tierImageSrc} alt="Tier" />
-              {/* <AvatarImage src={friends.profile_img} /> */}
-              <AvatarFallback></AvatarFallback>
-            </Avatar>
-            {/* <img src={friends.profile_img} alt="friends.profile_img" className="w-[25%]bg-cover" /> */}
+    <Link to={`/friend/${friends.userid}`} className=" flex text-black no-underline">
+      <div className="flex w-full gap-2 rounded-lg bg-white p-6 shadow-lg shadow-grabit-600/10">
+        <div className="flex w-full items-center gap-2">
+          <Avatar>
+            <AvatarImage src={friends.profile_img ? friends.profile_img : '/grabit_profile.png'} />
+            <AvatarFallback></AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-stone-700">{friends.nickname}</span>
+            <p className="flex text-sm font-bold text-grabit-600">
+              {friends.score_num}
+              <p className="ml-[2px]">포인트</p>
+            </p>
           </div>
         </div>
-      </Link>
-    </div>
+
+        <div className="flex w-fit flex-col items-center">
+          <div className="tierImage w-12">
+            <img src={tierImageSrc} alt="Tier" />
+          </div>
+          <p>{tierName}</p>
+          <p className="text-xs font-bold text-stone-500">{friends.rank}위</p>
+        </div>
+      </div>
+    </Link>
   );
 }

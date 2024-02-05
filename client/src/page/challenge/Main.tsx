@@ -116,7 +116,7 @@ export default function Main() {
 
   return (
     <div className="my-8 flex flex-col gap-16">
-      <div className="ranking flex flex-col gap-8">
+      <div className="ranking flex flex-col">
         <h1 className="text-grabit-800">랭킹</h1>
         <MainRanking />
       </div>
@@ -129,10 +129,10 @@ export default function Main() {
               <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
                 <div className="counter w-4"></div>
                 <div className="flex justify-between gap-2">
-                  <h2 className="font-['JalnanGothic'] text-grabit-600">{dailymission}</h2>
+                  <h2 className="font-['SBAggroB'] text-grabit-600">{dailymission}</h2>
                   <p className=" text-grabit-400"></p>
                 </div>
-                <p className="font-['JalnanGothic'] text-2xl font-bold text-grabit-600">10P</p>
+                <p className="font-['SBAggroB'] text-2xl font-bold text-grabit-600">10P</p>
               </div>
             </div>
           </Link>
