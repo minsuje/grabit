@@ -41,8 +41,14 @@ export class AuthController {
     console.log('login controller >>>>>>>>>.', req.user);
     const token = JSON.stringify(req.user);
     const tokens = JSON.parse(token);
-    const { loginToken, loginRefreshToken, userid_num, nickname, name } =
-      tokens;
+    const {
+      loginToken,
+      loginRefreshToken,
+      userid_num,
+      nickname,
+      name,
+      login_type,
+    } = tokens;
 
     // console.log('login controller >>>>>>>>>.', req.user);
     await res.setHeader(
@@ -79,6 +85,7 @@ export class AuthController {
       userid_num,
       nickname,
       name,
+      login_type: login_type,
     });
 
     // return this.authService.loginUser(req.body);

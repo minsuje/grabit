@@ -31,6 +31,7 @@ function Header() {
     localStorage.removeItem('nickname');
     localStorage.removeItem('userid_num');
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('login_type')
     dispatch(setIsLoggedIn(false));
     dispatch(setUserid_num(0));
     dispatch(setNickname(''));
