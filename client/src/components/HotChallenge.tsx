@@ -44,13 +44,13 @@ function HotChallenge() {
       label: hotTopic[0],
       render: () => {
         return (
-          <>
+          <div className="flex flex-col gap-4">
             {top1.length != 0
               ? top1.map((challenge: Challenge, idx: number) => {
                   return <ListComponentWithPeriod key={idx} challenge={challenge}></ListComponentWithPeriod>;
                 })
               : null}
-          </>
+          </div>
         );
       },
     },
@@ -59,13 +59,13 @@ function HotChallenge() {
       label: hotTopic[1],
       render: () => {
         return (
-          <>
+          <div className="flex flex-col gap-4">
             {top2.length != 0
               ? top2.map((challenge: Challenge, idx: number) => {
                   return <ListComponentWithPeriod key={idx} challenge={challenge}></ListComponentWithPeriod>;
                 })
               : null}
-          </>
+          </div>
         );
       },
     },
@@ -74,13 +74,13 @@ function HotChallenge() {
       label: hotTopic[2],
       render: () => {
         return (
-          <>
+          <div className="flex flex-col gap-4">
             {top3.length != 0
               ? top3.map((challenge: Challenge, idx: number) => {
                   return <ListComponentWithPeriod key={idx} challenge={challenge}></ListComponentWithPeriod>;
                 })
               : null}
-          </>
+          </div>
         );
       },
     },

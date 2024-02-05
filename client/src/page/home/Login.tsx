@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn, setUserid_num, setNickname, setAccessToken, setRefreshToken } from '@/store/loginSlice';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function Login() {
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
   const [userid, setUserid] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -69,7 +69,6 @@ export default function Login() {
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
         localStorage.setItem('login_type', login_type);
-
 
         console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
         console.log('🚀 ~ handleLogin ~ nickname:', nickname);

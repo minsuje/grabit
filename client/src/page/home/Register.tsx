@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 import { useEffect, useState } from 'react';
-import HeaderTitle from '@/components/HeaderTitle';
 
 interface RegisterForm {
   name: string;
@@ -95,7 +94,7 @@ export default function Register() {
       console.log(res.data);
       fileUrl = res.data;
 
-      const regex = /\/([^\/?#]+)[^\/]*$/;
+      const regex = /\/([^/?#]+)[^/]*$/;
       const match = fileUrl.match(regex);
 
       // 추출된 파일 이름 출력

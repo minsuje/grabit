@@ -3,8 +3,8 @@ import Lottie from 'lottie-react';
 import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn } from '@/store/loginSlice';
-import { useNavigate } from 'react-router-dom';
+// import { setIsLoggedIn } from '@/store/loginSlice';
+// import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { setHeaderInfo } from '@/store/headerSlice';
 
@@ -22,17 +22,17 @@ export default function Home() {
   };
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '', backPath: '/' }));
   }, [dispatch]);
 
-  function handleLogin() {
-    dispatch(setIsLoggedIn(true));
-    localStorage.setItem('isLoggedIn', 'true');
-    navigate('/main');
-  }
+  // function handleLogin() {
+  //   dispatch(setIsLoggedIn(true));
+  //   localStorage.setItem('isLoggedIn', 'true');
+  //   navigate('/main');
+  // }
 
   return (
     <div className="flex max-w-sm flex-col justify-center gap-4 text-center">
