@@ -21,6 +21,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       process.env.AWS_EC2_URL,
+      process.env.AWS_EC2_CLIENT,
       'http://localhost:5173',
       'https://localhost:5173',
       'https://accounts.kakao.com',
