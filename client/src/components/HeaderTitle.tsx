@@ -29,7 +29,7 @@ function HeaderTitle() {
       </div>
 
       {scrollPosition > 50 ? (
-        <h1 className="absolute left-0 right-0 z-[-1] w-full text-center text-lg text-grabit-700 transition-all">
+        <h1 className="absolute left-0 right-0 z-[-1] w-full text-center text-lg text-stone-800 transition-all">
           {title}
         </h1>
       ) : null}

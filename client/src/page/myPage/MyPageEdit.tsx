@@ -17,7 +17,7 @@ export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | null>();
 
   const Navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export default function MyPageEdit() {
     password: string; // 필수 필드로 정의
     changePassword?: string;
     confirmPassword?: string;
-    file?: any | undefined;
+    file?: any | null;
   }
 
   // yup 스키마 정의
@@ -45,7 +45,6 @@ export default function MyPageEdit() {
   const {
     register,
     handleSubmit,
-
     setError,
 
     // formState: { errors },
@@ -86,7 +85,8 @@ export default function MyPageEdit() {
     }).then((res) => {
       console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
-      console.log('patch res.data', res.data.file);
+      console.log('patch res.data>>', res.data.file);
+      alert(res.data.msg);
       axios({
         method: 'put',
         url: res.data.file,
@@ -127,10 +127,10 @@ export default function MyPageEdit() {
       </button> */}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h1>마이페이지</h1>
+        <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg} />
+            <AvatarImage src={proFileImg ? proFileImg : 'grabit_profile.png'} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
 

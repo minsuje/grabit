@@ -1,6 +1,6 @@
 import { Tab } from '@/components/Component0117';
 import { useDispatch, useSelector } from 'react-redux';
-import { ListComponent1, ProgressComponent } from '@/components/ComponentSeong';
+import { ProgressComponent } from '@/components/ComponentSeong';
 import { RootState } from '@/store/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -10,17 +10,13 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import { differenceInDays, differenceInCalendarDays } from 'date-fns';
 import { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
-import { CircularProgressbar, CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
+import { useRive } from '@rive-app/react-canvas';
 
-// Animation
-// import { easeQuadInOut } from 'd3-ease';
-// import AnimatedProgressProvider from './AnimatedProgressProvider';
-// import ChangingProgressProvider from './ChangingProgressProvider';
-
-// Radial separators
 import RadialSeparators from '@/components/progress/Seperator.tsx';
+import Error403 from '../Error403';
+import Error404 from '../Error404';
 
 type profiles = string;
 interface url {
@@ -28,21 +24,6 @@ interface url {
   url: string;
   authentication_id?: number;
 }
-
-// function Example(props) {
-//   return (
-//     <div style={{ marginBottom: 80 }}>
-//       <hr style={{ border: '2px solid #ddd' }} />
-//       <div style={{ marginTop: 30, display: 'flex' }}>
-//         <div style={{ width: '30%', paddingRight: 30 }}>{props.children}</div>
-//         <div style={{ width: '70%' }}>
-//           <h3 className="h5">{props.label}</h3>
-//           <p>{props.description}</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 function ChallengeInProgress() {
   const info = useSelector((state: RootState) => state.result);
@@ -61,6 +42,8 @@ function ChallengeInProgress() {
   const [isAcceptable, setIsAcceptable] = useState<boolean>(true);
   const [urls, setUrls] = useState<url[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));
@@ -111,11 +94,11 @@ function ChallengeInProgress() {
 
   useEffect(() => {
     privateApi
-      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://localhost:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {
-        console.log('response', response.data);
+        console.log('response', response);
         if (response.data.challengeDetail) {
           const { challengeDetail, challengers, urls, isAcceptable } = response.data;
           setChallengeDetail(challengeDetail[0]);
@@ -124,6 +107,12 @@ function ChallengeInProgress() {
           setIsAcceptable(isAcceptable);
           setLoading(true);
           console.log(isAcceptable);
+
+          const exist =
+            challengers.some((challenger: users) => challenger.userid_num === userid_num) ||
+            challengeDetail[0].userid_num === userid_num;
+
+          setIsValid(exist);
         } else if (response.data.msg) {
           alert(response.data.msg);
           navigate('/main');
@@ -230,128 +219,131 @@ function ChallengeInProgress() {
     autoplay: true,
   });
 
-  return (
-    <div className="mt-12 flex flex-col gap-4">
-      <h1 className="text-grabit-700 text-center text-3xl">{challengeDetail?.challenge_name}</h1>
-      <h3 className="text-grabit-400 text-center font-medium">
-        {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
-      </h3>
 
-      {loading && (
-        <>
-          <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
-            <div className="absolute h-40 w-40 opacity-50">
-              <RiveComponent />
-            </div>
-            <h2 className="animate-text text-grabit-600 z-10 flex bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['JalnanGothic'] text-4xl text-transparent">
-              {challengeDetail?.goal_money * challengers.length} 캐럿
-            </h2>
-          </div>
+  if (loading)
+    if (isValid) {
+      return (
+        <div className="mt-12 flex flex-col gap-4">
+          <div>
+            <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
+            <h3 className="text-center font-medium text-grabit-400">
+              {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
+            </h3>
 
-          <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
-            <h3 className="text-grabit-700 flex w-fit text-xl font-bold">{tab[0]}</h3>
-            <CircularProgressbarWithChildren
-              value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
-              strokeWidth={10}
-              styles={buildStyles({
-                trailColor: '#e9ecf6',
-                pathColor: '#726cb0',
-              })}
-            >
-              <div className="profile-img relative aspect-square w-full">
-                <img
-                  style={{ borderRadius: '100%', width: '70%' }}
-                  src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
-                  className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
-                />
+            <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
+              <div className="absolute h-40 w-40 opacity-50">
+                <RiveComponent />
               </div>
-              <RadialSeparators
-                count={totalAuthCount}
-                style={{
-                  background: '#fff',
-                  width: '10px',
-                  borderRadius: '0px',
-                  height: `${0}%`,
-                }}
-              />
-            </CircularProgressbarWithChildren>
-            <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
-          </div>
+              <h2 className="z-10 flex animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['SBAggroB'] text-4xl text-grabit-600 text-transparent">
+                {challengeDetail?.goal_money * challengers.length} 캐럿
+              </h2>
+            </div>
 
-          <div className="progress grid grid-cols-3 gap-6 p-2">
-            {tab.map((nickname, index) => {
-              if (index === 0) return null;
-
-              return (
-                <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
-                  <h3 className="text-grabit-700 flex w-fit break-all text-center text-xl font-bold">{nickname}</h3>
-                  <CircularProgressbarWithChildren
-                    value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
-                    strokeWidth={20}
-                    styles={buildStyles({
-                      trailColor: '#e9ecf6',
-                      pathColor: '#726cb0',
-                    })}
-                  >
-                    <div className="profile-img relative aspect-square w-full">
-                      <img
-                        style={{ borderRadius: '100%', width: '50%' }}
-                        src={profiles[index]}
-                        className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
-                      />
-                    </div>
-                    <RadialSeparators
-                      count={totalAuthCount}
-                      style={{
-                        background: '#fff',
-                        width: '20px',
-                        borderRadius: '0px',
-                        height: `${0}%`,
-                      }}
-                    />
-                  </CircularProgressbarWithChildren>
-                  <span className="text-center text-lg font-semibold text-stone-600">
-                    {UrlGroup[index].length}회 성공
-                  </span>
+            <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
+              <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
+              <CircularProgressbarWithChildren
+                value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
+                strokeWidth={10}
+                styles={buildStyles({
+                  trailColor: '#e9ecf6',
+                  pathColor: '#726cb0',
+                })}
+              >
+                <div className="profile-img relative aspect-square w-full">
+                  <img
+                    style={{ borderRadius: '100%', width: '70%' }}
+                    src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
+                    className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                  />
                 </div>
-              );
-            })}
+                <RadialSeparators
+                  count={totalAuthCount}
+                  style={{
+                    background: '#fff',
+                    width: '10px',
+                    borderRadius: '0px',
+                    height: `${0}%`,
+                  }}
+                />
+              </CircularProgressbarWithChildren>
+              <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
+            </div>
+            <div className="progress grid grid-cols-3 gap-6 p-2">
+              {tab.map((nickname, index) => {
+                if (index === 0) return null;
+                return (
+                  <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
+                    <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{nickname}</h3>
+                    <CircularProgressbarWithChildren
+                      value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
+                      strokeWidth={20}
+                      styles={buildStyles({
+                        trailColor: '#e9ecf6',
+                        pathColor: '#726cb0',
+                      })}
+                    >
+                      <div className="profile-img relative aspect-square w-full">
+                        <img
+                          style={{ borderRadius: '100%', width: '50%' }}
+                          src={profiles[index]}
+                          className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                        />
+                      </div>
+                      <RadialSeparators
+                        count={totalAuthCount}
+                        style={{
+                          background: '#fff',
+                          width: '20px',
+                          borderRadius: '0px',
+                          height: `${0}%`,
+                        }}
+
+                      />
+                    </CircularProgressbarWithChildren>
+                    <span className="text-center text-lg font-semibold text-stone-600">
+                      {UrlGroup[index].length}회 성공
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <ProgressComponent ProgressName={'진행률'} total={totalAuthCount} value={UrlGroup[0].length} />
+            <ProgressComponent
+              ProgressName={'기간'}
+              total={period + 1}
+              value={differenceInDays(new Date(), challengeDetail.authentication_start_date)}
+            />
+            <br />
+            {/* <ListComponent1 challenge={challengeDetail} /> */}
+            <Tab
+              tab1={tab[0]}
+              tab2={tab[1]}
+              tab3={tab[2]}
+              tab4={tab[3]}
+              tab1content={Images[0]}
+              tab2content={Images[1]}
+              tab3content={Images[2]}
+              tab4content={Images[3]}
+            />
+            <Cta
+              text="인증하기"
+              onclick={() => {
+                navigate(`/camera/${challenge_id}`, {
+                  state: {
+                    keyword: challengeDetail.auth_keyword,
+                    name: challengeDetail.challenge_name,
+                  },
+                });
+              }}
+              disabled={!isAcceptable}
+            ></Cta>
           </div>
-        </>
-      )}
-
-      <ProgressComponent ProgressName={'진행률'} total={totalAuthCount} value={UrlGroup[0].length} />
-      <ProgressComponent
-        ProgressName={'기간'}
-        total={period + 1}
-        value={differenceInDays(new Date(), challengeDetail.authentication_start_date)}
-      />
-      <br />
-      {/* <ListComponent1 challenge={challengeDetail} /> */}
-      <Tab
-        tab1={tab[0]}
-        tab2={tab[1]}
-        tab3={tab[2]}
-        tab4={tab[3]}
-        tab1content={Images[0]}
-        tab2content={Images[1]}
-        tab3content={Images[2]}
-        tab4content={Images[3]}
-      />
-
-      <Cta
-        text="인증하기"
-        onclick={() => {
-          navigate(`/camera/${challenge_id}`, {
-            state: {
-              keyword: challengeDetail.auth_keyword,
-              name: challengeDetail.challenge_name,
-            },
-          });
-        }}
-        disabled={!isAcceptable}
-      ></Cta>
-    </div>
-  );
+        </div>
+      );
+    } else {
+      return <Error403 />;
+    }
+  else return <Error404 />;
 }
 export default ChallengeInProgress;

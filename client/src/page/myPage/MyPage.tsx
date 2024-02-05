@@ -6,17 +6,19 @@ import { Button } from '@/components/ui/button';
 import { ListComponent3 } from '@/components/ComponentSeong';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRive } from '@rive-app/react-canvas';
+import { motion, useMotionValue, useTransform, animate, inView } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
-// interface account {}
+interface UserInfo {
+  nickname: string;
+  score_num: number;
+  carrot: number;
+  userInfo: any;
+  id: number;
+}
 
-// interface UserInfo {
-//   nickname: string;
-//   score_num: number;
-//   money: string;
-//   userInfo: any;
-//   id: number;
-//   carrot: number;
-// }
 interface ChallengeHistory {
   challenge_id?: number;
   userid_num?: number;
@@ -50,12 +52,12 @@ export default function MyPage() {
   const userid_num = localStorage.getItem('userid_num');
   const [nickName, setNickName] = useState<string>('');
   const [scoreNum, setScoreNum] = useState<number>(0);
-  const [money, setMoney] = useState<string>('');
+  const [money, setMoney] = useState<number>(0);
   const [win, setWin] = useState<string>('');
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
-  const [ranking, setRanking] = useState<string>('');
+  const [ranking, setRanking] = useState<string>();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
@@ -69,7 +71,9 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
+        console.log('mypage >>>>>', response.data);
         setProfileImg(response.data.file);
+        console.log('profileImg >>>>>', proFileImg);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
@@ -110,11 +114,13 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        const userInfo = response.data.userInfo[0];
+        console.log('mypage', response.data);
+        const userInfo: UserInfo = response.data.userInfo[0];
+        console.log('🚀 ~ .then ~ userInfo:', userInfo);
 
-        setNickName(userInfo.nickname);
-        setScoreNum(userInfo.score_num);
-        setMoney(userInfo.carrot);
+        setNickName(userInfo?.nickname);
+        setScoreNum(userInfo?.score_num);
+        setMoney(userInfo?.carrot);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
@@ -167,101 +173,152 @@ export default function MyPage() {
   const tierImageSrc = getTierImage(scoreNum);
   const tierName = getTierName(scoreNum);
 
+  const { RiveComponent } = useRive({
+    src: '/diamond.riv',
+    stateMachines: ['Rotate', 'Flash', 'Timeline1', 'Hover'],
+    autoplay: true,
+  });
+
+  const count = useMotionValue(money - 1000);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+
+  useEffect(() => {
+    const controls = animate(count, money, { duration: 2 });
+
+    return controls.stop;
+  }, [money]);
+
+  const [ref, inView] = useInView({
+    triggerOnce: false,
+    threshold: 0.1, // Adjust this value based on when you want the animation to start (0.1 means 10% of the element should be visible)
+  });
+
+  console.log('>>>>>>>proFileImg', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>
       <div></div>
 
-      <Avatar>
-        <AvatarImage src={proFileImg} />
-        <AvatarFallback></AvatarFallback>
-      </Avatar>
-
-      <Link to={`/mypage/edit`}>
-        <Button type="submit" variant="outline">
-          프로필 수정
-        </Button>
-      </Link>
-
-      <div>
-        <h2>닉네임</h2>
-        <p>{nickName}</p>
+      <div className="section flex">
+        <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
+          <Avatar className="aspect-square h-20 w-20">
+            <AvatarImage src={proFileImg === '' ? proFileImg : `/grabit_profile.png`} />
+            <AvatarFallback></AvatarFallback>
+          </Avatar>
+          {nickName === '' ? (
+            <Skeleton className="h-[24px] w-[60px]" />
+          ) : (
+            <p className="text-grabit-700 font-['SBAggroB'] font-bold">{nickName}</p>
+          )}
+          <Link to={`/mypage/edit`}>
+            <Button type="submit">프로필 수정</Button>
+          </Link>
+        </div>
       </div>
 
-      <div className="mt-10 flex content-center">
-        <div className="flex  w-[100%] flex-col justify-center">
-          <h2>점수</h2>
-          <p>{scoreNum}</p>
-        </div>
-        <div className="mr-5 w-[10%] text-end">
-          <p>{tierName}</p>
-          <p className="text-xs text-neutral-300">{ranking}위</p>
-        </div>
-        <div className="flex flex-col content-center justify-center">
+      <div className="my-16 flex w-full items-center justify-center text-center">
+        <div className="tier flex w-full basis-1/4 flex-col items-center justify-center">
           <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
+          <p className="text-2xl font-bold text-stone-700">{tierName}</p>
+          {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
         </div>
-      </div>
-      <br />
-      <br />
-
-      <h2>친구 목록</h2>
-      <div className="user-list rga-4 flex flex-col">
-        {friends.map((friend, index) => (
-          <div className="flex items-center gap-2" key={index}>
-            <Avatar>
-              <AvatarImage
-                src={friend.profile_img ? friend.profile_img : '/grabit_profile.png'}
-                alt={friend.nickname}
-              />
-              <AvatarFallback></AvatarFallback>
-            </Avatar>
-            <span>{friend.nickname}</span>
-          </div>
-        ))}
-        {/* 각각의 친구목록 전체보기 */}
-        <Link to={`/mypage/friend`}>
-          <Button>전체보기</Button>
-        </Link>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <div className="flex justify-between">
-          <span>{money}</span>
-          <Link to="/mypage/withdraw">
-            <span>출금하기</span>
-          </Link>
+        <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
+          <p className="font-['SBAggroB'] text-2xl">{scoreNum}</p>
+          <p className="text-xl font-bold text-stone-500">포인트</p>
         </div>
-        <div className="flex justify-between">
-          <button className="text-xs text-gray-400">내역보기</button>
-          <Link to="/mypage/charge">
-            <span>충전하기</span>
-          </Link>
-        </div>
-
-        <div className="flex justify-between">
-          <p>전적</p>
-          {/* http://localhost:3000/history history axios */}
-          <p>
-            {win}승 {lose}패
+        <div className="flex w-full basis-1/4  flex-col items-center justify-center">
+          {/* <h3 className="text-xl font-medium text-stone-500">전적</h3> */}
+          <p className="flex text-2xl font-bold text-stone-700">
+            {win}
+            <p className="ml-1 flex">승</p>
+          </p>
+          <p className="flex text-2xl font-bold text-stone-700">
+            {lose}
+            <p className="ml-1 flex">패</p>
           </p>
         </div>
-        <div>
-          <div>
-            {history?.map((challenge, key) => (
-              <Link
-                to={`/mypage/historydetail/${challenge.challenge_id}`}
-                key={key}
-                className="text-black no-underline"
-              >
-                <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <Link to={`/mypagehistorydetail/${userid_num}`}>
-            <button>전체보기</button>
+      </div>
+
+      <div className="friend flex flex-col items-center justify-center gap-4 ">
+        <div className="flex w-full items-center">
+          <h2 className="w-full font-['SBAggroB'] text-2xl">친구</h2>
+          <Link to={`/mypage/friend`}>
+            <Button variant={'secondary'} className="font-bold">
+              전체보기
+            </Button>
           </Link>
+        </div>
+        <div className="user-list  flex w-full flex-col gap-2 font-['SBAggroB'] text-stone-600">
+          {friends.map((friend, index) => (
+            <div className="flex w-full items-center gap-3" key={index}>
+              <Avatar>
+                <AvatarImage
+                  src={friend.profile_img ? friend.profile_img : 'grabit_profile.png'}
+                  alt={friend.nickname}
+                />
+                <AvatarFallback></AvatarFallback>
+              </Avatar>
+              <span>{friend.nickname}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="carrot bg-grabit-100 relative my-12 flex flex-col gap-4 rounded-2xl px-8 pb-4 pt-12">
+        <div className="absolute bottom-[130px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
+          <RiveComponent />
+        </div>
+        <motion.div
+          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-grabit-800 w-full text-center font-['SBAggroB'] text-3xl font-light"
+        >
+          <motion.span
+            ref={ref}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: inView ? 1 : 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-grabit-800 w-full text-center font-['SBAggroB'] text-3xl font-light"
+          >
+            {rounded}
+          </motion.span>
+          <span className="ml-1">캐럿</span>
+        </motion.div>
+        <div className="flex flex-col gap-2">
+          <div className="flex w-full gap-2">
+            <Link to="/mypage/charge" className="w-full">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
+                충전하기
+              </Button>
+            </Link>
+            <Link to="/mypage/withdraw" className="w-full ">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
+                출금하기
+              </Button>
+            </Link>
+          </div>
+          <Button variant={'ghost'} className="w-full">
+            내역보기
+          </Button>
+        </div>
+      </div>
+
+      <div className="friend flex flex-col items-center justify-center gap-4 ">
+        <div className="flex w-full items-center">
+          <h2 className="w-full font-['SBAggroB'] text-2xl">히스토리</h2>
+          <Link to={`/mypage/friend`}>
+            <Button variant={'secondary'} className="font-bold">
+              전체보기
+            </Button>
+          </Link>
+        </div>
+        <div className="user-list  flex w-full flex-col gap-2 font-['SBAggroB'] text-stone-600">
+          {history?.map((challenge, key) => (
+            <Link to={`/mypage/historydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
+              <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
+            </Link>
+          ))}
         </div>
       </div>
     </div>

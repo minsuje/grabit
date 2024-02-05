@@ -183,9 +183,11 @@ function ChallengeCreate() {
 
   console.log('authTerm', authTerm);
   console.log('authStart', authStart);
-
   async function onSubmit() {
-    const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
+    console.log('test');
+    try {
+      const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
+
 
     const result = await privateApi({
       method: 'POST',
@@ -207,6 +209,12 @@ function ChallengeCreate() {
     console.log(result);
     if (result.data.msg) {
       alert(result.data.msg);
+
+     
+    } }catch (error) {
+      // 오류 처리 로직
+      console.error('Challenge creation failed:', error);
+
     }
   }
 
