@@ -79,8 +79,8 @@ export class AuthController {
     // return this.authService.loginUser(req.body);
   }
 
-  @UseGuards(AuthGuard('kakao'))
   @Get('/auth/kakao')
+  @UseGuards(AuthGuard('kakao'))
   @HttpCode(301)
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
     const user = JSON.stringify(req.user);
@@ -118,7 +118,8 @@ export class AuthController {
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
     console.log('set cookie?????');
-    res.redirect('http://localhost:3000/auth/kakao/');
+    res.redirect('http://localhost:5173');
+
     // console.log('여기는?');
 
     // res.send({
