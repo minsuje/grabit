@@ -69,7 +69,7 @@ export default function Login() {
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
-        localStorage.setItem('accessToken', login_type);
+        localStorage.setItem('login_type', login_type);
 
 
         console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
