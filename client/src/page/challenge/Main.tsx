@@ -54,8 +54,8 @@ export default function Main() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        // console.log('dailyMission >>>>>>>', response.data);
-        setDailymission(response.data.mission_name[0].mission_content);
+        console.log('dailyMission >>>>>>>', response.data);
+        setDailymission(response.data.mission.title);
         setCompleted(response.data.completed);
       })
       .catch((error) => {
@@ -111,7 +111,6 @@ export default function Main() {
       ],
     });
     // console.log('openai >>>>>>>>>>', response.choices[0]);
-    setGptAnswer(response?.choices[0].message.content);
   }
 
   return (
@@ -124,7 +123,7 @@ export default function Main() {
       <div className="today-mission flex flex-col gap-6">
         <h1 className="text-grabit-800">오늘의 미션</h1>
         {completed === 'none' ? (
-          <Link to={`/challengeDaily/${dailymission}`} className="text-black no-underline">
+          <Link to={`/challengeDaily`} className="text-black no-underline">
             <div>
               <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
                 <div className="counter w-4"></div>

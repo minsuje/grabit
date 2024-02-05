@@ -5,17 +5,18 @@ import { Link } from 'react-router-dom';
 import { privateApi } from '@/api/axios';
 
 interface AlarmProps {
-  reference_id: number;
+  isConfirm?: boolean;
   type: string;
   content: JSX.Element;
   time: string;
-  button: boolean;
+  button?: boolean;
   link: string;
   notification_id: number;
 }
 
-function AlarmList({ notification_id, link, reference_id, type, content, time, button }: AlarmProps) {
+function AlarmList({ isConfirm, notification_id, link, type, content, time }: AlarmProps) {
   let createTime: string;
+
   if (differenceInCalendarDays(time, new Date()) === 0) {
     createTime = new Date(time).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' } as any);
   } else if (differenceInCalendarDays(time, new Date()) === -1) {
@@ -25,36 +26,54 @@ function AlarmList({ notification_id, link, reference_id, type, content, time, b
   }
 
   function deleteNoti(notification_id: number): void {
+    console.log(notification_id);
     privateApi
-      .patch(`http://3.34.122.205:3000/notification/${notification_id}`, {
+      .patch(`http://52.79.228.200:3000/notification/${notification_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('알림 삭제 >>>>>>>>>', response.data);
+        console.log('알림 삭제 >>>>>>>>>', response);
       })
       .catch((error) => {
         console.error('알림 삭제 중에 오류발생 :', error);
       });
   }
+
   return (
     <div key={notification_id}>
-      <div className="mb-[5%]  flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
+      <div
+        className={
+          isConfirm
+            ? 'mb-[5%]  flex flex-col gap-3 rounded-2xl bg-gray-100 p-6  opacity-70 shadow-lg shadow-grabit-600/10'
+            : 'mb-[5%]  flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10 '
+        }
+      >
         <div className="flex justify-between">
           <p className="w-[4.5rem] rounded-xl bg-grabit-600 px-2 py-[1.5px] text-center text-sm text-white">{type}</p>
 
-          {button ? (
+          {/* {button ? (
             <Cross1Icon
               className="text-grabit-6ㄴ00 h-4 w-4 hover:cursor-pointer"
               onClick={() => {
-                deleteNoti(reference_id);
+                deleteNoti(notification_id);
               }}
             />
-          ) : null}
+          ) : null} */}
         </div>
 
         {link ? (
-          <Link to={`${link}/${reference_id}`} className="text-black no-underline">
-            {content}
+          <Link to={link} className="text-black no-underline">
+            <p
+              onClick={() => {
+                if (isConfirm) {
+                  return;
+                } else {
+                  deleteNoti(notification_id);
+                }
+              }}
+            >
+              {content}
+            </p>
           </Link>
         ) : (
           content
