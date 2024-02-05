@@ -25,7 +25,7 @@ import ChallengeAccept from './page/challenge/ChallengeAccept';
 import MyPage from './page/myPage/MyPage';
 import MyPageEdit from './page/myPage/MyPageEdit';
 import Friend from './page/myPage/Friend';
-import MypageWithdraw from './page/myPage/MyPageWithdraw';
+import MypageWithdraw from './page/myPage/MypageWithdraw';
 import MypageCharge from './page/myPage/MyPageCharge';
 import MyPageHistory from './page/myPage/MyPageHistory';
 import MyPageHistoryDetail from './page/myPage/MyPageHistoryDetail';
