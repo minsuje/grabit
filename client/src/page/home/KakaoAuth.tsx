@@ -3,10 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 function KakaoAuth() {
   const navigate = useNavigate();
   // const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  const getCookie = (name: string) => {
+    return cookies.get(name);
+  };
 
   // Access Token 받아오기
   const getAccessToken = async () => {
