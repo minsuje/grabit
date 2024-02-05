@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { loadPaymentWidget, PaymentWidgetInstance, ANONYMOUS } from '@tosspayments/payment-widget-sdk';
+import { useEffect, useRef } from 'react';
+import { loadPaymentWidget, PaymentWidgetInstance } from '@tosspayments/payment-widget-sdk';
 import { nanoid } from 'nanoid';
-import axios, { privateApi } from '@/api/axios';
+import { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
 
 interface Props {

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export default function MypageWithdraw() {
+export default function MyPageWithdraw() {
   const dispatch = useDispatch();
   const [money, setMoney] = useState<string>('');
   const [bank_num, setBank_num] = useState<string>('');
