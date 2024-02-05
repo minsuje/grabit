@@ -121,10 +121,9 @@ function ChallengeDaily() {
       </div>
 
       {imgUrl ? (
-        <div className="mx-auto text-center">
+        <div className="mx-auto my-6 text-center">
           <h1> 미리보기</h1>
           <img src={imgUrl}></img>
-          <Button onClick={openaiFunction}>업로드</Button>
         </div>
       ) : (
         <div
@@ -158,16 +157,34 @@ function ChallengeDaily() {
               }
             }}
           />
-          <Button
-            onClick={() => {
-              if (inputRef.current) {
-                inputRef.current.click();
-              }
-            }}
-            className="w-full rounded-md p-6"
-          >
-            인증하기
-          </Button>
+          {!imgUrl ? (
+            <Button
+              onClick={() => {
+                if (inputRef.current) {
+                  inputRef.current.click();
+                }
+              }}
+              className="w-full rounded-md p-6"
+            >
+              인증하기
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={() => {
+                  if (inputRef.current) {
+                    inputRef.current.click();
+                  }
+                }}
+                className="my-2 w-full rounded-md p-6"
+              >
+                다시 찍기
+              </Button>
+              <Button onClick={openaiFunction} className="w-full rounded-md p-6">
+                업로드
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>

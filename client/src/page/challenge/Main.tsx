@@ -1,4 +1,3 @@
-import { HotChallenge } from '@/components/Component0117';
 import MainRanking from '@/components/MainRanking';
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Button } from '@/components/ui/button';
@@ -6,12 +5,13 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { privateApi } from '@/api/axios';
 import { Challenge } from '@/types/types';
-
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import HotChallenge from '@/components/HotChallenge';
 
 import OpenAI from 'openai';
 import { Input } from '@/components/ui/input';
+import HotTopicData from '@/components/HotTopicData';
 
 export default function Main() {
   console.log('main mounted !!!');
@@ -200,6 +200,7 @@ export default function Main() {
       <div className="trending-challenge flex flex-col gap-8">
         <h1 className="text-grabit-800">지금 인기있는 주제</h1>
         <HotChallenge />
+
         <Link to="/challengeList" className="text-center text-gray-400 no-underline">
           <div>전체 챌린지 보러가기</div>
         </Link>
