@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 
 // import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -20,7 +20,7 @@ export default function MyPageEdit() {
   const [file, setFile] = useState<File>();
 
   const Navigate = useNavigate();
-
+  const { userid_num } = useParams();
   // FormData 인터페이스 정의
   interface FormData {
     nickname?: string | null;
@@ -45,7 +45,6 @@ export default function MyPageEdit() {
   const {
     register,
     handleSubmit,
-
     setError,
 
     // formState: { errors },
@@ -86,7 +85,8 @@ export default function MyPageEdit() {
     }).then((res) => {
       console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
-      console.log('patch res.data', res.data.file);
+      console.log('patch res.data>>', res.data.file);
+      alert(res.data.msg);
       axios({
         method: 'put',
         url: res.data.file,
@@ -130,7 +130,7 @@ export default function MyPageEdit() {
         <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg} />
+            <AvatarImage src={proFileImg ? proFileImg : '/grabit_profile.png'} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
 
