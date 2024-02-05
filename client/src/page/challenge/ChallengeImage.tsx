@@ -1,9 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { privateApi } from '@/api/axios';
 import { useParams } from 'react-router-dom';
-import { authentication_img_emotion } from '@/types/types';
 import { motion } from 'framer-motion';
 
 interface Emotion {
@@ -17,8 +16,6 @@ function ChallengeImage() {
   // const userid_num = 3;
 
   const { challenge_id, authentication_id } = useParams();
-  // const emotionList: any = useRef<HTMLInputElement>(null);
-  const [emoticonArr, setEmoticonArr] = useState<authentication_img_emotion[]>([]);
 
   const [first, setFirst] = useState<Emotion>({
     count: 0,
@@ -50,7 +47,7 @@ function ChallengeImage() {
       .then((response): void => {
         console.log(response.data);
         setFileUrl(response.data.fileUrl);
-        setEmoticonArr(response.data.emoticon);
+
         for (let i = 0; i < response.data.emoticon.length; i++) {
           switch (response.data.emoticon[i].authentication_img_comment_emoticon) {
             case 1:

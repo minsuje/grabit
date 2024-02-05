@@ -16,7 +16,6 @@ import { useRive } from '@rive-app/react-canvas';
 
 import RadialSeparators from '@/components/progress/Seperator.tsx';
 import Error403 from '../Error403';
-import Error404 from '../Error404';
 
 type profiles = string;
 interface url {
@@ -43,7 +42,6 @@ function ChallengeInProgress() {
   const [urls, setUrls] = useState<url[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '진행중인 챌린지', backPath: -1 }));

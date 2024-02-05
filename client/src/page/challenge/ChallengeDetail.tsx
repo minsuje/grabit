@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+
 import { RootState } from '@/store/store';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { setHeaderInfo } from '@/store/headerSlice';
 import Cta from '@/components/Cta';
 import { motion } from 'framer-motion';
+import { Button } from 'react-day-picker';
 
 function ChallengeDetail() {
   const { userid_num } = useSelector((state: RootState) => state.login);
@@ -142,6 +143,9 @@ function ChallengeDetail() {
           {challengeDetail != undefined &&
             challengeDetail.authentication_start_time + '시 ~ ' + challengeDetail.authentication_end_time + '시 '}
         </p>
+      </div>
+      <div className="flex w-full">
+        <Button onClick={() => navigate('/challengeList')}>확인</Button>
       </div>
 
       {challengeDetail?.is_public &&
