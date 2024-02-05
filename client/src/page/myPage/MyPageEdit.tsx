@@ -127,7 +127,7 @@ export default function MyPageEdit() {
       </button> */}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h1>마이페이지</h1>
+        <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
           <Avatar>
             <AvatarImage src={proFileImg} />

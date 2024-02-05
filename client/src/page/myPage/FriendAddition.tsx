@@ -39,7 +39,7 @@ export default function FriendAddition() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '친구 추가', backPath: `-1` }));
+    dispatch(setHeaderInfo({ title: '친구 추가', backPath: -1 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -80,16 +80,19 @@ export default function FriendAddition() {
   const tierName = getTierName(scoreNum);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <h1>전체목록</h1>
-        <Link to="">
-          <button>친구 추가</button>
-        </Link>
+        <h1>유저 검색</h1>
       </div>
 
-      <Input placeholder="아이디를 입력해 주세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      <Button onClick={handleSubmit}>검색</Button>
+      <div className="flex gap-2">
+        <Input
+          placeholder="아이디를 입력해 주세요"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button onClick={handleSubmit}>검색</Button>
+      </div>
       {searchResult ? (
         // 검색 결과가 있을 때 렌더링
 
@@ -108,7 +111,9 @@ export default function FriendAddition() {
           </div>
         </Link>
       ) : (
-        <p>존재하지 않는 닉네임입니다.</p>
+        <div className="flex h-full min-h-60 w-full items-center justify-center text-center">
+          <p className="flex text-stone-400">존재하지 않는 닉네임입니다</p>
+        </div>
       )}
 
       {/* <MyPageFriendDetail></MyPageFriendDetail> */}

@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 interface FriendDetail {
   id: string;
   nickname: string;
@@ -15,6 +16,7 @@ interface FriendDetail {
 // 친구 객체를 위한 인터페이스 정의
 
 export default function MyPageFriendDetail() {
+  const dispatch = useDispatch();
   const [friendDetail] = useState<any | FriendDetail | null>('');
   const { userid } = useParams();
   const [nickname, setNickname] = useState();
@@ -28,6 +30,10 @@ export default function MyPageFriendDetail() {
   const userid_num = localStorage.getItem('userid_num');
 
   console.log(userid_num);
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '친구 상세', backPath: `/mypage/friend` }));
+  }, [dispatch]);
 
   useEffect(() => {
     privateApi
@@ -104,47 +110,39 @@ export default function MyPageFriendDetail() {
   console.log(friendDetail);
 
   return (
-    <div>
-      <Avatar>
-        <AvatarImage src={proFileImg} />
-        <AvatarFallback></AvatarFallback>
-      </Avatar>
-      <div>
-        <p>{nickname}</p>
+    <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col items-center justify-center gap-4">
+        <Avatar className="flex h-20 w-20">
+          <AvatarImage src={proFileImg} />
+          <AvatarFallback></AvatarFallback>
+        </Avatar>
+        <h2 className="flex font-['SBAggroB'] font-light text-grabit-700">{nickname}</h2>
       </div>
 
-      <div className="flex justify-between">
-        <div className="flex flex-col  justify-center">
-          <p>{scoreNum}</p>
+      <div className="my-8 flex w-full items-center justify-center text-center">
+        <div className="tier flex w-full basis-1/4 flex-col items-center justify-center">
+          <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
+          <p className="text-2xl font-bold text-stone-700">{tierName}</p>
+          {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
         </div>
-
-        <div className="flex">
-          <div>
-            <p>{tierName}</p>
-            <span className="text-xs text-gray-400">{myRank}위</span>
-          </div>
-
-          {/* 티어 이미지 */}
-          <Avatar>
-            <img src={tierImageSrc} alt="Tier" />
-
-            {/* <AvatarImage src={friends.profile_img} /> */}
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
-
-          {/* <img src={friends.profile_img} alt="friends.profile_img" className="w-[25%]bg-cover" /> */}
+        <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
+          <p className="font-['SBAggroB'] text-2xl">{scoreNum}</p>
+          <p className="text-xl font-bold text-stone-500">포인트</p>
         </div>
-      </div>
-
-      {/* 점수별로 띄워주는 이미지를 다르게 하기 */}
-      <div className="flex justify-between">
-        <p>전적</p>
-        <div className="flex">
-          <p>{win}승</p>
-          <p>{lose}패</p>
+        <div className="flex w-full basis-1/4  flex-col items-center justify-center">
+          {/* <h3 className="text-xl font-medium text-stone-500">전적</h3> */}
+          <p className="flex text-2xl font-bold text-stone-700">
+            {win}
+            <p className="ml-1 flex">승</p>
+          </p>
+          <p className="flex text-2xl font-bold text-stone-700">
+            {lose}
+            <p className="ml-1 flex">패</p>
+          </p>
         </div>
       </div>
-      <div>
+
+      <div className="flex w-full items-center justify-center">
         <Button onClick={handleDeleteFriend}>친구 끊기</Button>
       </div>
     </div>

@@ -49,21 +49,30 @@ export default function Friend() {
 
   return (
     <div>
-      <div className="flex justify-between">
-        <h1>친구목록</h1>
-      </div>
-      <div>
-        <Input placeholder="닉네임을 입력해주세요" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-        {/* 각각의 친구목록 상세 페이지 */}
+      <div className="flex w-full items-center justify-center">
+        <h1 className="w-full">친구 목록</h1>
         <Link to="/friend/new/">
           <Button>친구 추가</Button>
         </Link>
       </div>
-      {filteredFriends.length > 0 ? (
-        filteredFriends.map((friend, index) => <MyPageFriendList key={index} friends={friend} />)
-      ) : (
-        <p>존재하지 않는 닉네임입니다</p>
-      )}
+      <div className="my-6 flex w-full gap-2">
+        <Input
+          placeholder="닉네임을 입력해주세요"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="flex w-full"
+        />
+        <Button className="flex w-fit" variant={'secondary'}>
+          검색
+        </Button>
+      </div>
+      <div className="friendList flex flex-col gap-4">
+        {filteredFriends.length > 0 ? (
+          filteredFriends.map((friend, index) => <MyPageFriendList key={index} friends={friend} />)
+        ) : (
+          <p>존재하지 않는 닉네임입니다</p>
+        )}
+      </div>
     </div>
   );
 }
