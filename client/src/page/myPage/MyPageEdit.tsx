@@ -55,7 +55,7 @@ export default function MyPageEdit() {
     setError,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({ resolver: yupResolver(schema) });
+  } = useForm<FormData>();
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '회원 정보 수정', backPath: `/mypage` }));
@@ -115,7 +115,11 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/myPage`)
+      .get(`http://localhost:3000/myPage`, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+        },
+      })
       .then((response) => {
         const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);
