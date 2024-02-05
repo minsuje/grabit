@@ -52,7 +52,7 @@ function Payment({ price, setPrice }: Props) {
               : `flex flex-col items-center justify-center gap-1 rounded-xl p-4 ring-2 ring-grabit-100`
           }
         >
-          <span className="flex text-xl font-extrabold text-grabit-700">850 캐럿</span>
+          <span className="flex text-center text-xl font-extrabold text-grabit-700">850 캐럿</span>
           <span className="flex font-bold text-stone-400">1000 원</span>
         </motion.div>
         <motion.div
@@ -65,7 +65,7 @@ function Payment({ price, setPrice }: Props) {
               : `flex flex-col items-center justify-center gap-1 rounded-xl p-4 ring-2 ring-grabit-100`
           }
         >
-          <span className="flex text-xl font-extrabold text-grabit-700">1700 캐럿</span>
+          <span className="flex text-center text-xl font-extrabold text-grabit-700">1700 캐럿</span>
           <span className="flex font-bold text-stone-400">2000 원</span>
         </motion.div>
         <motion.div
@@ -78,7 +78,7 @@ function Payment({ price, setPrice }: Props) {
               : `flex flex-col items-center justify-center gap-1 rounded-xl p-4 ring-2 ring-grabit-100`
           }
         >
-          <span className="flex text-xl font-extrabold text-grabit-700">4800 캐럿</span>
+          <span className="flex text-center text-xl font-extrabold text-grabit-700">4800 캐럿</span>
           <span className="flex font-bold text-stone-400">5000 원</span>
         </motion.div>
         <motion.div
@@ -91,7 +91,7 @@ function Payment({ price, setPrice }: Props) {
               : `flex flex-col items-center justify-center gap-1 rounded-xl p-4 ring-2 ring-grabit-100`
           }
         >
-          <span className="flex text-xl font-extrabold text-grabit-700">10000 캐럿</span>
+          <span className="flex text-center text-xl font-extrabold text-grabit-700">10000 캐럿</span>
           <span className="flex font-bold text-stone-400">10000 원</span>
         </motion.div>
       </div>
