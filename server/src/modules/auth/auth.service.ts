@@ -120,6 +120,15 @@ export class AuthService {
       .from(users)
       .where(eq(users.userid, String(kakaoId)));
 
+    // 유저가 없다면 DB에 유저 추가
+    if (findUser.length == 0) {
+      const newUser = await db.insert(users).values({
+        login_type: 'kakao',
+        userid: String(kakaoId),
+        name: username,
+        nickname: username,
+      });
+    }
     const clearToken = await db
       .update(users)
       .set({ refreshToken: null })
@@ -129,17 +138,6 @@ export class AuthService {
       .select()
       .from(users)
       .where(eq(users.userid, String(kakaoId)));
-
-    // 유저가 없다면 DB에 유저 추가
-    if (findUser.length == 0) {
-      const newUser = await db.insert(users).values({
-        login_type: 'kakao',
-        userid: String(kakaoId),
-        profile_img,
-        name: username,
-        nickname: username,
-      });
-    }
 
     console.log('console isClear>>>', isClear);
     const kakaoTokenInfo = {

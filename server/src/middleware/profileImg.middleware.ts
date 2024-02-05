@@ -231,6 +231,7 @@ export class profileImgMiddleware implements NestMiddleware {
           if (req.method === 'DELETE' || req.method === 'PATCH') {
             if (key != null) {
               if (filename) {
+                console.log('HERE!!!');
                 const params = {
                   Bucket: process.env.AWS_S3_BUCKET,
                   Key: key,
@@ -240,6 +241,7 @@ export class profileImgMiddleware implements NestMiddleware {
               }
             }
             if (req.method === 'PATCH') {
+              console.log('middleware req > ', req.originalUrl);
               console.log('patch filename           >   ', filename);
               if (filename) {
                 console.log('patch if ');

@@ -97,7 +97,7 @@ function ChallengeDetail() {
                   animate={{ opacity: 1, y: 0 }}
                 >
                   <Avatar className="flex h-16 w-16 flex-col">
-                    <AvatarImage src={challenger.profile_img} alt="@shadcn" className="flex" />
+                    <AvatarImage src={challenger.profile_img!} alt="@shadcn" className="flex" />
                     <AvatarFallback className="flex">CN</AvatarFallback>
                   </Avatar>
                   <span className="text-md font-semibold text-stone-500">{challenger.nickname}</span>

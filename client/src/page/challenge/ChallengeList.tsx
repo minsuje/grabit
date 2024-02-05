@@ -63,13 +63,13 @@ function ChallengeList() {
 
       {preMyChallenge.map((challenge: Challenge) => {
         return (
-          <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
+          <>
             {Number(challenge.userid_num) === Number(userid_num) ? (
               <ListComponentWithButton challenge={challenge} />
             ) : (
               <ListComponentWithoutButton challenge={challenge} />
             )}
-          </Link>
+          </>
         );
       })}
 

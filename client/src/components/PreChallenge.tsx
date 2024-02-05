@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
-import { privateApi } from '@/api/axios';
 import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 
@@ -12,13 +11,14 @@ function ListComponentWithButton({ challenge }: ChallengeProp) {
   return (
     <div>
       <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-        <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-          <div className="flex justify-between">
+        <div className="flex justify-between">
+          <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
             <p>{challenge.challenge_name}</p>
-            <p>{dDay}일 후 시작</p>
-          </div>
-          <p>{challenge.goal_money}원</p>
-        </Link>
+          </Link>
+          <p>{dDay}일 후 시작</p>
+        </div>
+        <p>{challenge.goal_money}원</p>
+
         <div>
           <Button
             onClick={() => {
@@ -27,17 +27,6 @@ function ListComponentWithButton({ challenge }: ChallengeProp) {
             }}
           >
             수정
-          </Button>
-          <Button
-            onClick={() => {
-              privateApi
-                .delete(`http://52.79.228.200:3000/challengeEdit/${challenge.challenge_id}`)
-                .then((response) => {
-                  console.log('challengeEdit에서 chal', response.data);
-                });
-            }}
-          >
-            삭제
           </Button>
         </div>
       </div>
@@ -51,13 +40,13 @@ function ListComponentWithoutButton({ challenge }: ChallengeProp) {
   return (
     <div>
       <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-        <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
-          <div className="flex justify-between">
+        <div className="flex justify-between">
+          <Link to={`/challengeDetail/${challenge.challenge_id}`} className=" text-black no-underline">
             <p>{challenge.challenge_name}</p>
-            <p>{dDay}일 후 시작</p>
-          </div>
-          <p>{challenge.goal_money}원</p>
-        </Link>
+          </Link>
+          <p>{dDay}일 후 시작</p>
+        </div>
+        <p>{challenge.goal_money}원</p>
       </div>
     </div>
   );
