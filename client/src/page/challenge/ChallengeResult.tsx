@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
 import { ProgressComponent } from '@/components/ComponentSeong';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ReactCanvasConfetti from '@/components/ReactCanvasConfetti';
 import '@/App.css';
 import axios from '@/api/axios';
@@ -11,8 +11,10 @@ import { privateApi } from '@/api/axios';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Challenge } from '@/types/types';
+import Cta from '@/components/Cta';
 
 export default function ChallengeResult() {
+  const navigate = useNavigate();
   const [currentScore, setCurrentScore] = useState<number>(); // 사용자의 현재 점수
   const [earnedScore, setEarnedScore] = useState<number>(0); // 사용자가 획득한 점수
   const [tierName, setTierName] = useState<string>('');
@@ -34,6 +36,12 @@ export default function ChallengeResult() {
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 결과', backPath: -1 }));
+
+    const timer = setTimeout(() => {
+      handleHideTierResult();
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [dispatch]);
 
   // 마이페이지
@@ -78,6 +86,8 @@ export default function ChallengeResult() {
     setShowTierResult(false);
   };
 
+  // set setShowTierResult to false after 5 seconds
+
   // 티어 및 이미지 업데이트 로직
   useEffect(() => {
     if (currentScore >= 2000) {
@@ -93,8 +103,8 @@ export default function ChallengeResult() {
       setTierName('실버');
       setTierImageSrc('/silverTear.png');
     } else {
-      setTierName('Unranked');
-      setTierImageSrc('/grabit_profile.png');
+      setTierName('브론즈');
+      setTierImageSrc('/silverTear.png');
     }
   }, [currentScore]);
 
@@ -140,36 +150,83 @@ export default function ChallengeResult() {
     }
   }, [challengerInfo]);
 
+  function handleNavigate() {
+    navigate('/main');
+  }
+
   return (
     <>
       {showTierResult && (
-        <div className="full-screen-overlay">
-          <div className="challenge-result-page">
+        <div>
+          <div className="challenge-result-page fixed z-[100] flex h-full w-full items-center justify-center">
             <div className="tier-info text-center">
               <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 3 }}
-                className="flex flex-col "
+                // initial={{ scale: 0.8, opacity: 0 }}
+                animate={{
+                  scale: [0.8, 0.9, 1, 5],
+                  opacity: [0, 1, 1, 0],
+                  filter: ['blur(10px)', 'blur(0px)', 'blur(0px)', 'blur(20px)'],
+                }}
+                transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
+                className="flex flex-col items-center justify-center text-white"
               >
-                <h2>{winMessage}</h2>
-                <h2>당신의 티어: {tierName}</h2>
-                <img src={tierImageSrc} alt={`${tierName} 티어 이미지`} className="tier-image" />
-                <h2>획득 점수: {challengerInfo[0]?.score}</h2>
-                <h2 className="text-6xl">{currentScore}</h2>
+                <h2 className="text-white">{winMessage}</h2>
+                <h2 className="text-white">티어</h2>
+                <h3>{tierName}</h3>
+                <img src={tierImageSrc} alt={`${tierName} 티어 이미지`} className="tier-image w-40 rounded-full" />
+                <div className="score flex flex-col gap-2">
+                  <h2 className="text-white">획득 점수</h2>
+                  <h2 className="text-white">{challengerInfo[0]?.score}</h2>
+                  <h2 className="text-6xl text-white">{currentScore}</h2>
+                </div>
               </motion.div>
-
-              <Button onClick={handleHideTierResult}>확인</Button>
             </div>
+          </div>
+          {/* <Cta text={'확인'} onclick={handleHideTierResult} /> */}
+          <div>
+            <div className="fixed bottom-0 left-0 right-0 top-0 h-full w-full items-center justify-center bg-white/80 p-8 backdrop-blur-3xl">
+              <motion.div
+                initial={{ x: -200 }}
+                animate={{ scale: [1.5, 4], y: [0, -300], opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
+                exit={{ opacity: 0 }}
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-blue-500 to-rose-500"
+              ></motion.div>
+              {/* <motion.div
+                animate={{ scale: [2, 4], x: [300, -300], opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
+                exit={{ opacity: 0 }}
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-rose-500 to-grabit-500"
+              ></motion.div> */}
+              <motion.div
+                animate={{ scale: [1.5, 4], x: [-300, 300], opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
+                exit={{ opacity: 0 }}
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-grabit-500 to-violet-500"
+              ></motion.div>
+              <motion.div
+                initial={{ x: 200 }}
+                animate={{ scale: [1.5, 4], y: [-300, 300], opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
+                exit={{ opacity: 0 }}
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500 to-grabit-500"
+              ></motion.div>
+            </div>
+            <div className="fixed bottom-0 left-0 right-0 top-0 h-full w-full items-center justify-center p-8 backdrop-blur-3xl"></div>
           </div>
         </div>
       )}
 
       {showConfetti && <ReactCanvasConfetti />}
 
-      <div className="container ">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0, 1] }}
+        transition={{ duration: 6, times: [0, 0.8, 1] }}
+        className="container h-full w-full"
+      >
         <h1 className="mb-10  p-3 text-center text-3xl font-extrabold">{challengeInfo?.challenge_name} 결과</h1>
-        <div className="flex text-center">
+        <div className="grid grid-cols-3 text-center">
           <div className="text-center">
             <div>
               <span className="text-2xl font-black">{info.result[0].nickname}</span>
@@ -178,7 +235,7 @@ export default function ChallengeResult() {
               <p>{challengerInfo[0]?.score} P </p>
             </div>
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto " />
+              <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
             </div>
           </div>
 
@@ -190,7 +247,7 @@ export default function ChallengeResult() {
               <p>{challengerInfo[1]?.score} P </p>
             </div>
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto " />
+              <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
             </div>
           </div>
 
@@ -203,7 +260,7 @@ export default function ChallengeResult() {
                 <p>{challengerInfo[2]?.score} P</p>
               </div>
               <div className="text-center">
-                <img src={tierImageSrc} alt="tear" className="mx-auto " />
+                <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
               </div>
             </div>
           )}
@@ -223,13 +280,14 @@ export default function ChallengeResult() {
           )}
         </div>
 
-        <ProgressComponent ProgressName="진행률" total={info.totalAuth} value={info.result[0].Authcount} />
+        {/* <ProgressComponent ProgressName="진행률" total={info.totalAuth} value={info.result[0].Authcount} /> */}
         <div className="text-center ">
-          <Link to="/main">
+          {/* <Link to="/main">
             <button className="mb-10 mt-10">확인</button>
-          </Link>
+          </Link> */}
+          {showTierResult ? null : <Cta text={'확인'} onclick={handleNavigate} />}
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
