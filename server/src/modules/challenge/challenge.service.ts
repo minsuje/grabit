@@ -600,12 +600,12 @@ export class ChallengeService {
       }
     }
 
-    // return await db
-    //   .delete(challenge)
-    //   .where(eq(challenge.challenge_id, challenge_id));
+    return await db
+      .delete(challenge)
+      .where(eq(challenge.challenge_id, challenge_id));
 
     // 일단 알림만 보내주고 30일 이후에 db에서 삭제해줘야 함. -> 알림 조회될 때 없으면 충돌 발생하기 때문
-    return 'success';
+    // return 'success';
   };
 
   // 챌린지 인증하기
