@@ -51,6 +51,7 @@ import { useState } from 'react';
 import ScrollToTop from './components/ScrollTop';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedRootRoutes from './page/AnimatedRootRoutes';
+import TestKakao from './page/home/testKakao';
 
 function AnimatedRoutes() {
   const [price, setPrice] = useState<number>(0);
@@ -64,7 +65,8 @@ function AnimatedRoutes() {
           <Route element={<CommonLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
-            <Route path="/auth/kakao" element={<KakaoAuth />} />
+            <Route path="/auth/kakao/login" element={<KakaoAuth />} />
+            <Route path='/auth/kakao/test' element={<TestKakao />} />
           </Route>
         </Route>
         <Route element={<Layout />}>
