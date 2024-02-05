@@ -36,7 +36,7 @@ function ChallengeAccept() {
 
   const accept = () => {
     privateApi
-      .get(`http://52.79.228.200:3000/challengeAccept/${challengeDetail?.challenge_id}`)
+      .patch(`http://52.79.228.200:3000/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
@@ -47,7 +47,7 @@ function ChallengeAccept() {
 
   const refuse = () => {
     privateApi
-      .get(`http://52.79.228.200:3000/challengeRefuse/${challengeDetail?.challenge_id}`)
+      .patch(`http://52.79.228.200:3000/challengeReject/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
       })
