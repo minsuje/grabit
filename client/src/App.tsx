@@ -66,7 +66,7 @@ function AnimatedRoutes() {
             <Route path="/login" element={<Login />} />
             <Route path="/register/normal" element={<Register />} />
             <Route path="/auth/kakao/login" element={<KakaoAuth />} />
-            <Route path='/auth/kakao/test' element={<TestKakao />} />
+            <Route path="/auth/kakao/test" element={<TestKakao />} />
           </Route>
         </Route>
         <Route element={<Layout />}>
@@ -101,14 +101,13 @@ function AnimatedRoutes() {
           <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
           <Route path="/mypage/history" element={<MyPageHistory />} />
           <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
+          <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
+          <Route path="/checkout" element={<CheckoutPages price={price} />} />
+          <Route path="/checkout/success" element={<CheckoutSuccess />} />
+          <Route path="/checkout/fail" element={<CheckoutFail />} />
           <Route path="/friend/new/:userid" element={<FriendAddition />} />
           <Route path="/friend/new" element={<FriendAddition />} />
         </Route>
-        {/* 테스트 용 */}
-        <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
-        <Route path="/checkout" element={<CheckoutPages price={price} />} />
-        <Route path="/checkout/success" element={<CheckoutSuccess />} />
-        <Route path="/checkout/fail" element={<CheckoutFail />} />
       </Routes>
     </AnimatePresence>
   );
