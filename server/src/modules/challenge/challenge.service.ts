@@ -743,17 +743,17 @@ export class ChallengeService {
             })
             .split(',')[0],
         )
-      )
-        console.log(
-          myChallenge[i].authentication_end_date
-            .toLocaleString('en-US', {
-              timeZone: 'Asia/Seoul',
-            })
-            .split(',')[0],
-        );
-      history.push(myChallenge[i]);
+      ) {
+        // console.log(
+        //   myChallenge[i].authentication_end_date
+        //     .toLocaleString('en-US', {
+        //       timeZone: 'Asia/Seoul',
+        //     })
+        //     .split(',')[0],
+        // );
+        history.push(myChallenge[i]);
+      }
     }
-    console.log('history >> ', history);
     for (let i = 0; i < history.length; i++) {
       let challenger = history[i].challenger_userid_num;
       for (let j = 0; j < challenger.length; j++) {
