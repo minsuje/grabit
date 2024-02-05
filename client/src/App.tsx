@@ -76,7 +76,7 @@ function AnimatedRoutes() {
           <Route path="/challengeInProgress/:challenge_id" element={<ChallengeInProgress />} />
           <Route path="/camera/:challenge_id" element={<Camera />} />
           {/* <Route path="/challengetear" element={<ChallengeTear />} /> */}
-          <Route path="/challengeresult" element={<ChallengeResult />} />
+
           <Route path="/challengeImage/:challenge_id/:authentication_id" element={<ChallengeImage />} />
           <Route path="/challengeList" element={<ChallengeList />} />
           <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
@@ -88,7 +88,7 @@ function AnimatedRoutes() {
           <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
           <Route path="/fileupload" element={<FileUploadTest />} />
           <Route path="/friendSelect" element={<FriendSelect />} />
-          <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
+
           <Route path="/challengeNotice" element={<ChallengeNotice />} />
           <Route path="/challengeCreate" element={<ChallengeCreate />} />
           <Route path="/refresh" element={<Refresh />} />
@@ -109,7 +109,12 @@ function AnimatedRoutes() {
         </Route>
         <Route path="/checkout/success" element={<CheckoutSuccess />} />
         <Route path="/checkout/fail" element={<CheckoutFail />} />
+
+        {/* <Route path="/challengeresult" element={<ChallengeResult />} /> */}
+        <Route path="/challengeResult/:challenge_id" element={<ChallengeResult />} />
+
         <Route path={'*'} element={<Error404 />} />
+
       </Routes>
     </AnimatePresence>
   );

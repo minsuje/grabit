@@ -155,6 +155,7 @@ function Alarm() {
                 {/* reference_id */}
 
                 <AlarmList
+                  key={list.notification_id}
                   notification_id={list.notification_id}
                   type={finishCheck.type}
                   content={finishCheck.content}
@@ -166,7 +167,7 @@ function Alarm() {
             );
           })
         ) : (
-          <div className=" flex  items-center justify-center text-xl text-gray-500">알림이 없습니다.</div>
+          <div className=" flex items-center justify-center text-xl text-gray-500">알림이 없습니다.</div>
         )}
         {isAlarm ? (
           AlarmConfirm.map((list) => {
@@ -176,6 +177,7 @@ function Alarm() {
                 {/* reference_id */}
 
                 <AlarmList
+                  key={list.notification_id}
                   isConfirm={true}
                   notification_id={list.notification_id}
                   type={finishCheck.type}
