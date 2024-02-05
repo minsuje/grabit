@@ -56,6 +56,8 @@ export class ChallengeService {
       .where(eq(users.userid_num, login_userid_num));
     userMoney = userMoney[0].carrot;
 
+    let hasMoney = false;
+
     // 내기 금액보다 유저의 잔고가 많아야 챌린지 생성 가능
     if (userMoney >= goal_money) {
       let challengers = [];
@@ -131,8 +133,14 @@ export class ChallengeService {
         userid_num: login_userid_num,
       });
 
-      return { newChallenge, challengeNotification };
-    } else return { msg: '캐럿이 부족합니다.' };
+      hasMoney = true;
+
+      return { newChallenge, challengeNotification, hasMoney };
+    } else if (goal_money < 0) {
+      return { msg: '마이너스 값은 입력이 불가능 합니다.', hasMoney };
+    } else {
+      return { msg: '캐럿이 부족합니다.', hasMoney };
+    }
   };
 
   // 챌린지 수락
