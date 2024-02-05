@@ -89,20 +89,21 @@ export default function MyPageEdit() {
       console.log('patch res.data', res.data);
       console.log('patch res.data>>', res.data.file);
       // alert(res.data.msg);
-      if (res.data.file) {
-        axios({
-          method: 'put',
-          url: res.data.file,
-          data: file,
-          headers: {
-            'Content-Type': file?.type,
-          },
-        }).then((res) => {
-          console.log('>>>>', res);
-          Navigate(`/mypage`);
-        });
-      }
+      if(res.data.file){
+      axios({
+        method: 'put',
+        url: res.data.file,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      }).then((res) => {
+        console.log('>>>>', res);
+        Navigate(`/mypage`);
+      });
+    }
     });
+    
   };
 
   // 프로필 이미지 요청
