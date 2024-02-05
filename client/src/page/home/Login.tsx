@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import HeaderTitle from '@/components/HeaderTitle';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn, setUserid_num, setNickname, setAccessToken, setRefreshToken } from '@/store/loginSlice';
 import { Cookies } from 'react-cookie';
