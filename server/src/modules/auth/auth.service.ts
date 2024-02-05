@@ -98,11 +98,13 @@ export class AuthService {
           nickname,
           name,
           login_type,
+          isLogin,
         };
       } else {
         console.log('비밀번호가 틀렸습니다.');
         validate = 'noPassword';
-        return false;
+        isLogin = 'false';
+        return { validate, isLogin };
       }
     }
   };
