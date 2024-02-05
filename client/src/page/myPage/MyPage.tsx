@@ -11,7 +11,6 @@ import { useRive } from '@rive-app/react-canvas';
 import { motion, useMotionValue, useTransform, animate, inView } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
-
 interface UserInfo {
   nickname: string;
   score_num: number;
@@ -58,7 +57,7 @@ export default function MyPage() {
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
-  const [ranking, setRanking] = useState<string>('');
+  const [ranking, setRanking] = useState<string>();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
@@ -122,7 +121,6 @@ export default function MyPage() {
         setNickName(userInfo?.nickname);
         setScoreNum(userInfo?.score_num);
         setMoney(userInfo?.carrot);
-
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
@@ -195,22 +193,22 @@ export default function MyPage() {
     threshold: 0.1, // Adjust this value based on when you want the animation to start (0.1 means 10% of the element should be visible)
   });
 
+  console.log('>>>>>>>proFileImg', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>
       <div></div>
 
-
       <div className="section flex">
         <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
           <Avatar className="aspect-square h-20 w-20">
-            <AvatarImage src={proFileImg ? proFileImg : `/grabit_profile.png`} />
+            <AvatarImage src={proFileImg === '' ? proFileImg : `/grabit_profile.png`} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
           {nickName === '' ? (
             <Skeleton className="h-[24px] w-[60px]" />
           ) : (
-            <p className="font-['SBAggroB'] font-bold text-grabit-700">{nickName}</p>
+            <p className="text-grabit-700 font-['SBAggroB'] font-bold">{nickName}</p>
           )}
           <Link to={`/mypage/edit`}>
             <Button type="submit">프로필 수정</Button>
@@ -223,7 +221,6 @@ export default function MyPage() {
           <img src={tierImageSrc} alt="Tier Image" className="glowing-image w-12 " />
           <p className="text-2xl font-bold text-stone-700">{tierName}</p>
           {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
-
         </div>
         <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
           <p className="font-['SBAggroB'] text-2xl">{scoreNum}</p>
@@ -242,7 +239,6 @@ export default function MyPage() {
         </div>
       </div>
 
-
       <div className="friend flex flex-col items-center justify-center gap-4 ">
         <div className="flex w-full items-center">
           <h2 className="w-full font-['SBAggroB'] text-2xl">친구</h2>
@@ -257,7 +253,7 @@ export default function MyPage() {
             <div className="flex w-full items-center gap-3" key={index}>
               <Avatar>
                 <AvatarImage
-                  src={friend.profile_img ? friend.profile_img : '/grabit_profile.png'}
+                  src={friend.profile_img ? friend.profile_img : 'grabit_profile.png'}
                   alt={friend.nickname}
                 />
                 <AvatarFallback></AvatarFallback>
@@ -268,7 +264,7 @@ export default function MyPage() {
         </div>
       </div>
 
-      <div className="carrot relative my-12 flex flex-col gap-4 rounded-2xl bg-grabit-100 px-8 pb-4 pt-12">
+      <div className="carrot bg-grabit-100 relative my-12 flex flex-col gap-4 rounded-2xl px-8 pb-4 pt-12">
         <div className="absolute bottom-[130px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
           <RiveComponent />
         </div>
@@ -276,14 +272,14 @@ export default function MyPage() {
           whileInView={{ opacity: 1 }}
           initial={{ opacity: 0 }}
           transition={{ delay: 0.4 }}
-          className="w-full text-center font-['SBAggroB'] text-3xl font-light text-grabit-800"
+          className="text-grabit-800 w-full text-center font-['SBAggroB'] text-3xl font-light"
         >
           <motion.span
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: inView ? 1 : 0 }}
             transition={{ delay: 0.4 }}
-            className="w-full text-center font-['SBAggroB'] text-3xl font-light text-grabit-800"
+            className="text-grabit-800 w-full text-center font-['SBAggroB'] text-3xl font-light"
           >
             {rounded}
           </motion.span>
@@ -292,12 +288,12 @@ export default function MyPage() {
         <div className="flex flex-col gap-2">
           <div className="flex w-full gap-2">
             <Link to="/mypage/charge" className="w-full">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 충전하기
               </Button>
             </Link>
             <Link to="/mypage/withdraw" className="w-full ">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 출금하기
               </Button>
             </Link>
