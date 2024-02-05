@@ -15,8 +15,8 @@ import Cta from '@/components/Cta';
 
 export default function ChallengeResult() {
   const navigate = useNavigate();
-  const [currentScore, setCurrentScore] = useState<number>(); // 사용자의 현재 점수
-  const [earnedScore, setEarnedScore] = useState<number>(0); // 사용자가 획득한 점수
+  const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
+  const [earnedScore, setEarnedScore] = useState<number>(); // 사용자가 획득한 점수
   const [tierName, setTierName] = useState<string>('');
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
@@ -51,7 +51,8 @@ export default function ChallengeResult() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('>>>>>>', response.data.userInfo[0].score_num);
+        console.log('mypage>>>>>>>', response);
+        console.log('mypage', response.data.userInfo[0].score_num);
         setCurrentScore(response.data.userInfo[0].score_num);
       })
       .catch((error) => {
@@ -70,6 +71,7 @@ export default function ChallengeResult() {
       })
       .then((response) => {
         console.log('점수업데이트~~~>>>>>>', response);
+        console.log('점수업데이트~~~>>>>>>', response.data.challengeInfo);
         setChallengerInfo(response.data.challengerInfo);
         setChallengeInfo(response.data.challengeInfo);
         response.data.challengerInfo.map((challenger: any, index: any) => {
@@ -154,6 +156,8 @@ export default function ChallengeResult() {
     navigate('/main');
   }
 
+  console.log('challengerInfo>>>>>', challengerInfo[0]?.score);
+
   return (
     <>
       {showTierResult && (
@@ -202,14 +206,14 @@ export default function ChallengeResult() {
                 animate={{ scale: [1.5, 4], x: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="h-80 w-80 rounded-full bg-gradient-to-tr from-grabit-500 to-violet-500"
+                className="from-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr to-violet-500"
               ></motion.div>
               <motion.div
                 initial={{ x: 200 }}
                 animate={{ scale: [1.5, 4], y: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500 to-grabit-500"
+                className="to-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500"
               ></motion.div>
             </div>
             <div className="fixed bottom-0 left-0 right-0 top-0 h-full w-full items-center justify-center p-8 backdrop-blur-3xl"></div>
@@ -227,29 +231,33 @@ export default function ChallengeResult() {
       >
         <h1 className="mb-10  p-3 text-center text-3xl font-extrabold">{challengeInfo?.challenge_name} 결과</h1>
         <div className="grid grid-cols-3 text-center">
-          <div className="text-center">
-            <div>
-              <span className="text-2xl font-black">{info.result[0].nickname}</span>
-              <p>{info.result[0].Authcount}회 성공</p>
-              <p>{challengerInfo[0]?.carrot}캐럿</p>
-              <p>{challengerInfo[0]?.score} P </p>
-            </div>
+          {info.result[0] && (
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
+              <div>
+                <span className="text-2xl font-black">{info.result[0].nickname}</span>
+                <p>{info.result[0].Authcount}회 성공</p>
+                <p>{challengerInfo[0]?.carrot}캐럿</p>
+                <p>{challengerInfo[0]?.score} P </p>
+              </div>
+              <div className="text-center">
+                <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="text-center">
-            <div>
-              <span className="text-2xl font-black">{info.result[1].nickname}</span>
-              <p>{info.result[1].Authcount}회 성공</p>
-              <p>{challengerInfo[1]?.carrot}캐럿</p>
-              <p>{challengerInfo[1]?.score} P </p>
-            </div>
+          {info.result[1] && (
             <div className="text-center">
-              <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
+              <div>
+                <span className="text-2xl font-black">{info.result[1].nickname}</span>
+                <p>{info.result[1].Authcount}회 성공</p>
+                <p>{challengerInfo[1]?.carrot}캐럿</p>
+                <p>{challengerInfo[1]?.score} P </p>
+              </div>
+              <div className="text-center">
+                <img src={tierImageSrc} alt="tear" className="mx-auto w-20 rounded-full" />
+              </div>
             </div>
-          </div>
+          )}
 
           {info.result[2] && (
             <div className="text-center">

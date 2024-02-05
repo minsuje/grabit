@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRive } from '@rive-app/react-canvas';
-import { motion, useMotionValue, useTransform, animate, inView } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 interface UserInfo {
@@ -57,7 +57,7 @@ export default function MyPage() {
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
-  const [ranking, setRanking] = useState<string>();
+  const [, setRanking] = useState<string>();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
