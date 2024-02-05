@@ -544,10 +544,6 @@ export class ChallengeService {
       .returning();
 
     updateChallenge = updateChallenge[0];
-    console.log(
-      '🚀 ~ ChallengeService ~ patchChallengeEdit= ~ updateChallenge:',
-      updateChallenge,
-    );
 
     for (let i = 0; i < updateChallenge.challenger_userid_num.length; i++) {
       if (
@@ -557,7 +553,7 @@ export class ChallengeService {
         let noti = await db.insert(notification).values({
           userid_num: updateChallenge.challenger_userid_num[i].userid_num,
           reference_id: challenge_id,
-          message: { challengeName: updateChallenge[0].challenge_name },
+          message: { challengeName: updateChallenge.challenge_name },
           type: 'challenge/modify',
           is_confirm: false,
         });
