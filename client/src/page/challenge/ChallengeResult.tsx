@@ -2,21 +2,21 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
-import { ProgressComponent } from '@/components/ComponentSeong';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+
+import { useNavigate, useParams } from 'react-router-dom';
 import ReactCanvasConfetti from '@/components/ReactCanvasConfetti';
 import '@/App.css';
 import axios from '@/api/axios';
 import { privateApi } from '@/api/axios';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+
 import { Challenge } from '@/types/types';
 import Cta from '@/components/Cta';
 
 export default function ChallengeResult() {
   const navigate = useNavigate();
   const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
-  const [earnedScore, setEarnedScore] = useState<number>(); // 사용자가 획득한 점수
+
   const [tierName, setTierName] = useState<string>('');
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
@@ -47,7 +47,7 @@ export default function ChallengeResult() {
   // 마이페이지
   useEffect(() => {
     axios
-      .get(`http://52.79.228.200:3000/myPage`, {
+      .get(`http://localhost:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -63,7 +63,7 @@ export default function ChallengeResult() {
   // 챌린지 상세 정보 보기 점수 업데이트
   useEffect(() => {
     privateApi
-      .post(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
+      .post(`http://localhost:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         winner_userid_num: info.winner,
         total_money: info.totalMoney,

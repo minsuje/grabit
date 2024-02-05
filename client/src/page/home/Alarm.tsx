@@ -1,12 +1,12 @@
 import AlarmList from '@/components/AlarmList';
 import { useState, useEffect } from 'react';
 import { privateApi } from '@/api/axios';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 
-import { useDispatch } from 'react-redux';
-import { setHeaderInfo } from '@/store/headerSlice';
+// import { useDispatch } from 'react-redux';
+// import { setHeaderInfo } from '@/store/headerSlice';
 
 interface message {
   friendName?: string;
@@ -36,7 +36,7 @@ function Alarm() {
   // }
 
   let content: JSX.Element;
-  let type: string;
+  // let type: string;
   let link: string;
   interface check {
     content: JSX.Element;
@@ -118,10 +118,10 @@ function Alarm() {
         })
         .then((response) => {
           console.log(response.data);
-          let confirm = response.data.filter((alarm: challengeAlarmList) => {
+          const confirm = response.data.filter((alarm: challengeAlarmList) => {
             return alarm.is_confirm === true;
           });
-          let nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
+          const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
             return alarm.is_confirm === false;
           });
           setAlarmConfirm(confirm);
@@ -149,7 +149,7 @@ function Alarm() {
       <div className="list flex flex-col gap-4 p-4">
         {isAlarm ? (
           AlarmNonConfirm.map((list) => {
-            let finishCheck = checkType(list.type, list);
+            const finishCheck = checkType(list.type, list);
             return (
               <>
                 {/* reference_id */}
@@ -171,7 +171,7 @@ function Alarm() {
         )}
         {isAlarm ? (
           AlarmConfirm.map((list) => {
-            let finishCheck = checkType(list.type, list);
+            const finishCheck = checkType(list.type, list);
             return (
               <>
                 {/* reference_id */}

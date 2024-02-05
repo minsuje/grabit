@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './page/challenge/Main';
+
 import ChallengeInProgress from './page/challenge/ChallengeInProgress';
 import Home from './page/home/Home';
 import Register from './page/home/Register';
@@ -48,13 +49,12 @@ import CheckoutFail from './page/CheckoutFail';
 import Payment from './page/Payment';
 import { useState } from 'react';
 import ScrollToTop from './components/ScrollTop';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import AnimatedRootRoutes from './page/AnimatedRootRoutes';
 import Error404 from './page/Error404';
 
 function AnimatedRoutes() {
   const [price, setPrice] = useState<number>(0);
-  const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">

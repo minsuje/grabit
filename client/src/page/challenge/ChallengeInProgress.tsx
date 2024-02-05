@@ -191,6 +191,7 @@ function ChallengeInProgress() {
       }
     }
   }
+  console.log(profiles);
 
   // 각각의 참여자들의 사진을 모으기
   for (let j = 0; j < tabId.length; j++) {
