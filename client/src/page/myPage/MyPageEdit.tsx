@@ -112,7 +112,7 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`/myPage`)
+      .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);
