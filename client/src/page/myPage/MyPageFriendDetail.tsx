@@ -20,7 +20,7 @@ export default function MyPageFriendDetail() {
   const [friendDetail] = useState<any | FriendDetail | null>('');
   const { userid } = useParams();
   const [nickname, setNickname] = useState();
-  const [myRank, setMyRank] = useState();
+  const [, setMyRank] = useState();
   const [win, setWin] = useState();
   const [lose, setLose] = useState();
   const [scoreNum, setScoreNum] = useState<number>(0);

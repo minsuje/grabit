@@ -3,8 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 
 // import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -39,20 +37,20 @@ export default function MyPageEdit() {
   }
 
   // yup 스키마 정의
-  const schema = yup
-    .object({
-      //     nickname: yup?.string().nullable(),
-      // password: yup.string().required('현재 비밀번호는 필수입니다.'),
-      //     // changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
-      //     // confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
-    })
-    .required();
+  // const schema = yup
+  //   .object({
+  //         nickname: yup?.string().nullable(),
+  //      password: yup.string().required('현재 비밀번호는 필수입니다.'),
+  //           changePassword: yup.string().required('변경할 비밀번호는 필수입니다.'),
+  //           confirmPassword: yup.string().oneOf([yup.ref('changePassword')], '비밀번호가 일치하지 않습니다.'),
+  //   })
+  //   .required();
 
   // useForm 사용
   const {
     register,
     handleSubmit,
-    setError,
+
     setValue,
     formState: { errors },
   } = useForm<FormData>();
