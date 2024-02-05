@@ -130,10 +130,21 @@ export class FriendService {
                 eq(friend.userid_num, other_userid_num),
               ),
             ),
-          );
+          )
+          .returning();
 
         if (result) {
-          return { msg: `${id}님과 ${other_userid_num}님이 친구가 되었습니다` };
+          let name1: any = await db
+            .select({ name: users.name })
+            .from(users)
+            .where(eq(users.userid_num, id));
+          let name2: any = await db
+            .select({ name: users.name })
+            .from(users)
+            .where(eq(users.userid_num, other_userid_num));
+          name1 = name1[0].name;
+          name2 = name2[0].name;
+          return { msg: `${name1}님과 ${name2}님이 친구가 되었습니다` };
         }
       } else {
         return { msg: '이미 친구입니다' }; // 친구 상태가 아닌 경우 예외처리 필요함. 친구 상태는 업데이트 되지 않음.

@@ -43,6 +43,12 @@ export class ChallengeService {
       authentication_end_time,
     } = body;
 
+    let challenger_userid_num2 = [];
+    for (let i = 0; i < challenger_userid_num.length; i++) {
+      challenger_userid_num2.push(challenger_userid_num[i]);
+    }
+    challenger_userid_num2.push(login_userid_num);
+
     // 챌린지 생성하는 유저 정보 찾아오기
     let userMoney: any = await db
       .select({ carrot: users.carrot })
@@ -53,16 +59,16 @@ export class ChallengeService {
     // 내기 금액보다 유저의 잔고가 많아야 챌린지 생성 가능
     if (userMoney >= goal_money) {
       let challengers = [];
-      for (let i = 0; i < challenger_userid_num.length; i++) {
-        if (Number(challenger_userid_num[i]) !== login_userid_num) {
+      for (let i = 0; i < challenger_userid_num2.length; i++) {
+        if (Number(challenger_userid_num2[i]) !== login_userid_num) {
           challengers.push({
-            userid_num: challenger_userid_num[i],
+            userid_num: challenger_userid_num2[i],
             isAccept: false,
             resultConfirm: false,
           });
         } else {
           challengers.push({
-            userid_num: challenger_userid_num[i],
+            userid_num: challenger_userid_num2[i],
             isAccept: true,
             resultConfirm: false,
           });
@@ -92,11 +98,11 @@ export class ChallengeService {
       // notification 테이블에 추가하기
       const challengeNotification = [];
       let noti: any;
-      for (let i = 0; i < challenger_userid_num.length; i++) {
+      for (let i = 0; i < challenger_userid_num2.length; i++) {
         // 챌린지를 생성하는 유저를 제외하고 알람 보내주기
-        if (Number(challenger_userid_num[i]) !== login_userid_num) {
+        if (Number(challenger_userid_num2[i]) !== login_userid_num) {
           noti = await db.insert(notification).values({
-            userid_num: Number(challenger_userid_num[i]),
+            userid_num: Number(challenger_userid_num2[i]),
             reference_id: newChallenge.challenge_id,
             message: {
               challengeName: newChallenge.challenge_name,
