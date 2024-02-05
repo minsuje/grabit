@@ -8,6 +8,14 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { privateApi } from '@/api/axios';
 
+interface message {
+  friendName?: string;
+  requestorName?: string;
+  inviterName?: string;
+  challengeName?: string;
+  rejectorName?: string;
+}
+
 interface challengeAlarmList {
   created_at: string;
   is_confirm: boolean;
@@ -21,15 +29,15 @@ function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { isLoggedIn } = useSelector((state: RootState) => state.login);
+  // const { isLoggedIn } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
   const accessToken = localStorage.getItem('accessToken');
   const [scrollPosition, setScrollPosition] = useState(0);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-  const [AlarmConfirm, setAlarmConfirm] = useState<challengeAlarmList[]>([]);
+  // const [AlarmConfirm, setAlarmConfirm] = useState<challengeAlarmList[]>([]);
   const [AlarmNonConfirm, setAlarmNonConfirm] = useState<challengeAlarmList[]>([]);
-  const [isAlarm, setIsAlarm] = useState<boolean>(true);
+  // const [isAlarm, setIsAlarm] = useState<boolean>(true);
 
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
@@ -50,17 +58,17 @@ function Header() {
       })
       .then((response) => {
         console.log(response.data);
-        const confirm = response.data.filter((alarm: challengeAlarmList) => {
-          return alarm.is_confirm === true;
-        });
+        // const confirm = response.data.filter((alarm: challengeAlarmList) => {
+        //   return alarm.is_confirm === true;
+        // });
         const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
           return alarm.is_confirm === false;
         });
-        setAlarmConfirm(confirm);
+        // setAlarmConfirm(confirm);
         setAlarmNonConfirm(nonConfirm);
-        console.log('nonConfirm', AlarmNonConfirm);
+        // console.log('nonConfirm', AlarmNonConfirm);
         if (response.data.msg) {
-          setIsAlarm(false);
+          // setIsAlarm(false);
         }
       })
       .catch((error) => {
@@ -75,7 +83,7 @@ function Header() {
     localStorage.removeItem('nickname');
     localStorage.removeItem('userid_num');
     localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('login_type')
+    localStorage.removeItem('login_type');
     dispatch(setIsLoggedIn(false));
     dispatch(setUserid_num(0));
     dispatch(setNickname(''));
@@ -125,8 +133,8 @@ function Header() {
             <LuMenu size={28} />
             {AlarmNonConfirm.length > 0 ? (
               <div>
-                <div className="absolute right-1 top-1 h-3 w-3 origin-center animate-pulse rounded-full bg-red-600"></div>
-                <div className="absolute right-1 top-1 h-3 w-3 origin-center animate-ping rounded-full bg-red-600"></div>
+                <div className="absolute right-1 top-1 h-2 w-2 origin-center animate-pulse rounded-full bg-violet-600"></div>
+                <div className="absolute right-1 top-1 h-2 w-2 origin-center animate-ping rounded-full bg-violet-600"></div>
               </div>
             ) : null}
           </motion.div>

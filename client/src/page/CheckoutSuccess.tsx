@@ -16,7 +16,7 @@ export default function CheckoutSuccess() {
     // TODO: API를 호출해서 서버에게 paymentKey, orderId, amount를 넘겨주세요.
     // 서버에선 해당 데이터를 가지고 승인 API를 호출하면 결제가 완료됩니다.
     // https://docs.tosspayments.com/reference#%EA%B2%B0%EC%A0%9C-%EC%8A%B9%EC%9D%B8
-    const response = await axios({
+    await axios({
       url: '/checkout/confirm',
       method: 'POST',
       headers: {
@@ -34,7 +34,7 @@ export default function CheckoutSuccess() {
         setIsConfirmed(true);
       }
     });
-    const response2 = await privateApi({
+    await privateApi({
       url: 'http://localhost:3000/updateMoney',
       method: 'POST',
 
