@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Challenge } from '@/types/types';
 
 export default function ChallengeResult() {
-  const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
+  const [currentScore, setCurrentScore] = useState<number>(); // 사용자의 현재 점수
   const [earnedScore, setEarnedScore] = useState<number>(0); // 사용자가 획득한 점수
   const [tierName, setTierName] = useState<string>('');
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
