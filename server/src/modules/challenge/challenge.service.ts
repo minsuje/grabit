@@ -793,215 +793,243 @@ export class ChallengeService {
     userid_num: number,
     challengerInfo: any,
   ) {
-    // 챌린지에 대한 정보 조회
-    let challengeInfo: any = await db
-      .select()
-      .from(challenge)
-      .where(eq(challenge.challenge_id, challenge_id));
-    challengeInfo = challengeInfo[0];
-
-    let winners = winner.winner_userid_num;
-
-    // 총 상금
-    let totalMoney = winner.total_money;
-    console.log(totalMoney);
-
-    // 몇명이 참가했는지 찾기
-    let totalPeople: any = await db
+    // "resultConfirm : true"로 바꿔주기
+    let confirmData: any = await db
       .select({ challenger_userid_num: challenge.challenger_userid_num })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
-    totalPeople = totalPeople[0].challenger_userid_num;
-    totalPeople = totalPeople.length;
-    console.log('총 참가 인원', totalPeople);
-
-    // 1인당 제출한 금액
-    let onePerson = totalMoney / totalPeople;
-
-    // Check the user table money
-    let checkMoney = await db
-      .select({ carrot: users.carrot })
-      .from(users)
-      .where(eq(users.userid_num, userid_num));
-
-    const userMoney = checkMoney[0].carrot;
-
-    let win = 'none';
-    let carrot: number;
-
-    // 이긴 사람이 없을 때
-    if (winners === undefined || winners.length === 0) {
-      console.log('no winner');
-      win = 'none';
-      const loseScore = await db.insert(score).values({
-        userid_num: userid_num,
-        score_description: '챌린지 실패...',
-        score_type: 'lose',
-        score: -50,
-      });
-
-      // 유저의 점수 감소 시키기
-      const addUserTable = await db
-        .update(users)
-        .set({ score_num: sql`${users.score_num} - 50` })
-        .where(eq(users.userid_num, userid_num));
-
-      // challengerInfo 내역 업데이트(캐럿 추가)
-      for (let i = 0; i < challengerInfo.length; i++) {
-        challengerInfo[i] = {
-          ...challengerInfo[i],
-          carrot: -challengeInfo.goal_money,
-          score: -50,
-        };
+    confirmData = confirmData[0].challenger_userid_num;
+    console.log('confirmData > ', confirmData);
+    for (let i = 0; i < confirmData.length; i++) {
+      if (confirmData[i].userid_num === userid_num) {
+        confirmData[i].isAccept = true;
       }
-    } else {
-      win = 'someone';
+    }
+    let challengeInfo: any;
+    for (let i = 0; i < confirmData.length; i++) {
+      if (confirmData[i].userid_num === userid_num) {
+        if (confirmData[i].isAccept === false) {
+          let updateConfirm = await db
+            .update(challenge)
+            .set({ challenger_userid_num: confirmData })
+            .where(eq(challenge.challenge_id, challenge_id))
+            .returning();
+          // console.log('confirmData > ', updateConfirm[0].challenger_userid_num);
+          // 챌린지에 대한 정보 조회
+          challengeInfo = await db
+            .select()
+            .from(challenge)
+            .where(eq(challenge.challenge_id, challenge_id));
+          challengeInfo = challengeInfo[0];
 
-      // 이긴 사람이 있을 때 winner 추가하기
-      const addWinner = await db
-        .update(challenge)
-        .set({ winner_userid_num: winners })
-        .where(eq(challenge.challenge_id, challenge_id));
+          let winners = winner.winner_userid_num;
 
-      // 3.3% 운영 수수료
-      const companyCharge = totalMoney * 0.033;
-      console.log('수수료 >>> ', companyCharge);
+          // 총 상금
+          let totalMoney = winner.total_money;
+          console.log(totalMoney);
 
-      // 원금에서 수수료를 제외한 금액 반올림
-      const leftMoney = Math.round(totalMoney - companyCharge);
+          // 몇명이 참가했는지 찾기
+          let totalPeople: any = await db
+            .select({ challenger_userid_num: challenge.challenger_userid_num })
+            .from(challenge)
+            .where(eq(challenge.challenge_id, challenge_id));
+          totalPeople = totalPeople[0].challenger_userid_num;
+          totalPeople = totalPeople.length;
+          console.log('총 참가 인원', totalPeople);
 
-      console.log('수수료를 제외한 금액', leftMoney);
+          // 1인당 제출한 금액
+          let onePerson = totalMoney / totalPeople;
 
-      // 모든 이긴 유저 찾기
-      let findWinner: any = await db
-        .select({ winner_userid_num: challenge.winner_userid_num })
-        .from(challenge)
-        .where(eq(challenge.challenge_id, challenge_id));
-
-      findWinner = findWinner[0].winner_userid_num;
-
-      // 모든 승자를 조회
-      let amIWinner: boolean = false;
-      if (winners.includes(userid_num)) {
-        amIWinner = true;
-      }
-
-      // case 1. 참여한 모든 유저가 이겼다.
-      // 원래 돈을 그대로 입금
-      if (totalPeople === findWinner.length) {
-        // 스코어 증가!
-        const addScoreTable = await db.insert(score).values({
-          userid_num: userid_num,
-          score_description: '챌린지 성공!',
-          score_type: 'win',
-          score: +100,
-        });
-
-        // 유저의 점수 증가 시키기
-        const addUserTable = await db
-          .update(users)
-          .set({ score_num: sql`${users.score_num} + ${100}` })
-          .where(eq(users.userid_num, userid_num));
-
-        // 내가 원래 참가 신청한 돈
-        const originalMoney: any = totalMoney / findWinner.length;
-
-        // account 에 내역 추가
-        const getMoney = await db.insert(account).values({
-          userid_num: userid_num,
-          transaction_description: 'challenge/success',
-          transaction_type: 'carrot/deposit',
-          transaction_amount: originalMoney,
-          status: false,
-        });
-
-        // user 잔고에 돈 입금
-        const newMoney = await db
-          .update(users)
-          .set({ carrot: sql`${users.carrot} + ${originalMoney}` })
-          .where(eq(users.userid_num, userid_num));
-
-        // challengerInfo 내역 업데이트(캐럿 추가)
-        for (let i = 0; i < challengerInfo.length; i++) {
-          challengerInfo[i] = {
-            ...challengerInfo[i],
-            carrot: challengeInfo.goal_money,
-            score: 100,
-          };
-        }
-      } else {
-        let divMoney: any;
-        if (amIWinner) {
-          // case 2. 모든 유저가 이기지 못했다. (but! 나는 이김 )
-          // 스코어 증가!
-          const addScoreTable = await db.insert(score).values({
-            userid_num: userid_num,
-            score_description: '챌린지 성공!',
-            score_type: 'win',
-            score: +100,
-          });
-
-          // 유저의 점수 증가 시키기
-          const addUserTable = await db
-            .update(users)
-            .set({ score_num: sql`${users.score_num} + 100` })
+          // Check the user table money
+          let checkMoney = await db
+            .select({ carrot: users.carrot })
+            .from(users)
             .where(eq(users.userid_num, userid_num));
 
-          // 챌린저 수 만큼 돈을 나눠서 입금
-          // account 내역 추가
-          divMoney = Math.round(leftMoney / findWinner.length);
-          console.log('이긴 사람 만큼 돈 나누기 결과 >>> ', divMoney);
-          const money = await db.insert(account).values({
-            userid_num: userid_num,
-            transaction_description: 'challenge/success',
-            transaction_type: 'carrot/deposit',
-            transaction_amount: divMoney,
-            status: false,
-          });
-          console.log('이긴 사람 만큼 돈 나누기 결과 2 >>> ', typeof divMoney);
-          // user 잔고에 돈 입금
-          const newMoney = await db
-            .update(users)
-            .set({ carrot: sql`${users.carrot} + ${divMoney}` }) //sql`${users.money} + ${divMoney}`
-            .where(eq(users.userid_num, userid_num));
-        } else {
-          // case 3. 이긴 사람이 존재 한다. (but! 나는 짐)
+          const userMoney = checkMoney[0].carrot;
 
-          // score 감소
-          const loseScore = await db.insert(score).values({
-            userid_num: userid_num,
-            score_description: '챌린지 실패...',
-            score_type: 'lose',
-            score: -50,
-          });
-          // 유저의 점수 감소 시키기
-          const addUserTable = await db
-            .update(users)
-            .set({ score_num: sql`${users.score_num} - 50` })
-            .where(eq(users.userid_num, userid_num));
-        }
-        console.log('winners >>> ', winners);
-        // challengerInfo 내역 업데이트(캐럿 추가)
-        for (let i = 0; i < winners.length; i++) {
-          for (let j = 0; j < challengerInfo.length; j++) {
-            if (winners[i] === challengerInfo[j].userid_num) {
-              challengerInfo[j] = {
-                ...challengerInfo[j],
-                carrot: divMoney,
-                score: 100,
-              };
-            } else {
-              challengerInfo[j] = {
-                ...challengerInfo[j],
+          let win = 'none';
+          let carrot: number;
+
+          // 이긴 사람이 없을 때
+          if (winners === undefined || winners.length === 0) {
+            console.log('no winner');
+            win = 'none';
+            const loseScore = await db.insert(score).values({
+              userid_num: userid_num,
+              score_description: '챌린지 실패...',
+              score_type: 'lose',
+              score: -50,
+            });
+
+            // 유저의 점수 감소 시키기
+            const addUserTable = await db
+              .update(users)
+              .set({ score_num: sql`${users.score_num} - 50` })
+              .where(eq(users.userid_num, userid_num));
+
+            // challengerInfo 내역 업데이트(캐럿 추가)
+            for (let i = 0; i < challengerInfo.length; i++) {
+              challengerInfo[i] = {
+                ...challengerInfo[i],
                 carrot: -challengeInfo.goal_money,
                 score: -50,
               };
             }
+          } else {
+            win = 'someone';
+
+            // 이긴 사람이 있을 때 winner 추가하기
+            const addWinner = await db
+              .update(challenge)
+              .set({ winner_userid_num: winners })
+              .where(eq(challenge.challenge_id, challenge_id));
+
+            // 3.3% 운영 수수료
+            const companyCharge = totalMoney * 0.033;
+            console.log('수수료 >>> ', companyCharge);
+
+            // 원금에서 수수료를 제외한 금액 반올림
+            const leftMoney = Math.round(totalMoney - companyCharge);
+
+            console.log('수수료를 제외한 금액', leftMoney);
+
+            // 모든 이긴 유저 찾기
+            let findWinner: any = await db
+              .select({ winner_userid_num: challenge.winner_userid_num })
+              .from(challenge)
+              .where(eq(challenge.challenge_id, challenge_id));
+
+            findWinner = findWinner[0].winner_userid_num;
+
+            // 모든 승자를 조회
+            let amIWinner: boolean = false;
+            if (winners.includes(userid_num)) {
+              amIWinner = true;
+            }
+
+            // case 1. 참여한 모든 유저가 이겼다.
+            // 원래 돈을 그대로 입금
+            if (totalPeople === findWinner.length) {
+              // 스코어 증가!
+              const addScoreTable = await db.insert(score).values({
+                userid_num: userid_num,
+                score_description: '챌린지 성공!',
+                score_type: 'win',
+                score: +100,
+              });
+
+              // 유저의 점수 증가 시키기
+              const addUserTable = await db
+                .update(users)
+                .set({ score_num: sql`${users.score_num} + ${100}` })
+                .where(eq(users.userid_num, userid_num));
+
+              // 내가 원래 참가 신청한 돈
+              const originalMoney: any = totalMoney / findWinner.length;
+
+              // account 에 내역 추가
+              const getMoney = await db.insert(account).values({
+                userid_num: userid_num,
+                transaction_description: 'challenge/success',
+                transaction_type: 'carrot/deposit',
+                transaction_amount: originalMoney,
+                status: false,
+              });
+
+              // user 잔고에 돈 입금
+              const newMoney = await db
+                .update(users)
+                .set({ carrot: sql`${users.carrot} + ${originalMoney}` })
+                .where(eq(users.userid_num, userid_num));
+
+              // challengerInfo 내역 업데이트(캐럿 추가)
+              for (let i = 0; i < challengerInfo.length; i++) {
+                challengerInfo[i] = {
+                  ...challengerInfo[i],
+                  carrot: challengeInfo.goal_money,
+                  score: 100,
+                };
+              }
+            } else {
+              let divMoney: any;
+              if (amIWinner) {
+                // case 2. 모든 유저가 이기지 못했다. (but! 나는 이김 )
+                // 스코어 증가!
+                const addScoreTable = await db.insert(score).values({
+                  userid_num: userid_num,
+                  score_description: '챌린지 성공!',
+                  score_type: 'win',
+                  score: +100,
+                });
+
+                // 유저의 점수 증가 시키기
+                const addUserTable = await db
+                  .update(users)
+                  .set({ score_num: sql`${users.score_num} + 100` })
+                  .where(eq(users.userid_num, userid_num));
+
+                // 챌린저 수 만큼 돈을 나눠서 입금
+                // account 내역 추가
+                divMoney = Math.round(leftMoney / findWinner.length);
+                console.log('이긴 사람 만큼 돈 나누기 결과 >>> ', divMoney);
+                const money = await db.insert(account).values({
+                  userid_num: userid_num,
+                  transaction_description: 'challenge/success',
+                  transaction_type: 'carrot/deposit',
+                  transaction_amount: divMoney,
+                  status: false,
+                });
+                console.log(
+                  '이긴 사람 만큼 돈 나누기 결과 2 >>> ',
+                  typeof divMoney,
+                );
+                // user 잔고에 돈 입금
+                const newMoney = await db
+                  .update(users)
+                  .set({ carrot: sql`${users.carrot} + ${divMoney}` }) //sql`${users.money} + ${divMoney}`
+                  .where(eq(users.userid_num, userid_num));
+              } else {
+                // case 3. 이긴 사람이 존재 한다. (but! 나는 짐)
+
+                // score 감소
+                const loseScore = await db.insert(score).values({
+                  userid_num: userid_num,
+                  score_description: '챌린지 실패...',
+                  score_type: 'lose',
+                  score: -50,
+                });
+                // 유저의 점수 감소 시키기
+                const addUserTable = await db
+                  .update(users)
+                  .set({ score_num: sql`${users.score_num} - 50` })
+                  .where(eq(users.userid_num, userid_num));
+              }
+              console.log('winners >>> ', winners);
+              // challengerInfo 내역 업데이트(캐럿 추가)
+              for (let i = 0; i < winners.length; i++) {
+                for (let j = 0; j < challengerInfo.length; j++) {
+                  if (winners[i] === challengerInfo[j].userid_num) {
+                    challengerInfo[j] = {
+                      ...challengerInfo[j],
+                      carrot: divMoney,
+                      score: 100,
+                    };
+                  } else {
+                    challengerInfo[j] = {
+                      ...challengerInfo[j],
+                      carrot: -challengeInfo.goal_money,
+                      score: -50,
+                    };
+                  }
+                }
+              }
+            }
           }
+          // console.log('challengerInfo >> ', challengerInfo);
         }
       }
     }
-    // console.log('challengerInfo >> ', challengerInfo);
     return { challengeInfo, challengerInfo };
   }
 
