@@ -95,6 +95,8 @@ export class UserController {
     const login_type = decodedUserInfo.login_type;
     const file = req.file;
     console.log(userid_num);
+    console.log('controller patch myPage > ', body);
+    console.log('controller patch myPage file > ', file);
     return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 
