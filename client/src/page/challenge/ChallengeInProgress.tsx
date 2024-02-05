@@ -94,7 +94,7 @@ function ChallengeInProgress() {
 
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/challengeDetail/${challenge_id}`, {
+      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response): void => {
@@ -134,7 +134,10 @@ function ChallengeInProgress() {
   }
 
   // 챌린지 기간
-  const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
+  const period = differenceInCalendarDays(
+    challengeDetail.authentication_end_date,
+    challengeDetail.authentication_start_date,
+  );
 
   // 인증해야하는 총 횟수
   let totalAuthCount = 3;
@@ -165,7 +168,7 @@ function ChallengeInProgress() {
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
-  }, []);
+  }, [challengeDetail.authentication_end_date]);
 
   // 기본값  '나'는 이미 저장된 값
   // 로그인한 유저가 아닌 challengers의 nickname만 push

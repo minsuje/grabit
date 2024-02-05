@@ -70,7 +70,7 @@ function ChallengeDaily() {
           content: [
             {
               type: 'text',
-              text: `배열 ${keyword} 에 존재하는 키워드를 추출해서, 이미지에 해당 키워드가 존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
+              text: `배열 ${keyword} 에 존재하는 키워드를 4개 추출해서, 이미지에 해당 키워드가 한개 이상  존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
             },
             {
               type: 'image_url',
@@ -83,7 +83,7 @@ function ChallengeDaily() {
       ],
     });
     console.log('openai >>>>>>>>>>', response.choices[0]);
-    if (response?.choices[0].message.content == 'True') {
+    if (response?.choices[0].message.content == 'True' || response?.choices[0].message.content?.includes('True')) {
       console.log('보내기');
       privateApi
         .patch(`http://52.79.228.200:3000/dailyMissionAuth`)
