@@ -16,12 +16,13 @@ function KakaoAuth() {
 
     try {
       setAccessTokenFetching(true); // Set fetching to true
+      
 
-      const response = await axios.get('http://localhost:3000/auth/kakao/', {
+      const response = await axios.post('http://localhost:5173/auth/kakao/', {
         withCredentials: true,
       });
       console.log('response:', response);
-      const accessToken = response.data.accessToken;
+      const accessToken = response.data;
       console.log('accessToken:', accessToken);
 
       setAccessTokenFetching(false); // Reset fetching to false
