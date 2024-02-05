@@ -20,9 +20,7 @@ export default function Ranking() {
   useEffect(() => {
     {
       axios
-        .get('http://52.79.228.200:3000/Ranking', {
-          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-        })
+        .get('/Ranking')
         .then((response) => {
           // console.log('랭킹 axios');
           // console.log('ranking axios response', response);

@@ -35,12 +35,9 @@ export default function CheckoutSuccess() {
       }
     });
     await privateApi({
-      url: 'http://localhost:3000/updateMoney',
+      url: '/updateMoney',
       method: 'POST',
 
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
       data: {
         amount: amount,
       },

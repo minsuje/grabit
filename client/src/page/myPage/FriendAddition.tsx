@@ -48,9 +48,7 @@ export default function FriendAddition() {
 
   const handleSubmit = () => {
     privateApi
-      .get(`http://localhost:3000/profile/${searchTerm}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/profile/${searchTerm}`)
       .then((response) => {
         console.log(response);
         setSearchResult(response.data);

@@ -24,7 +24,7 @@ export default function Login() {
 
   // const handleLogin = async () => {
   //     try {
-  //         const response = await axios.post('http://localhost:3000/login', { userid, password });
+  //         const response = await axios.post('/login', { userid, password });
   //         console.log('로그인 성공:>>>>>', response);
 
   //         // JWT 토큰 response.data 저장
@@ -46,7 +46,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        'http://52.79.228.200:3000/login',
+        '/login',
         { userid, password },
         { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
       );

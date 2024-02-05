@@ -28,7 +28,7 @@ function ChallengeList() {
   useEffect(() => {
     {
       privateApi
-        .get('http://52.79.228.200:3000/challengeList')
+        .get('/challengeList')
         .then((response) => {
           console.log(response.data);
           setIngMyChallenge(response.data.ingMyChallenge);
@@ -41,7 +41,7 @@ function ChallengeList() {
     }
     // privateApi({
     //   method: 'GET',
-    //   url: 'http://localhost:3000/challengeList',
+    //   url: '/challengeList',
     //   headers: {
     //     Authorization: `Bearer ${accessToken}`,
     //   },

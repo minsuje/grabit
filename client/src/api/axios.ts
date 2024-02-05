@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_AWS_EC2_URL,
 });
 
 //토큰을 함께 보내는 instance
 export const privateApi = axios.create({
-  baseURL: `http://localhost:3000`,
+  baseURL: import.meta.env.VITE_AWS_EC2_URL,
   headers: {
     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   },
@@ -14,7 +14,7 @@ export const privateApi = axios.create({
 
 // //리프레시토큰 요청 api
 // function postRefreshToken() {
-//   const response = axios.post('http://localhost:3000/refresh', {
+//   const response = axios.post('/refresh', {
 //     refreshToken: localStorage.getItem('refreshToken'),
 //   });
 //   return response;

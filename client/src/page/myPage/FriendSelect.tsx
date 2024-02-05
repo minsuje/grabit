@@ -34,9 +34,7 @@ function FriendSelect() {
 
   useEffect(() => {
     privateApi
-      .get(`http://52.79.228.200:3000/friend/${userid_num}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/friend/${userid_num}`)
       .then((response) => {
         console.log('response.data>>>>>>>', response.data);
         setFriends(response.data.friends_info);
