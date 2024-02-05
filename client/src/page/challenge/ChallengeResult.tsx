@@ -10,15 +10,17 @@ import axios from '@/api/axios';
 import { privateApi } from '@/api/axios';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Challenge } from '@/types/types';
 
 export default function ChallengeResult() {
-  const [currentScore, setCurrentScore] = useState<number>(0); // 사용자의 현재 점수
+  const [currentScore, setCurrentScore] = useState<number>(); // 사용자의 현재 점수
   const [earnedScore, setEarnedScore] = useState<number>(0); // 사용자가 획득한 점수
   const [tierName, setTierName] = useState<string>('');
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
   const { challenge_id } = useParams<any>();
   const [challengerInfo, setChallengerInfo] = useState<challengerInfo | any>([]);
+  const [challengeInfo, setChallengeInfo] = useState<Challenge>();
   const [showConfetti, setShowConfetti] = useState<boolean>(false); // 컨페티 표시 상태 추가
   const [winMessage, setWinMessage] = useState<React.ReactNode>('');
 
@@ -37,7 +39,7 @@ export default function ChallengeResult() {
   // 마이페이지
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/myPage`, {
+      .get(`http://52.79.228.200:3000/myPage`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
@@ -52,7 +54,7 @@ export default function ChallengeResult() {
   // 챌린지 상세 정보 보기 점수 업데이트
   useEffect(() => {
     privateApi
-      .post(`http://localhost:3000/challengeDetail/${challenge_id}`, {
+      .post(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         winner_userid_num: info.winner,
         total_money: info.totalMoney,
@@ -61,6 +63,7 @@ export default function ChallengeResult() {
       .then((response) => {
         console.log('점수업데이트~~~>>>>>>', response);
         setChallengerInfo(response.data.challengerInfo);
+        setChallengeInfo(response.data.challengeInfo);
         response.data.challengerInfo.map((challenger: any, index: any) => {
           console.log(`Challenger ${index + 1}:`, challenger.nickname, challenger.score);
         });
@@ -165,7 +168,7 @@ export default function ChallengeResult() {
       {showConfetti && <ReactCanvasConfetti />}
 
       <div className="container ">
-        <h1 className="mb-10  p-3 text-center text-3xl font-extrabold">30,000 원</h1>
+        <h1 className="mb-10  p-3 text-center text-3xl font-extrabold">{challengeInfo?.challenge_name} 결과</h1>
         <div className="flex text-center">
           <div className="text-center">
             <div>

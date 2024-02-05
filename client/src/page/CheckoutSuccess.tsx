@@ -24,6 +24,7 @@ export default function CheckoutSuccess() {
       data: JSON.stringify({
         paymentKey,
         orderId,
+
         amount,
       }),
     }).then((res) => {
@@ -45,6 +46,7 @@ export default function CheckoutSuccess() {
     }).then((res) => {
       console.log('post 요청에 대한 > ', res.data);
     });
+
   }
 
   return (
