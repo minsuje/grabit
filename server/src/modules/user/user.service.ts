@@ -238,12 +238,12 @@ export class UserService {
       .where(eq(users.userid_num, userid_num));
 
     const myPassword = myDbPassword[0];
-    const checkPassword = await bcrypt.compare(
-      currentPassword,
-      myPassword.password,
-    );
 
     if (login_type === 'normal') {
+      const checkPassword = await bcrypt.compare(
+        currentPassword,
+        myPassword.password,
+      );
       if (checkPassword) {
         // 비밀번호 O, 이미지 O
         if (changePassword) {
@@ -309,6 +309,7 @@ export class UserService {
 
     if (login_type === 'kakao') {
       if (file.length !== 0) {
+        // 이미지 O, 닉네임 O
         const userInfo = await db
           .update(users)
           .set({
@@ -319,6 +320,7 @@ export class UserService {
         isUser = true;
         return { userInfo, file, isUser };
       } else {
+        // 이미지 X
         const userInfo = await db
           .update(users)
           .set({
