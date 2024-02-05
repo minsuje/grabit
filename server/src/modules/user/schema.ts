@@ -13,7 +13,7 @@ import { notification } from '../notification/schema';
 export const users = pgTable('users', {
   userid_num: serial('userid_num').primaryKey(),
   login_type: varchar('login_type', { length: 50 }).notNull(),
-  userid: varchar('userid', { length: 20 }),
+  userid: varchar('userid', { length: 100 }),
   password: varchar('password', { length: 200 }),
   name: varchar('name', { length: 100 }),
   nickname: varchar('nickname', { length: 50 }),
