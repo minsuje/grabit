@@ -103,11 +103,11 @@ function AnimatedRoutes() {
           <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
           <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
           <Route path="/checkout" element={<CheckoutPages price={price} />} />
-          <Route path="/checkout/success" element={<CheckoutSuccess />} />
-          <Route path="/checkout/fail" element={<CheckoutFail />} />
           <Route path="/friend/new/:userid" element={<FriendAddition />} />
           <Route path="/friend/new" element={<FriendAddition />} />
         </Route>
+        <Route path="/checkout/success" element={<CheckoutSuccess />} />
+        <Route path="/checkout/fail" element={<CheckoutFail />} />
       </Routes>
     </AnimatePresence>
   );
