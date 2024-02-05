@@ -158,7 +158,7 @@ function HotChallenge() {
 function ListComponentWithPeriod({ challenge }: ChallengeProp) {
   return (
     <div>
-      <div className="flex flex-col rounded-lg bg-white p-6 shadow-lg shadow-grabit-600/10">
+      <div className=" flex flex-col rounded-lg bg-white p-6 shadow-lg shadow-grabit-600/10">
         <Link to={`/challengeDetail/${challenge.challenge_id}`} className="flex flex-col gap-2  no-underline">
           <div className="flex justify-between">
             <p className="text-xl font-bold text-grabit-700">{challenge.challenge_name}</p>
