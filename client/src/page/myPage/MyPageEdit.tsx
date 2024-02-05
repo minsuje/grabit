@@ -11,6 +11,7 @@ import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
+import Cta from '@/components/Cta';
 
 export default function MyPageEdit() {
   const dispatch = useDispatch();
@@ -45,9 +46,7 @@ export default function MyPageEdit() {
   const {
     register,
     handleSubmit,
-
     setError,
-
     // formState: { errors },
   } = useForm<FormData>();
 
@@ -56,6 +55,7 @@ export default function MyPageEdit() {
   }, [dispatch]);
 
   const onSubmit = async (data: FormData) => {
+    console.log('data >>>>>>>>>>>>>', data);
     const { nickname, password: currentPassword, changePassword, confirmPassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
 
     if (changePassword && changePassword !== confirmPassword) {
@@ -87,17 +87,19 @@ export default function MyPageEdit() {
       console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
       console.log('patch res.data', res.data.file);
-      axios({
-        method: 'put',
-        url: res.data.file,
-        data: file,
-        headers: {
-          'Content-Type': file?.type,
-        },
-      }).then((res) => {
-        console.log('>>>>', res);
-        Navigate(`/mypage`);
-      });
+      if (res.data.file) {
+        axios({
+          method: 'put',
+          url: res.data.file,
+          data: file,
+          headers: {
+            'Content-Type': file?.type,
+          },
+        }).then((res) => {
+          console.log('>>>>', res);
+          Navigate(`/mypage`);
+        });
+      }
     });
   };
 
@@ -107,7 +109,10 @@ export default function MyPageEdit() {
       .get(`http://52.79.228.200:3000/myPage`)
       .then((response) => {
         console.log('>>>>', response.data.userInfo[0]);
+        console.log(response.data.userInfo[0].nickname);
         setNickName(response.data.userInfo[0].nickname);
+
+        console.log('nickname', nickName);
         setProFileImg(response.data.file);
       })
       .catch((error) => {
@@ -115,9 +120,14 @@ export default function MyPageEdit() {
       });
   }, []);
 
-  const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickName(e.target.value);
-  };
+  function checkNickname(e) {
+    e.preventDefault();
+    console.log('nickName', nickName);
+  }
+
+  // const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setNickName(e.target.value);
+  // };
 
   return (
     <div>
@@ -153,7 +163,12 @@ export default function MyPageEdit() {
           <Label htmlFor="nickname">
             <span className="text-xs text-red-500">*</span> 닉네임
           </Label>
-          <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} value={nickName} />
+          <Input
+            id="nickname"
+            {...register('nickname')}
+            onChange={(e) => setNickName(e.target.value)}
+            value={nickName}
+          />
           {/* {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>} */}
         </div>
         <div>
@@ -175,7 +190,9 @@ export default function MyPageEdit() {
           <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
           {/* {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>} */}
         </div>
+        <Button onClick={(e) => checkNickname(e)}>확인하기</Button>
       </form>
+      <Cta text={'수정하기'} onclick={handleSubmit(onSubmit)} />
     </div>
   );
 }

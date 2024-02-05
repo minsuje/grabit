@@ -219,28 +219,28 @@ function ChallengeInProgress() {
     autoplay: true,
   });
 
-
   if (loading)
     if (isValid) {
       return (
-        <div className="mt-12 flex flex-col gap-4">
+        <div className="mt-4 flex flex-col gap-4">
           <div>
-            <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
-            <h3 className="text-center font-medium text-grabit-400">
-              {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
-            </h3>
+            <div className="title flex flex-col gap-1">
+              <h1 className="text-center text-3xl text-grabit-700">{challengeDetail?.challenge_name}</h1>
+              <h3 className="text-center font-medium text-grabit-400">
+                {differenceInDays(new Date(), challengeDetail.authentication_start_date)}일차
+              </h3>
+            </div>
 
-            <div className="relative flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
-              <div className="absolute h-40 w-40 opacity-50">
+            <div className="relative my-8 flex flex-col items-center justify-center gap-4 p-3 text-center text-4xl font-extrabold">
+              <div className="absolute h-60 w-60 opacity-70">
                 <RiveComponent />
               </div>
-              <h2 className="z-10 flex animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center font-['SBAggroB'] text-4xl text-grabit-600 text-transparent">
-                {challengeDetail?.goal_money * challengers.length} 캐럿
+              <h2 className="font-['SUITE Variable'] z-10 flex animate-text flex-col bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-center text-4xl font-black text-grabit-600 text-transparent">
+                {challengeDetail?.goal_money * challengers.length} <span className="text-xl">캐럿</span>
               </h2>
             </div>
 
-            <div className="bar flex w-full flex-col items-center justify-center gap-4 px-20">
-              <h3 className="flex w-fit text-xl font-bold text-grabit-700">{tab[0]}</h3>
+            <div className="bar mb-10 mt-16 flex w-full flex-col items-center justify-center gap-4 px-20">
               <CircularProgressbarWithChildren
                 value={UrlGroup[0].length > 0 ? (UrlGroup[0].length / totalAuthCount) * 100 : 0}
                 strokeWidth={10}
@@ -266,14 +266,16 @@ function ChallengeInProgress() {
                   }}
                 />
               </CircularProgressbarWithChildren>
-              <span className="text-center text-lg font-semibold text-stone-600">{UrlGroup[0].length}회 성공</span>
+              <div className="flex flex-col items-center justify-center gap-1">
+                <h3 className="flex w-fit text-xl font-extrabold text-grabit-700">{tab[0]}</h3>
+                <span className="text-md text-center font-extrabold text-stone-400">{UrlGroup[0].length}회 성공</span>
+              </div>
             </div>
             <div className="progress grid grid-cols-3 gap-6 p-2">
               {tab.map((nickname, index) => {
                 if (index === 0) return null;
                 return (
-                  <div key={index} className="bar flex w-full flex-col items-center justify-center gap-4">
-                    <h3 className="flex w-fit break-all text-center text-xl font-bold text-grabit-700">{nickname}</h3>
+                  <div key={index} className="bar flex w-full flex-col items-center justify-start gap-4">
                     <CircularProgressbarWithChildren
                       value={UrlGroup[index].length > 0 ? (UrlGroup[index].length / totalAuthCount) * 100 : 0}
                       strokeWidth={20}
@@ -297,12 +299,16 @@ function ChallengeInProgress() {
                           borderRadius: '0px',
                           height: `${0}%`,
                         }}
-
                       />
                     </CircularProgressbarWithChildren>
-                    <span className="text-center text-lg font-semibold text-stone-600">
-                      {UrlGroup[index].length}회 성공
-                    </span>
+                    <div className="flex flex-col items-center justify-center gap-1">
+                      <h3 className="text-md flex w-fit truncate break-all text-center font-extrabold text-grabit-700">
+                        {nickname}
+                      </h3>
+                      <span className="text-center text-sm font-semibold text-stone-400">
+                        {UrlGroup[index].length}회 성공
+                      </span>
+                    </div>
                   </div>
                 );
               })}

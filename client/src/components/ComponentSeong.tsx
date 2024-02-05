@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
+import { PiTimerDuotone } from 'react-icons/pi';
+import { RiVipDiamondFill } from 'react-icons/ri';
 
 // ~~~일 후 종료
 
@@ -16,15 +18,24 @@ export function ListComponent1({ challenge }: ChallengeProp) {
 
   const dDay = differenceInCalendarDays(challenge.authentication_end_date, new Date());
   return (
-    <div>
-      <div key={challenge.challenge_id} className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-        <div className="flex justify-between">
-          <p>{challenge.challenge_name}</p>
-
-          <p>{dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}</p>
-        </div>
-        <p>{challenge.goal_money}원</p>
+    <div
+      key={challenge.challenge_id}
+      className="flex flex-col gap-2 rounded-xl bg-white p-6 shadow-lg shadow-grabit-600/10"
+    >
+      <div className="flex items-center justify-center">
+        <h2 className="flex-1">{challenge.challenge_name}</h2>
+        <p className="flex flex-none items-center gap-1 text-right text-sm text-stone-400">
+          <PiTimerDuotone />
+          {dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}
+        </p>
       </div>
+      <p className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
+        <RiVipDiamondFill />
+        <div className="flex items-end gap-1">
+          {challenge.goal_money}
+          <span className="mb-[3px] align-top text-sm font-bold text-grabit-400">캐럿</span>
+        </div>
+      </p>
     </div>
   );
 }

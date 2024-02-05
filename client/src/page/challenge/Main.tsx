@@ -129,10 +129,10 @@ export default function Main() {
               <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
                 <div className="counter w-4"></div>
                 <div className="flex justify-between gap-2">
-                  <h2 className="font-['SBAggroB'] text-grabit-600">{dailymission}</h2>
+                  <h2 className="font-['SUITE Variable'] text-grabit-600">{dailymission}</h2>
                   <p className=" text-grabit-400"></p>
                 </div>
-                <p className="font-['SBAggroB'] text-2xl font-bold text-grabit-600">10P</p>
+                <p className="font-['SUITE Variable'] text-2xl font-bold text-grabit-600">10P</p>
               </div>
             </div>
           </Link>
@@ -186,13 +186,15 @@ export default function Main() {
             </Link>
           </div>
         ) : (
-          ingMyChallenge.map((challenge: Challenge, idx: number) => {
-            return (
-              <Link key={idx} to={`/challengeInProgress/${challenge.challenge_id}`} className="text-black no-underline">
-                <ListComponent1 challenge={challenge} />
-              </Link>
-            );
-          })
+          <div className="flex flex-col gap-4">
+            {ingMyChallenge.map((challenge: Challenge, idx: number) => {
+              return (
+                <Link key={idx} to={`/challengeInProgress/${challenge.challenge_id}`} className="flex flex-col gap-2">
+                  <ListComponent1 challenge={challenge} />
+                </Link>
+              );
+            })}
+          </div>
         )}
       </div>
 

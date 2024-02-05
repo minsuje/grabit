@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUITE/fonts/variable/woff2/SUITE-Variable.css');
 
 @font-face {
   font-family: 'JalnanGothic';
@@ -8,9 +9,10 @@
 }
 
 @font-face {
-  font-family: 'SBAggroB';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
-  font-weight: normal;
+  font-family: 'PyeongChangPeace-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Bold.woff2')
+    format('woff2');
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -18,6 +20,7 @@
 @layer base {
   html {
     font-family:
+      'SUITE Variable',
       'Pretendard Variable',
       Pretendard,
       -apple-system,
@@ -36,16 +39,19 @@
     word-break: keep-all;
   }
   h1 {
-    @apply font-['SBAggroB'] text-2xl font-light;
+    @apply font-['PyeongChangPeace-Bold'] text-3xl font-extrabold text-grabit-900 subpixel-antialiased;
   }
   h2 {
-    @apply text-xl font-bold;
+    @apply text-xl font-extrabold text-grabit-800 subpixel-antialiased;
   }
   h3 {
-    @apply text-lg font-bold;
+    @apply text-lg font-bold subpixel-antialiased;
   }
-  a {
-    @apply text-blue-600 underline;
+  p {
+    @apply subpixel-antialiased;
+  }
+  span {
+    @apply subpixel-antialiased;
   }
 }
 @tailwind components;

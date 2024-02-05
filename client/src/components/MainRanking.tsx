@@ -46,7 +46,10 @@ export default function Ranking() {
     <div className="flex p-2 text-center text-grabit-700">
       {ranking?.map((rank: users, idx) => {
         return (
-          <div key={idx} className="relative flex w-full flex-col items-center justify-center gap-2 font-['SBAggroB']">
+          <div
+            key={idx}
+            className="font-['SUITE Variable'] relative flex w-full flex-col items-center justify-center gap-2"
+          >
             <motion.div
               className="h-60 w-20 rounded-t-md bg-gradient-to-t from-transparent to-grabit-700"
               style={{ originY: 1 }}

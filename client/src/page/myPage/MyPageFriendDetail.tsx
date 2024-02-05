@@ -148,7 +148,7 @@ export default function MyPageFriendDetail() {
           <AvatarImage src={proFileImg} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <h2 className="flex font-['SBAggroB'] font-light text-grabit-700">{nickname}</h2>
+        <h2 className="font-['SUITE Variable'] flex font-light text-grabit-700">{nickname}</h2>
       </div>
 
       <div className="my-8 flex w-full items-center justify-center text-center">
@@ -158,7 +158,7 @@ export default function MyPageFriendDetail() {
           {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
         </div>
         <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
-          <p className="font-['SBAggroB'] text-2xl">{scoreNum}</p>
+          <p className="font-['SUITE Variable'] text-2xl">{scoreNum}</p>
           <p className="text-xl font-bold text-stone-500">포인트</p>
         </div>
         <div className="flex w-full basis-1/4  flex-col items-center justify-center">
@@ -195,7 +195,6 @@ export default function MyPageFriendDetail() {
           <Button onClick={handleAcceptFriend}>수락완료</Button>
         </div>
       )}
-
     </div>
   );
 }
