@@ -55,7 +55,7 @@ export default function Login() {
 
       navigate('/main');
 
-      if (response.data === 'false' || response.data === 'none') {
+      if (response.data === 'false' || response.data.none === 'none') {
         setErrorMessage('유효하지 않은 사용자 정보입니다.');
       } else {
         setErrorMessage('로그인에 성공했습니다.');

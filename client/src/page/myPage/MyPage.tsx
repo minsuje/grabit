@@ -67,7 +67,7 @@ export default function MyPage() {
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-      .get(`/myPage`)
+      .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         console.log('mypage >>>>>여기가 카카오있음>>>>>', response.data);
         setProfileImg(response.data.file);
@@ -81,7 +81,7 @@ export default function MyPage() {
   useEffect(() => {
     // 챌린지 테이블정보 요청
     privateApi
-      .get(`/history`)
+      .get(`/history`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         console.log(response);
         const historyData: HistoryData = response.data;
@@ -106,7 +106,7 @@ export default function MyPage() {
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
-      .get(`/myPage`)
+      .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         console.log('mypage', response.data);
         const userInfo: UserInfo = response.data.userInfo[0];
@@ -124,7 +124,7 @@ export default function MyPage() {
   useEffect(() => {
     // 랭킹 요청
     privateApi
-      .get(`/myRanking`)
+      .get(`/myRanking`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         setRanking(response.data);
       })
@@ -136,7 +136,7 @@ export default function MyPage() {
   // 내 친구목록 불러오기
   useEffect(() => {
     privateApi
-      .get(`/friend/${userid_num}`)
+      .get(`/friend/${userid_num}`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);
@@ -198,7 +198,7 @@ export default function MyPage() {
           {nickName === '' ? (
             <Skeleton className="h-[32px] w-[60px]" />
           ) : (
-            <p className="text-2xl font-extrabold text-grabit-700">{nickName}</p>
+            <p className="text-grabit-700 text-2xl font-extrabold">{nickName}</p>
           )}
           <Link to={`/mypage/edit`}>
             <Button type="submit">프로필 수정</Button>
@@ -213,7 +213,7 @@ export default function MyPage() {
           {/* <p className="text-xl text-stone-500">{ranking}위</p> */}
         </div>
         <div className="mt-1 flex h-full w-full basis-2/4 flex-col justify-center">
-          <p className="text-2xl font-extrabold text-grabit-600">{scoreNum}</p>
+          <p className="text-grabit-600 text-2xl font-extrabold">{scoreNum}</p>
           <p className="text-xl font-bold text-stone-500">포인트</p>
         </div>
         <div className="flex w-full basis-1/4  flex-col items-center justify-center">
@@ -254,7 +254,7 @@ export default function MyPage() {
         </div>
       </div>
 
-      <div className="carrot relative my-12 flex flex-col gap-4 rounded-2xl bg-grabit-100 px-8 pb-4 pt-12">
+      <div className="carrot bg-grabit-100 relative my-12 flex flex-col gap-4 rounded-2xl px-8 pb-4 pt-12">
         <div className="absolute bottom-[150px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
           <RiveComponent />
         </div>
@@ -262,28 +262,28 @@ export default function MyPage() {
           whileInView={{ opacity: 1 }}
           initial={{ opacity: 0 }}
           transition={{ delay: 0.4 }}
-          className="font-['SUITE Variable'] flex w-full flex-col text-center text-3xl font-black text-grabit-800"
+          className="font-['SUITE Variable'] text-grabit-800 flex w-full flex-col text-center text-3xl font-black"
         >
           <motion.span
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: inView ? 1 : 0 }}
             transition={{ delay: 0.4 }}
-            className="font-['SUITE Variable'] w-full text-center text-3xl font-black text-grabit-800"
+            className="font-['SUITE Variable'] text-grabit-800 w-full text-center text-3xl font-black"
           >
             {rounded}
           </motion.span>
-          <span className="ml-1 text-xl font-bold text-grabit-400">캐럿</span>
+          <span className="text-grabit-400 ml-1 text-xl font-bold">캐럿</span>
         </motion.div>
         <div className="flex flex-col gap-2">
           <div className="flex w-full gap-2">
             <Link to="/payment" className="w-full">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 충전하기
               </Button>
             </Link>
             <Link to="/mypage/withdraw" className="w-full ">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 출금하기
               </Button>
             </Link>
