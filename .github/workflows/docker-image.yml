@@ -31,6 +31,7 @@ jobs:
                   AWS_REGION: ${{ secrets.AWS_REGION }}
                   TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
                   AWS_EC2_URL: ${{ secrets.AWS_EC2_URL }}
+                  AWS_EC2_CLIENT: ${{ secrets.AWS_EC2_CLIENT }}
               run: |
                   docker build \
                     --build-arg DATABASE_URL=${DATABASE_URL} \
@@ -45,6 +46,7 @@ jobs:
                     --build-arg AWS_REGION=${AWS_REGION} \
                     --build-arg TOSS_SECRET_KEY:${TOSS_SECRET_KEY} \
                     --build-arg AWS_EC2_URL:${AWS_EC2_URL} \
+                    --build-arg AWS_EC2_CLIENT:${AWS_EC2_CLIENT} \
                     --build-arg TZ=Asia/Seoul \
                     -t seejnn/grabit -f server/Dockerfile server
 
