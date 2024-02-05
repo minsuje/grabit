@@ -3,10 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 function KakaoAuth() {
   const navigate = useNavigate();
-  const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  // const [accessTokenFetching, setAccessTokenFetching] = useState(false);
+  const getCookie = (name: string) => {
+    return cookies.get(name);
+  };
 
   // Access Token 받아오기
   const getAccessToken = async () => {
@@ -16,12 +22,13 @@ function KakaoAuth() {
 
     try {
       setAccessTokenFetching(true); // Set fetching to true
+      
 
-      const response = await axios.get('http://localhost:3000/auth/kakao/', {
+      const response = await axios.post('http://localhost:5173/auth/kakao/', {
         withCredentials: true,
       });
       console.log('response:', response);
-      const accessToken = response.data.accessToken;
+      const accessToken = response.data;
       console.log('accessToken:', accessToken);
 
       setAccessTokenFetching(false); // Reset fetching to false
@@ -30,11 +37,14 @@ function KakaoAuth() {
       console.error('Error:', error);
       setAccessTokenFetching(false); // Reset fetching even in case of error
     }
+
+
+    const response = await axios.post(`http://localhost:3000/auth/kakao`, { withCredentials: true });
   };
 
-  useEffect(() => {
-    getAccessToken();
-  }, []);
+  // useEffect(() => {
+  //   getAccessToken();
+  // }, []);
 
   return <div>Loading...</div>;
 }

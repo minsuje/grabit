@@ -10,12 +10,12 @@ export default function MypageWithdraw() {
   const [money, setMoney] = useState<string>('');
   const [bank_num, setBank_num] = useState<string>('');
   const [bank_name, setBank_name] = useState<string>('');
-  const [userid, setUserId] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
   console.log(money);
   console.log(bank_num);
   console.log(bank_name);
-  console.log(userid);
+  console.log(name);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
@@ -28,7 +28,7 @@ export default function MypageWithdraw() {
           money,
           bank_num,
           bank_name,
-          userid,
+          name,
         })
         .then();
       console.log(response.data);
@@ -70,13 +70,13 @@ export default function MypageWithdraw() {
         </div>
 
         <div>
-          <h1>계정</h1>
+          <h1>이름</h1>
           <input
             type="text"
-            name="userId"
-            placeholder="계정을 입력하세요"
-            value={userid}
-            onChange={(e) => setUserId(e.target.value)}
+            name="name"
+            placeholder="이름을 입력하세요"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
 

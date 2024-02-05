@@ -145,10 +145,11 @@ export default function MyPageFriendDetail() {
     <div className="flex flex-col gap-4">
       <div className="flex w-full flex-col items-center justify-center gap-4">
         <Avatar className="flex h-20 w-20">
-          <AvatarImage src={proFileImg} />
+          <AvatarImage src={proFileImg ? proFileImg : '/grabit_profile.png'} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
         <h2 className="font-['SUITE Variable'] flex font-light text-grabit-700">{nickname}</h2>
+
       </div>
 
       <div className="my-8 flex w-full items-center justify-center text-center">
@@ -182,17 +183,17 @@ export default function MyPageFriendDetail() {
       )}
       {friendStatus === '친구입니다.' && (
         <div>
-          <Button onClick={handleDeleteFriend}>친구 삭제</Button>
+          <Button onClick={handleDeleteFriend}>친구 끊기</Button>
         </div>
       )}
       {friendStatus === '친구 신청 해놓고 대기 중' && (
         <div>
-          <Button disabled>친구 신청 해놓고 대기 중</Button>
+          <Button disabled>친구신청대기중</Button>
         </div>
       )}
       {friendStatus === '상대가 친구 신청 해놓은거 수락바람' && (
         <div>
-          <Button onClick={handleAcceptFriend}>수락완료</Button>
+          <Button onClick={handleAcceptFriend}>친구수락</Button>
         </div>
       )}
     </div>

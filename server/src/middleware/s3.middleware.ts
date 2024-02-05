@@ -51,71 +51,75 @@ export class s3Middleware implements NestMiddleware {
           .where(
             eq(challenge.challenge_id, Number(req.originalUrl.split('/')[2])),
           );
+        // 존재하지 않는 챌린지인 경우
+        if (challenger.length > 0) {
+          challenger = challenger[0].challenger_userid_num;
 
-        challenger = challenger[0].challenger_userid_num;
+          let challenger_num = [];
+          for (let i = 0; i < challenger.length; i++) {
+            let id = challenger[i].userid_num;
 
-        let challenger_num = [];
-        for (let i = 0; i < challenger.length; i++) {
-          let id = challenger[i].userid_num;
+            challenger_num.push(id);
+          }
 
-          challenger_num.push(id);
-        }
+          let challengers = [];
+          for (let i = 0; i < challenger_num.length; i++) {
+            let info = await db
+              .select({
+                userid_num: users.userid_num,
+                nickname: users.nickname,
+                profile_img: users.profile_img,
+              })
+              .from(users)
+              .where(eq(users.userid_num, challenger_num[i]));
+            challengers.push(info[0]);
+          }
 
-        let challengers = [];
-        for (let i = 0; i < challenger_num.length; i++) {
-          let info = await db
+          for (let i = 0; i < challengers.length; i++) {
+            key = challengers[i].profile_img;
+            if (key !== null) {
+              const command = new GetObjectCommand({
+                Bucket: process.env.AWS_S3_BUCKET,
+                Key: key,
+              });
+
+              url = await getSignedUrl(client, command, { expiresIn: 3600 });
+            }
+            challengers[i] = {
+              ...challengers[i],
+              profile_img: url,
+            };
+          }
+
+          let files = await db
             .select({
-              userid_num: users.userid_num,
-              nickname: users.nickname,
-              profile_img: users.profile_img,
+              userid_num: authentication.userid_num,
+              authentication_img: authentication.authentication_img,
+              authentication_id: authentication.authentication_id,
             })
-            .from(users)
-            .where(eq(users.userid_num, challenger_num[i]));
-          challengers.push(info[0]);
-        }
+            .from(authentication)
+            .where(
+              eq(authentication.challenge_id, Number(req.url.split('/')[1])),
+            )
+            .orderBy(desc(authentication.created_at));
 
-        for (let i = 0; i < challengers.length; i++) {
-          key = challengers[i].profile_img;
-          if (key !== null) {
+          let urls = [];
+          for (let i = 0; i < files.length; i++) {
+            key = files[i].authentication_img;
             const command = new GetObjectCommand({
               Bucket: process.env.AWS_S3_BUCKET,
               Key: key,
             });
 
             url = await getSignedUrl(client, command, { expiresIn: 3600 });
+            urls.push({
+              authentication_id: files[i].authentication_id,
+              userid_num: files[i].userid_num,
+              url: url,
+            });
           }
-          challengers[i] = {
-            ...challengers[i],
-            profile_img: url,
-          };
-        }
-
-        let files = await db
-          .select({
-            userid_num: authentication.userid_num,
-            authentication_img: authentication.authentication_img,
-            authentication_id: authentication.authentication_id,
-          })
-          .from(authentication)
-          .where(eq(authentication.challenge_id, Number(req.url.split('/')[1])))
-          .orderBy(desc(authentication.created_at));
-
-        let urls = [];
-        for (let i = 0; i < files.length; i++) {
-          key = files[i].authentication_img;
-          const command = new GetObjectCommand({
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: key,
-          });
-
-          url = await getSignedUrl(client, command, { expiresIn: 3600 });
-          urls.push({
-            authentication_id: files[i].authentication_id,
-            userid_num: files[i].userid_num,
-            url: url,
-          });
-        }
-        req['file'] = { urls, challengers };
+          req['file'] = { urls, challengers };
+        } else req['file'] = null;
       } else {
         // 인증 사진 하나
         let file = await db

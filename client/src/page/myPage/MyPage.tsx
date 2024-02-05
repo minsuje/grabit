@@ -57,7 +57,7 @@ export default function MyPage() {
   const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]); // history는 배열 타입
   const [proFileImg, setProfileImg] = useState<string>('');
-  const [ranking, setRanking] = useState<string>('');
+  const [ranking, setRanking] = useState<string>();
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
 
   useEffect(() => {
@@ -193,6 +193,7 @@ export default function MyPage() {
     threshold: 0.1, // Adjust this value based on when you want the animation to start (0.1 means 10% of the element should be visible)
   });
 
+  console.log('>>>>>>>proFileImg', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>
@@ -201,13 +202,15 @@ export default function MyPage() {
       <div className="section flex">
         <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
           <Avatar className="aspect-square h-20 w-20">
-            <AvatarImage src={proFileImg ? proFileImg : `/grabit_profile.png`} />
+            <AvatarImage src={proFileImg === '' ? proFileImg : `/grabit_profile.png`} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
           {nickName === '' ? (
             <Skeleton className="h-[32px] w-[60px]" />
           ) : (
+
             <p className="text-2xl font-extrabold text-grabit-700">{nickName}</p>
+
           )}
           <Link to={`/mypage/edit`}>
             <Button type="submit">프로필 수정</Button>
@@ -252,7 +255,7 @@ export default function MyPage() {
             <div className="flex w-full items-center gap-3" key={index}>
               <Avatar>
                 <AvatarImage
-                  src={friend.profile_img ? friend.profile_img : '/grabit_profile.png'}
+                  src={friend.profile_img ? friend.profile_img : 'grabit_profile.png'}
                   alt={friend.nickname}
                 />
                 <AvatarFallback></AvatarFallback>
@@ -263,22 +266,28 @@ export default function MyPage() {
         </div>
       </div>
 
+
       <div className="carrot relative my-12 flex flex-col gap-4 rounded-2xl bg-grabit-100 px-8 pb-4 pt-12">
         <div className="absolute bottom-[150px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
+
           <RiveComponent />
         </div>
         <motion.div
           whileInView={{ opacity: 1 }}
           initial={{ opacity: 0 }}
           transition={{ delay: 0.4 }}
+
           className="font-['SUITE Variable'] flex w-full flex-col text-center text-3xl font-black text-grabit-800"
+
         >
           <motion.span
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: inView ? 1 : 0 }}
             transition={{ delay: 0.4 }}
+
             className="font-['SUITE Variable'] w-full text-center text-3xl font-black text-grabit-800"
+
           >
             {rounded}
           </motion.span>
@@ -287,12 +296,12 @@ export default function MyPage() {
         <div className="flex flex-col gap-2">
           <div className="flex w-full gap-2">
             <Link to="/mypage/charge" className="w-full">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 충전하기
               </Button>
             </Link>
             <Link to="/mypage/withdraw" className="w-full ">
-              <Button variant={'secondary'} className="w-full bg-grabit-200">
+              <Button variant={'secondary'} className="bg-grabit-200 w-full">
                 출금하기
               </Button>
             </Link>

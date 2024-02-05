@@ -15,10 +15,11 @@ import Cta from '@/components/Cta';
 
 export default function MyPageEdit() {
   const dispatch = useDispatch();
-  const [nickName, setNickName] = useState<string>('');
+  const [nickName, setNickName] = useState<string>();
+
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | null>();
 
   const Navigate = useNavigate();
 
@@ -28,7 +29,7 @@ export default function MyPageEdit() {
     password: string; // 필수 필드로 정의
     changePassword?: string;
     confirmPassword?: string;
-    file?: any | undefined;
+    file?: any | null;
   }
 
   // yup 스키마 정의
@@ -47,6 +48,9 @@ export default function MyPageEdit() {
     register,
     handleSubmit,
     setError,
+
+    setValue,
+
     // formState: { errors },
   } = useForm<FormData>();
 
@@ -74,7 +78,8 @@ export default function MyPageEdit() {
 
     await axios({
       method: 'patch',
-      url: 'http://52.79.228.200:3000/myPage',
+      // url: 'http://52.79.228.200:3000/myPage',
+      url: 'http://localhost:3000/myPage',
       headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       data: {
         filename: file?.name,
@@ -86,21 +91,24 @@ export default function MyPageEdit() {
     }).then((res) => {
       console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
-      console.log('patch res.data', res.data.file);
-      if (res.data.file) {
-        axios({
-          method: 'put',
-          url: res.data.file,
-          data: file,
-          headers: {
-            'Content-Type': file?.type,
-          },
-        }).then((res) => {
-          console.log('>>>>', res);
-          Navigate(`/mypage`);
-        });
-      }
+
+      console.log('patch res.data>>', res.data.file);
+      // alert(res.data.msg);
+      if(res.data.file){
+      axios({
+        method: 'put',
+        url: res.data.file,
+        data: file,
+        headers: {
+          'Content-Type': file?.type,
+        },
+      }).then((res) => {
+        console.log('>>>>', res);
+        Navigate(`/mypage`);
+      });
+    }
     });
+    
   };
 
   // 프로필 이미지 요청
@@ -108,8 +116,11 @@ export default function MyPageEdit() {
     privateApi
       .get(`http://52.79.228.200:3000/myPage`)
       .then((response) => {
+        const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);
-        console.log(response.data.userInfo[0].nickname);
+
+        setValue('nickname', nickname); // 폼 필드 업데이트
+
         setNickName(response.data.userInfo[0].nickname);
 
         console.log('nickname', nickName);
@@ -118,16 +129,9 @@ export default function MyPageEdit() {
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, []);
 
-  function checkNickname(e) {
-    e.preventDefault();
-    console.log('nickName', nickName);
-  }
+  }, [setValue]);
 
-  // const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setNickName(e.target.value);
-  // };
 
   return (
     <div>
@@ -140,7 +144,7 @@ export default function MyPageEdit() {
         <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg} />
+            <AvatarImage src={proFileImg ? proFileImg : 'grabit_profile.png'} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
 
@@ -163,12 +167,9 @@ export default function MyPageEdit() {
           <Label htmlFor="nickname">
             <span className="text-xs text-red-500">*</span> 닉네임
           </Label>
-          <Input
-            id="nickname"
-            {...register('nickname')}
-            onChange={(e) => setNickName(e.target.value)}
-            value={nickName}
-          />
+
+          <Input id="nickname" {...register('nickname')} />
+
           {/* {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>} */}
         </div>
         <div>

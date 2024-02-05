@@ -78,7 +78,9 @@ function AnimatedRoutes() {
           <Route path="/challengeList" element={<ChallengeList />} />
           <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
           <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
-          <Route path="/challengeDaisly/:mission_content" element={<ChallengeDaily />} />
+
+          <Route path="/challengeDaily" element={<ChallengeDaily />} />
+
           <Route path="/alarm" element={<Alarm />} />
           <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
           <Route path="/fileupload" element={<FileUploadTest />} />
@@ -96,7 +98,7 @@ function AnimatedRoutes() {
           <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
           <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
           <Route path="/mypage/history" element={<MyPageHistory />} />
-          <Route path="/mypage/historydetail" element={<MyPageHistoryDetail />} />
+          <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
           <Route path="/friend/new/:userid" element={<FriendAddition />} />
           <Route path="/friend/new" element={<FriendAddition />} />
         </Route>
