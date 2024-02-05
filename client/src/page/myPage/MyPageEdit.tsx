@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 
 // import * as yup from 'yup';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios, { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -17,17 +17,17 @@ export default function MyPageEdit() {
   const [nickName, setNickName] = useState<string>('');
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | null>();
 
   const Navigate = useNavigate();
-  const { userid_num } = useParams();
+
   // FormData 인터페이스 정의
   interface FormData {
     nickname?: string | null;
     password: string; // 필수 필드로 정의
     changePassword?: string;
     confirmPassword?: string;
-    file?: any | undefined;
+    file?: any | null;
   }
 
   // yup 스키마 정의
@@ -130,7 +130,7 @@ export default function MyPageEdit() {
         <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
           <Avatar>
-            <AvatarImage src={proFileImg ? proFileImg : '/grabit_profile.png'} />
+            <AvatarImage src={proFileImg ? proFileImg : 'grabit_profile.png'} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
 
