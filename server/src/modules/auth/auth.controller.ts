@@ -100,7 +100,8 @@ export class AuthController {
       username,
     );
 
-    const { loginToken, loginRefreshToken, login_type } = searchUser;
+    const { loginToken, loginRefreshToken, login_type, userid_nums } =
+      searchUser;
 
     const header = await res.setHeader(
       'Authorization',
@@ -126,7 +127,7 @@ export class AuthController {
     data = {
       accessToken: loginToken,
       refreshToken: loginRefreshToken,
-      userid_num: id,
+      userid_num: userid_nums,
       nickname: username,
       name: username,
       login_type: login_type,

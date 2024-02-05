@@ -123,8 +123,6 @@ export class AuthService {
       .from(users)
       .where(eq(users.userid, String(kakaoId)));
 
-    console.log('isClear >>>> ', isClear);
-
     // 유저가 없다면 DB에 유저 추가
     if (findUser.length == 0) {
       const newUser = await db.insert(users).values({
@@ -145,8 +143,8 @@ export class AuthService {
     };
 
     let login_type = isClear[0].login_type;
+    let userid_nums = isClear[0].userid_num;
 
-    console.log('kakaoToken>>> ', kakaoTokenInfo);
     // DB에 내용이 있다면 해당 유저가 refresh 토큰 값을 초기화 하고 새로 넣어주기
     // DB에 유저가 있다면 토큰 생성
     const loginToken = await this.jwtService.sign(kakaoTokenInfo);
@@ -173,7 +171,7 @@ export class AuthService {
         refreshToken: [currentRefreshToken, String(isClear[0].userid_num)],
       })
       .where(eq(users.userid, String(kakaoId)));
-    return { loginToken, loginRefreshToken, login_type };
+    return { loginToken, loginRefreshToken, login_type, userid_nums };
   };
 
   // refresh 토큰을 통해 재발급
@@ -192,8 +190,6 @@ export class AuthService {
         .select()
         .from(users)
         .where(eq(users.userid_num, decodedRefreshToken.tokenInfo.userid_num));
-
-      console.log('refresh user > ', user);
 
       const refreshTokenMatching = await bcrypt.compare(
         loginRefreshToken,

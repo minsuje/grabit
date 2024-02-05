@@ -49,12 +49,10 @@ export class UserService {
 
     let isLogins = false;
     if (checkUser.length !== 0) {
-      console.log('user.service >>>>> check user 밖에서');
       const isLogins = false;
       console.log(isLogins);
       return isLogins;
     } else {
-      console.log('user.service >>>>> check user 안에서');
       const CUser = await db.insert(users).values(userInfo);
       return (isLogins = true);
     }
@@ -71,12 +69,19 @@ export class UserService {
 
   // 프로필 조회
   getMyPage = async (userid_num: number, file: string) => {
+    console.log('여기 오류');
+
     const userInfo = await db
       .select({
         nickname: users.nickname,
         score_num: users.score_num,
         carrot: users.carrot,
       })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+
+    const checkNum = await db
+      .select({ userid: users.userid })
       .from(users)
       .where(eq(users.userid_num, userid_num));
 
