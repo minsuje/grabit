@@ -89,6 +89,7 @@ export default function MyPageEdit() {
       console.log('patch res.data', res.data);
       console.log('patch res.data>>', res.data.file);
       // alert(res.data.msg);
+      if(res.data.file){
       axios({
         method: 'put',
         url: res.data.file,
@@ -100,7 +101,9 @@ export default function MyPageEdit() {
         console.log('>>>>', res);
         Navigate(`/mypage`);
       });
+    }
     });
+    
   };
 
   // 프로필 이미지 요청
