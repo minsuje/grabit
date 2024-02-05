@@ -24,7 +24,7 @@ export default function MyPageWithdraw() {
   const handleSubmit = async () => {
     try {
       const response = await privateApi
-        .post('http://localhost:3000/requsetWithdraw', {
+        .post('/requsetWithdraw', {
           money,
           bank_num,
           bank_name,

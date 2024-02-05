@@ -27,14 +27,10 @@ function CheckoutPage({ price }: Props) {
 
   useEffect(() => {
     console.log('accessToken >>>>>>', localStorage.getItem('accessToken'));
-    privateApi
-      .post('http://localhost:3000/userInfo', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
-      .then((res) => {
-        console.log('res', res.data.user[0]);
-        username = res.data.user[0].name;
-      });
+    privateApi.post('/userInfo').then((res) => {
+      console.log('res', res.data.user[0]);
+      username = res.data.user[0].name;
+    });
   }, []);
 
   async function handlePayment() {

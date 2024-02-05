@@ -42,9 +42,7 @@ export default function MyPageFriendDetail() {
 
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/profile/${userid}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/profile/${userid}`)
       .then((response) => {
         console.log('mypageDate>>>>>>>>>>', response);
         setNickname(response.data.file.nickname);
@@ -84,9 +82,8 @@ export default function MyPageFriendDetail() {
     console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
     privateApi({
       method: 'DELETE',
-      url: `http://localhost:3000/friend/${userid_num}`,
+      url: `/friend/${userid_num}`,
       data: { other_userid: userid },
-      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
     })
       .then((response) => {
         console.log('친구 삭제 성공:', response);
@@ -106,9 +103,8 @@ export default function MyPageFriendDetail() {
     console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
     privateApi({
       method: 'POST',
-      url: `http://localhost:3000/friend/${userid_num}`,
+      url: `/friend/${userid_num}`,
       data: { other_userid_num: friendUserNum, is_friend: false },
-      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
     })
       .then((response) => {
         console.log('친구 추가 요청 성공:', response);
@@ -124,9 +120,8 @@ export default function MyPageFriendDetail() {
     console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
     privateApi({
       method: 'Patch',
-      url: `http://localhost:3000/friend/${userid_num}`,
+      url: `/friend/${userid_num}`,
       data: { other_userid_num: friendUserNum, is_friend: false },
-      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
     })
       .then((response) => {
         console.log('친구 추가 요청 성공:', response);
@@ -149,7 +144,6 @@ export default function MyPageFriendDetail() {
           <AvatarFallback></AvatarFallback>
         </Avatar>
         <h2 className="font-['SUITE Variable'] flex font-light text-grabit-700">{nickname}</h2>
-
       </div>
 
       <div className="my-8 flex w-full items-center justify-center text-center">

@@ -68,9 +68,7 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
-      .get(`http://localhost:3000/history`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/history`)
       .then((response) => {
         setWinnerUseridNum(response.data.history[0].winner_userid_num);
       })

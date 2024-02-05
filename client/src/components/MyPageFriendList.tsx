@@ -10,9 +10,7 @@ export default function MyPageFriendList({ friends }: any) {
   useEffect(() => {
     // 랭킹 요청
     privateApi
-      .get(`http://localhost:3000/myRanking`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/myRanking`)
       .then(() => {})
       .catch((error) => {
         console.error(' 랭킹 axios 오류', error);

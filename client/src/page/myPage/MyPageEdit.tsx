@@ -72,9 +72,8 @@ export default function MyPageEdit() {
     console.log('>>>>>>>>>>>>>>>>>DDAATTAA>', data);
     await axios({
       method: 'patch',
-      // url: 'http://52.79.228.200:3000/myPage',
-      url: 'http://localhost:3000/myPage',
-      headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      url: '/myPage',
+
       data: {
         login_type: `${loginType}`,
         filename: file?.name,
@@ -113,11 +112,7 @@ export default function MyPageEdit() {
   // 프로필 이미지 요청
   useEffect(() => {
     privateApi
-      .get(`http://localhost:3000/myPage`, {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        },
-      })
+      .get(`/myPage`)
       .then((response) => {
         const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);

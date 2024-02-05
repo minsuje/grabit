@@ -92,9 +92,7 @@ function ChallengeInProgress() {
 
   useEffect(() => {
     privateApi
-      .get(`http://52.79.228.200:3000/challengeDetail/${challenge_id}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/challengeDetail/${challenge_id}`)
       .then((response): void => {
         console.log('response', response);
         if (response.data.challengeDetail) {

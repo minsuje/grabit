@@ -17,9 +17,7 @@ function ChallengeDaily() {
 
   useEffect(() => {
     privateApi
-      .get('http://52.79.228.200:3000/dailyMission', {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get('/dailyMission')
       .then((response) => {
         console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission.title);
@@ -86,7 +84,7 @@ function ChallengeDaily() {
     if (response?.choices[0].message.content == 'True' || response?.choices[0].message.content?.includes('True')) {
       console.log('보내기');
       privateApi
-        .patch(`http://52.79.228.200:3000/dailyMissionAuth`)
+        .patch(`/dailyMissionAuth`)
         .then((response): void => {
           console.log('response', response.data);
           if (response.data.msg) {

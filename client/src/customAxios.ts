@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
-const SERVER_ADDRESS: string = 'http://localhost:3000';
+const SERVER_ADDRESS: string = import.meta.env.VITE_AWS_EC2_URL;
 
 export const customAxios: AxiosInstance = axios.create({
   baseURL: `${SERVER_ADDRESS}`,

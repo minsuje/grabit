@@ -47,9 +47,7 @@ export default function ChallengeResult() {
   // 마이페이지
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/myPage`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
-      })
+      .get(`/myPage`)
       .then((response) => {
         console.log('mypage>>>>>>>', response);
         console.log('mypage', response.data.userInfo[0].score_num);
@@ -63,8 +61,7 @@ export default function ChallengeResult() {
   // 챌린지 상세 정보 보기 점수 업데이트
   useEffect(() => {
     privateApi
-      .post(`http://localhost:3000/challengeDetail/${challenge_id}`, {
-        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      .post(`/challengeDetail/${challenge_id}`, {
         winner_userid_num: info.winner,
         total_money: info.totalMoney,
         challenge_id,
@@ -206,14 +203,14 @@ export default function ChallengeResult() {
                 animate={{ scale: [1.5, 4], x: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="from-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr to-violet-500"
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-grabit-500 to-violet-500"
               ></motion.div>
               <motion.div
                 initial={{ x: 200 }}
                 animate={{ scale: [1.5, 4], y: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="to-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500"
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500 to-grabit-500"
               ></motion.div>
             </div>
             <div className="fixed bottom-0 left-0 right-0 top-0 h-full w-full items-center justify-center p-8 backdrop-blur-3xl"></div>
