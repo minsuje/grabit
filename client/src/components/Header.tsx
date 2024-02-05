@@ -6,15 +6,30 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { LuChevronLeft, LuMenu } from 'react-icons/lu';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { privateApi } from '@/api/axios';
+
+interface challengeAlarmList {
+  created_at: string;
+  is_confirm: boolean;
+  notification_id: number;
+  reference_id: number;
+  type: string;
+  message: message;
+}
 
 function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { isLoggedIn } = useSelector((state: RootState) => state.login);
   const { title, backPath } = useSelector((state: RootState) => state.header);
   const accessToken = localStorage.getItem('accessToken');
   const [scrollPosition, setScrollPosition] = useState(0);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+  const [AlarmConfirm, setAlarmConfirm] = useState<challengeAlarmList[]>([]);
+  const [AlarmNonConfirm, setAlarmNonConfirm] = useState<challengeAlarmList[]>([]);
+  const [isAlarm, setIsAlarm] = useState<boolean>(true);
 
   const updateScroll = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
@@ -23,6 +38,35 @@ function Header() {
   useEffect(() => {
     window.addEventListener('scroll', updateScroll);
   });
+
+  useEffect(() => {
+    console.log('location', location.pathname);
+
+    privateApi
+      .get(`http://52.79.228.200:3000/notification`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        const confirm = response.data.filter((alarm: challengeAlarmList) => {
+          return alarm.is_confirm === true;
+        });
+        const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
+          return alarm.is_confirm === false;
+        });
+        setAlarmConfirm(confirm);
+        setAlarmNonConfirm(nonConfirm);
+        console.log('nonConfirm', AlarmNonConfirm);
+        if (response.data.msg) {
+          setIsAlarm(false);
+        }
+      })
+      .catch((error) => {
+        console.error('Alarm에서 오류발생 :', error);
+      });
+  }, [location.pathname]);
 
   function handleLogout() {
     console.log('로그아웃');
@@ -52,7 +96,7 @@ function Header() {
     <header className="flex flex-col transition-all">
       {menuOpen ? (
         <div className={`fixed left-0 right-0 top-0 z-[999] flex items-center justify-end bg-white px-4 py-3`}>
-          <motion.div onClick={handleMenu} className="flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
+          <motion.div onClick={handleMenu} className="relative flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
             <LuMenu size={28} />
           </motion.div>
         </div>
@@ -76,8 +120,14 @@ function Header() {
             </h1>
           ) : null}
 
-          <motion.div onClick={handleMenu} className="flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
+          <motion.div onClick={handleMenu} className="relative flex p-2" whileTap={{ scale: 0.85 }} initial={false}>
             <LuMenu size={28} />
+            {AlarmNonConfirm.length > 0 ? (
+              <div>
+                <div className="absolute right-1 top-1 h-3 w-3 origin-center animate-pulse rounded-full bg-red-600"></div>
+                <div className="absolute right-1 top-1 h-3 w-3 origin-center animate-ping rounded-full bg-red-600"></div>
+              </div>
+            ) : null}
           </motion.div>
         </div>
       )}
@@ -105,6 +155,19 @@ function Header() {
                 className="flex py-2 text-lg font-medium text-stone-600 no-underline"
               >
                 <span>마이페이지</span>
+              </Link>
+              <Link
+                to={`/alarm`}
+                onClick={handleMenu}
+                className="flex py-2 text-lg font-medium text-stone-600 no-underline"
+              >
+                <span>알림</span>
+                {AlarmNonConfirm.length > 0 ? (
+                  <div>
+                    <div className="absolute left-16 h-3 w-3 origin-center animate-pulse rounded-full bg-red-600"></div>
+                    <div className="absolute left-16 h-3 w-3 origin-center animate-ping rounded-full bg-red-600"></div>
+                  </div>
+                ) : null}
               </Link>
 
               {accessToken ? (
