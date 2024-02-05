@@ -14,7 +14,8 @@ import { setHeaderInfo } from '@/store/headerSlice';
 
 export default function MyPageEdit() {
   const dispatch = useDispatch();
-  const [nickName, setNickName] = useState<string>('');
+  const [nickName, setNickName] = useState<string>();
+
   const [passwordErr] = useState<string>('');
   const [proFileImg, setProFileImg] = useState<string>('');
   const [file, setFile] = useState<File | null>();
@@ -46,7 +47,7 @@ export default function MyPageEdit() {
     register,
     handleSubmit,
     setError,
-
+    setValue,
     // formState: { errors },
   } = useForm<FormData>();
 
@@ -86,7 +87,7 @@ export default function MyPageEdit() {
       console.log('res>>>>>>>>>>>>>>>>>>>>>>', res);
       console.log('patch res.data', res.data);
       console.log('patch res.data>>', res.data.file);
-      alert(res.data.msg);
+      // alert(res.data.msg);
       axios({
         method: 'put',
         url: res.data.file,
@@ -106,18 +107,16 @@ export default function MyPageEdit() {
     privateApi
       .get(`http://52.79.228.200:3000/myPage`)
       .then((response) => {
+        const { nickname } = response.data.userInfo[0];
         console.log('>>>>', response.data.userInfo[0]);
+        setValue('nickname', nickname); // 폼 필드 업데이트
         setNickName(response.data.userInfo[0].nickname);
         setProFileImg(response.data.file);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
       });
-  }, []);
-
-  const handleNickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickName(e.target.value);
-  };
+  }, [setValue]);
 
   return (
     <div>
@@ -153,7 +152,7 @@ export default function MyPageEdit() {
           <Label htmlFor="nickname">
             <span className="text-xs text-red-500">*</span> 닉네임
           </Label>
-          <Input id="nickname" {...register('nickname')} onChange={handleNickNameChange} value={nickName} />
+          <Input id="nickname" {...register('nickname')} />
           {/* {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>} */}
         </div>
         <div>
