@@ -35,7 +35,7 @@ export default function CheckoutSuccess() {
       }
     });
     const response2 = await privateApi({
-      url: 'http://localhost:3000/updpateMoney',
+      url: 'http://localhost:3000/updateMoney',
       method: 'POST',
 
       headers: {
