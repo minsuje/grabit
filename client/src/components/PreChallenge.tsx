@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router-dom';
-import { privateApi } from '@/api/axios';
 import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 

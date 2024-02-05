@@ -9,10 +9,6 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import HotChallenge from '@/components/HotChallenge';
 
-import OpenAI from 'openai';
-import { Input } from '@/components/ui/input';
-import HotTopicData from '@/components/HotTopicData';
-
 export default function Main() {
   console.log('main mounted !!!');
   const dispatch = useDispatch();
@@ -22,29 +18,6 @@ export default function Main() {
   const [endedMyChallenge, setEndedMyChallenge] = useState<Challenge[]>([]);
   const [dailymission, setDailymission] = useState<string>('');
   const [completed, setCompleted] = useState<string>('none');
-  const [gptInput, setGptInput] = useState<string>('');
-  const [gptAnswer, setGptAnswer] = useState<string>();
-  const [imageBase64, setImageBase64] = useState('');
-
-  // Function to convert image to base64
-  const convertToBase64 = (file: File) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setImageBase64(reader.result as string);
-    };
-    reader.onerror = (error) => {
-      console.error('Error converting image to Base64', error);
-    };
-  };
-
-  // Handle file input change
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      convertToBase64(file);
-    }
-  };
 
   useEffect(() => {
     setUserid_num(Number(localStorage.getItem('userid_num')));
@@ -83,35 +56,6 @@ export default function Main() {
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '홈', backPath: '/' }));
   }, [dispatch]);
-
-  const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_KEY,
-    dangerouslyAllowBrowser: true,
-  });
-
-  async function openaiFunction() {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-vision-preview',
-      messages: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: `${gptInput} 라는 주제에서 키워드를 추출해서, 이미지에 해당 키워드가 존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
-            },
-            {
-              type: 'image_url',
-              image_url: {
-                url: imageBase64,
-              },
-            },
-          ],
-        },
-      ],
-    });
-    // console.log('openai >>>>>>>>>>', response.choices[0]);
-  }
 
   return (
     <div className="my-8 flex flex-col gap-16">
@@ -210,31 +154,6 @@ export default function Main() {
         <Link to="/challengeCreate">
           <Button>챌린지 생성</Button>
         </Link>
-        <Link
-          to="/challengeInProgress/1
-        "
-        >
-          <Button>진행중인 챌린지</Button>
-        </Link>
-        <Link to="/fileUpload">
-          <Button>파일 업로드 테스트</Button>
-        </Link>
-        <Link to="/challengeEdit/1">
-          <Button>1번 챌린지 수정</Button>
-        </Link>
-
-        <Link to={`/mypage`}>
-          <Button>마이페이지 </Button>
-        </Link>
-
-        <Input onChange={(e) => setGptInput(e.target.value)} />
-
-        <input type="file" capture="environment" onChange={handleFileChange} />
-
-        <Button onClick={openaiFunction} className="bg-grabit-400 p-4">
-          OPENAI
-        </Button>
-        <p>{gptAnswer}</p>
       </div>
     </div>
   );
