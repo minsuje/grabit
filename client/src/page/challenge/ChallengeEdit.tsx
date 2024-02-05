@@ -39,7 +39,7 @@ async function patchChallenge(
 
   const result = await privateApi({
     method: 'PATCH',
-    url: `http://52.79.228.200:3000/challengeEdit/${challenge_id}`,
+    url: `http://localhost:3000/challengeEdit/${challenge_id}`,
     data: challengeData,
   });
   console.log(result);
