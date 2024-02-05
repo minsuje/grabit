@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { privateApi } from '@/api/axios';
-import { ChallengeProp, Challenge } from '@/types/types';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Challenge } from '@/types/types';
 import { ListComponentWithPeriod } from './Component0117';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 

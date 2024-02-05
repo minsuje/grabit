@@ -1,20 +1,16 @@
 import { Label } from '@/components/ui/label';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { RootState } from '@/store/store';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
-import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeAccept() {
-  const { userid_num } = useSelector((state: RootState) => state.login);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { challenge_id } = useParams();
