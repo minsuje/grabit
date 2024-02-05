@@ -71,13 +71,29 @@ function ChallengeCreate() {
   };
 
   const handleAuthStartChange = (value: string) => {
-    setValue('authStart', value, { shouldValidate: true });
-    setAuthStart(value);
+    if (Number(value) >= Number(authEnd) && authEnd) {
+      setCheckStartTime(false);
+      setValue('authStart', (Number(authEnd) - 1).toString(), { shouldValidate: true });
+      setAuthStart((Number(authEnd) - 1).toString());
+    } else {
+      console.log(value);
+      setCheckStartTime(true);
+      setValue('authStart', value, { shouldValidate: true });
+      setAuthStart(value);
+    }
   };
 
   const handleAuthEndChange = (value: string) => {
-    setValue('authEnd', value, { shouldValidate: true });
-    setAuthEnd(value);
+    if (Number(value) <= Number(authStart)) {
+      setCheckEndTime(false);
+      setValue('authEnd', (Number(authStart) + 1).toString(), { shouldValidate: true });
+      setAuthEnd((Number(authStart) + 1).toString());
+      console.log((Number(authStart) + 1).toString());
+    } else {
+      setCheckEndTime(true);
+      setValue('authEnd', value, { shouldValidate: true });
+      setAuthEnd(value);
+    }
   };
 
   // const handleSelectChange = (value) => {
@@ -91,11 +107,20 @@ function ChallengeCreate() {
   // };
 
   const handleDateChange = (selectedDate: any) => {
-    // 선택된 날짜를 'yyyy-MM-dd' 형식의 문자열로 포맷합니다.
-    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    // `setValue` 함수를 사용하여 폼의 'startDate' 필드 값을 업데이트합니다.
-    setValue('startDate', formattedDate, { shouldValidate: true });
-    setDate(selectedDate);
+    if (selectedDate) {
+      if (addDays(selectedDate, 1) < new Date()) {
+        setcheckDate(false);
+        setDate(new Date());
+        setValue('startDate', format(new Date(), 'yyyy-MM-dd'), { shouldValidate: true });
+      } else {
+        // 선택된 날짜를 'yyyy-MM-dd' 형식의 문자열로 포맷합니다.
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+        // `setValue` 함수를 사용하여 폼의 'startDate' 필드 값을 업데이트합니다.
+        setDate(selectedDate);
+        setValue('startDate', formattedDate, { shouldValidate: true });
+        setcheckDate(true);
+      }
+    }
   };
   useEffect(() => {
     register('startDate');
@@ -124,6 +149,10 @@ function ChallengeCreate() {
   const [authStart, setAuthStart] = useState<string>('');
   const [authEnd, setAuthEnd] = useState<string>('');
   const [authKeyword, setAuthKeyword] = useState<string>('');
+
+  const [checkDate, setcheckDate] = useState<boolean>(true);
+  const [checkStartTime, setCheckStartTime] = useState<boolean>(true);
+  const [checkEndTime, setCheckEndTime] = useState<boolean>(true);
 
   const selectedFriends = useSelector((state: RootState) => state.friend.selectedFriends);
 
@@ -159,27 +188,33 @@ function ChallengeCreate() {
     try {
       const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
-      const result = await privateApi({
-        method: 'POST',
-        url: 'http://localhost:3000/challengeCreate',
-        data: {
-          challenge_name: challengeName,
-          is_public: isPublic,
-          topic,
-          challenger_userid_num: friendId,
-          auth_keyword: authKeyword,
-          goal_money: goalMoney,
-          term: authTerm,
-          authentication_start_date: date ? date : null,
-          authentication_end_date: date ? addDays(date, term) : null,
-          authentication_start_time: authStart,
-          authentication_end_time: authEnd,
-        },
-      });
-      console.log(result);
-    } catch (error) {
+
+    const result = await privateApi({
+      method: 'POST',
+      url: 'http://52.79.228.200:3000/challengeCreate',
+      data: {
+        challenge_name: challengeName,
+        is_public: isPublic,
+        topic,
+        challenger_userid_num: friendId,
+        auth_keyword: authKeyword,
+        goal_money: goalMoney,
+        term: authTerm,
+        authentication_start_date: date ? date : null,
+        authentication_end_date: date ? addDays(date, term) : null,
+        authentication_start_time: authStart,
+        authentication_end_time: authEnd,
+      },
+    });
+    console.log(result);
+    if (result.data.msg) {
+      alert(result.data.msg);
+
+     
+    } }catch (error) {
       // 오류 처리 로직
       console.error('Challenge creation failed:', error);
+
     }
   }
 
@@ -292,7 +327,9 @@ function ChallengeCreate() {
             </PopoverContent>
           </Popover>
           {errors.startDate && <p className=" p-1 text-xs text-red-500">{errors.startDate.message}</p>}
+          {!checkDate && <span className="text-xs text-red-500">오늘 이전 날짜는 선택할 수 없습니다.</span>}
         </div>
+
         <div className="challengeTerm flex flex-col">
           <h2 className="py-4 text-xl font-bold">기간</h2>
           <Select onValueChange={handleTermChange}>
@@ -325,7 +362,7 @@ function ChallengeCreate() {
           <div className="authTime flex w-full gap-4">
             <div className="startTime flex w-full flex-col">
               <h2 className="py-4 text-xl font-bold">인증 시작 시간</h2>
-              <Select onValueChange={handleAuthStartChange}>
+              <Select onValueChange={handleAuthStartChange} value={authStart}>
                 <SelectTrigger className="w-full" {...register('authStart')}>
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
@@ -343,7 +380,7 @@ function ChallengeCreate() {
             </div>
             <div className="endTime flex w-full flex-col">
               <h2 className="py-4 text-xl font-bold">인증 마감 시간</h2>
-              <Select onValueChange={handleAuthEndChange}>
+              <Select onValueChange={handleAuthEndChange} value={authEnd}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
@@ -361,6 +398,11 @@ function ChallengeCreate() {
             </div>
           </div>
         </div>
+        {!checkStartTime || !checkEndTime ? (
+          <p className="text-xs text-red-500">마감시간은 시작시간 이후로 설정해주세요</p>
+        ) : (
+          <></>
+        )}
         <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
           <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
           <div className="flex bg-white px-8  pb-8 ">

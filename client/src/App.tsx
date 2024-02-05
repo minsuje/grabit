@@ -78,7 +78,7 @@ function AnimatedRoutes() {
           <Route path="/challengeList" element={<ChallengeList />} />
           <Route path="/challengeEdit/:challenge_id" element={<ChallengeEdit />} />
           <Route path="/challengeDetail/:challenge_id" element={<ChallengeDetail />} />
-          <Route path="/challengeDaily/:mission_content" element={<ChallengeDaily />} />
+          <Route path="/challengeDaily" element={<ChallengeDaily />} />
           <Route path="/alarm" element={<Alarm />} />
           <Route path="/challengeAccept/:challenge_id" element={<ChallengeAccept />} />
           <Route path="/fileupload" element={<FileUploadTest />} />
