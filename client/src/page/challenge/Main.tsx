@@ -23,7 +23,9 @@ export default function Main() {
     setUserid_num(Number(localStorage.getItem('userid_num')));
 
     privateApi
-      .get('/dailyMission')
+      .get('/dailyMission', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission.title);
@@ -34,7 +36,9 @@ export default function Main() {
       });
 
     privateApi
-      .get('/challengeList')
+      .get('/challengeList', {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         // console.log('challengeList >>>>>>>>>', response.data);
         setIngMyChallenge(response.data.ingMyChallenge);
