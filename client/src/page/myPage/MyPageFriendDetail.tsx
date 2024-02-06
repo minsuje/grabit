@@ -107,7 +107,7 @@ export default function MyPageFriendDetail() {
       data: { other_userid_num: friendUserNum, is_friend: false },
     })
       .then((response) => {
-        console.log('친구 추가 요청 성공:', response);
+        console.log('친구 추가 요청 성공>>>>>>>:', response);
         alert(response.data.msg);
         navigate(`/mypage/`);
       })
@@ -115,18 +115,17 @@ export default function MyPageFriendDetail() {
         console.error('친구 추가 요청 에러:', error);
       });
   };
+
   // 유저 친구 요청 수락
-  const handleAcceptFriend = () => {
-    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
+  const handleFriendRequest = (requestType: string): void => {
     privateApi({
-      method: 'Patch',
+      method: 'patch',
       url: `/friend/${userid_num}`,
-      data: { other_userid_num: friendUserNum, is_friend: false },
+      data: { other_userid_num: friendUserNum, is_friend: false, type: requestType },
     })
       .then((response) => {
-        console.log('친구 추가 요청 성공:', response);
-        alert(response.data.msg);
-        navigate(`/mypage/`);
+        console.log('친구 추가 요청 성공>>>>>>:', response);
+        // navigate(`/mypage/`);
       })
       .catch((error) => {
         console.error('친구 추가 요청 에러:', error);
@@ -143,7 +142,7 @@ export default function MyPageFriendDetail() {
           <AvatarImage src={proFileImg ? proFileImg : '/grabit_profile.png'} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <h2 className="font-['SUITE Variable'] flex font-light text-grabit-700">{nickname}</h2>
+        <h2 className="font-['SUITE Variable'] text-grabit-700 flex font-light">{nickname}</h2>
       </div>
 
       <div className="my-8 flex w-full items-center justify-center text-center">
@@ -187,7 +186,8 @@ export default function MyPageFriendDetail() {
       )}
       {friendStatus === '상대가 친구 신청 해놓은거 수락바람' && (
         <div>
-          <Button onClick={handleAcceptFriend}>친구수락</Button>
+          <Button onClick={() => handleFriendRequest('accept')}>친구수락</Button>
+          <Button onClick={() => handleFriendRequest('reject')}>친구거절</Button>
         </div>
       )}
     </div>
