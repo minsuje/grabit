@@ -35,6 +35,12 @@ function ChallengeAccept() {
       .patch(`/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
         console.log('response', response.data);
+        if (response.data.msg) {
+          alert(response.data.msg);
+        } else {
+          alert('참가 완료되었습니다.');
+          window.location.href = '/challengeList';
+        }
       })
       .catch((error): void => {
         console.error('ChallengeDetail에서 참가 axios 오류:', error);
