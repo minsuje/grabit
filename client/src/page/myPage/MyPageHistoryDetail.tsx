@@ -65,7 +65,7 @@ export default function ListComponent3() {
       <div>
         <h1>히스토리 상세</h1>
       </div>
-      <div className="w-100 bg-gray-white rounded-lg p-6 shadow-xl shadow-grabit-600/10">
+      <div className="w-100 bg-gray-white shadow-grabit-600/10 rounded-lg p-6 shadow-xl">
         <div className="flex flex-col justify-between">
           <div className="font-bold text-black">{challengeDetail?.challenge_name}</div>
           <div className="text-gray-400 ">
@@ -105,10 +105,10 @@ export default function ListComponent3() {
         <h2>금액</h2>
         <p>{challengeDetail?.goal_money} 캐럿</p>
       </div>
-      <div>
+      {/* <div>
         <h2>포인트 결과</h2>
         <p> {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}</p>
-      </div>
+      </div> */}
       <div>
         <h2>전적</h2>
         <span>
