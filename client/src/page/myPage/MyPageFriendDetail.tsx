@@ -120,8 +120,8 @@ export default function MyPageFriendDetail() {
   const handleFriendRequest = (requestType: string): void => {
     privateApi({
       method: 'patch',
-      // url: `/friend/${userid_num}`,
-      url: `http://localhost:3000/friend/${userid_num}`,
+      url: `/friend/${userid_num}`,
+      // url: `http://localhost:3000/friend/${userid_num}`,
       data: { other_userid_num: friendUserNum, is_friend: false, type: requestType },
     })
       .then((response) => {
