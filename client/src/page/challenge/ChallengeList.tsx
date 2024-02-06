@@ -63,12 +63,13 @@ function ChallengeList() {
 
       <h1>참가 예정 챌린지</h1>
 
+
       <div className="flex flex-col gap-4">
         {preMyChallenge.map((challenge: Challenge) => {
           return (
             <>
               {Number(challenge.userid_num) === Number(userid_num) ? (
-                <ListComponentWithButton challenge={challenge} />
+                <ListComponentWithoutButton challenge={challenge} />
               ) : (
                 <ListComponentWithoutButton challenge={challenge} />
               )}
@@ -76,6 +77,7 @@ function ChallengeList() {
           );
         })}
       </div>
+
 
       <h1>열려있는 챌린지</h1>
 
