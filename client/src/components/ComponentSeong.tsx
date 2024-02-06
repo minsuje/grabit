@@ -91,8 +91,8 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
   return (
     <>
       {sortedHistory.map((item, key) => (
-        <div key={key} className="w-100 mb-10 rounded-lg bg-gray-200 p-6 shadow-md">
-          <div className="flex justify-between">
+        <div key={key} className="w-100 bg-whit mb-10 rounded-lg p-6 shadow-lg shadow-grabit-600/10">
+          <div className="flex flex-col justify-between">
             <div className="font-bold text-black">{item.challenge_name}</div>
             <div className="text-gray-400">
               {format(new Date(item.authentication_start_date), 'yyyy-MM-dd')}~
