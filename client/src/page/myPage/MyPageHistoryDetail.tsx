@@ -61,12 +61,12 @@ export default function ListComponent3() {
 
   console.log(opponent);
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <div>
         <h1>히스토리 상세</h1>
       </div>
-      <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
-        <div className="flex justify-between">
+      <div className="w-100 bg-gray-white rounded-lg p-6 shadow-xl shadow-grabit-600/10">
+        <div className="flex flex-col justify-between">
           <div className="font-bold text-black">{challengeDetail?.challenge_name}</div>
           <div className="text-gray-400 ">
             {formattedStartDate}~{formattedEndDate}
@@ -75,7 +75,7 @@ export default function ListComponent3() {
           </div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">{}</div>
+          <div className="mt-2 text-black">{}</div>
           <div className="mt-2 text-black">
             <Badge variant="default">
               {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+50P' : '+100P'}
@@ -87,7 +87,7 @@ export default function ListComponent3() {
         </div>
       </div>
       <div>
-        <h1>상대닉네임</h1>
+        <h2>상대닉네임</h2>
         {/* 모든 상대방의 닉네임을 출력 */}
         {opponent.map((opponent, index) => (
           <p key={index}>{opponent.nickname}</p>
@@ -102,15 +102,15 @@ export default function ListComponent3() {
         <p>챌린지</p>
       </div> */}
       <div>
-        <h1>금액</h1>
+        <h2>금액</h2>
         <p>{challengeDetail?.goal_money} 캐럿</p>
       </div>
       <div>
-        <h1>포인트 결과</h1>
-        <p> {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '-50P' : '+100P'}</p>
+        <h2>포인트 결과</h2>
+        <p> {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}</p>
       </div>
       <div>
-        <h1>전적</h1>
+        <h2>전적</h2>
         <span>
           {record?.win}승 {record?.lose}패
         </span>
