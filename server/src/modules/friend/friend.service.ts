@@ -7,6 +7,7 @@ import { eq, not, and, or } from 'drizzle-orm';
 import { isBefore, isAfter } from 'date-fns';
 import { users } from '../user/schema';
 import { notification } from '../notification/schema';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class FriendService {
@@ -99,6 +100,10 @@ export class FriendService {
     console.log(id, updateFriendDto);
 
     const { is_friend, other_userid_num, type } = updateFriendDto;
+
+    console.log('is_friend >> ', is_friend);
+    console.log('other_userid_num', other_userid_num);
+    console.log('type >>>>', type);
 
     // 교차 검색
     const findFriend: any = await db

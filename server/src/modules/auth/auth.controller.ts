@@ -152,7 +152,7 @@ export class AuthController {
       name: username,
       login_type: login_type,
     };
-    res.redirect('http://localhost:5173/auth/kakao/login');
+    res.redirect(process.env.RES_REDIRECT);
   }
 
   @Get('/auth/kakao/redirect')
@@ -183,8 +183,6 @@ export class AuthController {
 
     if (decodedAccessToken.exp < Date.now() / 1000) {
       const loginRefreshToken = req.headers['authorization'].split(' ')[2];
-
-      console.log('Post /refresh refreshtoken >>>', loginRefreshToken);
 
       try {
         const loginToken = await this.authService.refresh(loginRefreshToken);
