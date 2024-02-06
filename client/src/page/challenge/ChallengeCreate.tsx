@@ -27,8 +27,6 @@ const schema = yup
     name: yup
       .string()
       .required('* 이름은 필수입니다.')
-      .min(2, '이름은 2글자 이상 8글자 이하로 작성해주세요.')
-      .max(8, '이름은 2글자 이상 8글자 이하로 작성해주세요.')
       .matches(/^[가-힣]+$/, '* 이름은 한글로만 작성해주세요.'),
     topic: yup.string().notOneOf([''], '주제를 선택하세요.'),
     keyword: yup
