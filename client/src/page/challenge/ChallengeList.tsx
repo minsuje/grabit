@@ -51,33 +51,39 @@ function ChallengeList() {
   return (
     <div className="mt-8 flex flex-col gap-12">
       <h1>참여중인 챌린지</h1>
-      {ingMyChallenge.map((challenge: Challenge) => {
-        return (
-          <Link to={`/challengeInProgress/${challenge.challenge_id}`} className=" text-black no-underline">
-            <ListComponent1 challenge={challenge} />
-          </Link>
-        );
-      })}
+      <div className="flex flex-col gap-4">
+        {ingMyChallenge.map((challenge: Challenge) => {
+          return (
+            <Link to={`/challengeInProgress/${challenge.challenge_id}`} className=" text-black no-underline">
+              <ListComponent1 challenge={challenge} />
+            </Link>
+          );
+        })}
+      </div>
 
       <h1>참가 예정 챌린지</h1>
 
-      {preMyChallenge.map((challenge: Challenge) => {
-        return (
-          <>
-            {Number(challenge.userid_num) === Number(userid_num) ? (
-              <ListComponentWithButton challenge={challenge} />
-            ) : (
-              <ListComponentWithoutButton challenge={challenge} />
-            )}
-          </>
-        );
-      })}
+      <div className="flex flex-col gap-4">
+        {preMyChallenge.map((challenge: Challenge) => {
+          return (
+            <>
+              {Number(challenge.userid_num) === Number(userid_num) ? (
+                <ListComponentWithButton challenge={challenge} />
+              ) : (
+                <ListComponentWithoutButton challenge={challenge} />
+              )}
+            </>
+          );
+        })}
+      </div>
 
       <h1>열려있는 챌린지</h1>
 
-      {publicChallenge.map((challenge: Challenge) => {
-        return <ListComponentWithoutButton challenge={challenge} />;
-      })}
+      <div className="flex flex-col gap-4">
+        {publicChallenge.map((challenge: Challenge) => {
+          return <ListComponentWithoutButton challenge={challenge} />;
+        })}
+      </div>
     </div>
   );
 }

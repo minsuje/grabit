@@ -112,22 +112,21 @@ function HotChallenge() {
 
   return (
     <>
-      <div className="flex justify-start gap-4">
+      <div className="flex justify-start gap-2">
         {tabs.map((tab) => (
-          <div
-            key={tab.name}
-            className={
-              isSelected(tab)
-                ? 'w-fit gap-4 rounded-full border-solid bg-grabit-600 px-6 py-3 text-white'
-                : 'w-fit gap-4 rounded-full border-solid bg-grabit-400 px-6 py-3 text-white'
-            }
-          >
-            <a href="#" onClick={(e: any) => handleClick(e, tab)}>
+          <a href="#" onClick={(e: any) => handleClick(e, tab)}>
+            <div
+              key={tab.name}
+              className={
+                isSelected(tab)
+                  ? 'w-fit gap-4 rounded-full border-solid bg-grabit-600 px-6 py-3 text-white'
+                  : 'w-fit gap-4 rounded-full border-solid bg-grabit-400 px-6 py-3 text-white'
+              }
+            >
               {tab.label}
-            </a>
-
-            {isSelected(tab) && <motion.div layoutId="indicator" />}
-          </div>
+              {isSelected(tab) && <motion.div layoutId="indicator" />}
+            </div>
+          </a>
         ))}
       </div>
 
