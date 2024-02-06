@@ -1,7 +1,7 @@
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Link } from 'react-router-dom';
 
-import { ListComponentWithButton, ListComponentWithoutButton } from '@/components/PreChallenge';
+import { ListComponentWithoutButton } from '@/components/PreChallenge';
 
 import { privateApi } from '@/api/axios';
 import { RootState } from '@/store/store';
@@ -63,7 +63,6 @@ function ChallengeList() {
 
       <h1>참가 예정 챌린지</h1>
 
-
       <div className="flex flex-col gap-4">
         {preMyChallenge.map((challenge: Challenge) => {
           return (
@@ -77,7 +76,6 @@ function ChallengeList() {
           );
         })}
       </div>
-
 
       <h1>열려있는 챌린지</h1>
 
