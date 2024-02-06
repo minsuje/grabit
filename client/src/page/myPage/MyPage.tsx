@@ -83,7 +83,7 @@ export default function MyPage() {
   useEffect(() => {
     // 챌린지 테이블정보 요청
     privateApi
-      .get(`/history`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+      .get(`/history`, { Authorization: 'Bearer ' + localStorage.getItem('accessToken') })
       .then((response) => {
         console.log(response);
         const historyData: HistoryData = response.data;

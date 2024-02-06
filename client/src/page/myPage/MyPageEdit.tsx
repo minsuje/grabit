@@ -1,5 +1,5 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
@@ -135,18 +135,18 @@ export default function MyPageEdit() {
         업데이트
       </button> */}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <h1>회원 정보 수정</h1>
         <div className="flex justify-between">
-          <Avatar>
+          <Avatar className="h-20 w-20">
             <AvatarImage src={proFileImg ? proFileImg : 'grabit_profile'} />
             <AvatarFallback></AvatarFallback>
           </Avatar>
 
-          <Button variant="outline">프로필 수정</Button>
+          {/* <Button variant="outline">프로필 수정</Button> */}
         </div>
         <Label htmlFor="profile">
-          <input
+          {/* <input
             id="profile"
             type="file"
             onChange={(e) => {
@@ -156,35 +156,47 @@ export default function MyPageEdit() {
                 console.log(e.target.files[0]);
               }
             }}
+          /> */}
+
+          <Input
+            type="file"
+            id="profile"
+            onChange={(e) => {
+              console.log('파일 입력시 이벤트 객체', e);
+              if (e.target.files?.length == 1) {
+                setFile(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }
+            }}
           />
         </Label>
-        <div>
+        <div className="flex flex-col gap-2 text-stone-500">
           <Label htmlFor="nickname">
-            <span className="text-xs text-red-500">*</span> 닉네임
+            <span className="text-xs text-grabit-700">*</span> 닉네임
           </Label>
 
           <Input id="nickname" {...register('nickname')} />
 
           {/* {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>} */}
         </div>
-        <div>
+        <div className="flex flex-col gap-2 text-stone-500">
           <Label htmlFor="password">
-            <span className="text-xs text-red-500">* </span>
+            <span className="text-xs text-grabit-700">* </span>
             현재 비밀번호
           </Label>
           <Input id="password" type="password" {...register('password')} disabled={isDisabled} />
-          {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
-          {/* {errMessage && <p className="text-xs text-red-500">{errMessage}</p>} */}
+          {errors.password && <p className="text-xs text-grabit-700">{errors.password.message}</p>}
+          {/* {errMessage && <p className="text-xs text-grabit-700">{errMessage}</p>} */}
         </div>
-        <div>
-          <Label htmlFor="changePassword">변경비밀번호</Label>
+        <div className="flex flex-col gap-2 text-stone-500">
+          <Label htmlFor="changePassword">변경 비밀번호</Label>
           <Input id="changePassword" type="password" {...register('changePassword')} disabled={isDisabled} />
           {/* 에러 메시지를 표시하는 로직을 추가할 수 있습니다. */}
         </div>
-        <div>
-          <Label htmlFor="confirmPassword">비밀번호확인</Label>
+        <div className="flex flex-col gap-2 text-stone-500">
+          <Label htmlFor="confirmPassword">비밀번호 확인</Label>
           <Input id="confirmPassword" type="password" {...register('confirmPassword')} disabled={isDisabled} />
-          {/* {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>} */}
+          {/* {errors.confirmPassword && <p className="text-xs text-grabit-700">{errors.confirmPassword.message}</p>} */}
         </div>
       </form>
       <Cta text={'수정하기'} onclick={handleSubmit(onSubmit)} />

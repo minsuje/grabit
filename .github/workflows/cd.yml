@@ -59,6 +59,9 @@ jobs:
                   -e TOSS_SECRET_KEY=${{ secrets.TOSS_SECRET_KEY }} \
                   -e AWS_EC2_URL=${{ secrets.AWS_EC2_URL }} \
                   -e AWS_EC2_CLIENT=${{ secrets.AWS_EC2_CLIENT }} \
+                  -e RES_REDIRECT=${{ secrets.RES_REDIRECT }} \
+                  -e KAKAO_BACK_URL=${{ secrets.KAKAO_BACK_URL }} \
+                  -e KAKO_CLIENT=${{ secrets.KAKO_CLIENT }} \
                   -e TZ=Asia/Seoul \
                   --name server seejnn/grabit
 

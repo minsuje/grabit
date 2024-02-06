@@ -68,7 +68,7 @@ function ChallengeDaily() {
           content: [
             {
               type: 'text',
-              text: `배열 ${keyword} 에 존재하는 키워드를 4개 추출해서, 이미지에 해당 키워드가 한개 이상  존재하는지 true, false 로만 대답해. 다른 말은 하지마.`,
+              text: `배열 ${keyword} 에 존재하는 키워드를 4개 추출해서, 이미지에 해당 키워드가 한개 이상 존재하는지 true, false 로만 대답해. 4개 중 하나만 true여도 하나의 true 값을 반환하고, 4개 중 하나도 존재하지 않으면 하나의 false 값을 반환해줘. 다른 말은 하지마.`,
             },
             {
               type: 'image_url',
@@ -107,12 +107,14 @@ function ChallengeDaily() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="p-3 text-center text-5xl font-extrabold">데일리 미션</div>
+      <h1 className="font-extrabold">데일리 미션</h1>
 
-      <div className="text-center">
-        <p>오늘의 미션을 완료하고</p>
-        <p>추가 포인트를 얻으세요!</p>
-        <div className="m-2   ">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
+          <p className="flex text-stone-400">오늘의 미션을 완료하고</p>
+          <p className="flex text-stone-400">추가 포인트를 얻으세요!</p>
+        </div>
+        <div className="flex w-full flex-col gap-2 rounded-xl bg-grabit-100 p-4 text-center">
           <p className="">오늘의 미션</p>
           <h1 className="text-center">{dailymission}</h1>
         </div>

@@ -69,19 +69,21 @@ export default function Main() {
         {completed === 'none' ? (
           <Link to={`/challengeDaily`} className="text-black no-underline">
             <div>
-              <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
-                <div className="counter w-4"></div>
+              <div className="flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
                 <div className="flex justify-between gap-2">
-                  <h2 className="font-['SUITE Variable'] text-grabit-600">{dailymission}</h2>
-                  <p className=" text-grabit-400"></p>
+                  <h2 className="text-grabit-600">{dailymission}</h2>
+                  {/* <p className=" text-grabit-400"></p> */}
                 </div>
-                <p className="font-['SUITE Variable'] text-2xl font-bold text-grabit-600">10P</p>
+                <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
+                  10
+                  <span className="mb-[0px] align-top text-sm font-bold text-grabit-400">포인트</span>
+                </div>
               </div>
             </div>
           </Link>
         ) : (
           <div>
-            <div className="mb-[5%]  flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
+            <div className="flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
               <div className="flex justify-between">
                 <h2>{dailymission}</h2>
                 <p>오늘 미션 완료!!</p>

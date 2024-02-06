@@ -95,17 +95,23 @@ export default function FriendAddition() {
       {searchResult ? (
         // 검색 결과가 있을 때 렌더링
 
-        <Link to={`/friend/${searchTerm}`}>
-          <div>
+        <Link to={`/friend/${searchTerm}`} className="flex w-full font-bold text-stone-600">
+          <div className="flex w-full items-center justify-center gap-2">
             <Avatar>
               <AvatarImage src={searchResult.file.profile_img} />
               <AvatarFallback />
             </Avatar>
-            <div>{searchResult.nickname}</div>
-            <p>점수: {searchResult.file.score_num}</p>
-            <p>순위: {searchResult.myRank}</p>
-            <img src={`${tierImageSrc}`} alt="" />
-            <p>{tierName}</p>
+            <div className="flex w-full flex-col">
+              <h2>{searchResult.userid}</h2>
+              <div className="flex w-full gap-3">
+                <p>{searchResult.file.score_num} 포인트</p>
+                <p>{searchResult.myRank} 위</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <img src={`${tierImageSrc}`} alt="" width={40} />
+              <p>{tierName}</p>
+            </div>
             {/* 기타 필요한 정보 렌더링 */}
           </div>
         </Link>
