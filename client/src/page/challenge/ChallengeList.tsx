@@ -65,7 +65,7 @@ function ChallengeList() {
         return (
           <>
             {Number(challenge.userid_num) === Number(userid_num) ? (
-              <ListComponentWithButton challenge={challenge} />
+              <ListComponentWithoutButton challenge={challenge} />
             ) : (
               <ListComponentWithoutButton challenge={challenge} />
             )}
