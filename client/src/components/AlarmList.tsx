@@ -42,12 +42,12 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
       <div
         className={
           isConfirm
-            ? 'flex flex-col gap-3 rounded-2xl bg-gray-100 p-6  opacity-70 shadow-lg shadow-grabit-600/10'
+            ? 'flex flex-col gap-3 rounded-2xl bg-white p-6 opacity-40 shadow-lg shadow-grabit-600/10'
             : 'flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10 '
         }
       >
         <div className="flex justify-between">
-          <p className="w-[4.5rem] rounded-xl bg-grabit-600 px-2 py-[1.5px] text-center text-sm text-white">{type}</p>
+          <p className="rounded-xl bg-grabit-600 px-2 py-[1.5px] text-center text-sm text-white">{type}</p>
 
           {/* {button ? (
             <Cross1Icon

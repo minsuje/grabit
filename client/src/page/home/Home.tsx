@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
-import Lottie from 'lottie-react';
-import rabbit from './Animation - 1705488595485.json';
+// import Lottie from 'lottie-react';
+// import rabbit from './Animation - 1705488595485.json';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 // import { setIsLoggedIn } from '@/store/loginSlice';
@@ -17,9 +17,9 @@ export default function Home() {
     console.log('🚀 ~ Home ~ REDIRECT_URI:', REDIRECT_URI);
   });
 
-  const Rabbit = () => {
-    return <Lottie animationData={rabbit} width={0} height={0} />;
-  };
+  // const Rabbit = () => {
+  //   return <Lottie animationData={rabbit} width={0} height={0} />;
+  // };
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
