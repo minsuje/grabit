@@ -5,5 +5,4 @@ export class CreateFriendDto {
   is_friend?: boolean;
   userid?: string;
   other_userid: string;
-  type?: string;
 }

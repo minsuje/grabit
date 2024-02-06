@@ -99,11 +99,7 @@ export class FriendService {
   async update(id: number, updateFriendDto: UpdateFriendDto) {
     console.log(id, updateFriendDto);
 
-    const { is_friend, other_userid_num, type } = updateFriendDto;
-
-    console.log('is_friend >> ', is_friend);
-    console.log('other_userid_num', other_userid_num);
-    console.log('type >>>>', type);
+    const { is_friend, other_userid_num } = updateFriendDto;
 
     // 교차 검색
     const findFriend: any = await db
@@ -121,44 +117,35 @@ export class FriendService {
     // console.log('findFriend[0]', findFriend[0]);
 
     if (findFriend.length > 0) {
-      console.log('findFriend', findFriend[0].is_friend);
-
       if (findFriend[0].is_friend === false) {
         // console.log('친구 상태 업데이트');
-        if (type === 'accept') {
-          // console.log('친구 상태 업데이트 if ');
-          const result = await db
-            .update(friend)
-            .set({ is_friend: true })
-            .where(
-              and(
-                or(eq(friend.userid_num, id), eq(friend.other_userid_num, id)),
-                or(
-                  eq(friend.other_userid_num, other_userid_num),
-                  eq(friend.userid_num, other_userid_num),
-                ),
+        const result = await db
+          .update(friend)
+          .set({ is_friend: true })
+          .where(
+            and(
+              or(eq(friend.userid_num, id), eq(friend.other_userid_num, id)),
+              or(
+                eq(friend.other_userid_num, other_userid_num),
+                eq(friend.userid_num, other_userid_num),
               ),
-            )
-            .returning();
-          // console.log('result', result);
+            ),
+          )
+          .returning();
+        // console.log('result', result);
 
-          if (result) {
-            let name1: any = await db
-              .select({ name: users.name })
-              .from(users)
-              .where(eq(users.userid_num, id));
-            let name2: any = await db
-              .select({ name: users.name })
-              .from(users)
-              .where(eq(users.userid_num, other_userid_num));
-            name1 = name1[0].name;
-            name2 = name2[0].name;
-            return { msg: `${name1}님과 ${name2}님이 친구가 되었습니다` };
-          }
-        } else {
-          const result = await db
-            .delete(friend)
-            .where(eq(friend.friend_id, findFriend[0].friend_num));
+        if (result) {
+          let name1: any = await db
+            .select({ name: users.name })
+            .from(users)
+            .where(eq(users.userid_num, id));
+          let name2: any = await db
+            .select({ name: users.name })
+            .from(users)
+            .where(eq(users.userid_num, other_userid_num));
+          name1 = name1[0].name;
+          name2 = name2[0].name;
+          return { msg: `${name1}님과 ${name2}님이 친구가 되었습니다` };
         }
       } else {
         return { msg: '이미 친구입니다' }; // 친구 상태가 아닌 경우 예외처리 필요함. 친구 상태는 업데이트 되지 않음.
