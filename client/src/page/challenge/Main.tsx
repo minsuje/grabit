@@ -105,12 +105,12 @@ export default function Main() {
                 className="text-black no-underline"
               >
                 <div>
-                  <div className="mb-[5%] flex flex-col rounded-lg bg-gray-200 p-6 shadow-md">
-                    <div className="flex justify-between">
-                      <p>{challenge.challenge_name}</p>
-                      <p>챌린지 완료</p>
+                  <div className="bg-gray-white flex flex-col gap-6 rounded-xl p-6 shadow-lg shadow-grabit-600/10">
+                    <div className="flex items-center justify-center">
+                      <h2 className="flex w-full">{challenge.challenge_name}</h2>
+                      <p className="w-28 text-stone-500">챌린지 완료</p>
                     </div>
-                    <p>결과 확인하기 {'>>'} </p>
+                    <Button>결과 확인하기</Button>
                   </div>
                 </div>
               </Link>
