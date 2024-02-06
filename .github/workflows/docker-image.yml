@@ -33,6 +33,9 @@ jobs:
                   AWS_EC2_URL: ${{ secrets.AWS_EC2_URL }}
                   AWS_EC2_CLIENT: ${{ secrets.AWS_EC2_CLIENT }}
                   RES_REDIRECT: ${{ secrets.RES_REDIRECT }}
+                  KAKAO_BACK_URL: ${{ secerts.KAKAO_BACK_URL }}
+                  KAKO_CLIENT: ${{ secrets.KAKO_CLIENT }}
+                  
               run: |
                   docker build \
                     --build-arg DATABASE_URL=${DATABASE_URL} \
@@ -49,6 +52,8 @@ jobs:
                     --build-arg AWS_EC2_URL:${AWS_EC2_URL} \
                     --build-arg AWS_EC2_CLIENT:${AWS_EC2_CLIENT} \
                     --build-arg RES_REDIRECT:${RES_REDIRECT} \
+                    --build-arg KAKAO_BACK_URL:${KAKAO_BACK_URL} \
+                    --build-arg KAKO_CLIENT:${KAKO_CLIENT} \
                     --build-arg TZ=Asia/Seoul \
                     -t seejnn/grabit -f server/Dockerfile server
 
