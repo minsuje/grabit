@@ -74,7 +74,18 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
             </p>
           </Link>
         ) : (
-          content
+          <p
+            className="hover:cursor-pointer"
+            onClick={() => {
+              if (isConfirm) {
+                return;
+              } else {
+                deleteNoti(notification_id);
+              }
+            }}
+          >
+            {content}
+          </p>
         )}
 
         {/*  */}
