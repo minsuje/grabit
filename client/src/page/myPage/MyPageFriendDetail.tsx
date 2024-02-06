@@ -126,6 +126,7 @@ export default function MyPageFriendDetail() {
     })
       .then((response) => {
         console.log('친구 추가 및 거절 성공>>>>>>:', response);
+        alert(response.data.msg);
         navigate(`/mypage/`);
       })
       .catch((error) => {
@@ -188,7 +189,7 @@ export default function MyPageFriendDetail() {
       {friendStatus === '상대가 친구 신청 해놓은거 수락바람' && (
         <div>
           <Button onClick={() => handleFriendRequest('accept')}>친구수락</Button>
-          <Button onClick={() => handleFriendRequest('reject')}>친구거절</Button>
+          {/* <Button onClick={() => handleFriendRequest('reject')}>친구거절</Button> */}
         </div>
       )}
     </div>
