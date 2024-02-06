@@ -36,8 +36,12 @@ export default function Home() {
 
   return (
     <div className="flex max-w-sm flex-col justify-center gap-4 text-center">
-      <div className="flex w-40">
+      {/* <div className="flex w-40">
         <Rabbit />
+      </div> */}
+
+      <div className="flex min-h-screen w-full -translate-y-20 items-center justify-center">
+        <img src="/grabit_logo.svg" alt="" width={160} />
       </div>
       {/* <Button onClick={handleLogin}>임시 로그인</Button> */}
       <div className="fixed bottom-0 left-0 right-0 flex flex-col gap-4 p-8">
@@ -67,8 +71,10 @@ export default function Home() {
         <Link
           to={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`}
         >
-          <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />
-          {/* </a> */}
+          <Button variant="default" className="flex w-full gap-2 bg-[#FEE500] text-[#191919]">
+            <img src="/kakao.svg" alt="" width={18} />
+            <span>카카오 로그인</span>
+          </Button>
         </Link>
       </div>
     </div>
