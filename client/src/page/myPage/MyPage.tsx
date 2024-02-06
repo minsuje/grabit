@@ -67,7 +67,9 @@ export default function MyPage() {
   useEffect(() => {
     // 프로필 이미지 요청
     privateApi
-      .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+      .get(`/myPage`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         console.log('mypage >>>>>여기가 카카오있음>>>>>', response.data);
         setProfileImg(response.data.file);
@@ -106,7 +108,9 @@ export default function MyPage() {
   // 닉네임 스코어 점수 돈
   useEffect(() => {
     privateApi
-      .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+      .get(`/myPage`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         console.log('mypage', response.data);
         const userInfo: UserInfo = response.data.userInfo[0];
@@ -124,7 +128,9 @@ export default function MyPage() {
   useEffect(() => {
     // 랭킹 요청
     privateApi
-      .get(`/myRanking`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+      .get(`/myRanking`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         setRanking(response.data);
       })
@@ -136,7 +142,9 @@ export default function MyPage() {
   // 내 친구목록 불러오기
   useEffect(() => {
     privateApi
-      .get(`/friend/${userid_num}`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+      .get(`/friend/${userid_num}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);

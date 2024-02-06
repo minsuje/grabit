@@ -124,8 +124,8 @@ export default function MyPageFriendDetail() {
       data: { other_userid_num: friendUserNum, is_friend: false, type: requestType },
     })
       .then((response) => {
-        console.log('친구 추가 요청 성공>>>>>>:', response);
-        // navigate(`/mypage/`);
+        console.log('친구 추가 및 거절 성공>>>>>>:', response);
+        navigate(`/mypage/`);
       })
       .catch((error) => {
         console.error('친구 추가 요청 에러:', error);
