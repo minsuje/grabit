@@ -45,10 +45,10 @@ export default function Ranking() {
         return (
           <div
             key={idx}
-            className="font-['SUITE Variable'] relative flex w-full flex-col items-center justify-center gap-2"
+            className="font-['SUITE Variable'] relative mt-10 flex w-full flex-col items-center justify-center gap-4"
           >
             <motion.div
-              className="h-60 w-20 rounded-t-md bg-gradient-to-t from-transparent to-grabit-700"
+              className="h-40 w-20 rounded-t-md bg-gradient-to-t from-transparent to-grabit-700"
               style={{ originY: 1 }}
               initial={{ opacity: 0, scaleY: 0 }}
               animate={{ opacity: 1, scaleY: rank.score_num / topScore }}
@@ -58,12 +58,12 @@ export default function Ranking() {
               className="z-20 flex w-full flex-col items-center justify-center gap-2"
               style={{ originY: 1 }}
               initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 240 - (rank.score_num / topScore) * 240 - 270 }}
+              animate={{ opacity: 1, y: 240 - (rank.score_num / topScore) * 240 - 200 }}
               transition={{ duration: 0.7, delay: 0.3 }}
             >
-              <span className="w-full text-xl font-bold">{idx + 1}</span>
-              <span className="w-full text-sm font-light text-white">{rank.nickname}</span>
-              <span className="z-10 flex w-fit rounded-full bg-grabit-200 px-3 pb-1 pt-2 text-center text-sm font-light">
+              {/* <span className="w-full text-xl font-bold">{idx + 1}</span> */}
+              <span className="w-full text-sm font-bold text-grabit-700">{rank.nickname}</span>
+              <span className="z-10 flex w-fit rounded-full bg-grabit-200 px-2 py-1 text-center text-sm font-extrabold">
                 {rank.score_num}
               </span>
             </motion.div>

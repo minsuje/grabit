@@ -29,13 +29,14 @@ export function ListComponent1({ challenge }: ChallengeProp) {
           {dDay > 0 ? dDay + '일 후 종료' : '오늘 종료'}
         </p>
       </div>
-      <p className="text-grabit-800 flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold">
+
+      <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
         <RiVipDiamondFill />
         <div className="flex items-end gap-1">
-          {challenge.goal_money}
-          <span className="text-grabit-400 mb-[3px] align-top text-sm font-bold">캐럿</span>
+          <p>{challenge.goal_money}</p>
+          <span className="mb-[3px] align-top text-sm font-bold text-grabit-400">캐럿</span>
         </div>
-      </p>
+      </div>
     </div>
   );
 }
@@ -133,15 +134,15 @@ interface ProgressProp {
 
 export function ProgressComponent({ ProgressName, total, value }: ProgressProp) {
   return (
-    <>
-      <div className="mr-3 flex justify-between">
-        <p className="mt-3 font-bold">{ProgressName}</p>
-        <p className="mt-3">
-          {value}/{total}
+    <div className="flex flex-col gap-4">
+      <div className=" flex justify-between gap-2">
+        <p className="mt-3 flex font-bold text-stone-600">{ProgressName}</p>
+        <p className="mt-3 flex font-bold text-stone-400">
+          {value} / {total}
         </p>
       </div>
       <Progress value={(value / total) * 100} />
-    </>
+    </div>
   );
 }
 

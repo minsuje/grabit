@@ -139,14 +139,16 @@ function Alarm() {
   return (
     <div>
       <div className="flex items-end justify-between">
-        <h1 className="text-2xl font-extrabold"> 알림</h1>
-        <p className="text-gray-400">30일 지난 알림은 자동으로 삭제됩니다.</p>
+        <div className="mb-8 flex flex-col gap-2">
+          <h1 className="text-2xl font-extrabold"> 알림</h1>
+          <p className="text-gray-400">30일 지난 알림은 자동으로 삭제됩니다.</p>
+        </div>
         {/* <Button className="bg-transparent text-lg font-extrabold text-black hover:bg-transparent" onClick={showX}>
           {deleteButton ? '완료' : '편집'}
         </Button> */}
       </div>
 
-      <div className="list flex flex-col gap-4 p-4">
+      <div className="list flex flex-col gap-4">
         {isAlarm ? (
           AlarmNonConfirm.map((list) => {
             const finishCheck = checkType(list.type, list);

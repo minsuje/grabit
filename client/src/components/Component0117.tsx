@@ -9,6 +9,8 @@ import { ko } from 'date-fns/locale';
 import { ChallengeProp, Challenge } from '@/types/types';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
+import { RiVipDiamondFill } from 'react-icons/ri';
+
 function CreateChallenge() {
   return (
     <>
@@ -160,14 +162,20 @@ function ListComponentWithPeriod({ challenge }: ChallengeProp) {
     <div>
       <div className=" flex flex-col rounded-lg bg-white p-6 shadow-lg shadow-grabit-600/10">
         <Link to={`/challengeDetail/${challenge.challenge_id}`} className="flex flex-col gap-2  no-underline">
-          <div className="flex justify-between">
+          <div className="flex flex-col justify-between gap-2">
             <p className="text-xl font-bold text-grabit-700">{challenge.challenge_name}</p>
-            <p className="text-grabit-400">
+            <p className="text-sm text-grabit-400">
               {format(challenge.authentication_start_date, 'PP (EEE)', { locale: ko })} ~{' '}
               {format(challenge.authentication_end_date, 'PP (EEE)', { locale: ko })}
             </p>
           </div>
-          <p className="text-2xl font-bold text-grabit-700">{challenge.goal_money}원</p>
+          <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
+            <RiVipDiamondFill />
+            <div className="flex items-end gap-1">
+              <p>{challenge.goal_money}</p>
+              <span className="mb-[3px] align-top text-sm font-bold text-grabit-400">캐럿</span>
+            </div>
+          </div>
         </Link>
       </div>
     </div>

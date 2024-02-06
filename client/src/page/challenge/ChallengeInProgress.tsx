@@ -314,13 +314,14 @@ function ChallengeInProgress() {
                 );
               })}
             </div>
-
-            <ProgressComponent ProgressName={'진행률'} total={totalAuthCount} value={UrlGroup[0].length} />
-            <ProgressComponent
-              ProgressName={'기간'}
-              total={period + 1}
-              value={differenceInDays(new Date(), challengeDetail.authentication_start_date)}
-            />
+            <div className="mt-12 flex flex-col gap-4">
+              <ProgressComponent ProgressName={'진행률'} total={totalAuthCount} value={UrlGroup[0].length} />
+              <ProgressComponent
+                ProgressName={'기간'}
+                total={period + 1}
+                value={differenceInDays(new Date(), challengeDetail.authentication_start_date)}
+              />
+            </div>
             <br />
             {/* <ListComponent1 challenge={challengeDetail} /> */}
             <Tab
