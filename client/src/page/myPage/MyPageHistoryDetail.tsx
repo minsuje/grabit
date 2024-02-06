@@ -75,7 +75,7 @@ export default function ListComponent3() {
           </div>
         </div>
         <div className="flex">
-          <div className="mr-3 mt-2 text-black">{}원</div>
+          <div className="mr-3 mt-2 text-black">{}</div>
           <div className="mt-2 text-black">
             <Badge variant="default">
               {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}

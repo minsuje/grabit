@@ -29,7 +29,9 @@ export default function Friend() {
 
   useEffect(() => {
     privateApi
-      .get(`/friend/${userid_num}`)
+      .get(`/friend/${userid_num}`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
       .then((response) => {
         setFriends(response.data.friends_info);
         console.log('>>>>>친구계정', response);
