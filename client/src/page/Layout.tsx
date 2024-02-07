@@ -1,17 +1,9 @@
 import Header from '@/components/Header';
-// import { useSelector } from 'react-redux';
-// import { RootState } from '@/store/store';
 import { Outlet, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 function Layout() {
-  // const { isLoggedIn } = useSelector((state: RootState) => state.login);
-  // console.log(isLoggedIn);
-
-  // const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
-  // const isLoggedIn = true;
   const accessToken = localStorage.getItem('accessToken');
-  console.log('Layout accessToken >>>>>', accessToken);
 
   return accessToken ? (
     <div>

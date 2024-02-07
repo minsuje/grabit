@@ -35,14 +35,12 @@ async function patchChallenge(
       authentication_end_date: addDays(startDay, period),
     };
   }
-  console.log('수정 전 데이터', challengeData);
 
   const result = await privateApi({
     method: 'PATCH',
     url: `/challengeEdit/${challenge_id}`,
     data: challengeData,
   });
-  console.log(result);
   if (result.status == 200) {
     alert('정상적으로 수정되었습니다.');
   } else {
@@ -51,11 +49,10 @@ async function patchChallenge(
 }
 
 async function deleteChallenge(challenge_id: string | undefined) {
-  const result = await privateApi({
+  await privateApi({
     method: 'DELETE',
     url: `/challengeEdit/${challenge_id}`,
   });
-  console.log(result);
 }
 
 function ChallengeEdit() {
@@ -72,7 +69,6 @@ function ChallengeEdit() {
       privateApi
         .get(`/challengeDetail/${challenge_id}`)
         .then((response) => {
-          console.log(response.data);
           setChallengeDetail(response.data.challengeDetail[0]);
           setChallengers(response.data.challengers);
         })
@@ -116,7 +112,6 @@ function ChallengeEdit() {
 
   const period = differenceInDays(challengeDetail.authentication_end_date, challengeDetail.authentication_start_date);
   let periodChanged = period;
-  console.log('period', period);
 
   const handleStartDate = (date: Date | undefined) => {
     setDate(date);

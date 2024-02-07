@@ -92,7 +92,6 @@ function HotChallenge() {
       privateApi
         .get('/popularChallenge')
         .then((response) => {
-          // console.log('HotTopicData', response.data);
           setHotTopic(response.data.popularTopics);
 
           setTop1(response.data.top1);
@@ -114,7 +113,7 @@ function HotChallenge() {
     <>
       <div className="flex justify-start gap-2">
         {tabs.map((tab) => (
-          <a href="#" onClick={(e: any) => handleClick(e, tab)}>
+          <a href="#" key={tab.name} onClick={(e: any) => handleClick(e, tab)}>
             <div
               key={tab.name}
               className={

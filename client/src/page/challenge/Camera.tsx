@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState, RefObject } from 'react';
 import OpenAI from 'openai';
@@ -15,12 +14,7 @@ function Camera() {
   const { state } = location;
   const { keyword, name } = state;
 
-  const info = useSelector((state: RootState) => state.result);
-  console.log(info);
-
   // const { userid_num } = useSelector((state: RootState) => state.login);
-  const userid_num = Number(localStorage.getItem('userid_num'));
-  console.log('user', userid_num);
   const [imgUrl, setImgUrl] = useState<string>();
   const [fileData, setFileData] = useState<File>();
   const [imageBase64, setImageBase64] = useState('');
@@ -46,12 +40,10 @@ function Camera() {
 
   // Handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('파일 변환 실행');
     const file = event.target.files?.[0];
     if (file) {
       convertToBase64(file);
     }
-    console.log(file);
   };
 
   const openai = new OpenAI({
@@ -80,10 +72,7 @@ function Camera() {
         },
       ],
     });
-    console.log('openai >>>>>>>>>>', response.choices[0]);
     if (response?.choices[0].message.content?.includes('True')) {
-      console.log('보내기');
-
       await privateApi({
         method: 'post',
         url: `/challengeAuth/${challenge_id}`,
@@ -92,7 +81,6 @@ function Camera() {
           type: fileData?.type,
         },
       }).then((res) => {
-        console.log('res.data>>>>>>>>>>', res.data);
         if (res.data.msg) {
           alert(res.data.msg);
         } else {
@@ -103,8 +91,7 @@ function Camera() {
             headers: {
               'Content-Type': fileData?.type,
             },
-          }).then((res) => {
-            console.log(res);
+          }).then(() => {
             alert('업로드 완료!');
             navigate(`/challengeInProgress/${challenge_id}`);
           });
@@ -154,7 +141,6 @@ function Camera() {
             ref={inputRef}
             onChange={(e) => {
               if (e.target.files?.length == 1) {
-                console.log(e.target.files[0]);
                 setFileData(e.target.files[0]);
                 setImgUrl(URL.createObjectURL(e.target.files[0]));
                 handleFileChange(e);

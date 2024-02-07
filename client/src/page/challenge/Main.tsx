@@ -10,7 +10,6 @@ import { setHeaderInfo } from '@/store/headerSlice';
 import HotChallenge from '@/components/HotChallenge';
 
 export default function Main() {
-  console.log('main mounted !!!');
   const dispatch = useDispatch();
 
   const [userid_num, setUserid_num] = useState<number>(0);
@@ -27,7 +26,6 @@ export default function Main() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission.title);
         setCompleted(response.data.completed);
       })
@@ -40,17 +38,12 @@ export default function Main() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        // console.log('challengeList >>>>>>>>>', response.data);
         setIngMyChallenge(response.data.ingMyChallenge);
         setEndedMyChallenge(response.data.endedMyChallenge);
       })
       .catch((error) => {
         console.error('ChallengeInProgress에서 진행중인챌린지 오류발생 :', error);
       });
-
-    // console.log('dailyMission', dailymission);
-    // console.log('completed', completed);
-    // console.log('ingMyChallenge', ingMyChallenge);
   }, [userid_num]);
 
   useEffect(() => {

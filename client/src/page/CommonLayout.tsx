@@ -3,11 +3,7 @@ import { motion } from 'framer-motion';
 import HeaderTitle from '@/components/HeaderTitle';
 
 function Layout() {
-  // const { isLoggedIn } = useSelector((state: RootState) => state.login);
-  // console.log(isLoggedIn);
-
   const isLoggedIn = Boolean(localStorage.getItem('isLoggedIn'));
-  console.log(isLoggedIn);
 
   return !isLoggedIn ? (
     <div>

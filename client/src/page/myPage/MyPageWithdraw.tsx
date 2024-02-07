@@ -12,18 +12,13 @@ export default function MyPageWithdraw() {
   const [bank_name, setBank_name] = useState<string>('');
   const [name, setName] = useState<string>('');
 
-  console.log(money);
-  console.log(bank_num);
-  console.log(bank_name);
-  console.log(name);
-
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
   }, [dispatch]);
 
   const handleSubmit = async () => {
     try {
-      const response = await privateApi
+      await privateApi
         .post('/requsetWithdraw', {
           money,
           bank_num,
@@ -31,7 +26,6 @@ export default function MyPageWithdraw() {
           name,
         })
         .then();
-      console.log(response.data);
     } catch (error) {
       console.error('Error during API call', error);
     }

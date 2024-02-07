@@ -10,7 +10,6 @@ export const customAxios: AxiosInstance = axios.create({
 
 customAxios.interceptors.request.use((config) => {
   const { refreshToken } = useSelector((state: RootState) => state.login);
-  console.log('refreshToken: ', refreshToken);
   if (refreshToken) {
     config.headers.Authorization = `Bearer ${refreshToken}`;
   }

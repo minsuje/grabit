@@ -196,7 +196,6 @@ export class profileImgMiddleware implements NestMiddleware {
             .from(users)
             .where(eq(users.userid_num, userid_num));
           key = file[0].profile_img;
-          // console.log('middleware profileImg key > ', key);
           let url: string;
           if (file[0].profile_img !== null) {
             const command = new GetObjectCommand({
@@ -226,12 +225,9 @@ export class profileImgMiddleware implements NestMiddleware {
             .where(eq(users.userid_num, userid_num));
 
           key = file[0].profile_img;
-          console.log('middleware profileImg key > ', key);
-          console.log('middleware profileImg filename > ', filename);
           if (req.method === 'DELETE' || req.method === 'PATCH') {
             if (key != null) {
               if (filename) {
-                console.log('HERE!!!');
                 const params = {
                   Bucket: process.env.AWS_S3_BUCKET,
                   Key: key,
@@ -241,10 +237,7 @@ export class profileImgMiddleware implements NestMiddleware {
               }
             }
             if (req.method === 'PATCH') {
-              console.log('middleware req > ', req.originalUrl);
-              console.log('patch filename           >   ', filename);
               if (filename) {
-                console.log('patch if ');
                 filename = uuid() + '.' + filename.split('.')[1];
                 let command = new PutObjectCommand({
                   Bucket: process.env.AWS_S3_BUCKET,

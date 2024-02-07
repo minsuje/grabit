@@ -18,7 +18,6 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthenticatedUser: (state: AuthState, { payload }: PayloadAction<AuthState>) => {
-      console.log('authSlice:: setAuthenticatedUser: ', payload);
       state.userid = payload.userid;
       state.access_token = payload.access_token;
       state.refresh_token = payload.refresh_token;

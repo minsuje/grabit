@@ -10,8 +10,6 @@ function FileUploadTest() {
   }, []);
 
   async function handleUpload() {
-    console.log('axios', file);
-
     await privateApi({
       method: 'post',
       url: '/challengeAuth/1',
@@ -27,8 +25,6 @@ function FileUploadTest() {
         headers: {
           'Content-Type': file?.type,
         },
-      }).then((res) => {
-        console.log(res);
       });
     });
   }
@@ -42,7 +38,6 @@ function FileUploadTest() {
         type: file?.type,
       },
     }).then((res) => {
-      console.log('patch res.data', res);
       privateApi({
         method: 'put',
         url: res.data,
@@ -59,13 +54,12 @@ function FileUploadTest() {
       method: 'get',
       url: '/challengeAuth/1/77',
     }).then((res) => {
-      console.log(res.data);
+      res.data;
       setProfile(res.data.fileUrl);
     });
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.files![0]);
     setFile(e.target.files![0]);
   }
 

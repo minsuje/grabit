@@ -23,10 +23,9 @@ export default function MypageCharge() {
     if (chargeAmount !== null) {
       try {
         // 서버로 충전 요청을 보냅니다.
-        const response = await privateApi.post('', {
+        await privateApi.post('', {
           amount: chargeAmount,
         });
-        console.log(response.data); // 응답 로그 출력
         navigate('/mypage'); // 충전 후 Mypage로 이동
       } catch (error) {
         console.error('충전 요청 실패:', error);

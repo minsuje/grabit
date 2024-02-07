@@ -30,7 +30,6 @@ function ChallengeList() {
       privateApi
         .get('/challengeList')
         .then((response) => {
-          console.log(response.data);
           setIngMyChallenge(response.data.ingMyChallenge);
           setPreMyChallenge(response.data.preMyChallenge);
           setPublicChallenge(response.data.prePublicChallenge);

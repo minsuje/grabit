@@ -17,7 +17,6 @@ export default function MyPageFriendList({ friends }: any) {
       });
   }, []);
 
-  console.log(',friends', friends);
   const tierImages = {
     silver: '/silverTear.png',
     platinum: '/platinumTear.png',

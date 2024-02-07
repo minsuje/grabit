@@ -18,9 +18,9 @@ function ChallengeNotice() {
 
   function handleSubmit() {
     if (confirm) {
-      console.log('챌린지 참여');
+      alert('챌린지 참여 완료');
     } else {
-      console.log('챌린지 참여 안함');
+      alert('챌린지 참여 주의사항을 확인해주세요');
     }
   }
 

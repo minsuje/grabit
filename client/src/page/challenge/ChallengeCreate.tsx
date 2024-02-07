@@ -76,7 +76,6 @@ function ChallengeCreate() {
       setValue('authStart', (Number(authEnd) - 1).toString(), { shouldValidate: true });
       setAuthStart((Number(authEnd) - 1).toString());
     } else {
-      console.log(value);
       setCheckStartTime(true);
       setValue('authStart', value, { shouldValidate: true });
       setAuthStart(value);
@@ -88,7 +87,6 @@ function ChallengeCreate() {
       setCheckEndTime(false);
       setValue('authEnd', (Number(authStart) + 1).toString(), { shouldValidate: true });
       setAuthEnd((Number(authStart) + 1).toString());
-      console.log((Number(authStart) + 1).toString());
     } else {
       setCheckEndTime(true);
       setValue('authEnd', value, { shouldValidate: true });
@@ -181,10 +179,7 @@ function ChallengeCreate() {
   //   dispatch(setChallengeName(e.target.value));
   // };
 
-  console.log('authTerm', authTerm);
-  console.log('authStart', authStart);
   async function onSubmit() {
-    console.log('test');
     try {
       const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
@@ -205,7 +200,6 @@ function ChallengeCreate() {
           authentication_end_time: authEnd,
         },
       });
-      console.log(result);
       if (result.data.msg) {
         alert(result.data.msg);
       } else {

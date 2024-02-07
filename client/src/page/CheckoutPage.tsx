@@ -26,9 +26,7 @@ function CheckoutPage({ price }: Props) {
   }, [price]);
 
   useEffect(() => {
-    console.log('accessToken >>>>>>', localStorage.getItem('accessToken'));
     privateApi.post('/userInfo').then((res) => {
-      console.log('res', res.data.user[0]);
       username = res.data.user[0].name;
     });
   }, []);
@@ -45,7 +43,7 @@ function CheckoutPage({ price }: Props) {
         failUrl: `${window.location.origin}/checkout/fail`,
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 

@@ -52,7 +52,6 @@ export default function FriendAddition() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log(response);
         setSearchResult(response.data);
       })
       .catch((error) => {

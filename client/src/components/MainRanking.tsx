@@ -22,13 +22,10 @@ export default function Ranking() {
       axios
         .get('/Ranking')
         .then((response) => {
-          // console.log('랭킹 axios');
-          // console.log('ranking axios response', response);
           response.data?.sort((a: { score_num: number }, b: { score_num: number }) => b.score_num - a.score_num);
           const reorderedData = [response.data[1], response.data[0], response.data[2]];
 
           setRanking(reorderedData);
-          console.log('ranking', ranking);
 
           setTopScore(response.data[0].score_num);
           // setLoad(true);

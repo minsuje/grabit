@@ -4,7 +4,6 @@ interface hotTopicProp {
 }
 
 export function ToggleGroupDemo({ hotTopic }: hotTopicProp) {
-  console.log(hotTopic);
   return (
     <ToggleGroup type="single">
       {hotTopic.map((topic, idx) => {

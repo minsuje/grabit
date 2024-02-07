@@ -14,12 +14,12 @@ import Cta from '@/components/Cta';
 
 export default function MyPageEdit() {
   const dispatch = useDispatch();
-  const [nickName, setNickName] = useState<string>();
+  // const [nickName, setNickName] = useState<string>();
 
   const [proFileImg, setProFileImg] = useState<string>('');
   const [file, setFile] = useState<File>();
   const [userTrue, setUserTrue] = useState<boolean>();
-  const [errMessage, setErrMessage] = useState<string>();
+  // const [errMessage, setErrMessage] = useState<string>();
 
   const loginType = localStorage.getItem('login_type');
   // kakao 로그인 타입일 경우 true, 그 외 경우(여기서는 normal) false
@@ -60,7 +60,6 @@ export default function MyPageEdit() {
   }, [dispatch]);
 
   const onSubmit = async (data: FormData) => {
-    console.log('data >>>>>>>>>>>>>', data);
     const { nickname, password: currentPassword, changePassword, confirmPassword } = data; // 구조 분해 할당을 사용하여 변수명을 적절하게 변경합니다.
 
     if (changePassword && changePassword !== confirmPassword) {
@@ -69,7 +68,6 @@ export default function MyPageEdit() {
     }
     // 비밀번호 변경을 원하는 경우 검증
 
-    console.log('>>>>>>>>>>>>>>>>>DDAATTAA>', data);
     await axios({
       method: 'patch',
       url: '/myPage',
@@ -86,13 +84,10 @@ export default function MyPageEdit() {
       if (userTrue === true) {
         Navigate(`/mypage`);
       } else if (userTrue === false) {
-        setErrMessage('패스워드를 확인해주세요');
+        // setErrMessage('패스워드를 확인해주세요');
       }
-      console.log('patch res.data', res.data.isUser);
       setUserTrue(res.data.isUser);
 
-      console.log('patch res.data>>', res.data.file);
-      // alert(res.data.msg);
       if (res.data.file) {
         axios({
           method: 'put',
@@ -101,8 +96,7 @@ export default function MyPageEdit() {
           headers: {
             'Content-Type': file?.type,
           },
-        }).then((res) => {
-          console.log('>>>>', res);
+        }).then(() => {
           Navigate(`/mypage`);
         });
       }
@@ -115,10 +109,8 @@ export default function MyPageEdit() {
       .get(`/myPage`, { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
       .then((response) => {
         const { nickname } = response.data.userInfo[0];
-        console.log('>>>>', response.data.userInfo[0]);
         setValue('nickname', nickname); // 폼 필드 업데이트
-        setNickName(response.data.userInfo[0].nickname);
-        console.log('nickname', nickName);
+        // setNickName(response.data.userInfo[0].nickname);
         setProFileImg(response.data.file);
       })
       .catch((error) => {
@@ -126,8 +118,6 @@ export default function MyPageEdit() {
       });
   }, [setValue]);
 
-  console.log('>>>>>file', file);
-  console.log(errMessage);
   return (
     <div>
       {/* <input type="file" onChange={handleChange} />
@@ -150,10 +140,8 @@ export default function MyPageEdit() {
             id="profile"
             type="file"
             onChange={(e) => {
-              console.log('파일 입력시 이벤트 객체', e);
               if (e.target.files?.length == 1) {
                 setFile(e.target.files[0]);
-                console.log(e.target.files[0]);
               }
             }}
           /> */}
@@ -162,10 +150,8 @@ export default function MyPageEdit() {
             type="file"
             id="profile"
             onChange={(e) => {
-              console.log('파일 입력시 이벤트 객체', e);
               if (e.target.files?.length == 1) {
                 setFile(e.target.files[0]);
-                console.log(e.target.files[0]);
               }
             }}
           />

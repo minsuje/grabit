@@ -12,11 +12,6 @@ export default function Home() {
   const REST_API_KEY = import.meta.env.VITE_REST_API_KEY;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
-  useEffect(() => {
-    console.log('🚀 ~ Home ~ REST_API_KEY:', REST_API_KEY);
-    console.log('🚀 ~ Home ~ REDIRECT_URI:', REDIRECT_URI);
-  });
-
   // const Rabbit = () => {
   //   return <Lottie animationData={rabbit} width={0} height={0} />;
   // };

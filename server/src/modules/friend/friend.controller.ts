@@ -19,7 +19,6 @@ export class FriendController {
   //# 유저 친구 조회
   @Get(':userid')
   findOne(@Param('userid') userid: number, @Req() req) {
-    console.log('controller friend > ', req.file);
     let friends_info = req.file;
     return this.friendService.findOne(userid, friends_info);
   }
@@ -30,8 +29,6 @@ export class FriendController {
     @Body() createFriendDto: CreateFriendDto,
     @Param('userid') userid: number,
   ) {
-    console.log('친구 추가 시작');
-
     return this.friendService.create(createFriendDto, userid);
   }
 
@@ -41,7 +38,6 @@ export class FriendController {
     @Body() updateFriendDto: UpdateFriendDto,
     @Param('userid') userid: number,
   ) {
-    console.log('updateFriendDto', updateFriendDto);
     return this.friendService.update(userid, updateFriendDto);
   }
 
@@ -51,7 +47,6 @@ export class FriendController {
     @Body() createFriendDto: CreateFriendDto,
     @Param('userid') userid: number,
   ) {
-    console.log('DELETE FRIEND BODY', createFriendDto);
     return this.friendService.remove(createFriendDto, userid);
   }
 

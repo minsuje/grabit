@@ -31,7 +31,6 @@ export class UserController {
     @Param('type') login_type: string,
     @Body() createUserDto: CreateUserDto,
   ): any {
-    console.log('register controller body', createUserDto);
     return this.userService.createNewUser(login_type, createUserDto);
   }
 
@@ -42,8 +41,6 @@ export class UserController {
     @Body() body: any,
     @Req() req,
   ): any {
-    console.log('profileUpload controller body', body);
-    console.log('controller postProfileUpload', req.file);
     const file = req.file;
     return this.userService.postProfileUpload(login_type, body, file);
   }
@@ -57,9 +54,7 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    console.log('userid_num type > ', userid_num);
 
-    // console.log('myPage controller req.file > ', req.file);
     const file = req.file;
 
     return this.userService.getMyPage(userid_num, file);
@@ -78,7 +73,6 @@ export class UserController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const login_userid_num = decodedUserInfo.userid_num;
-    console.log('myPage controller req.file > ', req.file);
     const file = req.file;
     return this.userService.getProfilePage(login_userid_num, userid, file);
   }
@@ -94,9 +88,6 @@ export class UserController {
     const userid_num = decodedUserInfo.userid_num;
     const login_type = decodedUserInfo.login_type;
     const file = req.file;
-    console.log(userid_num);
-    console.log('controller patch myPage > ', body);
-    console.log('controller patch myPage file > ', file);
     return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 

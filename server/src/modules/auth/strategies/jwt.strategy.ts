@@ -25,7 +25,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       //     let token = null;
       //     if (request && request.cookies) {
       //       token = request.cookies['refreshToken'];
-      //       // console.log('accessToken', token);
       //     }
       //     return token;
       //   },
@@ -36,8 +35,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // 따로 처리를 하지 않아도 자동으로 서버와 프론트는 쿠키를 주고받습니다.
       // jwtFromRequest: ExtractJwt.fromExtractors([
       //   (request) => {
-      //     console.log(
-      //       '🚀 ~ JwtStrategy ~ constructor ~ accessToken:',
       //       request?.cookies?.accessToken,
       //     );
       //     return request?.cookies?.accessToken;
@@ -47,29 +44,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET_KEY,
     });
-    console.log('JWT Strategy>>>>>>>>>>');
   }
 
   // async validate(payload: any) {
-  //   console.log('jwt Strategy payload >>> ', payload);
 
   //   if (payload.exp < Date.now() / 1000) {
   //     // 토큰이 만료된 경우
 
-  //     console.log('if문 안에서 시작 >>>> ');
   //     throw new UnauthorizedException('Token has expired');
   //   }
   //   return { userid: payload.userid, name: payload.name };
   // }
 
   // validate(loginDto: any) {
-  //     console.log('Inside jwt strategy');
-  //     console.log(loginDto);
   //     return loginDto;
   // }
   async validate(userid: string, password: string) {
     const user = await this.authService.loginUser({ userid, password });
-    console.log('jwt strategy >>>> ', user);
     if (!user) throw new UnauthorizedException();
     return user;
   }
@@ -78,7 +69,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   // async validate(userid: string, password: string) {
   //   try {
   //     const user = await this.authService.loginUser({ userid, password });
-  //     console.log('jwt strategy >>>> ', user);
   //     return user;
   //   } catch (error) {
   //     throw new UnauthorizedException('토큰이 유효하지 않습니다.');

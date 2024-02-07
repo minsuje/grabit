@@ -15,14 +15,11 @@ export class NotificationService {
   }
 
   findOne = async (userid_num: number) => {
-    console.log('userid_num >>>>>', userid_num);
     const result = await db
       .select()
       .from(notification)
       .where(eq(notification.userid_num, userid_num))
       .orderBy(desc(notification.created_at));
-
-    console.log('result >>>>>', result);
 
     if (result.length > 0) {
       return result;
@@ -44,7 +41,6 @@ export class NotificationService {
   async handleCron() {
     try {
       const dateNow = addHours(new Date(), 9);
-      console.log('dateNow >>>>>', dateNow);
 
       const currentTime = await db.select().from(notification);
 
@@ -69,8 +65,6 @@ export class NotificationService {
             );
         }
       }
-
-      console.log('30일이 지난 알림 삭제');
     } catch (error) {
       console.error('에러 발생', error.message);
     }

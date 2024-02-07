@@ -50,7 +50,6 @@ export class UserService {
     let isLogins = false;
     if (checkUser.length !== 0) {
       const isLogins = false;
-      console.log(isLogins);
       return isLogins;
     } else {
       const CUser = await db.insert(users).values(userInfo);
@@ -69,8 +68,6 @@ export class UserService {
 
   // 프로필 조회
   getMyPage = async (userid_num: number, file: string) => {
-    console.log('여기 오류');
-
     const userInfo = await db
       .select({
         nickname: users.nickname,
@@ -195,7 +192,6 @@ export class UserService {
     for (let i = 0; i < friendStatus2.length; i++) {
       friends.push(friendStatus2[i]);
     }
-    // console.log('friends > ', friends);
 
     for (let i = 0; i < friends.length; i++) {
       if (friends[i].userid_num === login_userid_num) {
@@ -235,7 +231,6 @@ export class UserService {
     } else {
       if (preInfo.profile_img !== null) filename = null;
     }
-    console.log(`service file ${file}  / filename ${filename}`);
 
     let isUser = false;
     const myDbPassword = await db
@@ -256,7 +251,6 @@ export class UserService {
           // 비밀번호 변경함
           const newPassword = await bcrypt.hash(changePassword, 10);
           if (filename) {
-            console.log('비밀번호 O, 프로필 이미지 O');
             const userInfo = await db
               .update(users)
               .set({
@@ -266,23 +260,19 @@ export class UserService {
               })
               .where(eq(users.userid_num, userid_num))
               .returning();
-            console.log('userInfo > ', userInfo);
             isUser = true;
           }
-          console.log('비밀번호 O, 프로필 이미지 X');
           const userInfo = await db
             .update(users)
             .set({ password: newPassword, nickname: nickname })
             .where(eq(users.userid_num, userid_num))
             .returning();
-          console.log('userInfo > ', userInfo);
           isUser = true;
           return { userInfo, file, isUser };
         } else {
           // 비밀 번호 변경 안함
           if (filename) {
             // 비밀번호 X, 프로필 이미지 O
-            console.log('비밀번호 X, 프로필 이미지 O');
             const userInfo = await db
               .update(users)
               .set({
@@ -291,13 +281,11 @@ export class UserService {
               })
               .where(eq(users.userid_num, userid_num))
               .returning();
-            console.log('userInfo > ', userInfo);
 
             isUser = true;
             return { userInfo, file, isUser };
           } else {
             // 비밀번호 X, 프로필 X
-            console.log('비밀번호 X, 프로필 이미지 X');
             const userInfo = await db
               .update(users)
               .set({
@@ -305,7 +293,6 @@ export class UserService {
               })
               .where(eq(users.userid_num, userid_num))
               .returning();
-            console.log('userInfo > ', userInfo);
             isUser = true;
             return { userInfo, file, isUser };
           }
@@ -380,7 +367,7 @@ export class UserService {
         amount: response.data.totalAmount,
       };
     } catch (e) {
-      console.log('토스페이먼츠 에러', e);
+      console.error(e);
     }
   };
 

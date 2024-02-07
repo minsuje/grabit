@@ -38,7 +38,6 @@ export class AuthController {
   @Post('login')
   @UseGuards(localGuard)
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
-    console.log('login controller >>>>>>>>>.', req.user);
     const token = JSON.stringify(req.user);
     const tokens = JSON.parse(token);
     const {
@@ -54,13 +53,10 @@ export class AuthController {
 
     let none = 'true';
 
-    console.log('tokens>>>>>> ', tokens);
-
     if (tokens === 'none') {
       none = 'none';
     }
 
-    // console.log('login controller >>>>>>>>>.', req.user);
     await res.setHeader(
       'Authorization',
       'Bearer ' + [loginToken, loginRefreshToken].join(' '),
@@ -86,8 +82,6 @@ export class AuthController {
       // path: '/auth',
     });
     res.cookie('isLoggedIn', true, { httpOnly: false });
-
-    console.log('/ > ', loginToken);
 
     return res.send({
       accessToken: loginToken,
@@ -163,8 +157,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('/main')
   status(@Req() req: Request) {
-    console.log('Inside AuthController status method');
-    console.log(req.user);
     return req.user;
   }
 
@@ -172,10 +164,7 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(200)
   async refresh(@Req() req: Request, @Res() res: Response) {
-    console.log('/refresh site 접속 >>>');
     const accessToken = req.headers['authorization'].split(' ')[1];
-
-    console.log('auth controller accessToken >>>>', accessToken);
 
     const decodedAccessToken = await this.jwtService.verify(accessToken, {
       secret: process.env.JWT_SECRET_KEY,
@@ -201,7 +190,6 @@ export class AuthController {
 
         return res.send({ msg: '새로운 토큰 발급 완료' });
       } catch (err) {
-        console.log('실패');
         res.clearCookie('login Token');
         res.clearCookie('refreshToken');
         res.clearCookie('accessToken');

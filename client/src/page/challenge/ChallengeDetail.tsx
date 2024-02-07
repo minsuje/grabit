@@ -37,14 +37,9 @@ function ChallengeDetail() {
   ]);
 
   const participate = () => {
-    privateApi
-      .get(`/challengeAccept/${challengeDetail?.challenge_id}`)
-      .then((response): void => {
-        console.log('response', response.data);
-      })
-      .catch((error): void => {
-        console.error('ChallengeDetail에서 참가 axios 오류:', error);
-      });
+    privateApi.get(`/challengeAccept/${challengeDetail?.challenge_id}`).catch((error): void => {
+      console.error('ChallengeDetail에서 참가 axios 오류:', error);
+    });
   };
 
   useEffect(() => {
@@ -52,12 +47,10 @@ function ChallengeDetail() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(challenge_id);
     privateApi
       .get(`/challengeDetail/${challenge_id}`)
 
       .then((response): void => {
-        console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
       })

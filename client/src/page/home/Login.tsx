@@ -25,7 +25,6 @@ export default function Login() {
   // const handleLogin = async () => {
   //     try {
   //         const response = await axios.post('/login', { userid, password });
-  //         console.log('로그인 성공:>>>>>', response);
 
   //         // JWT 토큰 response.data 저장
   //         const token = response.data;
@@ -51,30 +50,20 @@ export default function Login() {
         { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
       );
 
-      console.log('로그인 성공:>>>>>', response.data);
-
       navigate('/main');
 
       if (response.data === 'false' || response.data.none === 'none') {
-        // setErrorMessage('유효하지 않은 사용자 정보입니다.');
         alert('유효하지 않은 사용자 정보입니다');
       } else {
         setErrorMessage('로그인에 성공했습니다.');
 
         const { nickname, userid_num, accessToken, refreshToken, login_type } = response.data;
 
-        // console.log('cookies get accessToken', cookies.get('accessToken'));
-
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('nickname', nickname);
         localStorage.setItem('userid_num', userid_num);
         localStorage.setItem('login_type', login_type);
-
-        console.log('🚀 ~ handleLogin ~ userid_num:', userid_num);
-        console.log('🚀 ~ handleLogin ~ nickname:', nickname);
-        console.log('🚀 ~ handleLogin ~ refreshToken:', refreshToken);
-        console.log('🚀 ~ handleLogin ~ accessToken:', accessToken);
 
         dispatch(setIsLoggedIn(true));
         dispatch(setNickname(nickname));

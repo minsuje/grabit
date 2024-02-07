@@ -34,7 +34,6 @@ export default function Friend() {
       })
       .then((response) => {
         setFriends(response.data.friends_info);
-        console.log('>>>>>친구계정', response);
       })
       .catch((error) => {
         console.error('친구 목록 불러오기? axios 오류', error);

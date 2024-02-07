@@ -26,11 +26,10 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
   }
 
   function deleteNoti(notification_id: number): void {
-    console.log(notification_id);
     privateApi
       .patch(`/notification/${notification_id}`)
-      .then((response) => {
-        console.log('알림 삭제 >>>>>>>>>', response);
+      .then(() => {
+        alert('알림이 삭제되었습니다');
       })
       .catch((error) => {
         console.error('알림 삭제 중에 오류발생 :', error);

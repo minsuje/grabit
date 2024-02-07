@@ -83,8 +83,6 @@ export class DailyMissionService {
       .select({ mission_content: dailyMission.mission_content })
       .from(dailyMission);
 
-    console.log('미션 이름 >> ', mission_name);
-
     // 성공한 유저 확인
     const checkUser = await db
       .select({ success_userid_num: dailyMission.success_userid_num })
@@ -106,7 +104,6 @@ export class DailyMissionService {
     try {
       // 여기에서 테이블 삭제 또는 필요한 작업을 수행합니다.
       const deleteDaily = await db.delete(dailyMission);
-      console.log('매일 23:59에 실행됨');
     } catch (error) {
       console.error('에러 발생:', error.message);
     }
@@ -120,14 +117,11 @@ export class DailyMissionService {
         .select({ success_userid_num: dailyMission.success_userid_num })
         .from(dailyMission);
 
-      console.log('success Array > ', successArray[0].success_userid_num);
-
       // case1. 버그가 생겨서 또 인증 됐을 때 에러 처리
       if (
         successArray[0].success_userid_num !== null &&
         successArray[0].success_userid_num.includes(userid_num)
       ) {
-        console.log('이미 인증 되었습니다.');
         return {
           msg: '이미 인증 되었습니다.',
         };
@@ -139,11 +133,8 @@ export class DailyMissionService {
         userState = successArray[0].success_userid_num;
       }
 
-      console.log('userState > ', userState);
-
       // 성공한 유저를 배열에 추가
       userState.push(userid_num);
-      console.log('push userState >> ', userState);
 
       // 추가한 배열을 DB에 저장
       const getSuccess = await db

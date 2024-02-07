@@ -78,7 +78,6 @@ export default function Register() {
   }, [dispatch]);
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.files);
     setProfilePic(e.target.files![0]);
   }
 
@@ -91,7 +90,6 @@ export default function Register() {
         type: profilePic?.type,
       },
     }).then((res) => {
-      console.log(res.data);
       fileUrl = res.data;
 
       const regex = /\/([^/?#]+)[^/]*$/;
@@ -100,9 +98,6 @@ export default function Register() {
       // 추출된 파일 이름 출력
       if (match && match[1]) {
         fileName = match[1];
-        console.log(fileName);
-      } else {
-        console.log('파일 이름을 찾을 수 없습니다.');
       }
 
       axios({
@@ -112,8 +107,7 @@ export default function Register() {
         headers: {
           'Content-Type': profilePic?.type,
         },
-      }).then((res) => {
-        console.log('fileUrl', fileUrl);
+      }).then(() => {
         try {
           axios({
             method: 'post',
@@ -126,10 +120,7 @@ export default function Register() {
               profile_img: fileName,
             },
           });
-          console.log('회원가입 성공');
-          console.log(res);
           navigate('/login');
-          console.log(res);
         } catch (err) {
           console.error('회원가입 실패:', err);
         }

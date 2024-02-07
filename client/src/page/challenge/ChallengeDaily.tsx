@@ -19,7 +19,6 @@ function ChallengeDaily() {
     privateApi
       .get('/dailyMission')
       .then((response) => {
-        console.log('dailyMission >>>>>>>', response.data);
         setDailymission(response.data.mission.title);
         setKeyword(response.data.mission.topic);
       })
@@ -46,12 +45,10 @@ function ChallengeDaily() {
 
   // Handle file input change
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('파일 변환 실행');
     const file = event.target.files?.[0];
     if (file) {
       convertToBase64(file);
     }
-    console.log(file);
   };
 
   const openai = new OpenAI({
@@ -80,13 +77,10 @@ function ChallengeDaily() {
         },
       ],
     });
-    console.log('openai >>>>>>>>>>', response.choices[0]);
     if (response?.choices[0].message.content == 'True' || response?.choices[0].message.content?.includes('True')) {
-      console.log('보내기');
       privateApi
         .patch(`/dailyMissionAuth`)
         .then((response): void => {
-          console.log('response', response.data);
           if (response.data.msg) {
             alert(response.data.msg);
             window.location.href = '/main';
