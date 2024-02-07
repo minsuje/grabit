@@ -1,16 +1,27 @@
 import axios from 'axios';
 
+const privateApi = axios.create({
+  baseURL: import.meta.env.VITE_AWS_EC2_URL,
+});
+
+privateApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 export default axios.create({
   baseURL: import.meta.env.VITE_AWS_EC2_URL,
 });
 
-//토큰을 함께 보내는 instance
-export const privateApi = axios.create({
-  baseURL: import.meta.env.VITE_AWS_EC2_URL,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-  },
-});
+export { privateApi };
 
 // //리프레시토큰 요청 api
 // function postRefreshToken() {
