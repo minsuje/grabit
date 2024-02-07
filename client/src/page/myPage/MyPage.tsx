@@ -71,9 +71,7 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('mypage >>>>>여기가 카카오있음>>>>>', response.data);
         setProfileImg(response.data.file);
-        console.log('profileImg >>>>>', proFileImg);
       })
       .catch((error) => {
         console.error('이미지 불러오기 axios 오류', error);
@@ -85,9 +83,7 @@ export default function MyPage() {
     privateApi
       .get(`/history`, { headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') } })
       .then((response) => {
-        console.log(response);
         const historyData: HistoryData = response.data;
-        console.log('>>>>>', historyData);
         setWin(historyData.win);
         setLose(historyData.lose);
 
@@ -112,9 +108,7 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('mypage', response.data);
         const userInfo: UserInfo = response.data.userInfo[0];
-        console.log('🚀 ~ .then ~ userInfo:', userInfo);
 
         setNickName(userInfo?.nickname);
         setScoreNum(userInfo?.score_num);
@@ -191,7 +185,6 @@ export default function MyPage() {
     threshold: 0.1, // Adjust this value based on when you want the animation to start (0.1 means 10% of the element should be visible)
   });
 
-  console.log('>>>>>>>proFileImg', proFileImg);
   return (
     <div className="">
       <h1>마이페이지</h1>

@@ -43,7 +43,6 @@ function ChallengeImage() {
     privateApi
       .get(`/challengeAuth/${challenge_id}/${authentication_id}`)
       .then((response): void => {
-        console.log(response.data);
         setFileUrl(response.data.fileUrl);
 
         for (let i = 0; i < response.data.emoticon.length; i++) {
@@ -84,19 +83,15 @@ function ChallengeImage() {
       case 'first':
         if (first.checked) {
           setFirst({ count: first.count - 1, checked: false });
-          console.log('first -1');
           privateApi
             .delete(`/challengeAuth/${challenge_id}/${authentication_id}/${1}`)
-            .then((res) => console.log(res))
             .catch((err) => console.error(err));
         } else {
           setFirst({ count: first.count + 1, checked: true });
-          console.log('frist +1');
           privateApi
             .post(`/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 1,
             })
-            .then((res) => console.log(res))
             .catch((err) => console.error(err));
         }
 
@@ -104,51 +99,39 @@ function ChallengeImage() {
       case 'second':
         if (second.checked) {
           setSecond({ count: second.count - 1, checked: false });
-          privateApi
-            .delete(`/challengeAuth/${challenge_id}/${authentication_id}/2`)
-            .then((res) => console.log(res))
-            .catch((err) => console.error(err));
+          privateApi.delete(`/challengeAuth/${challenge_id}/${authentication_id}/2`).catch((err) => console.error(err));
         } else {
           setSecond({ count: second.count + 1, checked: true });
           privateApi
             .post(`/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 2,
             })
-            .then((res) => console.log(res))
             .catch((err) => console.error(err));
         }
         break;
       case 'third':
         if (third.checked) {
           setThird({ count: third.count - 1, checked: false });
-          privateApi
-            .delete(`/challengeAuth/${challenge_id}/${authentication_id}/3`)
-            .then((res) => console.log(res))
-            .catch((err) => console.error(err));
+          privateApi.delete(`/challengeAuth/${challenge_id}/${authentication_id}/3`).catch((err) => console.error(err));
         } else {
           setThird({ count: third.count + 1, checked: true });
           privateApi
             .post(`/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 3,
             })
-            .then((res) => console.log(res))
             .catch((err) => console.error(err));
         }
         break;
       case 'fourth':
         if (fourth.checked) {
           setFourth({ count: fourth.count - 1, checked: false });
-          privateApi
-            .delete(`/challengeAuth/${challenge_id}/${authentication_id}/4`)
-            .then((res) => console.log(res))
-            .catch((err) => console.error(err));
+          privateApi.delete(`/challengeAuth/${challenge_id}/${authentication_id}/4`).catch((err) => console.error(err));
         } else {
           setFourth({ count: fourth.count + 1, checked: true });
           privateApi
             .post(`/challengeAuth/${challenge_id}/${authentication_id}`, {
               authentication_img_comment_emoticon: 4,
             })
-            .then((res) => console.log(res))
             .catch((err) => console.error(err));
         }
         break;

@@ -36,7 +36,6 @@ function FriendSelect() {
     privateApi
       .get(`/friend/${userid_num}`)
       .then((response) => {
-        console.log('response.data>>>>>>>', response.data);
         setFriends(response.data.friends_info);
       })
       .catch((error) => {

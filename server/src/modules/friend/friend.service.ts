@@ -13,7 +13,6 @@ import { compareSync } from 'bcrypt';
 export class FriendService {
   //# 유저 친구 목록 조회
   async findOne(userid: number, friends_info: any) {
-    console.log(friends_info);
     // const userid_num = userid;
     // const result = await db
     //   .select({ friends: friend.other_userid_num })
@@ -97,8 +96,6 @@ export class FriendService {
 
   //# 친구 상태 업데이트
   async update(id: number, updateFriendDto: UpdateFriendDto) {
-    console.log(id, updateFriendDto);
-
     const { is_friend, other_userid_num } = updateFriendDto;
 
     // 교차 검색
@@ -114,11 +111,9 @@ export class FriendService {
           ),
         ),
       );
-    // console.log('findFriend[0]', findFriend[0]);
 
     if (findFriend.length > 0) {
       if (findFriend[0].is_friend === false) {
-        // console.log('친구 상태 업데이트');
         const result = await db
           .update(friend)
           .set({ is_friend: true })
@@ -132,7 +127,6 @@ export class FriendService {
             ),
           )
           .returning();
-        // console.log('result', result);
 
         if (result) {
           let name1: any = await db
@@ -157,16 +151,12 @@ export class FriendService {
 
   //# 친구 삭제
   async remove(createFriendDto: CreateFriendDto, userid: number) {
-    console.log('친구 삭제 시작', createFriendDto, userid);
     const { other_userid } = createFriendDto;
-    console.log(other_userid);
 
     const friend_id_num = await db
       .select()
       .from(users)
       .where(eq(users.userid, other_userid));
-
-    console.log('friend_id_num', friend_id_num);
 
     return await db
       .delete(friend)

@@ -1,8 +1,7 @@
 import { Tab } from '@/components/Component0117';
-import { useDispatch, useSelector } from 'react-redux';
 import { ProgressComponent } from '@/components/ComponentSeong';
-import { RootState } from '@/store/store';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Challenge, users } from '@/types/types';
 import { setTotalAuth, setResult, setWinner, setTotalMoney } from '@/store/resultSlice';
@@ -25,9 +24,6 @@ interface url {
 }
 
 function ChallengeInProgress() {
-  const info = useSelector((state: RootState) => state.result);
-  console.log('결과페이지로 보내는 값', info);
-
   const userid_num = Number(localStorage.getItem('userid_num'));
 
   const dispatch = useDispatch();
@@ -94,7 +90,6 @@ function ChallengeInProgress() {
     privateApi
       .get(`/challengeDetail/${challenge_id}`)
       .then((response): void => {
-        console.log('response', response);
         if (response.data.challengeDetail) {
           const { challengeDetail, challengers, urls, isAcceptable } = response.data;
           setChallengeDetail(challengeDetail[0]);
@@ -102,7 +97,6 @@ function ChallengeInProgress() {
           setUrls(urls);
           setIsAcceptable(isAcceptable);
           setLoading(true);
-          console.log(isAcceptable);
 
           const exist =
             challengers.some((challenger: users) => challenger.userid_num === userid_num) ||
@@ -137,7 +131,6 @@ function ChallengeInProgress() {
 
   // 인증해야하는 총 횟수
   let totalAuthCount = 3;
-  console.log('period', period);
   if (period !== 2) {
     totalAuthCount = ((period + 1) / 7) * challengeDetail.term;
   }
@@ -161,7 +154,6 @@ function ChallengeInProgress() {
 
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
-    console.log('>Dday>>>>>', Dday);
     if (Dday < 0) {
       navigate(`/challengeResult/${challenge_id}`);
     }
@@ -189,7 +181,6 @@ function ChallengeInProgress() {
       }
     }
   }
-  console.log(profiles);
 
   // 각각의 참여자들의 사진을 모으기
   for (let j = 0; j < tabId.length; j++) {

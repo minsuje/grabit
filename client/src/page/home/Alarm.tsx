@@ -117,7 +117,6 @@ function Alarm() {
           headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         })
         .then((response) => {
-          console.log(response.data);
           const confirm = response.data.filter((alarm: challengeAlarmList) => {
             return alarm.is_confirm === true;
           });

@@ -245,7 +245,6 @@ export class s3Middleware implements NestMiddleware {
         key = file[0].authentication_img;
 
         if (req.method === 'DELETE' || req.method === 'PATCH') {
-          // console.log('is deleted?');
           const params = {
             Bucket: process.env.AWS_S3_BUCKET,
             Key: key,

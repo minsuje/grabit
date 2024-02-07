@@ -34,7 +34,6 @@ function ChallengeAccept() {
     privateApi
       .patch(`/challengeAccept/${challengeDetail?.challenge_id}`)
       .then((response): void => {
-        console.log('response', response.data);
         if (response.data.msg) {
           alert(response.data.msg);
         } else {
@@ -48,14 +47,9 @@ function ChallengeAccept() {
   };
 
   const refuse = () => {
-    privateApi
-      .patch(`/challengeReject/${challengeDetail?.challenge_id}`)
-      .then((response): void => {
-        console.log('response', response.data);
-      })
-      .catch((error): void => {
-        console.error('ChallengeDetail에서 참가 axios 오류:', error);
-      });
+    privateApi.patch(`/challengeReject/${challengeDetail?.challenge_id}`).catch((error): void => {
+      console.error('ChallengeDetail에서 참가 axios 오류:', error);
+    });
   };
 
   useEffect(() => {
@@ -63,11 +57,9 @@ function ChallengeAccept() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(challenge_id);
     privateApi
       .get(`/challengeDetail/${challenge_id}`)
       .then((response): void => {
-        console.log('response', response.data);
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
       })

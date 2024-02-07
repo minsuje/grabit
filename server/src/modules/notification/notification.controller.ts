@@ -28,7 +28,6 @@ export class NotificationController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    console.log(userid_num);
     // const result = await this.notificationService.findOne(userid_num);
     // return res.send(result);
     return this.notificationService.findOne(userid_num);

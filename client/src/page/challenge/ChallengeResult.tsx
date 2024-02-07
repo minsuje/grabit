@@ -32,7 +32,6 @@ export default function ChallengeResult() {
 
   const info = useSelector((state: RootState) => state.result);
   const dispatch = useDispatch();
-  // console.log('info console.log >>>>>>', info);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 결과', backPath: -1 }));
@@ -51,8 +50,6 @@ export default function ChallengeResult() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
-        console.log('mypage>>>>>>>', response);
-        console.log('mypage', response.data.userInfo[0].score_num);
         setCurrentScore(response.data.userInfo[0].score_num);
       })
       .catch((error) => {
@@ -69,13 +66,8 @@ export default function ChallengeResult() {
         challenge_id,
       })
       .then((response) => {
-        console.log('점수업데이트~~~>>>>>>', response);
-        console.log('점수업데이트~~~>>>>>>', response.data.challengeInfo);
         setChallengerInfo(response.data.challengerInfo);
         setChallengeInfo(response.data.challengeInfo);
-        response.data.challengerInfo.map((challenger: any, index: any) => {
-          console.log(`Challenger ${index + 1}:`, challenger.nickname, challenger.score);
-        });
       })
       .catch((error) => {
         console.error('점수업데이트에러', error);
@@ -155,8 +147,6 @@ export default function ChallengeResult() {
     navigate('/main');
   }
 
-  console.log('challengerInfo>>>>>', challengerInfo[0]?.score);
-
   return (
     <>
       {showTierResult && (
@@ -205,14 +195,14 @@ export default function ChallengeResult() {
                 animate={{ scale: [1.5, 4], x: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="from-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr to-violet-500"
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-grabit-500 to-violet-500"
               ></motion.div>
               <motion.div
                 initial={{ x: 200 }}
                 animate={{ scale: [1.5, 4], y: [-300, 300], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 exit={{ opacity: 0 }}
-                className="to-grabit-500 h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500"
+                className="h-80 w-80 rounded-full bg-gradient-to-tr from-fuchsia-500 to-grabit-500"
               ></motion.div>
             </div>
             <div className="fixed bottom-0 left-0 right-0 top-0 h-full w-full items-center justify-center p-8 backdrop-blur-3xl"></div>

@@ -6,18 +6,17 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
-interface FriendDetail {
-  id: string;
-  nickname: string;
-  profile_img: string;
-  score: number;
-}
+// interface FriendDetail {
+//   id: string;
+//   nickname: string;
+//   profile_img: string;
+//   score: number;
+// }
 
 // 친구 객체를 위한 인터페이스 정의
 
 export default function MyPageFriendDetail() {
   const dispatch = useDispatch();
-  const [friendDetail] = useState<any | FriendDetail | null>('');
   const { userid } = useParams();
   const [nickname, setNickname] = useState();
   const [, setMyRank] = useState();
@@ -34,8 +33,6 @@ export default function MyPageFriendDetail() {
   const navigate = useNavigate();
   const userid_num = Number(localStorage.getItem('userid_num'));
 
-  console.log(userid_num);
-
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '친구 상세', backPath: `/mypage/friend` }));
   }, [dispatch]);
@@ -44,7 +41,6 @@ export default function MyPageFriendDetail() {
     privateApi
       .get(`/profile/${userid}`)
       .then((response) => {
-        console.log('mypageDate>>>>>>>>>>', response);
         setNickname(response.data.file.nickname);
         setMyRank(response.data.myRank);
         setWin(response.data.finalHistory.win);
@@ -79,14 +75,12 @@ export default function MyPageFriendDetail() {
 
   // 친구 삭제 요청
   const handleDeleteFriend = () => {
-    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
     privateApi({
       method: 'DELETE',
       url: `/friend/${userid_num}`,
       data: { other_userid: userid },
     })
-      .then((response) => {
-        console.log('친구 삭제 성공:', response);
+      .then(() => {
         alert('친구 삭제 완료');
         navigate(`/mypage/friend`);
       })
@@ -95,19 +89,14 @@ export default function MyPageFriendDetail() {
       });
   };
 
-  console.log('userid', typeof userid);
-
-  console.log('userid_num', typeof userid_num);
   // 친구 추가 요청
   const handleAddFriend = () => {
-    console.log('userid >>>>>>>>>>>>>>>>>>>', userid);
     privateApi({
       method: 'POST',
       url: `/friend/${userid_num}`,
       data: { other_userid_num: friendUserNum, is_friend: false },
     })
       .then((response) => {
-        console.log('친구 추가 요청 성공>>>>>>>:', response);
         alert(response.data.msg);
         navigate(`/mypage/`);
       })
@@ -125,7 +114,6 @@ export default function MyPageFriendDetail() {
       data: { other_userid_num: friendUserNum, is_friend: false, type: requestType },
     })
       .then((response) => {
-        console.log('친구 추가 및 거절 성공>>>>>>:', response);
         alert(response.data.msg);
         navigate(`/mypage/`);
       })
@@ -134,9 +122,6 @@ export default function MyPageFriendDetail() {
       });
   };
 
-  console.log('>>>>>', win);
-  console.log(friendDetail);
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -144,7 +129,7 @@ export default function MyPageFriendDetail() {
           <AvatarImage src={proFileImg ? proFileImg : '/grabit_profile.png'} />
           <AvatarFallback></AvatarFallback>
         </Avatar>
-        <h2 className="font-['SUITE Variable'] text-grabit-700 flex font-light">{nickname}</h2>
+        <h2 className="font-['SUITE Variable'] flex font-light text-grabit-700">{nickname}</h2>
       </div>
 
       <div className="my-8 flex w-full items-center justify-center text-center">

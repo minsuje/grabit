@@ -101,7 +101,6 @@ function HotChallenge() {
       privateApi
         .get('/popularChallenge')
         .then((response) => {
-          // console.log('HotTopicData', response.data);
           setHotTopic(response.data.popularTopics);
           setTop1(response.data.top1);
           setTop2(response.data.top2);

@@ -48,12 +48,9 @@ function Header() {
   });
 
   useEffect(() => {
-    console.log('location', location.pathname);
-
     privateApi
       .get(`/notification`)
       .then((response) => {
-        console.log(response.data);
         // const confirm = response.data.filter((alarm: challengeAlarmList) => {
         //   return alarm.is_confirm === true;
         // });
@@ -62,7 +59,6 @@ function Header() {
         });
         // setAlarmConfirm(confirm);
         setAlarmNonConfirm(nonConfirm);
-        // console.log('nonConfirm', AlarmNonConfirm);
         if (response.data.msg) {
           // setIsAlarm(false);
         }
@@ -73,7 +69,6 @@ function Header() {
   }, [location.pathname]);
 
   function handleLogout() {
-    console.log('로그아웃');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('nickname');
@@ -89,7 +84,6 @@ function Header() {
   }
 
   function handleLogin() {
-    console.log('로그인');
     navigate('/login');
   }
 
@@ -186,7 +180,7 @@ function Header() {
             <motion.div
               className="fixed top-16 z-[997] h-screen w-full bg-black/80 backdrop-blur-md"
               onClick={handleMenu}
-              key="menu"
+              key="shade"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

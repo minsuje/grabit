@@ -29,7 +29,6 @@ export default function CheckoutSuccess() {
         amount,
       }),
     }).then((res) => {
-      console.log('post 요청에 대한 > ', res);
       if (res) {
         setIsConfirmed(true);
       }
@@ -41,8 +40,6 @@ export default function CheckoutSuccess() {
       data: {
         amount: amount,
       },
-    }).then((res) => {
-      console.log('post 요청에 대한 > ', res.data);
     });
   }
 

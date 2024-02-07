@@ -55,5 +55,4 @@ bootstrap();
 
 // async function getUsers() {
 //   const user = await db.select().from(users);
-//   console.log(user);
 // }

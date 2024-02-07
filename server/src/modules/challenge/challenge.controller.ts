@@ -28,7 +28,6 @@ export class ChallengeController {
   @UseGuards(JwtAuthGuard)
   @Post('/challengeCreate')
   async postChallengeCreate(@Body() body: ChallengeDto, @Req() req) {
-    console.log('controller postChallengeCreate');
     // 로그인한 유저의 정보 찾기
     const userInfo = req.headers['authorization'].split(' ')[1];
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
@@ -36,7 +35,6 @@ export class ChallengeController {
     });
     //  { userid_num: 35,nickname: 'yewon',name: '김예원',,,,, }
 
-    console.log('controller decodedUserInfo > ', decodedUserInfo);
     const userid_num = decodedUserInfo.userid_num;
     const nickname = decodedUserInfo.nickname;
     return this.ChallengeService.newChallenge(userid_num, nickname, body);
@@ -111,8 +109,6 @@ export class ChallengeController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    // console.log('controller', challenge_id);
-    console.log('controller challengeDetail req > ', req.file);
     return this.ChallengeService.challengeDetail(
       userid_num,
       challenge_id,
@@ -138,8 +134,6 @@ export class ChallengeController {
 
     const userid_num = decodedUserInfo.userid_num;
     const challengerInfo = req.file;
-
-    console.log('controller postChallengeDetail >  ', req.file);
 
     // this.ChallengeService.challengeScore(winner);
     return this.ChallengeService.challengeWinner(
@@ -203,7 +197,6 @@ export class ChallengeController {
       secret: process.env.JWT_SECRET_KEY,
     });
     const userid_num = decodedUserInfo.userid_num;
-    console.log('controller newChallengeAuth req.file > ', req.file);
     const file = req.file;
     return this.ChallengeService.newChallengeAuth(
       userid_num,
@@ -246,13 +239,11 @@ export class ChallengeController {
     @Req() req: Request,
   ) {
     const userInfo = req.headers['authorization'].split(' ')[1];
-    console.log('controller userInfo >>>', req);
 
     const decodedUserInfo = await this.jwtService.verify(userInfo, {
       secret: process.env.JWT_SECRET_KEY,
     });
 
-    console.log('userid num', decodedUserInfo.userid_num);
     const userid_num = decodedUserInfo.userid_num;
 
     return await this.ChallengeService.deleteChallengeAuthEmoticon(

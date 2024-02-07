@@ -47,10 +47,8 @@ export const privateApi = axios.create({
 //         } catch (error) {
 //           if (axios.isAxiosError(error)) {
 //             if (error.response?.status === 404 || error.response?.status === 422) {
-//               console.log('만료되었습니다');
 //               window.location.replace('/sign-in');
 //             } else {
-//               console.log('로그인 실패');
 //             }
 //           }
 //         }

@@ -30,7 +30,6 @@ export class AuthService {
 
     // 해당하는 비멀번호를 가지고 있지 않을 시
     if (!findPassword.length) {
-      console.log('존재하지 않는 계정입니다.');
       return (validate = 'none');
     } else {
       // 비밀번호가 존재한다면
@@ -41,7 +40,6 @@ export class AuthService {
       const checkPassword = await bcrypt.compare(password, field);
 
       // true 반환
-      console.log('check Password >>>>', checkPassword);
       if (checkPassword) {
         // DB에 저장되어 있는 refresh token clear
         const clearToken = await db
@@ -110,7 +108,6 @@ export class AuthService {
     profile_img: string,
     username: string,
   ) => {
-    console.log('Auth Service search', String(kakaoId));
     // DB에서 카카오 로그인 유저 찾기
     const findUser = await db
       .select()
@@ -136,7 +133,6 @@ export class AuthService {
       .from(users)
       .where(eq(users.userid, String(kakaoId)));
 
-    console.log('console isClear>>>', isClear);
     const kakaoTokenInfo = {
       login_type: isClear[0].login_type,
       nickname: isClear[0].nickname,
@@ -164,7 +160,6 @@ export class AuthService {
 
     // refreshToken 해싱
     const currentRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
-    console.log(currentRefreshToken);
 
     // db에 넣기
     const inputRefreshToken = await db
@@ -179,13 +174,10 @@ export class AuthService {
   // refresh 토큰을 통해 재발급
   refresh = async (loginRefreshToken: string) => {
     try {
-      console.log('refreshToken 재발급 시작 >>>>>>>>', loginRefreshToken);
-
       // 1차검증 쿠키에 있는 refresh 토큰 복호화
       const decodedRefreshToken = this.jwtService.verify(loginRefreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
-      console.log('decodedRefreshToken >>>>>>>', decodedRefreshToken.tokenInfo);
 
       // DB에 저장되어 있는 유저 찾기
       let user = await db
@@ -209,8 +201,6 @@ export class AuthService {
         name: user[0].name,
       });
 
-      console.log('service loginToken >', loginToken);
-
       return loginToken;
     } catch {
       return {
@@ -221,7 +211,6 @@ export class AuthService {
   };
 
   // validateUser = async (payload: IPayload) => {
-  //   console.log('validateUser >>>>>>>>', payload.userid_num);
   //   const user = await db
   //     .select()
   //     .from(users)

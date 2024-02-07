@@ -15,12 +15,8 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
       clientSecret: process.env.KKT_CLIENT_SECRET,
       callbackURL: process.env.REDIRECT_URI,
     });
-    console.log('kakao strategy >>>>> 지금 여기');
   }
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    console.log('kakao strategy profile >>>>>', profile);
-    console.log('Access Token:', accessToken);
-    console.log('Refresh Token:', refreshToken);
     const { _json } = profile;
     const user = {
       id: _json.id,
@@ -29,7 +25,6 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
       profile_image: _json.properties.profile_image,
     };
     const { username, profile_image, id, login_type } = user;
-    console.log('kakao strategy profile json >>>>>', _json);
     return {
       accessToken,
       refreshToken,

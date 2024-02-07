@@ -211,7 +211,6 @@ export class ChallengeService {
         newChallengeWait.push(challengeWait[i]);
       }
     }
-    // console.log('service challengeReject challengeWait > ', newChallengeWait);
 
     const updateChallenge = await db
       .update(challenge)
@@ -261,7 +260,6 @@ export class ChallengeService {
         }
       }
     }
-    console.log('service challengeList myChallenge > ', myChallenge);
     // 참여중인 챌린지
     let ingMyChallenge = [];
     for (let i = 0; i < myChallenge.length; i++) {
@@ -295,10 +293,6 @@ export class ChallengeService {
         }
       }
     }
-    console.log(
-      '🚀 ~ ChallengeService ~ challengeList= ~ endedMyChallenge:',
-      endedMyChallenge,
-    );
 
     // 열려있는 챌린지
     const publicChallengeAll = await db
@@ -358,9 +352,7 @@ export class ChallengeService {
     // count 기준으로 내림차순 정렬
     topicCounts.sort((a, b) => b.count - a.count);
     const popularTopic = topicCounts.slice(0, 3);
-    console.log('popularTopic > ', popularTopic);
     const popularTopics = popularTopic.map((topic) => topic.name);
-    console.log('s3middleware service popularTopics', popularTopics);
     const top1 = await db
       .select()
       .from(challenge)
@@ -417,7 +409,6 @@ export class ChallengeService {
       const year: number = Number(today.split('/')[2]);
       const month: number = Number(today.split('/')[0]);
       const day: number = Number(today.split('/')[1]);
-      // console.log('service today > ', today);
 
       const period = differenceInDays(
         challengeDetail[0].authentication_end_date,
@@ -582,11 +573,7 @@ export class ChallengeService {
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
     challengeInfo = challengeInfo[0];
-    console.log(
-      '🚀 ~ ChallengeService ~ deleteChallengeEdit ~ challenger:',
-      challengeInfo,
-    );
-    console.log(challengeInfo.challenger_userid_num.length);
+
     for (let i = 0; i < challengeInfo.challenger_userid_num.length; i++) {
       if (
         challengeInfo.userid_num !==
@@ -748,13 +735,6 @@ export class ChallengeService {
             .split(',')[0],
         )
       ) {
-        // console.log(
-        //   myChallenge[i].authentication_end_date
-        //     .toLocaleString('en-US', {
-        //       timeZone: 'Asia/Seoul',
-        //     })
-        //     .split(',')[0],
-        // );
         history.push(myChallenge[i]);
       }
     }
@@ -770,10 +750,6 @@ export class ChallengeService {
           ...challenger[j],
           nickname: nickname,
         };
-        // console.log(
-        //   'history challenger_userid_num > ',
-        //   history[i].challenger_userid_num,
-        // );
       }
     }
     let win = 0, // 승리 횟수
@@ -838,7 +814,6 @@ export class ChallengeService {
 
           // 총 상금
           let totalMoney = winner.total_money;
-          console.log(totalMoney);
 
           // 몇명이 참가했는지 찾기
           let totalPeople: any = await db
@@ -847,7 +822,6 @@ export class ChallengeService {
             .where(eq(challenge.challenge_id, challenge_id));
           totalPeople = totalPeople[0].challenger_userid_num;
           totalPeople = totalPeople.length;
-          console.log('총 참가 인원', totalPeople);
 
           // 1인당 제출한 금액
           let onePerson = totalMoney / totalPeople;
@@ -865,7 +839,6 @@ export class ChallengeService {
 
           // 이긴 사람이 없을 때
           if (winners === undefined || winners.length === 0) {
-            console.log('no winner');
             win = 'none';
             const loseScore = await db.insert(score).values({
               userid_num: userid_num,
@@ -899,12 +872,9 @@ export class ChallengeService {
 
             // 3.3% 운영 수수료
             const companyCharge = totalMoney * 0.033;
-            console.log('수수료 >>> ', companyCharge);
 
             // 원금에서 수수료를 제외한 금액 반올림
             const leftMoney = Math.round(totalMoney - companyCharge);
-
-            console.log('수수료를 제외한 금액', leftMoney);
 
             // 모든 이긴 유저 찾기
             let findWinner: any = await db
@@ -984,7 +954,6 @@ export class ChallengeService {
                 // 챌린저 수 만큼 돈을 나눠서 입금
                 // account 내역 추가
                 divMoney = Math.round(leftMoney / findWinner.length);
-                console.log('이긴 사람 만큼 돈 나누기 결과 >>> ', divMoney);
                 const money = await db.insert(account).values({
                   userid_num: userid_num,
                   transaction_description: 'challenge/success',
@@ -992,10 +961,7 @@ export class ChallengeService {
                   transaction_amount: divMoney,
                   status: false,
                 });
-                console.log(
-                  '이긴 사람 만큼 돈 나누기 결과 2 >>> ',
-                  typeof divMoney,
-                );
+
                 // user 잔고에 돈 입금
                 const newMoney = await db
                   .update(users)
@@ -1017,7 +983,6 @@ export class ChallengeService {
                   .set({ score_num: sql`${users.score_num} - 50` })
                   .where(eq(users.userid_num, userid_num));
               }
-              console.log('winners >>> ', winners);
               // challengerInfo 내역 업데이트(캐럿 추가)
               for (let i = 0; i < winners.length; i++) {
                 for (let j = 0; j < challengerInfo.length; j++) {
@@ -1053,7 +1018,6 @@ export class ChallengeService {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
     const everyChallenge = await db.select().from(challenge);
-    // console.log('everyChallenge', everyChallenge);
 
     const dateNow = addHours(new Date(), 9);
 
@@ -1069,8 +1033,6 @@ export class ChallengeService {
       const year = Number(time.split('/')[2]);
 
       const timeNow = addMonths(new Date(year, month - 1, day), 1);
-      // console.log(`timeNow${i} >>> `, timeNow);
-      // console.log('dateNow >>> ', dateNow);
 
       if (dateNow === timeNow || dateNow > timeNow) {
         await db
@@ -1078,7 +1040,6 @@ export class ChallengeService {
           .where(eq(challenge.challenge_id, everyChallenge[i].challenge_id));
       }
     }
-    console.log('30일이 지난 챌린지 삭제');
   }
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async hendleCron() {
