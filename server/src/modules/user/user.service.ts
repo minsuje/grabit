@@ -18,7 +18,7 @@ import { friend } from '../friend/schema';
 @Injectable()
 export class UserService {
   createNewUser = async (login_type: any, createUserDto: CreateUserDto) => {
-    const {
+    let {
       userid,
       social_userid,
       password,
@@ -28,6 +28,7 @@ export class UserService {
       score_num,
       carrot,
     } = createUserDto;
+    if (profile_img === '') profile_img = null;
 
     const hash: string = await bcrypt.hash(password, 10);
 
