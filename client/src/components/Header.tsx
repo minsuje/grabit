@@ -80,6 +80,7 @@ function Header() {
     localStorage.removeItem('userid_num');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('login_type');
+    window.localStorage.clear();
     dispatch(setIsLoggedIn(false));
     dispatch(setUserid_num(0));
     dispatch(setNickname(''));
