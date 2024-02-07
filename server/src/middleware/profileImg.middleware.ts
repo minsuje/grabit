@@ -206,6 +206,7 @@ export class profileImgMiddleware implements NestMiddleware {
           } else url = null;
           req['file'] = url;
         } else if (req.method === 'POST') {
+          let url: string;
           if (filename) {
             key = uuid() + '.' + filename.split('.')[1];
             const command = new PutObjectCommand({
@@ -213,11 +214,11 @@ export class profileImgMiddleware implements NestMiddleware {
               Key: key,
               ContentType: type,
             });
-            const url = await getSignedUrl(client, command, {
+            url = await getSignedUrl(client, command, {
               expiresIn: 3600,
             });
-            req['file'] = url;
-          }
+          } else url = null;
+          req['file'] = url;
         } else {
           let file = await db
             .select()

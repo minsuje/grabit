@@ -90,41 +90,68 @@ export default function Register() {
         type: profilePic?.type,
       },
     }).then((res) => {
-      fileUrl = res.data;
+      if (res.data !== '') {
+        fileUrl = res.data;
 
-      const regex = /\/([^/?#]+)[^/]*$/;
-      const match = fileUrl.match(regex);
+        const regex = /\/([^/?#]+)[^/]*$/;
+        const match = fileUrl.match(regex);
 
-      // 추출된 파일 이름 출력
-      if (match && match[1]) {
-        fileName = match[1];
+        // 추출된 파일 이름 출력
+        if (match && match[1]) {
+          fileName = match[1];
+        }
+
+        axios({
+          method: 'put',
+          url: res.data,
+          data: profilePic,
+          headers: {
+            'Content-Type': profilePic?.type,
+          },
+        });
+      }
+      try {
+        axios({
+          method: 'post',
+          url: '/register/normal',
+          data: {
+            name: form.name,
+            userid: form.userid,
+            nickname: form.nickname,
+            password: form.password,
+            profile_img: fileName,
+          },
+        });
+        navigate('/login');
+      } catch (err) {
+        console.error('회원가입 실패:', err);
       }
 
-      axios({
-        method: 'put',
-        url: res.data,
-        data: profilePic,
-        headers: {
-          'Content-Type': profilePic?.type,
-        },
-      }).then(() => {
-        try {
-          axios({
-            method: 'post',
-            url: '/register/normal',
-            data: {
-              name: form.name,
-              userid: form.userid,
-              nickname: form.nickname,
-              password: form.password,
-              profile_img: fileName,
-            },
-          });
-          navigate('/login');
-        } catch (err) {
-          console.error('회원가입 실패:', err);
-        }
-      });
+      // axios({
+      //   method: 'put',
+      //   url: res.data,
+      //   data: profilePic,
+      //   headers: {
+      //     'Content-Type': profilePic?.type,
+      //   },
+      // }).then(() => {
+      //   try {
+      //     axios({
+      //       method: 'post',
+      //       url: '/register/normal',
+      //       data: {
+      //         name: form.name,
+      //         userid: form.userid,
+      //         nickname: form.nickname,
+      //         password: form.password,
+      //         profile_img: fileName,
+      //       },
+      //     });
+      //     navigate('/login');
+      //   } catch (err) {
+      //     console.error('회원가입 실패:', err);
+      //   }
+      // });
     });
   };
 
