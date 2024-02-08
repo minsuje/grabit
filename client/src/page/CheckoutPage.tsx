@@ -3,14 +3,21 @@ import { loadPaymentWidget, PaymentWidgetInstance } from '@tosspayments/payment-
 import { nanoid } from 'nanoid';
 import { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
+import { useDispatch } from 'react-redux';
+import { setHeaderInfo } from '@/store/headerSlice';
 
 interface Props {
   price: number;
 }
 
 function CheckoutPage({ price }: Props) {
+  const dispatch = useDispatch();
   let username: string;
   const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
+
+  useEffect(() => {
+    dispatch(setHeaderInfo({ title: '주문서', backPath: `/payment` }));
+  }, [dispatch]);
 
   useEffect(() => {
     (async () => {

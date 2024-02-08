@@ -1,8 +1,9 @@
 import Header from '@/components/Header';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 function Layout() {
+  const location = useLocation();
   const accessToken = localStorage.getItem('accessToken');
 
   return accessToken ? (
@@ -13,7 +14,7 @@ function Layout() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 2 }}
+          transition={{ duration: 0.5 }}
           key={location.pathname}
         >
           <Outlet />
