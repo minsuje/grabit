@@ -841,7 +841,12 @@ export class ChallengeService {
           .select({ challenger_userid_num: challenge.challenger_userid_num })
           .from(challenge)
           .where(eq(challenge.challenge_id, challenge_id));
+
         totalPeople = totalPeople[0].challenger_userid_num;
+        console.log('totalPeople true? > ', totalPeople);
+        const acceptPeople = totalPeople.filter((people) => {
+          return people.isAccept === true;
+        });
         totalPeople = totalPeople.length;
 
         console.log('total people >>', totalPeople);
@@ -925,9 +930,13 @@ export class ChallengeService {
             amIWinner = true;
           }
 
+          console.log('winners.length >> ');
+
           // case 1. 참여한 모든 유저가 이겼다.
           // 원래 돈을 그대로 입금
-          if (totalPeople === winners.length) {
+          if (acceptPeople.length === winners.length) {
+            console.log('여기 찍히나요???????');
+            console.log(winners.length);
             // 스코어 증가!
             const addScoreTable = await db.insert(score).values({
               userid_num: userid_num,
