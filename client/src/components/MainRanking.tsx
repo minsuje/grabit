@@ -55,7 +55,7 @@ export default function Ranking() {
               className="z-20 flex w-full flex-col items-center justify-center gap-2"
               style={{ originY: 1 }}
               initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 240 - (rank.score_num / topScore) * 240 - 220 }}
+              animate={{ opacity: 1, y: (rank.score_num / topScore) * -160 - 60 }}
               transition={{ duration: 0.7, delay: 0.3 }}
             >
               {/* <span className="w-full text-xl font-bold">{idx + 1}</span> */}

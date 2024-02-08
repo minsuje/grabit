@@ -112,7 +112,6 @@ function Alarm() {
   };
 
   useEffect(() => {
-
     privateApi
       .get('/notification', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
@@ -134,9 +133,6 @@ function Alarm() {
       .catch((error) => {
         console.error('Alarm에서 오류발생 :', error);
       });
-
-    console.log(isAlarm);
-
   }, []);
 
   return (

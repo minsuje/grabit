@@ -165,8 +165,8 @@ function Header() {
                 <span>알림</span>
                 {AlarmNonConfirm.length > 0 ? (
                   <div>
-                    <div className="absolute left-16 h-3 w-3 origin-center animate-pulse rounded-full bg-red-600"></div>
-                    <div className="absolute left-16 h-3 w-3 origin-center animate-ping rounded-full bg-red-600"></div>
+                    <div className="absolute left-16 h-2 w-2 origin-center animate-pulse rounded-full bg-grabit-600"></div>
+                    <div className="absolute left-16 h-2 w-2 origin-center animate-ping rounded-full bg-grabit-600"></div>
                   </div>
                 ) : null}
               </Link>
