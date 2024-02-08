@@ -151,8 +151,8 @@ export default function Main() {
       </div>
 
       <motion.div
-        initial={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
+        initial={{ scale: 1, rotate: 0 }}
+        whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
         className="fixed bottom-6 right-6 rounded-full bg-grabit-700 p-4 text-center shadow-lg shadow-grabit-600/20"
       >

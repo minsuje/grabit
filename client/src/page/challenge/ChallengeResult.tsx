@@ -23,6 +23,7 @@ export default function ChallengeResult() {
   const [challengerInfo] = useState<challengerInfo | any>([]);
   const [challengeInfo] = useState<Challenge>();
   const [showConfetti, setShowConfetti] = useState<boolean>(false); // 컨페티 표시 상태 추가
+  const [win, setWin] = useState<boolean>(false);
   // const [winMessage, setWinMessage] = useState<React.ReactNode>('');
 
   interface challengerInfo {
@@ -71,6 +72,7 @@ export default function ChallengeResult() {
         console.log(response.data);
         const isWinner = response.data.challengeInfo.winner_userid_num.includes(Number(userid_num));
         const scoreChange = isWinner ? 100 : -50;
+        setWin(isWinner);
 
         console.log(isWinner);
         console.log(scoreChange);
@@ -190,7 +192,7 @@ export default function ChallengeResult() {
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 className="flex flex-col items-center justify-center text-white"
               >
-                {isWinner ? <h2 className="text-white">승리</h2> : <h2 className="text-white">패배</h2>}
+                {win ? <h2 className="text-white">승리</h2> : <h2 className="text-white">패배</h2>}
                 <h2 className="text-white">티어</h2>
                 <h3>{tierName}</h3>
                 <img src={tierImageSrc} alt={`${tierName} 티어 이미지`} className="tier-image w-40 rounded-full" />
