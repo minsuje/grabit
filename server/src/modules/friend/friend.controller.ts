@@ -9,12 +9,16 @@ import {
   Req,
 } from '@nestjs/common';
 import { FriendService } from './friend.service';
+import { JwtService } from '@nestjs/jwt';
 import { CreateFriendDto } from './dto/create-friend.dto';
 import { UpdateFriendDto } from './dto/update-friend.dto';
 
 @Controller('friend')
 export class FriendController {
-  constructor(private readonly friendService: FriendService) {}
+  constructor(
+    private readonly friendService: FriendService,
+    private jwtService: JwtService,
+  ) {}
 
   //# 유저 친구 조회
   @Get(':userid')
@@ -25,20 +29,35 @@ export class FriendController {
 
   //# 유저 친구 추가
   @Post(':userid')
-  create(
+  async create(
     @Body() createFriendDto: CreateFriendDto,
     @Param('userid') userid: number,
+    @Req() request: Request,
   ) {
-    return this.friendService.create(createFriendDto, userid);
+    // 로그인한 유저 정보
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const login_userid_num = decodedUserInfo.userid_num;
+
+    return this.friendService.create(createFriendDto, userid, login_userid_num);
   }
 
   //# 유저 친구 수락 / 거절
   @Patch(':userid')
-  update(
+  async update(
     @Body() updateFriendDto: UpdateFriendDto,
     @Param('userid') userid: number,
+    @Req() request: Request,
   ) {
-    return this.friendService.update(userid, updateFriendDto);
+    // 로그인한 유저 정보
+    const userInfo = request.headers['authorization'].split(' ')[1];
+    const decodedUserInfo = await this.jwtService.verify(userInfo, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    const login_userid_num = decodedUserInfo.userid_num;
+    return this.friendService.update(userid, updateFriendDto, login_userid_num);
   }
 
   //# 유저 친구 삭제
