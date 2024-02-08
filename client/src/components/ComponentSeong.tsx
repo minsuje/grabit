@@ -20,7 +20,7 @@ export function ListComponent1({ challenge }: ChallengeProp) {
   return (
     <div
       key={challenge.challenge_id}
-      className="shadow-grabit-600/10 flex flex-col gap-2 rounded-xl bg-white p-6 shadow-lg"
+      className="flex flex-col gap-2 rounded-xl bg-white p-6 shadow-lg shadow-grabit-600/10"
     >
       <div className="flex items-center justify-center">
         <h2 className="flex-1">{challenge.challenge_name}</h2>
@@ -65,13 +65,14 @@ export function ListComponent2({ challenge }: ChallengeProp) {
 export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: number; challenge_name: string }) => {
   const { userid_num } = useParams<any>();
   const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
-  const [, setWinnerUseridNum] = useState<number[]>([]);
+  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
       .get(`/history`)
       .then((response) => {
-        setWinnerUseridNum(response.data.history[0].winner_userid_num);
+        console.log(response);
+        setWinnerUseridNum(response.data.history);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
@@ -80,7 +81,6 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
 
   // history를 배열로 변환
   const historyArray = [history];
-
   // history 배열을 날짜 기준으로 오름차순으로 정렬
   const sortedHistory = historyArray.slice().sort((a, b) => {
     const startDateA = new Date(a.authentication_start_date).getTime();
@@ -88,6 +88,9 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
     return startDateB - startDateA; // 날짜를 오름차순으로 정렬
   });
   // 정렬 후 결과 확인
+
+  console.log('history', history);
+  console.log('winnerUseridNum', winnerUseridNum);
 
   return (
     <>
@@ -111,11 +114,11 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
             </div>
             <div className="mt-2 text-black">
               <Badge variant="default" className="ml-2">
-                {item?.winner_userid_num?.includes(userIdNum) ? '-50P' : '+100P'}
+                {item.winner_userid_num?.includes(userIdNum) ? '+100' : '-50P'}
               </Badge>
             </div>
             <div className="flex w-[100%] justify-end">
-              <div className="mt-2 text-black ">{item?.winner_userid_num?.includes(userIdNum) ? '패배' : '승'}</div>
+              <div className="mt-2 text-black ">{item.winner_userid_num?.includes(userIdNum) ? '승' : '패배'}</div>
             </div>
           </div>
         </div>
