@@ -57,44 +57,47 @@ export class AuthController {
       none = 'none';
     }
 
-    await res.setHeader(
-      'Authorization',
-      'Bearer ' + [loginToken, loginRefreshToken].join(' '),
-    );
+    if (none !== 'none') {
+      await res.setHeader(
+        'Authorization',
+        'Bearer ' + [loginToken, loginRefreshToken].join(' '),
+      );
 
-    // cookie set
-    res.cookie('accessToken', loginToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      // maxAge: 10 * 1000,
-      // maxAge: 6000,
-      secure: true,
-      sameSite: 'none',
-      // path: '/auth',
-    });
-    res.cookie('refreshToken', loginRefreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      // maxAge: 40 * 1000,
-      // maxAge: 10 * 1000,
-      secure: true,
-      sameSite: 'none',
-      // path: '/auth',
-    });
-    res.cookie('isLoggedIn', true, { httpOnly: false });
+      // cookie set
+      res.cookie('accessToken', loginToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 10 * 1000,
+        // maxAge: 6000,
+        secure: true,
+        sameSite: 'none',
+        // path: '/auth',
+      });
+      res.cookie('refreshToken', loginRefreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 40 * 1000,
+        // maxAge: 10 * 1000,
+        secure: true,
+        sameSite: 'none',
+        // path: '/auth',
+      });
+      res.cookie('isLoggedIn', true, { httpOnly: false });
 
-    return res.send({
-      accessToken: loginToken,
-      refreshToken: loginRefreshToken,
-      userid_num,
-      nickname,
-      name,
-      login_type: login_type,
-      isLogin,
-      validate,
-      none,
-    });
-
+      return res.send({
+        accessToken: loginToken,
+        refreshToken: loginRefreshToken,
+        userid_num,
+        nickname,
+        name,
+        login_type: login_type,
+        isLogin,
+        validate,
+      });
+    } else
+      return {
+        msg: '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.',
+      };
     // return this.authService.loginUser(req.body);
   }
 

@@ -22,82 +22,94 @@ export class AuthService {
     let isLogin: string = 'false';
     let validate: string = 'none';
 
-    // 입력된 아이디에 대한 db에서 password만 가져옴
-    const findPassword = await db
-      .select({ field: users.password })
+    // 아이디 있는지 확인
+    const findUser = await db
+      .select({ userid: users.userid, password: users.password })
       .from(users)
       .where(eq(users.userid, userid));
 
-    // 해당하는 비멀번호를 가지고 있지 않을 시
-    if (!findPassword.length) {
-      return (validate = 'none');
-    } else {
-      // 비밀번호가 존재한다면
+    if (findUser.length === 0) {
+      return {
+        msg: '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.',
+      };
+    } else if (findUser.length > 0) {
+      // 입력된 아이디에 대한 db에서 password만 가져옴
+      const findPassword = await db
+        .select({ field: users.password })
+        .from(users)
+        .where(eq(users.userid, userid));
 
-      const { field } = findPassword[0];
+      // 해당하는 비멀번호를 가지고 있지 않을 시
+      if (!findPassword.length) {
+        return (validate = 'none');
+      } else {
+        // 비밀번호가 존재한다면
 
-      // 비밀번호 비교
-      const checkPassword = await bcrypt.compare(password, field);
+        const { field } = findPassword[0];
 
-      // true 반환
-      if (checkPassword) {
-        // DB에 저장되어 있는 refresh token clear
-        const clearToken = await db
-          .update(users)
-          .set({ refreshToken: null })
-          .where(and(eq(users.userid, userid), eq(users.password, field)));
+        // 비밀번호 비교
+        const checkPassword = await bcrypt.compare(password, field);
 
-        // 유저 정보 찾아서 담기
-        const loginAccess = await db
-          .select()
-          .from(users)
-          .where(and(eq(users.userid, userid), eq(users.password, field)));
+        // true 반환
+        if (checkPassword) {
+          // DB에 저장되어 있는 refresh token clear
+          const clearToken = await db
+            .update(users)
+            .set({ refreshToken: null })
+            .where(and(eq(users.userid, userid), eq(users.password, field)));
 
-        const tokenInfo = {
-          login_type: loginAccess[0].login_type,
-          userid_num: loginAccess[0].userid_num,
-          nickname: loginAccess[0].nickname,
-          name: loginAccess[0].name,
-        };
+          // 유저 정보 찾아서 담기
+          const loginAccess = await db
+            .select()
+            .from(users)
+            .where(and(eq(users.userid, userid), eq(users.password, field)));
 
-        // 토큰 때문에 잠깐 만든 거예요 누가 발견하면 지워요
+          const tokenInfo = {
+            login_type: loginAccess[0].login_type,
+            userid_num: loginAccess[0].userid_num,
+            nickname: loginAccess[0].nickname,
+            name: loginAccess[0].name,
+          };
 
-        // 1. Jwt 토큰 생성
-        const loginToken = this.jwtService.sign(tokenInfo);
+          // 토큰 때문에 잠깐 만든 거예요 누가 발견하면 지워요
 
-        // refresh Token 만들기
-        const loginRefreshToken = this.jwtService.sign(
-          { tokenInfo },
-          {
-            secret: process.env.JWT_REFRESH_SECRET,
-            expiresIn: '7d',
-          },
-        );
+          // 1. Jwt 토큰 생성
+          const loginToken = this.jwtService.sign(tokenInfo);
 
-        // refresh 토큰 암호화
-        const hashRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
+          // refresh Token 만들기
+          const loginRefreshToken = this.jwtService.sign(
+            { tokenInfo },
+            {
+              secret: process.env.JWT_REFRESH_SECRET,
+              expiresIn: '7d',
+            },
+          );
 
-        // 2. refresh Token 해당 유저에 넣기
-        const inputLoginReToken = await db
-          .update(users)
-          .set({ refreshToken: [hashRefreshToken, userid] })
-          .where(eq(users.userid, userid));
+          // refresh 토큰 암호화
+          const hashRefreshToken = await bcrypt.hash(loginRefreshToken, 10);
 
-        const userid_num = loginAccess[0].userid_num;
-        const nickname = loginAccess[0].nickname;
-        const name = loginAccess[0].name;
-        const login_type = loginAccess[0].login_type;
-        isLogin = 'true';
-        validate = 'true';
-        return {
-          loginToken,
-          loginRefreshToken,
-          userid_num,
-          nickname,
-          name,
-          login_type,
-          isLogin,
-        };
+          // 2. refresh Token 해당 유저에 넣기
+          const inputLoginReToken = await db
+            .update(users)
+            .set({ refreshToken: [hashRefreshToken, userid] })
+            .where(eq(users.userid, userid));
+
+          const userid_num = loginAccess[0].userid_num;
+          const nickname = loginAccess[0].nickname;
+          const name = loginAccess[0].name;
+          const login_type = loginAccess[0].login_type;
+          isLogin = 'true';
+          validate = 'true';
+          return {
+            loginToken,
+            loginRefreshToken,
+            userid_num,
+            nickname,
+            name,
+            login_type,
+            isLogin,
+          };
+        }
       }
     }
   };
