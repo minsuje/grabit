@@ -78,7 +78,7 @@ function ChallengeList() {
         })}
       </div>
 
-      <h1>열려있는 챌린지</h1>
+      <h1>공개 챌린지</h1>
 
       <div className="flex flex-col gap-4">
         {publicChallenge.map((challenge: Challenge) => {

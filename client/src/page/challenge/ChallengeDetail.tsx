@@ -15,7 +15,7 @@ import Cta from '@/components/Cta';
 import { motion } from 'framer-motion';
 
 function ChallengeDetail() {
-  const { userid_num } = useSelector((state: RootState) => state.login);
+  const userid_num = localStorage.getItem('userid_num');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -37,9 +37,19 @@ function ChallengeDetail() {
   ]);
 
   const participate = () => {
-    privateApi.get(`/challengeAccept/${challengeDetail?.challenge_id}`).catch((error): void => {
-      console.error('ChallengeDetail에서 참가 axios 오류:', error);
-    });
+    privateApi
+      .patch(`/challengeAccept/${challenge_id}`)
+      .then((response): void => {
+        if (response.data.msg) {
+          alert(response.data.msg);
+        } else {
+          alert('참가 완료되었습니다.');
+          navigate(-1);
+        }
+      })
+      .catch((error): void => {
+        console.error('ChallengeDetail에서 참가 axios 오류:', error);
+      });
   };
 
   useEffect(() => {
@@ -141,7 +151,7 @@ function ChallengeDetail() {
       <div className="text-center">
         <Button
           onClick={() => {
-            navigate('/main');
+            navigate(-1);
           }}
         >
           확인
@@ -150,8 +160,8 @@ function ChallengeDetail() {
 
       {challengeDetail?.is_public &&
         challengers.length < 4 &&
-        challengers.find((challenger) => challenger.userid_num == userid_num) == undefined && (
-          <Cta text={'참가하기'} onclick={() => participate} />
+        !challengers.find((challenger) => challenger.userid_num == Number(userid_num)) && (
+          <Cta text={'참가하기'} onclick={participate} />
         )}
 
       {challengeDetail?.is_public && challengers.length == 4 && (

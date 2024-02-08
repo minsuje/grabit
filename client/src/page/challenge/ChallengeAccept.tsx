@@ -9,9 +9,11 @@ import { Challenge, users } from '@/types/types';
 import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { setHeaderInfo } from '@/store/headerSlice';
+import { useNavigate } from 'react-router-dom';
 
 function ChallengeAccept() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
@@ -38,7 +40,7 @@ function ChallengeAccept() {
           alert(response.data.msg);
         } else {
           alert('참가 완료되었습니다.');
-          window.location.href = '/challengeList';
+          navigate(-1);
         }
       })
       .catch((error): void => {
@@ -47,9 +49,16 @@ function ChallengeAccept() {
   };
 
   const refuse = () => {
-    privateApi.patch(`/challengeReject/${challengeDetail?.challenge_id}`).catch((error): void => {
-      console.error('ChallengeDetail에서 참가 axios 오류:', error);
-    });
+    privateApi
+      .patch(`/challengeReject/${challengeDetail?.challenge_id}`)
+      .then((res) => {
+        console.log(res);
+        alert('참가 거절되었습니다.');
+        navigate(-1);
+      })
+      .catch((error): void => {
+        console.error('ChallengeDetail에서 참가 axios 오류:', error);
+      });
   };
 
   useEffect(() => {

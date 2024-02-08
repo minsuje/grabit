@@ -117,14 +117,16 @@ function Alarm() {
           headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
         })
         .then((response) => {
-          const confirm = response.data.filter((alarm: challengeAlarmList) => {
-            return alarm.is_confirm === true;
-          });
-          const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
-            return alarm.is_confirm === false;
-          });
-          setAlarmConfirm(confirm);
-          setAlarmNonConfirm(nonConfirm);
+          if (!response.data.msg) {
+            const confirm = response.data.filter((alarm: challengeAlarmList) => {
+              return alarm.is_confirm === true;
+            });
+            const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
+              return alarm.is_confirm === false;
+            });
+            setAlarmConfirm(confirm);
+            setAlarmNonConfirm(nonConfirm);
+          }
           if (response.data.msg) {
             setIsAlarm(false);
           }
