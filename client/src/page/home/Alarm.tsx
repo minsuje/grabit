@@ -112,6 +112,7 @@ function Alarm() {
   };
 
   useEffect(() => {
+
     privateApi
       .get('/notification', {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
@@ -135,6 +136,7 @@ function Alarm() {
       });
 
     console.log(isAlarm);
+
   }, []);
 
   return (
