@@ -66,6 +66,7 @@ export class profileImgMiddleware implements NestMiddleware {
       }
       // '/profile/:userid'
       else if ('profile' === req.originalUrl.split('/')[1]) {
+        console.log('middleware req.originalUrl  > ', req.originalUrl);
         friend = await db
           .select({
             userid_num: users.userid_num,
@@ -79,6 +80,7 @@ export class profileImgMiddleware implements NestMiddleware {
       friend = friend[0];
 
       let url: string;
+      console.log('middleware friend  > ', friend);
       if (friend.profile_img !== null) {
         const command = new GetObjectCommand({
           Bucket: process.env.AWS_S3_BUCKET,
@@ -88,6 +90,7 @@ export class profileImgMiddleware implements NestMiddleware {
       } else url = null;
       friend.profile_img = url;
 
+      console.log('middleware url  > ', url);
       req['file'] = friend;
     }
     // '/friend' 경로로 요청 온 경우
