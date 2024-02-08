@@ -41,7 +41,9 @@ export class AuthService {
 
       // 해당하는 비멀번호를 가지고 있지 않을 시
       if (!findPassword.length) {
-        return (validate = 'none');
+        return {
+          msg: '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.',
+        };
       } else {
         // 비밀번호가 존재한다면
 

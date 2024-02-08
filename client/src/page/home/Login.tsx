@@ -50,10 +50,12 @@ export default function Login() {
         { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
       );
 
-      navigate('/main');
-
-      if (response.data === 'false' || response.data.none === 'none') {
-        alert('유효하지 않은 사용자 정보입니다');
+      if (
+        response.data === 'false' ||
+        response.data.msg === '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.'
+      ) {
+        // alert('아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.');
+        setErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.');
       } else {
         setErrorMessage('로그인에 성공했습니다.');
 
@@ -75,13 +77,13 @@ export default function Login() {
       }
     } catch (error) {
       console.error('로그인 실패:', error);
-      setErrorMessage('유효하지 않은 사용자 정보입니다.');
+      setErrorMessage('아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.');
     }
   };
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <form className="flex h-full w-full flex-col items-center justify-center">
+      <div className="flex h-full w-full flex-col items-center justify-center">
         <div className="flex w-full max-w-sm flex-col items-center gap-4">
           <h1 className="mb-10 w-full text-center">로그인</h1>
           <Label className="flex w-full" htmlFor="username">
@@ -121,7 +123,7 @@ export default function Login() {
         >
           로그인
         </Button>
-      </form>
+      </div>
     </div>
   );
 }
