@@ -86,6 +86,7 @@ export default function MyPage() {
         const historyData: HistoryData = response.data;
         setWin(historyData.win);
         setLose(historyData.lose);
+        console.log(response);
 
         // 데이터 로딩 후 정렬 로직 적용
         const sortedHistory = historyData.history.sort((a, b) => {
@@ -109,6 +110,7 @@ export default function MyPage() {
       })
       .then((response) => {
         const userInfo: UserInfo = response.data.userInfo[0];
+        console.log(response);
 
         setNickName(userInfo?.nickname);
         setScoreNum(userInfo?.score_num);
@@ -127,6 +129,7 @@ export default function MyPage() {
       })
       .then((response) => {
         setRanking(response.data);
+        console.log('랭킹페이지 요청', response);
       })
       .catch((error) => {
         console.error(' 랭킹 axios 오류', error);
@@ -140,6 +143,7 @@ export default function MyPage() {
         headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
       })
       .then((response) => {
+        console.log('친구목록 콘솔', response);
         const friendsData = response.data.friends_info.slice(0, 3); // 처음 3개의 데이터만 선택
         setFriends(friendsData);
       })
@@ -188,7 +192,6 @@ export default function MyPage() {
   return (
     <div className="">
       <h1>마이페이지</h1>
-      <div></div>
 
       <div className="section flex">
         <div className="profile mt-8 flex w-full flex-col items-center justify-center gap-4">
@@ -298,14 +301,15 @@ export default function MyPage() {
       <div className="friend flex flex-col items-center justify-center gap-4 ">
         <div className="flex w-full items-center">
           <h2 className="font-['SUITE Variable'] w-full text-2xl">히스토리</h2>
-          <Link to={`/mypage/friend`}>
+          <Link to={`/mypage/historydetail/${userid_num}`}>
             <Button variant={'secondary'} className="font-bold">
               전체보기
             </Button>
           </Link>
         </div>
+        {/* 히스토리 각각의 카드 */}
         <div className="user-list  font-['SUITE Variable'] flex w-full flex-col gap-2 text-stone-600">
-          {history?.map((challenge, key) => (
+          {history?.slice(0, 2).map((challenge, key) => (
             <Link to={`/mypage/historydetail/${challenge.challenge_id}`} key={key} className="text-black no-underline">
               <ListComponent3 history={challenge} scoreNum={scoreNum} challenge_name={challenge.challenge_name} />
             </Link>

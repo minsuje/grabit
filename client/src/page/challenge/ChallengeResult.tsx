@@ -51,6 +51,7 @@ export default function ChallengeResult() {
       })
       .then((response) => {
         setCurrentScore(response.data.userInfo[0].score_num);
+        console.log('mypage >>>>>', response);
       })
       .catch((error) => {
         console.error('사용자 정보 불러오기 오류', error);
@@ -59,6 +60,8 @@ export default function ChallengeResult() {
 
   // 챌린지 상세 정보 보기 점수 업데이트
   useEffect(() => {
+    const userid_num = localStorage.getItem('userid_num');
+
     privateApi
       .post(`/challengeDetail/${challenge_id}`, {
         winner_userid_num: info.winner,
@@ -66,14 +69,40 @@ export default function ChallengeResult() {
         challenge_id,
       })
       .then((response) => {
-        setChallengerInfo(response.data.challengerInfo);
-        setChallengeInfo(response.data.challengeInfo);
+        console.log(response.data);
+        const isWinner = response.data.challengeInfo.winner_userid_num.includes(Number(userid_num));
+        let scoreChange = isWinner ? 100 : -50;
+
+        console.log(isWinner);
+        console.log(scoreChange);
+
+        setShowConfetti(isWinner);
+        setWinMessage(
+          <span style={{ color: isWinner ? 'blue' : 'red' }}>{isWinner ? '승리하셨습니다!' : '패배하셨습니다.'}</span>,
+        );
+
+        const targetScore = currentScore + scoreChange;
+        // 점수를 점진적으로 변경하는 로직
+        const adjustScore = () => {
+          setCurrentScore((prevScore) => {
+            if (scoreChange > 0 ? prevScore < targetScore : prevScore > targetScore) {
+              // 점수 증가 또는 감소 조건에 따라 1씩 증가 또는 감소
+              return prevScore + (scoreChange > 0 ? 1 : -1);
+            } else {
+              clearInterval(intervalId); // 목표 점수에 도달하면 중단
+              return targetScore; // 목표 점수 설정
+            }
+          });
+        };
+
+        const intervalId = setInterval(adjustScore, 40);
+
+        return () => clearInterval(intervalId);
       })
       .catch((error) => {
         console.error('점수업데이트에러', error);
       });
-  }, []);
-
+  }, [challenge_id, info.winner, info.totalMoney]);
   // 티어 결과 숨기기 함수
   const handleHideTierResult = () => {
     setShowTierResult(false);
@@ -101,47 +130,46 @@ export default function ChallengeResult() {
     }
   }, [currentScore]);
 
-  useEffect(() => {
-    if (challengerInfo.length > 0 && typeof challengerInfo[0]?.score === 'number') {
-      const scoreChange = challengerInfo[0].score; // 획득 점수
-      const targetScore = currentScore + scoreChange; // 목표 점수 계산
+  // useEffect(() => {
+  //   if (challengerInfo.length > 0 && typeof challengerInfo[0]?.score === 'number') {
+  //     const scoreChange = challengerInfo[0].score; // 획득 점수
+  //     const targetScore = currentScore + scoreChange; // 목표 점수 계산
 
-      const intervalId = setInterval(() => {
-        setCurrentScore((prevScore) => {
-          // 점수 증가
-          if (scoreChange > 0 && prevScore < targetScore) {
-            return prevScore + 1;
-          }
-          // 점수 감소
-          else if (scoreChange < 0 && prevScore > targetScore) {
-            return prevScore - 1;
-          }
-          // 목표 점수에 도달하거나, 그 외의 경우 인터벌 종료
-          clearInterval(intervalId);
-          return targetScore; // 목표 점수 설정으로 정확한 값 보장
-        });
-      }, 50); // 10ms 마다 실행
+  //     const intervalId = setInterval(() => {
+  //       setCurrentScore((prevScore) => {
+  //         // 점수 증가
+  //         if (scoreChange > 0 && prevScore < targetScore) {
+  //           return prevScore + 1;
+  //         }
+  //         // 점수 감소
+  //         else if (scoreChange < 0 && prevScore > targetScore) {
+  //           return prevScore - 1;
+  //         }
+  //         // 목표 점수에 도달하거나, 그 외의 경우 인터벌 종료
+  //         clearInterval(intervalId);
+  //         return targetScore; // 목표 점수 설정으로 정확한 값 보장
+  //       });
+  //     }, 50); // 10ms 마다 실행
 
-      return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 정리
-    }
-  }, [challengerInfo]);
+  //     return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 인터벌 정리
+  //   }
+  // }, [challengerInfo]);
 
-  // ReactCanvasConfetti 효과
-  useEffect(() => {
-    if (challengerInfo.length > 0 && typeof challengerInfo[0]?.score === 'number') {
-      const scoreChange = challengerInfo[0].score;
+  // useEffect(() => {
+  //   if (challengerInfo.length > 0 && typeof challengerInfo[0]?.score === 'number') {
+  //     const scoreChange = challengerInfo[0].score;
 
-      if (scoreChange === 100) {
-        setShowConfetti(true);
-        // 승리 메시지에 녹색 적용
-        setWinMessage(<span style={{ color: 'blue' }}>승리하셨습니다!</span>);
-      } else {
-        setShowConfetti(false);
-        // 패배 메시지에 빨간색 적용
-        setWinMessage(<span style={{ color: 'red' }}>패배하셨습니다.</span>);
-      }
-    }
-  }, [challengerInfo]);
+  //     if (scoreChange === 100) {
+  //       setShowConfetti(true);
+  //       // 승리 메시지에 파란색 적용
+  //       setWinMessage(<span style={{ color: 'blue' }}>승리하셨습니다!</span>);
+  //     } else {
+  //       setShowConfetti(false);
+  //       // 패배 메시지에 빨간색 적용
+  //       setWinMessage(<span style={{ color: 'red' }}>패배하셨습니다.</span>);
+  //     }
+  //   }
+  // }, [challengerInfo]);
 
   function handleNavigate() {
     navigate('/main');

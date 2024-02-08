@@ -36,6 +36,7 @@ export default function ListComponent3() {
     privateApi
       .get(`/history`)
       .then((response) => {
+        console.log(response);
         const detail = response.data.history.find((item: any) => item.challenge_id.toString() === userid_num);
         setChallengeDetail(detail);
         setRecord(response.data);
@@ -58,6 +59,7 @@ export default function ListComponent3() {
     ? format(new Date(challengeDetail.authentication_end_date), 'yyyy-MM-dd')
     : '';
 
+  console.log(opponent);
   return (
     <div className="flex flex-col gap-8">
       <div>
