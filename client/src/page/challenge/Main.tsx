@@ -93,25 +93,27 @@ export default function Main() {
       {endedMyChallenge.length !== 0 && (
         <>
           <h1>완료된 챌린지</h1>
-          {endedMyChallenge.map((challenge: Challenge, index) => {
-            return (
-              <Link
-                key={index}
-                to={`/challengeInProgress/${challenge.challenge_id}`}
-                className="text-black no-underline"
-              >
-                <div>
-                  <div className="bg-gray-white flex flex-col gap-6 rounded-xl p-6 shadow-lg shadow-grabit-600/10">
-                    <div className="flex items-center justify-center">
-                      <h2 className="flex w-full">{challenge.challenge_name}</h2>
-                      <p className="w-28 text-stone-500">챌린지 완료</p>
+          <div className="flex flex-col gap-4">
+            {endedMyChallenge.map((challenge: Challenge, index) => {
+              return (
+                <Link
+                  key={index}
+                  to={`/challengeInProgress/${challenge.challenge_id}`}
+                  className="text-black no-underline"
+                >
+                  <div>
+                    <div className="bg-gray-white flex flex-col gap-6 rounded-xl p-6 shadow-lg shadow-grabit-600/10">
+                      <div className="flex items-center justify-center">
+                        <h2 className="flex w-full">{challenge.challenge_name}</h2>
+                        <p className="w-28 text-stone-500">챌린지 완료</p>
+                      </div>
+                      <Button>결과 확인하기</Button>
                     </div>
-                    <Button>결과 확인하기</Button>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
         </>
       )}
 

@@ -23,7 +23,7 @@ export default function ChallengeResult() {
   const [challengerInfo] = useState<challengerInfo | any>([]);
   const [challengeInfo] = useState<Challenge>();
   const [showConfetti, setShowConfetti] = useState<boolean>(false); // 컨페티 표시 상태 추가
-  const [winMessage, setWinMessage] = useState<React.ReactNode>('');
+  // const [winMessage, setWinMessage] = useState<React.ReactNode>('');
 
   interface challengerInfo {
     score: number;
@@ -70,15 +70,15 @@ export default function ChallengeResult() {
       .then((response) => {
         console.log(response.data);
         const isWinner = response.data.challengeInfo.winner_userid_num.includes(Number(userid_num));
-        let scoreChange = isWinner ? 100 : -50;
+        const scoreChange = isWinner ? 100 : -50;
 
         console.log(isWinner);
         console.log(scoreChange);
 
         setShowConfetti(isWinner);
-        setWinMessage(
-          <span style={{ color: isWinner ? 'blue' : 'red' }}>{isWinner ? '승리하셨습니다!' : '패배하셨습니다.'}</span>,
-        );
+        // setWinMessage(
+        //   <span style={{ color: isWinner ? 'blue' : 'red' }}>{isWinner ? '승리하셨습니다!' : '패배하셨습니다.'}</span>,
+        // );
 
         const targetScore = currentScore + scoreChange;
         // 점수를 점진적으로 변경하는 로직
@@ -190,7 +190,7 @@ export default function ChallengeResult() {
                 transition={{ duration: 5, times: [0, 0.2, 0.9, 1] }}
                 className="flex flex-col items-center justify-center text-white"
               >
-                <h2 className="text-white">{winMessage}</h2>
+                {isWinner ? <h2 className="text-white">승리</h2> : <h2 className="text-white">패배</h2>}
                 <h2 className="text-white">티어</h2>
                 <h3>{tierName}</h3>
                 <img src={tierImageSrc} alt={`${tierName} 티어 이미지`} className="tier-image w-40 rounded-full" />
