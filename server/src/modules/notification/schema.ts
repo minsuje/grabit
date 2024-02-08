@@ -27,7 +27,5 @@ export const notification = pgTable('notification', {
   type: varchar('type', { length: 50 }).notNull(),
   message: jsonb('message').$type<MyObjectType>(),
   is_confirm: boolean('is_confirm').notNull(),
-  created_at: timestamp('created_at', { withTimezone: true }).default(
-    new Date(),
-  ),
+  created_at: timestamp('created_at', { withTimezone: true }).defaultNow(),
 });
