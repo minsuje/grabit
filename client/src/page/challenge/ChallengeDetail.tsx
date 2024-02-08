@@ -1,8 +1,7 @@
 import { Label } from '@/components/ui/label';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { RootState } from '@/store/store';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -41,6 +40,7 @@ function ChallengeDetail() {
     privateApi
       .patch(`/challengeAccept/${challenge_id}`)
       .then((response): void => {
+        // console.log(response.data);
         if (response.data.msg) {
           alert(response.data.msg);
         } else {
@@ -64,7 +64,6 @@ function ChallengeDetail() {
   useEffect(() => {
     privateApi
       .get(`/challengeDetail/${challenge_id}`)
-
       .then((response): void => {
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);

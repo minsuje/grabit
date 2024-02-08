@@ -10,6 +10,7 @@ import { ko } from 'date-fns/locale';
 import { format } from 'date-fns';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function ChallengeAccept() {
   const dispatch = useDispatch();
@@ -93,13 +94,22 @@ function ChallengeAccept() {
           <div className="flex items-center gap-2">
             {challengers.map((challenger: users, idx) => {
               return (
-                <div className="flex items-center gap-2 " key={idx}>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
+                <motion.div
+                  className="flex w-full flex-col items-center gap-2"
+                  key={idx}
+                  initial={{ opacity: 0, y: -100 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <Avatar className="flex h-16 w-16 flex-col">
+                    <AvatarImage
+                      src={challenger.profile_img ? challenger.profile_img : '/grabit_profile.png'}
+                      alt="@shadcn"
+                      className="flex"
+                    />
+                    <AvatarFallback className="flex">CN</AvatarFallback>
                   </Avatar>
-                  <span>{challenger.nickname}</span>
-                </div>
+                  <span className="text-md font-semibold text-stone-500">{challenger.nickname}</span>
+                </motion.div>
               );
             })}
           </div>
