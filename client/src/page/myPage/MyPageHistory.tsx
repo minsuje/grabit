@@ -4,7 +4,7 @@ export default function ListComponent3() {
   return (
     <div>
       <div>
-        <h1>히스토리</h1>
+        <h1>히스토리 상세</h1>
       </div>
       <div className="w-100 rounded-lg bg-gray-200  p-6 shadow-md">
         <div className="flex justify-between">

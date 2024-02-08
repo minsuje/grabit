@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
-
 import { useNavigate, useParams } from 'react-router-dom';
 import ReactCanvasConfetti from '@/components/ReactCanvasConfetti';
 import '@/App.css';
@@ -21,8 +20,8 @@ export default function ChallengeResult() {
   const [tierImageSrc, setTierImageSrc] = useState<string>('');
   const [showTierResult, setShowTierResult] = useState<boolean>(true);
   const { challenge_id } = useParams<any>();
-  const [challengerInfo, setChallengerInfo] = useState<challengerInfo | any>([]);
-  const [challengeInfo, setChallengeInfo] = useState<Challenge>();
+  const [challengerInfo] = useState<challengerInfo | any>([]);
+  const [challengeInfo] = useState<Challenge>();
   const [showConfetti, setShowConfetti] = useState<boolean>(false); // 컨페티 표시 상태 추가
   const [winMessage, setWinMessage] = useState<React.ReactNode>('');
 

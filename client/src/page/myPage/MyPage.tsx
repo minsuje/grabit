@@ -301,7 +301,7 @@ export default function MyPage() {
       <div className="friend flex flex-col items-center justify-center gap-4 ">
         <div className="flex w-full items-center">
           <h2 className="font-['SUITE Variable'] w-full text-2xl">히스토리</h2>
-          <Link to={`/mypage/historydetail/${userid_num}`}>
+          <Link to={`/mypage/history/${userid_num}`}>
             <Button variant={'secondary'} className="font-bold">
               전체보기
             </Button>

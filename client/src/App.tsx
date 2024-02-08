@@ -96,7 +96,7 @@ function AnimatedRoutes() {
           <Route path="/mypage/friend" element={<Friend />} />
           <Route path="/friend/:userid" element={<MyPageFriendDetail />} />
           <Route path="/mypage/mypagefrienddetail" element={<MyPageFriendDetail />} />
-          <Route path="/mypage/history" element={<MyPageHistory />} />
+          <Route path="/mypage/history/:userid_num" element={<MyPageHistory />} />
           <Route path="/mypage/historydetail/:userid_num" element={<MyPageHistoryDetail />} />
           <Route path="/payment" element={<Payment price={price} setPrice={setPrice} />} />
           <Route path="/checkout" element={<CheckoutPages price={price} />} />
