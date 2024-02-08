@@ -47,6 +47,10 @@ export default function CheckoutSuccess() {
     navigate('/mypage');
   }
 
+  setTimeout(() => {
+    setIsConfirmed(true);
+  }, 2000);
+
   return (
     <div className="wrapper container h-screen w-full">
       {isConfirmed ? (
@@ -82,7 +86,7 @@ export default function CheckoutSuccess() {
             <img src="https://static.toss.im/lotties/loading-spot-apng.png" width="120" height="120" />
             <h2 className="title text-center">결제 요청에 성공했습니다.</h2>
           </div>
-          <Cta text={'결제 완료'} onclick={confirmPayment} />
+          {/* <Cta text={'결제 완료'} onclick={confirmPayment} /> */}
         </div>
       )}
     </div>

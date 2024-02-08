@@ -80,10 +80,10 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="mt-20 flex w-full flex-col items-center justify-center">
-        <h1 className="w-full">로그인</h1>
-        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+    <div className="flex h-full w-full items-center justify-center">
+      <form className="flex h-full w-full flex-col items-center justify-center">
+        <div className="flex w-full max-w-sm flex-col items-center gap-4">
+          <h1 className="mb-10 w-full text-center">로그인</h1>
           <Label className="flex w-full" htmlFor="username">
             아이디
           </Label>
@@ -106,15 +106,22 @@ export default function Login() {
             placeholder="비밀번호"
             className="flex"
             value={password}
+            autoComplete="off"
             onChange={(e) => setPassword(e.target.value)}
           />
           {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
         </div>
         <br />
-        <Button variant="default" className="w-full max-w-sm" onClick={handleLogin} disabled={!userid || !password}>
+        <Button
+          type="button"
+          variant="default"
+          className="w-full max-w-sm"
+          onClick={handleLogin}
+          disabled={!userid || !password}
+        >
           로그인
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

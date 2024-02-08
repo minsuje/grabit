@@ -1,7 +1,9 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 function AnimatedRootRoutes() {
+  const location = useLocation();
+
   return (
     <div>
       <motion.div
