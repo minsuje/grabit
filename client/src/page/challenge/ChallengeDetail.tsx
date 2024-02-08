@@ -155,7 +155,7 @@ function ChallengeDetail() {
         )}
 
       {challengeDetail?.is_public && challengers.length == 4 && (
-        <Cta text={'참가하기'} disabled onclick={() => participate} />
+        <Cta text={'인원초과'} disabled onclick={() => participate} />
       )}
     </div>
   );

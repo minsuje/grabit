@@ -1,17 +1,15 @@
 import { ListComponent1 } from '@/components/ComponentSeong';
 import { Link } from 'react-router-dom';
-
-import { ListComponentWithoutButton } from '@/components/PreChallenge';
-
+import { ListComponentWithoutButton, ListComponentWithButton } from '@/components/PreChallenge';
 import { privateApi } from '@/api/axios';
-import { RootState } from '@/store/store';
 import { useEffect, useState } from 'react';
 import { Challenge } from '@/types/types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 function ChallengeList() {
-  const { userid_num } = useSelector((state: RootState) => state.login);
+  // const { userid_num } = useSelector((state: RootState) => state.login);
+  const userid_num = localStorage.getItem('userid_num');
 
   const dispatch = useDispatch();
 
@@ -67,9 +65,13 @@ function ChallengeList() {
           return (
             <>
               {Number(challenge.userid_num) === Number(userid_num) ? (
-                <ListComponentWithoutButton challenge={challenge} />
+                <>
+                  <ListComponentWithButton challenge={challenge} />
+                </>
               ) : (
-                <ListComponentWithoutButton challenge={challenge} />
+                <>
+                  <ListComponentWithoutButton challenge={challenge} />
+                </>
               )}
             </>
           );
