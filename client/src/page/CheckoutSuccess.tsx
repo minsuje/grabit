@@ -1,5 +1,5 @@
 // import axios from '@/api/axios';
-import axios, { privateApi } from '@/api/axios';
+// import axios, { privateApi } from '@/api/axios';
 import Cta from '@/components/Cta';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -8,40 +8,40 @@ export default function CheckoutSuccess() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const paymentKey = searchParams.get('paymentKey');
+  // const paymentKey = searchParams.get('paymentKey');
   const orderId = searchParams.get('orderId');
   const amount = searchParams.get('amount');
 
-  async function confirmPayment() {
-    // TODO: API를 호출해서 서버에게 paymentKey, orderId, amount를 넘겨주세요.
-    // 서버에선 해당 데이터를 가지고 승인 API를 호출하면 결제가 완료됩니다.
-    // https://docs.tosspayments.com/reference#%EA%B2%B0%EC%A0%9C-%EC%8A%B9%EC%9D%B8
-    await axios({
-      url: '/checkout/confirm',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify({
-        paymentKey,
-        orderId,
+  // async function confirmPayment() {
+  //   // TODO: API를 호출해서 서버에게 paymentKey, orderId, amount를 넘겨주세요.
+  //   // 서버에선 해당 데이터를 가지고 승인 API를 호출하면 결제가 완료됩니다.
+  //   // https://docs.tosspayments.com/reference#%EA%B2%B0%EC%A0%9C-%EC%8A%B9%EC%9D%B8
+  //   await axios({
+  //     url: '/checkout/confirm',
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     data: JSON.stringify({
+  //       paymentKey,
+  //       orderId,
 
-        amount,
-      }),
-    }).then((res) => {
-      if (res) {
-        setIsConfirmed(true);
-      }
-    });
-    await privateApi({
-      url: '/updateMoney',
-      method: 'POST',
+  //       amount,
+  //     }),
+  //   }).then((res) => {
+  //     if (res) {
+  //       setIsConfirmed(true);
+  //     }
+  //   });
+  //   await privateApi({
+  //     url: '/updateMoney',
+  //     method: 'POST',
 
-      data: {
-        amount: amount,
-      },
-    });
-  }
+  //     data: {
+  //       amount: amount,
+  //     },
+  //   });
+  // }
 
   function handleNavigate() {
     navigate('/mypage');
