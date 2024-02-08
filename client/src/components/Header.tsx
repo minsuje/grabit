@@ -54,13 +54,14 @@ function Header() {
         // const confirm = response.data.filter((alarm: challengeAlarmList) => {
         //   return alarm.is_confirm === true;
         // });
-        const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
-          return alarm.is_confirm === false;
-        });
-        // setAlarmConfirm(confirm);
-        setAlarmNonConfirm(nonConfirm);
-        if (response.data.msg) {
-          // setIsAlarm(false);
+        if (response.data.length > 0) {
+          const nonConfirm = response.data.filter((alarm: challengeAlarmList) => {
+            return alarm.is_confirm === false;
+          });
+          setAlarmNonConfirm(nonConfirm);
+          if (response.data.msg) {
+            // setIsAlarm(false);
+          }
         }
       })
       .catch((error) => {

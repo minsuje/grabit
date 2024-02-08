@@ -35,18 +35,20 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
   }
 
   return (
-    <div key={notification_id}>
-      <div
-        className={
-          isConfirm
-            ? 'flex flex-col gap-3 rounded-2xl bg-white p-6 opacity-40 shadow-lg shadow-grabit-600/10'
-            : 'flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10 '
-        }
-      >
-        <div className="flex justify-between">
-          <p className="rounded-xl bg-grabit-600 px-2 py-[1.5px] text-center text-sm text-white">{type}</p>
+    <Link
+      to={link}
+      className={
+        isConfirm
+          ? 'flex flex-col gap-3 rounded-2xl bg-white p-6 opacity-40 shadow-lg shadow-grabit-600/10'
+          : 'flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10 '
+      }
+    >
+      <div className="flex justify-between">
+        <p className="rounded-full bg-grabit-100 px-3 py-2 text-center text-sm font-extrabold text-grabit-700">
+          {type}
+        </p>
 
-          {/* {button ? (
+        {/* {button ? (
             <Cross1Icon
               className="text-grabit-6ㄴ00 h-4 w-4 hover:cursor-pointer"
               onClick={() => {
@@ -54,41 +56,37 @@ function AlarmList({ isConfirm, notification_id, link, type, content, time }: Al
               }}
             />
           ) : null} */}
-        </div>
-
-        {link ? (
-          <Link to={link} className="text-black no-underline">
-            <p
-              onClick={() => {
-                if (isConfirm) {
-                  return;
-                } else {
-                  deleteNoti(notification_id);
-                }
-              }}
-            >
-              {content}
-            </p>
-          </Link>
-        ) : (
-          <p
-            className="hover:cursor-pointer"
-            onClick={() => {
-              if (isConfirm) {
-                return;
-              } else {
-                deleteNoti(notification_id);
-              }
-            }}
-          >
-            {content}
-          </p>
-        )}
-
-        {/*  */}
-        <p className="text-grabit-400">{createTime}</p>
       </div>
-    </div>
+
+      {link ? (
+        <div
+          onClick={() => {
+            if (isConfirm) {
+              return;
+            } else {
+              deleteNoti(notification_id);
+            }
+          }}
+        >
+          {content}
+        </div>
+      ) : (
+        <div
+          className="hover:cursor-pointer"
+          onClick={() => {
+            if (isConfirm) {
+              return;
+            } else {
+              deleteNoti(notification_id);
+            }
+          }}
+        >
+          {content}
+        </div>
+      )}
+
+      <p className="text-grabit-400">{createTime}</p>
+    </Link>
   );
 }
 
