@@ -132,6 +132,7 @@ export class ChallengeController {
       secret: process.env.JWT_SECRET_KEY,
     });
 
+    console.log('winner > ', winner);
     const userid_num = decodedUserInfo.userid_num;
     const challengerInfo = req.file;
 
