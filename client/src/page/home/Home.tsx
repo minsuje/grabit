@@ -39,7 +39,7 @@ export default function Home() {
           <img src="/grabit_logo.svg" alt="" width={160} />
         </div>
         {/* <Button onClick={handleLogin}>임시 로그인</Button> */}
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-4 p-8">
+        <div className="fixed bottom-0 left-0 right-0 flex flex-col gap-4 p-8">
           <Link to="/login" className="">
             <Button variant="default" className="w-full">
               로그인

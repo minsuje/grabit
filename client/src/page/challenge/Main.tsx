@@ -8,6 +8,8 @@ import { Challenge } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import HotChallenge from '@/components/HotChallenge';
+import { FaPlus } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -52,39 +54,40 @@ export default function Main() {
 
   return (
     <div className="my-8 flex flex-col gap-16">
-      <div className="ranking flex flex-col">
-        <h1 className="text-grabit-800">랭킹</h1>
-        <MainRanking />
-      </div>
-
-      <div className="today-mission flex flex-col gap-6">
-        <h1 className="text-grabit-800">오늘의 미션</h1>
-        {completed === 'none' ? (
-          <Link to={`/challengeDaily`} className="text-black no-underline">
+      <div className="flex flex-col">
+        <div className="ranking flex flex-col">
+          <h1 className="text-grabit-800">랭킹</h1>
+          <MainRanking />
+        </div>
+        <div className="today-mission flex flex-col gap-6">
+          <h1 className="text-grabit-800">오늘의 미션</h1>
+          {completed === 'none' ? (
+            <Link to={`/challengeDaily`} className="text-black no-underline">
+              <div>
+                <div className="flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
+                  <div className="flex justify-between gap-2">
+                    <h2 className="text-grabit-600">{dailymission}</h2>
+                    {/* <p className=" text-grabit-400"></p> */}
+                  </div>
+                  <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
+                    10
+                    <span className="mb-[0px] align-top text-sm font-bold text-grabit-400">포인트</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ) : (
             <div>
               <div className="flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
-                <div className="flex justify-between gap-2">
-                  <h2 className="text-grabit-600">{dailymission}</h2>
-                  {/* <p className=" text-grabit-400"></p> */}
+                <div className="flex justify-between">
+                  <h2>{dailymission}</h2>
+                  <p>오늘 미션 완료!!</p>
                 </div>
-                <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
-                  10
-                  <span className="mb-[0px] align-top text-sm font-bold text-grabit-400">포인트</span>
-                </div>
+                <p>10P</p>
               </div>
             </div>
-          </Link>
-        ) : (
-          <div>
-            <div className="flex flex-col gap-2 rounded-2xl bg-white p-6 shadow-lg shadow-grabit-600/10">
-              <div className="flex justify-between">
-                <h2>{dailymission}</h2>
-                <p>오늘 미션 완료!!</p>
-              </div>
-              <p>10P</p>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {endedMyChallenge.length !== 0 && (
@@ -145,11 +148,17 @@ export default function Main() {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-3 p-3 text-center">
+      <motion.div
+        initial={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-6 right-6 rounded-full bg-grabit-700 p-4 text-center shadow-lg shadow-grabit-600/20"
+      >
         <Link to="/challengeCreate">
-          <Button>챌린지 생성</Button>
+          {/* <Button>챌린지 생성</Button> */}
+          <FaPlus color="white" size={28} />
         </Link>
-      </div>
+      </motion.div>
     </div>
   );
 }
