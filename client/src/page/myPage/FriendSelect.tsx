@@ -27,7 +27,7 @@ function FriendSelect() {
   };
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '친구 선택', backPath: `-1` }));
+    dispatch(setHeaderInfo({ title: '친구 선택', backPath: -1 }));
   }, [dispatch]);
 
   const userid_num = Number(localStorage.getItem('userid_num'));

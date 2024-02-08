@@ -34,7 +34,7 @@ export default function MyPageFriendDetail() {
   const userid_num = Number(localStorage.getItem('userid_num'));
 
   useEffect(() => {
-    dispatch(setHeaderInfo({ title: '친구 상세', backPath: `/mypage/friend` }));
+    dispatch(setHeaderInfo({ title: '친구 상세', backPath: -1 }));
   }, [dispatch]);
 
   useEffect(() => {
