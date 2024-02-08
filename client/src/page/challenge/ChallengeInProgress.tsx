@@ -140,8 +140,8 @@ function ChallengeInProgress() {
     const winnerArr: number[] = [];
     for (let i = 0; i < 4; i++) {
       if (tab[i]) {
-        resultArr.push({ userid_num: tabId[i], nickname: tab[i], Authcount: UrlGroup[i].length });
-        if (UrlGroup[i].length === totalAuthCount) {
+        resultArr.push({ userid_num: tabId[i], nickname: tab[i], Authcount: totalAuthCount });
+        if (resultArr[i].Authcount === totalAuthCount) {
           winnerArr.push(tabId[i]);
         }
       }
@@ -150,7 +150,7 @@ function ChallengeInProgress() {
     dispatch(setTotalAuth(totalAuthCount));
     dispatch(setResult(resultArr));
     dispatch(setWinner(winnerArr));
-    dispatch(setTotalMoney(challengeDetail.goal_money * challengers.length));
+    dispatch(setTotalMoney(challengeDetail.goal_money * tabId.length));
 
     const Dday = differenceInCalendarDays(challengeDetail.authentication_end_date, new Date());
 
