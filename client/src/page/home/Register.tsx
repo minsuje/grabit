@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 
 import { useEffect, useState } from 'react';
+import Cta from '@/components/Cta';
 
 interface RegisterForm {
   name: string;
@@ -122,8 +123,10 @@ export default function Register() {
             profile_img: fileName,
           },
         });
+        alert('회원가입이 완료되었습니다!');
         navigate('/login');
       } catch (err) {
+        alert('회원가입 실패');
         console.error('회원가입 실패:', err);
       }
 
@@ -158,40 +161,53 @@ export default function Register() {
   return (
     <div className="flex justify-center">
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        // onSubmit={handleSubmit(onSubmit)}
         className="mt-20 flex max-w-sm flex-col items-center justify-center gap-4"
       >
         <h1>회원가입</h1>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
-          <Label htmlFor="name">이름</Label>
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="name">
+            이름
+          </Label>
           <Input id="name" {...register('name')} />
           {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
-          <Label htmlFor="userid">아이디</Label>
+        <div className="mt-10 flex  w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="userid">
+            아이디
+          </Label>
           <Input id="userid" {...register('userid')} />
           {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
-          <Label htmlFor="profile_img">프로필 사진</Label>
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="profile_img">
+            프로필 사진
+          </Label>
           <Input type="file" id="profile_img" onChange={handleFile} />
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
-          <Label htmlFor="nickname">닉네임</Label>
+        <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="nickname">
+            닉네임
+          </Label>
           <Input id="nickname" {...register('nickname')} />
           {errors.nickname && <p className="text-xs text-red-500">{errors.nickname.message}</p>}
         </div>
-        <div className="mt-10 flex grid w-full max-w-sm items-center gap-4">
-          <Label htmlFor="password">비밀번호</Label>
+        <div className="mt-10 flex  w-full max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="password">
+            비밀번호
+          </Label>
           <Input type="password" id="password" {...register('password')} />
           {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
         </div>
-        <div className="gap-≈2 mt-10 flex grid w-full max-w-sm items-center">
-          <Label htmlFor="confirmPassword">비밀번호 확인</Label>
+        <div className="mt-10 flex w-full  max-w-sm flex-col items-center gap-4">
+          <Label className="flex w-full" htmlFor="confirmPassword">
+            비밀번호 확인
+          </Label>
           <Input type="password" id="confirmPassword" {...register('confirmPassword')} />
           {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
         </div>
-        <Button type="submit">회원가입</Button>
+        {/* <Button type="submit">회원가입</Button> */}
+        <Cta text={'회원가입'} onclick={handleSubmit(onSubmit)} />
       </form>
     </div>
   );
