@@ -17,7 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @UseGuards(JwtAuthGuard)
-@Controller('/')
+@Controller('/api')
 export class ChallengeController {
   constructor(
     private ChallengeService: ChallengeService,

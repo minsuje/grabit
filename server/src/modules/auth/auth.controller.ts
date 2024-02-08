@@ -28,7 +28,7 @@ import axios from 'axios';
 
 let data;
 
-@Controller('/')
+@Controller('/api')
 export class AuthController {
   constructor(
     private authService: AuthService,
