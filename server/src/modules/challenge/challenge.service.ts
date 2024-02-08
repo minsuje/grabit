@@ -145,24 +145,25 @@ export class ChallengeService {
 
   // 챌린지 수락
   challengeAccept = async (userid_num: number, challenge_id: number) => {
-    // 챌린지 생성하는 유저 정보 찾아오기
+    // 챌린지 참가하는 유저 정보 찾아오기
     let userMoney: any = await db
       .select({ carrot: users.carrot })
       .from(users)
       .where(eq(users.userid_num, userid_num));
     userMoney = userMoney[0].carrot;
-    const challengeWait: any = await db
+    let challengeWait: any = await db
       .select({
         goal_money: challenge.goal_money,
         challenger_userid_num: challenge.challenger_userid_num,
       })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
+    challengeWait = challengeWait[0];
 
-    if (userMoney >= challengeWait[0].goal_money) {
-      for (let i = 0; i < challengeWait.length; i++) {
-        if (challengeWait[i].userid_num === userid_num) {
-          challengeWait[i].isAccept = true;
+    if (userMoney >= challengeWait.goal_money) {
+      for (let i = 0; i < challengeWait.challenger_userid_num.length; i++) {
+        if (challengeWait.challenger_userid_num[i].userid_num === userid_num) {
+          challengeWait.challenger_userid_num[i].isAccept = true;
         }
       }
       // 수락하면 유저 테이블에서 money 수정하고 , account 기록 남겨주기
@@ -170,14 +171,14 @@ export class ChallengeService {
       const money = await db
         .update(users)
         .set({
-          carrot: sql`${users.carrot} - ${challengeWait[0].goal_money}`,
+          carrot: sql`${users.carrot} - ${challengeWait.goal_money}`,
         })
         .where(eq(users.userid_num, userid_num));
 
       const accountInfo = await db.insert(account).values({
         transaction_description: 'challenge/participation',
         transaction_type: 'carrot/withdraw',
-        transaction_amount: challengeWait[0].goal_money,
+        transaction_amount: challengeWait.goal_money,
         status: false,
         userid_num: userid_num,
       });
@@ -185,7 +186,7 @@ export class ChallengeService {
       return await db
         .update(challenge)
         .set({
-          challenger_userid_num: challengeWait[0].challenger_userid_num,
+          challenger_userid_num: challengeWait.challenger_userid_num,
         })
         .where(eq(challenge.challenge_id, challenge_id));
     } else
