@@ -1087,7 +1087,8 @@ export class ChallengeService {
       .from(users)
       .where(eq(users.userid_num, userid_num));
     console.log('현재 점수 >> ', nowScore[0].score_num);
-    return { challengeInfo, challengerInfo, nowScore };
+    const getScore = nowScore[0].score_num;
+    return { challengeInfo, challengerInfo, getScore };
   }
 
   // challenge 테이블에서 authentication_start_date로 부터 30일 지났으면 삭제
