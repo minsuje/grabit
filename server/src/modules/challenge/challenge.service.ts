@@ -775,11 +775,15 @@ export class ChallengeService {
   ) {
     // "resultConfirm : true"로 바꿔주기
     let challengeInfo: any;
+
+    // challenge userid num( 참가자들 )
     let preConfirmData: any = await db
       .select({ challenger_userid_num: challenge.challenger_userid_num })
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
     preConfirmData = preConfirmData[0].challenger_userid_num;
+
+    console.log('preConfirmData>>>> ', preConfirmData);
     let confirmData: any = [];
     for (let i = 0; i < preConfirmData.length; i++) {
       if (preConfirmData[i].userid_num === userid_num) {
@@ -792,6 +796,7 @@ export class ChallengeService {
           ...preConfirmData[i],
         });
     }
+    console.log('confirm >> ', confirmData);
     // 챌린지에 대한 정보 조회
     challengeInfo = await db
       .select()
@@ -799,21 +804,34 @@ export class ChallengeService {
       .where(eq(challenge.challenge_id, challenge_id));
     challengeInfo = challengeInfo[0];
 
+    console.log('preConfirm > > ', preConfirmData[0]);
     let user: any = {};
     for (let i = 0; i < preConfirmData.length; i++) {
       user = preConfirmData[i];
       if (user.userid_num === userid_num) {
-        if (user.resultConfirm === false) {
+        // 참가 결과를 확인 안했다면
+        // if (user.resultConfirm === false) {
+        //   let updateConfirm = await db
+        //     .update(challenge)
+        //     .set({ challenger_userid_num: confirmData })
+        //     .where(eq(challenge.challenge_id, challenge_id))
+        //     .returning();
+        if (user.resultConfirm === true) {
           let updateConfirm = await db
             .update(challenge)
             .set({ challenger_userid_num: confirmData })
             .where(eq(challenge.challenge_id, challenge_id))
             .returning();
 
+          console.log(winner);
           let winners = winner.winner_userid_num;
+
+          console.log('winners >', winners);
 
           // 총 상금
           let totalMoney = winner.total_money;
+
+          console.log('total Money > ', totalMoney);
 
           // 몇명이 참가했는지 찾기
           let totalPeople: any = await db
@@ -823,8 +841,12 @@ export class ChallengeService {
           totalPeople = totalPeople[0].challenger_userid_num;
           totalPeople = totalPeople.length;
 
+          console.log('total people >>', totalPeople);
+
           // 1인당 제출한 금액
           let onePerson = totalMoney / totalPeople;
+
+          console.log('onePerson >', onePerson);
 
           // Check the user table money
           let checkMoney = await db
@@ -832,13 +854,18 @@ export class ChallengeService {
             .from(users)
             .where(eq(users.userid_num, userid_num));
 
+          console.log('check money > ', checkMoney);
+
           const userMoney = checkMoney[0].carrot;
+
+          console.log(userMoney);
 
           let win = 'none';
           let carrot: number;
 
           // 이긴 사람이 없을 때
           if (winners === undefined || winners.length === 0) {
+            console.log('이긴 사람이 없을 떄');
             win = 'none';
             const loseScore = await db.insert(score).values({
               userid_num: userid_num,
@@ -847,12 +874,29 @@ export class ChallengeService {
               score: -50,
             });
 
-            // 유저의 점수 감소 시키기
-            const addUserTable = await db
-              .update(users)
-              .set({ score_num: sql`${users.score_num} - 50` })
+            // 유저가 가진 점수 확인 하기
+            const checkScore = await db
+              .select({ score_num: users.score_num })
+              .from(users)
               .where(eq(users.userid_num, userid_num));
 
+            const myScore = checkScore[0].score_num;
+            console.log(myScore);
+
+            // 유저의 점수 감소 시키기 ( 50 이하면 0점으로 )
+            if (myScore > 50) {
+              const addUserTable = await db
+                .update(users)
+                .set({ score_num: sql`${users.score_num} - 50` })
+                .where(eq(users.userid_num, userid_num));
+            } else {
+              const addUserTable = await db
+                .update(users)
+                .set({ score_num: 0 })
+                .where(eq(users.userid_num, userid_num));
+            }
+
+            console.log('challengerInfo >', challengerInfo);
             // challengerInfo 내역 업데이트(캐럿 추가)
             for (let i = 0; i < challengerInfo.length; i++) {
               challengerInfo[i] = {
@@ -861,6 +905,7 @@ export class ChallengeService {
                 score: -50,
               };
             }
+            console.log('challengerInfo 2>', challengerInfo);
           } else {
             win = 'someone';
 
@@ -868,8 +913,10 @@ export class ChallengeService {
             const addWinner = await db
               .update(challenge)
               .set({ winner_userid_num: winners })
-              .where(eq(challenge.challenge_id, challenge_id));
+              .where(eq(challenge.challenge_id, challenge_id))
+              .returning();
 
+            console.log('winner > ', addWinner);
             // 3.3% 운영 수수료
             const companyCharge = totalMoney * 0.033;
 
@@ -929,13 +976,14 @@ export class ChallengeService {
               for (let i = 0; i < challengerInfo.length; i++) {
                 challengerInfo[i] = {
                   ...challengerInfo[i],
-                  carrot: challengeInfo.goal_money,
+                  carrot: originalMoney,
                   score: 100,
                 };
               }
             } else {
               let divMoney: any;
               if (amIWinner) {
+                console.log('모든 유저가 이기지 못함, 나는 이김');
                 // case 2. 모든 유저가 이기지 못했다. (but! 나는 이김 )
                 // 스코어 증가!
                 const addScoreTable = await db.insert(score).values({
@@ -969,6 +1017,16 @@ export class ChallengeService {
                   .where(eq(users.userid_num, userid_num));
               } else {
                 // case 3. 이긴 사람이 존재 한다. (but! 나는 짐)
+                console.log('이긴 사람 존재 하지만 나는 짐');
+
+                // 내 현재 점수
+                const checkScore = await db
+                  .select({ score_num: users.score_num })
+                  .from(users)
+                  .where(eq(users.userid_num, userid_num));
+
+                const myScore = checkScore[0].score_num;
+                console.log(myScore);
 
                 // score 감소
                 const loseScore = await db.insert(score).values({
@@ -977,11 +1035,19 @@ export class ChallengeService {
                   score_type: 'lose',
                   score: -50,
                 });
-                // 유저의 점수 감소 시키기
-                const addUserTable = await db
-                  .update(users)
-                  .set({ score_num: sql`${users.score_num} - 50` })
-                  .where(eq(users.userid_num, userid_num));
+
+                // 유저의 점수 감소 시키기 ( 50 이하면 0점으로 )
+                if (myScore > 50) {
+                  const addUserTable = await db
+                    .update(users)
+                    .set({ score_num: sql`${users.score_num} - 50` })
+                    .where(eq(users.userid_num, userid_num));
+                } else {
+                  const addUserTable = await db
+                    .update(users)
+                    .set({ score_num: 0 })
+                    .where(eq(users.userid_num, userid_num));
+                }
               }
               // challengerInfo 내역 업데이트(캐럿 추가)
               for (let i = 0; i < winners.length; i++) {
@@ -1006,12 +1072,21 @@ export class ChallengeService {
         }
       }
     }
+
     challengeInfo = await db
       .select()
       .from(challenge)
       .where(eq(challenge.challenge_id, challenge_id));
     challengeInfo = challengeInfo[0];
-    return { challengeInfo, challengerInfo };
+    console.log('challengeInfo', challengeInfo);
+    console.log('challengerInfo >>> ', challengerInfo);
+    // 현재 점수
+    const nowScore = await db
+      .select({ score_num: users.score_num })
+      .from(users)
+      .where(eq(users.userid_num, userid_num));
+    console.log('현재 점수 >> ', nowScore[0].score_num);
+    return { challengeInfo, challengerInfo, nowScore };
   }
 
   // challenge 테이블에서 authentication_start_date로 부터 30일 지났으면 삭제
