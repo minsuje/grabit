@@ -1,7 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-// import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -52,10 +52,6 @@ function ChallengeDetail() {
         console.error('ChallengeDetail에서 참가 axios 오류:', error);
       });
   };
-
-  function handleBack() {
-    navigate(-1);
-  }
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 정보', backPath: -1 }));
@@ -153,7 +149,7 @@ function ChallengeDetail() {
             challengeDetail.authentication_start_time + '시 ~ ' + challengeDetail.authentication_end_time + '시 '}
         </p>
       </div>
-      {/* <div className="text-center">
+      <div className="text-center">
         <Button
           onClick={() => {
             navigate(-1);
@@ -161,7 +157,7 @@ function ChallengeDetail() {
         >
           확인
         </Button>
-      </div> */}
+      </div>
 
       {challengeDetail?.is_public &&
         challengers.length < 4 &&
@@ -169,7 +165,8 @@ function ChallengeDetail() {
           <Cta text={'참가하기'} onclick={participate} />
         )}
 
-      {!challengeDetail?.is_public && <Cta text={'비공개 챌린지입니다'} onclick={handleBack} disabled />}
+      {/* {!challengeDetail?.is_public && <Cta text={'비공개 챌린지입니다'} onclick={handleBack} disabled />} */}
+      {/* <Cta text={'확인'} onclick={() => navigate(-1)} /> */}
 
       {challengeDetail?.is_public && challengers.length == 4 && (
         <Cta text={'인원초과'} disabled onclick={() => participate} />
