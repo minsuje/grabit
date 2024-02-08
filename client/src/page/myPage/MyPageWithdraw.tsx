@@ -7,13 +7,39 @@ import { Input } from '@/components/ui/input';
 import Cta from '@/components/Cta';
 import { useNavigate } from 'react-router-dom';
 
+interface UserInfo {
+  nickname: string;
+  score_num: number;
+  carrot: number;
+  userInfo: any;
+  id: number;
+}
+
 export default function MyPageWithdraw() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [money, setMoney] = useState<string>('');
+  const userid_num = localStorage.getItem('userid_num');
+  const [withdrawMoney, setWithdrawMoney] = useState<string>('');
   const [bank_num, setBank_num] = useState<string>('');
   const [bank_name, setBank_name] = useState<string>('');
   const [name, setName] = useState<string>('');
+  const [money, setMoney] = useState<number>(0);
+
+  // 닉네임 스코어 점수 돈
+  useEffect(() => {
+    privateApi
+      .get(`/myPage`, {
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') },
+      })
+      .then((response) => {
+        const userInfo: UserInfo = response.data.userInfo[0];
+
+        setMoney(userInfo?.carrot);
+      })
+      .catch((error) => {
+        console.error('사용자 정보 불러오기 오류', error);
+      });
+  }, [userid_num]);
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '출금 신청', backPath: `/mypage` }));
@@ -23,7 +49,7 @@ export default function MyPageWithdraw() {
     try {
       await privateApi
         .post('/requsetWithdraw', {
-          money,
+          money: withdrawMoney,
           bank_num,
           bank_name,
           name,
@@ -49,11 +75,18 @@ export default function MyPageWithdraw() {
           <h2>출금 금액</h2>
           <Input
             type="number"
-            name="money"
+            name="withdrawMoney"
             placeholder="금액입력"
-            value={money}
-            onChange={(e) => setMoney(e.target.value)}
+            value={withdrawMoney}
+            onChange={(e) => setWithdrawMoney(e.target.value)}
           />
+          <div className="flex items-center justify-center">
+            <span className="flex-initial text-sm">보유 캐럿</span>
+            <span className="flex flex-auto items-center justify-end gap-1 text-right font-bold text-grabit-600">
+              {money}
+              <span className="text-sm font-bold text-stone-400">캐럿</span>
+            </span>
+          </div>
           <p className="text-sm text-stone-400">출금 신청은 10,000캐럿부터 가능합니다</p>
         </div>
 

@@ -1,8 +1,8 @@
 import { Label } from '@/components/ui/label';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-// import { RootState } from '@/store/store';
+import { RootState } from '@/store/store';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,6 +21,7 @@ function ChallengeDetail() {
 
   const { challenge_id } = useParams();
   const [challengeDetail, setChallengeDetail] = useState<Challenge>();
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [challengers, setChallengers] = useState<users[]>([
     {
       userid_num: 1,
@@ -52,6 +53,10 @@ function ChallengeDetail() {
       });
   };
 
+  function handleBack() {
+    navigate(-1);
+  }
+
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 정보', backPath: -1 }));
   }, [dispatch]);
@@ -63,13 +68,14 @@ function ChallengeDetail() {
       .then((response): void => {
         setChallengeDetail(response.data.challengeDetail[0]);
         setChallengers(response.data.challengers);
+        setLoaded(true);
       })
       .catch((error): void => {
         console.error('ChallengeDetail에서 axios 오류:', error);
       });
   }, []);
 
-  return (
+  return loaded ? (
     <div className="flex flex-col gap-8">
       <div className="title flex flex-col">
         <Label className="w-fit rounded-md bg-grabit-200 px-3 py-2 font-semibold text-grabit-700">
@@ -87,7 +93,7 @@ function ChallengeDetail() {
 
         <div className="user-list flex flex-col gap-4">
           <div
-            className={`grid grid-cols-${challengers.length} items-start justify-center gap-4 break-all text-center`}
+            className={`grid grid-cols-${challengers?.length} items-start justify-center gap-4 break-all text-center`}
           >
             {challengers.map((challenger: users, idx) => {
               return (
@@ -148,7 +154,7 @@ function ChallengeDetail() {
             challengeDetail.authentication_start_time + '시 ~ ' + challengeDetail.authentication_end_time + '시 '}
         </p>
       </div>
-      <div className="text-center">
+      {/* <div className="text-center">
         <Button
           onClick={() => {
             navigate(-1);
@@ -156,7 +162,7 @@ function ChallengeDetail() {
         >
           확인
         </Button>
-      </div>
+      </div> */}
 
       {challengeDetail?.is_public &&
         challengers.length < 4 &&
@@ -164,10 +170,14 @@ function ChallengeDetail() {
           <Cta text={'참가하기'} onclick={participate} />
         )}
 
+      {!challengeDetail?.is_public && <Cta text={'비공개 챌린지입니다'} onclick={handleBack} disabled />}
+
       {challengeDetail?.is_public && challengers.length == 4 && (
         <Cta text={'인원초과'} disabled onclick={() => participate} />
       )}
     </div>
+  ) : (
+    <div>불러오는 중...</div>
   );
 }
 
