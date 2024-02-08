@@ -68,18 +68,26 @@ export class FriendService {
           is_friend,
         })
         .returning();
+
+      // 로그인한 유저 정보 조회
+      const userInfo = await db
+        .select({ nickname: users.nickname })
+        .from(users)
+        .where(eq(users.userid_num, userid));
+
+      // 상대 정보 조회
       const friendInfo = await db
         .select({ nickname: users.nickname, userid: users.userid })
         .from(users)
-        .where(eq(users.userid_num, newFriendRequest[0].userid_num));
+        .where(eq(users.userid_num, other_userid_num));
 
       await db.insert(notification).values({
         userid_num: other_userid_num,
         reference_id: newFriendRequest[0].friend_id,
         type: 'friend',
         message: {
-          friendName: friendInfo[0].nickname,
-          requestorName: friendInfo[0].userid,
+          friendName: userInfo[0].nickname,
+          requestorName: friendInfo[0].nickname,
         },
         is_confirm: false,
       });
