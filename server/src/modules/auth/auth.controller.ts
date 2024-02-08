@@ -40,6 +40,7 @@ export class AuthController {
   async LoginDto(@Res() res: Response, @Req() req: Request): Promise<any> {
     const token = JSON.stringify(req.user);
     const tokens = JSON.parse(token);
+
     const {
       loginToken,
       loginRefreshToken,
@@ -51,13 +52,12 @@ export class AuthController {
       validate,
     } = tokens;
 
-    let none = 'true';
-
-    if (tokens === 'none') {
-      none = 'none';
-    }
-
-    if (none !== 'none') {
+    if (
+      tokens.msg ===
+      '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.'
+    ) {
+      return res.send({ msg: tokens.msg });
+    } else {
       await res.setHeader(
         'Authorization',
         'Bearer ' + [loginToken, loginRefreshToken].join(' '),
@@ -94,11 +94,7 @@ export class AuthController {
         isLogin,
         validate,
       });
-    } else
-      return {
-        msg: '아이디 혹은 비밀번호가 일치하지 않습니다. 다시 한 번 확인해주세요.',
-      };
-    // return this.authService.loginUser(req.body);
+    }
   }
 
   @Get('/auth/kakao')
