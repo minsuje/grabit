@@ -1,8 +1,8 @@
 import { Label } from '@/components/ui/label';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { RootState } from '@/store/store';
+// import { RootState } from '@/store/store';
 import { privateApi } from '@/api/axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
