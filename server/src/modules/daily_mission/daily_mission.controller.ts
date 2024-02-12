@@ -13,7 +13,7 @@ import { DailyMissionService } from './daily_mission.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { JwtService } from '@nestjs/jwt';
 
-@Controller('/')
+@Controller('/api')
 export class DailyMissionController {
   constructor(
     private dailyMissionService: DailyMissionService,
