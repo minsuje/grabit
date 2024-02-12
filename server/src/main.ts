@@ -18,34 +18,33 @@ async function bootstrap() {
     // httpsOptions,
   });
 
-  app.enableCors();
-  //   {
-  //   origin: [
-  //     process.env.AWS_EC2_URL,
-  //     process.env.AWS_EC2_CLIENT,
-  //     'http://localhost:5173',
-  //     'https://localhost:5173',
-  //     'https://accounts.kakao.com',
-  //     'https://accounts.kakao.com/login',
-  //     'http://localhost:3000/auth/kakao',
-  //     'https://api.tosspayments.com/v1/payments',
-  //     'http://localhost:5173/auth/kakao/',
-  //     'https://kauth.kakao.com',
-  //     'http://localhost:3000/',
-  //     'http://g-rabit.site:3000/',
-  //     'https://g-rabit.site:3000/',
-  //     'https://g-rabit.site:5173/',
-  //     'http://g-rabit.site:5173/',
-  //     'https://g-rabit.site',
-  //     'https://localhost:3000/',
-  //     'https://127.0.0.1:3000/',
-  //     process.env.KAKAO_BACK_URL,
-  //     process.env.KAKO_CLIENT,
-  //   ],
-  //   preflightContinue: false,
-  //   credentials: true,
-  // }
-
+  app.enableCors({
+    origin: [
+      process.env.AWS_EC2_URL,
+      process.env.AWS_EC2_CLIENT,
+      'http://localhost:5173',
+      'https://localhost:5173',
+      'https://accounts.kakao.com',
+      'https://accounts.kakao.com/login',
+      'http://localhost:3000/auth/kakao',
+      'https://api.tosspayments.com/v1/payments',
+      'http://localhost:5173/auth/kakao/',
+      'https://kauth.kakao.com',
+      'http://localhost:3000/',
+      'http://g-rabit.site:3000/',
+      'https://g-rabit.site:3000/',
+      'https://g-rabit.site:5173/',
+      'http://g-rabit.site:5173/',
+      'https://g-rabit.site/',
+      'http://g-rabit.site/',
+      'https://localhost:3000/',
+      'https://127.0.0.1:3000/',
+      process.env.KAKAO_BACK_URL,
+      process.env.KAKO_CLIENT,
+    ],
+    preflightContinue: false,
+    credentials: true,
+  });
   app.use(cookieParser());
 
   // getUsers();
