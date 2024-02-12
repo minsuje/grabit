@@ -39,6 +39,8 @@ async function bootstrap() {
       'http://g-rabit.site/',
       'https://localhost:3000/',
       'https://127.0.0.1:3000/',
+      'http://www.g-rabit.site',
+      'https://www.g-rabit.site',
       process.env.KAKAO_BACK_URL,
       process.env.KAKO_CLIENT,
     ],
