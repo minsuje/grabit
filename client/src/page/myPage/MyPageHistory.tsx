@@ -6,8 +6,8 @@ export default function ListComponent3() {
   const userid_num = localStorage.getItem('userid_num');
   const userIdNum = Number(localStorage.getItem('userid_num'));
 
-  const [win, setWin] = useState<string>('');
-  const [lose, setLose] = useState<string>('');
+  // const [win, setWin] = useState<string>('');
+  // const [lose, setLose] = useState<string>('');
   const [history, setHistory] = useState<ChallengeHistory[]>([]);
   const [challengeDetail, setChallengeDetail] = useState<ChallengeDetail>();
 
@@ -46,12 +46,12 @@ export default function ListComponent3() {
     history: ChallengeHistory[];
   }
 
-  const challengeDetail2 = {
-    // 다른 필드들...
-    winner_userid_num: [10, 20, 30], // 배열로 선언
-  };
+  // const challengeDetail2 = {
+  //   // 다른 필드들...
+  //   winner_userid_num: [10, 20, 30], // 배열로 선언
+  // };
 
-  const userIdNum2 = 10; // 현재 사용자 ID
+  // const userIdNum2 = 10; // 현재 사용자 ID
 
   // 배열에서 현재 사용자 ID가 있는지 확인
   // const isWinner = challengeDetail.winner_userid_num.includes(userIdNum);
@@ -68,8 +68,8 @@ export default function ListComponent3() {
         const detail = response.data.history.find((item: any) => item.winner_userid_num.toString() === userid_num);
         setChallengeDetail(detail);
 
-        setWin(historyData.win);
-        setLose(historyData.lose);
+        // setWin(historyData.win);
+        // setLose(historyData.lose);
         console.log(response);
 
         // 데이터 로딩 후 정렬 로직 적용
