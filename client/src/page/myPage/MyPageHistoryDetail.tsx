@@ -78,7 +78,7 @@ export default function ListComponent3() {
           <div className="mt-2 text-black">{}</div>
           <div className="mt-2 text-black">
             <Badge variant="default">
-              {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+50P' : '+100P'}
+              {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}
             </Badge>
           </div>
           <div className="flex w-[100%] justify-end">
