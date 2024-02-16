@@ -4,7 +4,7 @@ import { db } from '../db/db';
 import { users } from '../src/modules/user/schema';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-// import * as fs from 'fs';
+import * as fs from 'fs';
 // import * as https from 'https';
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -16,7 +16,7 @@ async function bootstrap() {
   // };
 
   const app = await NestFactory.create(AppModule, {
-    // httpsOptions,
+    httpsOptions,
   });
 
   app.enableCors({
