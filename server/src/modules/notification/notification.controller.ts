@@ -13,7 +13,7 @@ import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { JwtService } from '@nestjs/jwt';
-@Controller('/api/notification/')
+@Controller('/notification')
 export class NotificationController {
   constructor(
     private readonly notificationService: NotificationService,

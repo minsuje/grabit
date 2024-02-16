@@ -18,7 +18,7 @@ import { JwtService } from '@nestjs/jwt';
 import { REPLCommand } from 'repl';
 
 @UseGuards(JwtService)
-@Controller('/api')
+@Controller('/')
 export class UserController {
   constructor(
     private userService: UserService,
