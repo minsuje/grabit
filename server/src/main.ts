@@ -10,12 +10,11 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('/etc/letsencrypt/live/www.g-rabit.site/privkey.pem'),
-    cert: fs.readFileSync(
-      '/etc/letsencrypt/live/www.g-rabit.site/fullchain.pem',
-    ),
-  };
+  // const httpsOptions = {
+  //     key: fs.readFileSync('./server-key.pem'),
+  //     cert: fs.readFileSync('./server.pem'),
+  // };
+
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
   });
