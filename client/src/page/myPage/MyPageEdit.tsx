@@ -68,7 +68,7 @@ export default function MyPageEdit() {
     }
     // 비밀번호 변경을 원하는 경우 검증
 
-    await axios({
+    await privateApi({
       method: 'patch',
       url: '/myPage',
 
@@ -158,7 +158,7 @@ export default function MyPageEdit() {
         </Label>
         <div className="flex flex-col gap-2 text-stone-500">
           <Label htmlFor="nickname">
-            <span className="text-xs text-grabit-700">*</span> 닉네임
+            <span className="text-grabit-700 text-xs">*</span> 닉네임
           </Label>
 
           <Input id="nickname" {...register('nickname')} />
@@ -167,11 +167,11 @@ export default function MyPageEdit() {
         </div>
         <div className="flex flex-col gap-2 text-stone-500">
           <Label htmlFor="password">
-            <span className="text-xs text-grabit-700">* </span>
+            <span className="text-grabit-700 text-xs">* </span>
             현재 비밀번호
           </Label>
           <Input id="password" type="password" {...register('password')} disabled={isDisabled} />
-          {errors.password && <p className="text-xs text-grabit-700">{errors.password.message}</p>}
+          {errors.password && <p className="text-grabit-700 text-xs">{errors.password.message}</p>}
           {/* {errMessage && <p className="text-xs text-grabit-700">{errMessage}</p>} */}
         </div>
         <div className="flex flex-col gap-2 text-stone-500">
