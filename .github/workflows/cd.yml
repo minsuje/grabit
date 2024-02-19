@@ -24,50 +24,55 @@
 name: CD Pipeline
 
 on:
-    workflow_run:
-        workflows: ['Docker Image CI']
-        types:
-            - completed
+  workflow_run:
+    workflows: ["Docker Image CI"]
+    types:
+      - completed
 
 jobs:
-    deploy: # 작업 이름을 'deploy'로 변경
-        runs-on: self-hosted
+  deploy: # 작업 이름을 'deploy'로 변경
+    runs-on: self-hosted
 
-        steps:
-            - name: Pull Docker image
-              run: sudo docker pull seejnn/grabit:latest
+    steps:
+      - name: Login to DockerHub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - name: Pull Docker image
+        run: sudo docker pull seejnn/grabit:latest
 
-            - name: Delete Old Docker container
-              run: sudo docker rm -f server || echo "No existing container to remove."
+      - name: Delete Old Docker container
+        run: sudo docker rm -f server || echo "No existing container to remove."
 
-            # - name: Run Docker Container
-            #   run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
+      # - name: Run Docker Container
+      #   run: sudo docker run -d -p 3000:3000 --name server seejnn/grabit
 
-            - name: Run Docker Container
-              run: |
-                  sudo docker run -d -p 3000:3000 \
-                  -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-                  -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
-                  -e REST_API_KEY=${{ secrets.REST_API_KEY }} \
-                  -e KKT_SECRET_KEY=${{ secrets.KKT_SECRET_KEY }} \
-                  -e KKT_CLIENT_SECRET=${{ secrets.KKT_CLIENT_SECRET }} \
-                  -e REDIRECT_URI=${{ secrets.REDIRECT_URI }} \
-                  -e AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} \
-                  -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
-                  -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
-                  -e AWS_REGION=${{ secrets.AWS_REGION }} \
-                  -e TOSS_SECRET_KEY=${{ secrets.TOSS_SECRET_KEY }} \
-                  -e AWS_EC2_URL=${{ secrets.AWS_EC2_URL }} \
-                  -e AWS_EC2_CLIENT=${{ secrets.AWS_EC2_CLIENT }} \
-                  -e RES_REDIRECT=${{ secrets.RES_REDIRECT }} \
-                  -e KAKAO_BACK_URL=${{ secrets.KAKAO_BACK_URL }} \
-                  -e KAKO_CLIENT=${{ secrets.KAKO_CLIENT }} \
-                  -e TZ=Asia/Seoul \
-                  --name server seejnn/grabit
+      - name: Run Docker Container
+        run: |
+          sudo docker run -d -p 3000:3000 \
+          -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+          -e REST_API_KEY=${{ secrets.REST_API_KEY }} \
+          -e KKT_SECRET_KEY=${{ secrets.KKT_SECRET_KEY }} \
+          -e KKT_CLIENT_SECRET=${{ secrets.KKT_CLIENT_SECRET }} \
+          -e REDIRECT_URI=${{ secrets.REDIRECT_URI }} \
+          -e AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} \
+          -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \
+          -e AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} \
+          -e AWS_REGION=${{ secrets.AWS_REGION }} \
+          -e TOSS_SECRET_KEY=${{ secrets.TOSS_SECRET_KEY }} \
+          -e AWS_EC2_URL=${{ secrets.AWS_EC2_URL }} \
+          -e AWS_EC2_CLIENT=${{ secrets.AWS_EC2_CLIENT }} \
+          -e RES_REDIRECT=${{ secrets.RES_REDIRECT }} \
+          -e KAKAO_BACK_URL=${{ secrets.KAKAO_BACK_URL }} \
+          -e KAKO_CLIENT=${{ secrets.KAKO_CLIENT }} \
+          -e TZ=Asia/Seoul \
+          --name server seejnn/grabit
 
-            # - name: Remove Docker image
-            #   run: sudo docker rmi seejnn/grabit:latest || echo "No existing image to remove."
+      # - name: Remove Docker image
+      #   run: sudo docker rmi seejnn/grabit:latest || echo "No existing image to remove."
 
-            - name: Remove old Docker images
-              run: |
-                  docker images | grep 'seejnn/grabit' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi
+      - name: Remove old Docker images
+        run: |
+          docker images | grep 'seejnn/grabit' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi
