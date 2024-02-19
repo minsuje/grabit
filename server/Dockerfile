@@ -28,7 +28,7 @@
 
 
 # Base image
-FROM node:alpine AS builder
+FROM oven/bun:latest AS base
 
 # Accept DATABASE_URL as a build argument
 ARG DATABASE_URL
