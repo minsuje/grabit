@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Docker Container
         run: |
-          sudo docker run -d -p 3000:3001 \
+          sudo docker run -d -p 3001:3000 \
           -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
           -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
           -e REST_API_KEY=${{ secrets.REST_API_KEY }} \
