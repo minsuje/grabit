@@ -42,10 +42,11 @@ async function bootstrap() {
       'https://127.0.0.1:3000/',
       'http://www.g-rabit.site',
       'https://www.g-rabit.site',
+
       process.env.KAKAO_BACK_URL,
       process.env.KAKO_CLIENT,
     ],
-    preflightContinue: false,
+    preflightContinue: true,
     credentials: true,
   });
   app.use(cookieParser());
