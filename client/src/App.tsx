@@ -53,8 +53,11 @@ import { AnimatePresence } from 'framer-motion';
 import AnimatedRootRoutes from './page/AnimatedRootRoutes';
 import Error404 from './page/Error404';
 
+import PageChangeTracker from './PageChangeTracker';
+
 function AnimatedRoutes() {
   const [price, setPrice] = useState<number>(0);
+  PageChangeTracker();
 
   return (
     <AnimatePresence mode="wait">
