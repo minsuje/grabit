@@ -259,7 +259,7 @@ export default function MyPage() {
       </div>
 
       <div className="carrot relative my-12 flex flex-col gap-4 rounded-2xl bg-grabit-100 px-8 pb-4 pt-12">
-        <div className="absolute bottom-[150px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
+        <div className="absolute bottom-[180px] left-1/2 right-1/2 h-40 w-40 -translate-x-1/2 opacity-100">
           <RiveComponent />
         </div>
         <motion.div

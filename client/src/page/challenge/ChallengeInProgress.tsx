@@ -245,7 +245,7 @@ function ChallengeInProgress() {
                   <img
                     style={{ borderRadius: '100%', width: '70%' }}
                     src={profiles[0] !== null ? profiles[0] : '/grabit_profile.png'}
-                    className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                    className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 "
                   />
                 </div>
                 <RadialSeparators
@@ -280,7 +280,7 @@ function ChallengeInProgress() {
                         <img
                           style={{ borderRadius: '100%', width: '50%' }}
                           src={profiles[index]}
-                          className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2 animate-pulse"
+                          className="absolute left-1/2 top-1/2 aspect-square -translate-x-1/2 -translate-y-1/2"
                         />
                       </div>
                       <RadialSeparators

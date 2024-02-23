@@ -8,7 +8,7 @@ import { Challenge } from '@/types/types';
 import { useDispatch } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import HotChallenge from '@/components/HotChallenge';
-import { FaPlus } from 'react-icons/fa';
+import { BsPlus } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 
 export default function Main() {
@@ -149,18 +149,17 @@ export default function Main() {
           <div>전체 챌린지 보러가기</div>
         </Link>
       </div>
-
-      <motion.div
-        initial={{ scale: 1, rotate: 0 }}
-        whileHover={{ scale: 1.1, rotate: 90 }}
-        whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 rounded-full bg-grabit-700 p-4 text-center shadow-lg shadow-grabit-600/20"
-      >
-        <Link to="/challengeCreate">
+      <Link to="/challengeCreate">
+        <motion.div
+          initial={{ scale: 1, rotate: 0 }}
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
+          className="fixed bottom-6 right-6 rounded-full bg-grabit-700 p-4 text-center shadow-lg shadow-grabit-600/20"
+        >
           {/* <Button>챌린지 생성</Button> */}
-          <FaPlus color="white" size={28} />
-        </Link>
-      </motion.div>
+          <BsPlus color="white" size={32} />
+        </motion.div>
+      </Link>
     </div>
   );
 }
