@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import Cta from '@/components/Cta';
 
 const schema = yup
   .object({
@@ -36,7 +37,7 @@ const schema = yup
         message:
           '키워드는 영어로만 작성해야 하며, 특수문자를 사용할 수 없습니다. 최소 2글자 이상 15글자 이하로 작성해주세요.',
       }),
-    auth: yup.string().required('인증 주기를 선택하세요.'),
+
     goalMoney: yup.number().required('* 금액을 작성해주세요.').min(1000, '* 최소 금액은 1000원 이상이어야 합니다.'),
     startDate: yup.string().required('날짜를 입력해주세요'),
     term: yup.string().required('기간을 선택하세요.'),
@@ -63,6 +64,9 @@ function ChallengeCreate() {
   const handleTermChange = (value: string) => {
     setValue('term', value, { shouldValidate: true });
     setTerm(Number(value));
+    if (term == 2) {
+      setAuthTerm('7');
+    }
   };
 
   const handleAuthTermChange = (value: string) => {
@@ -160,26 +164,21 @@ function ChallengeCreate() {
 
   useEffect(() => {}, [challengeState]);
 
-  const hours: number[] = [];
+  const StartHours: number[] = [];
+  const EndHours: number[] = [];
   for (let i = 0; i < 24; i++) {
-    hours.push(i);
+    StartHours.push(i);
   }
-
-  const amHours: number[] = [];
-  const pmHours: number[] = [];
-  hours.forEach((hour) => {
-    if (hour < 12) {
-      amHours.push(hour);
-    } else {
-      pmHours.push(hour);
-    }
-  });
+  for (let i = 1; i <= 24; i++) {
+    EndHours.push(i);
+  }
 
   // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   dispatch(setChallengeName(e.target.value));
   // };
 
-  async function onSubmit() {
+  async function onSubmit(form: any) {
+    console.log('submit 실행');
     try {
       const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
 
@@ -212,6 +211,10 @@ function ChallengeCreate() {
     }
   }
 
+  function invalid(err: any) {
+    console.log('에러', err);
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -222,7 +225,7 @@ function ChallengeCreate() {
             <div className="flex w-fit items-center space-x-2">
               <Switch id="public" checked={isPublic} onCheckedChange={setIsPublic} />
               <Label htmlFor="public" className="w-8">
-                공개
+                {isPublic ? '공개' : '비공개'}
               </Label>
             </div>
           </div>
@@ -286,7 +289,7 @@ function ChallengeCreate() {
         </div>
         <div className="challengeMoney flex flex-col">
           <h2 className="py-4 text-xl font-bold">인증 키워드</h2>
-          <span className="text-gray-500">영어로 입력해주세요</span>
+
           <Input type="text" {...register('keyword')} onChange={(e) => setAuthKeyword(e.target.value)} />
           {errors.keyword && <p className=" p-1 text-xs text-red-500">{errors.keyword.message}</p>}
         </div>
@@ -294,6 +297,7 @@ function ChallengeCreate() {
           <h2 className="py-4 text-xl font-bold">목표 금액</h2>
           <Input
             type="number"
+            onWheel={(event) => (event.target as HTMLElement).blur()}
             {...register('goalMoney', {
               setValueAs: (value) => (value === '' ? 0 : parseInt(value, 10)),
             })}
@@ -338,15 +342,41 @@ function ChallengeCreate() {
           </Select>
           {errors.term && <p className="p-1 text-xs text-red-500">{errors.term.message}</p>}
         </div>
+
+        <div className="challengeStartDate flex flex-col">
+          <h2 className="py-4 text-xl font-bold">끝 날짜</h2>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className={cn(
+                  'w-full justify-start rounded-md text-left font-normal',
+                  !date && 'text-muted-foreground',
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date && term != 0 ? (
+                  format(addDays(date, term), 'PPP EEE요일', { locale: ko })
+                ) : (
+                  <span> 시작 날짜와 기간을 선택하세요</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+          </Popover>
+        </div>
         <div className="challengeAuthTerm flex flex-col">
           <h2 className="py-4 text-xl font-bold">인증 주기</h2>
-          <Select onValueChange={handleAuthTermChange}>
+          <Select onValueChange={handleAuthTermChange} value={authTerm}>
             <SelectTrigger className="w-full" {...register('authTerm')}>
-              <SelectValue placeholder="인증 주기" />
+              <SelectValue placeholder="인증주기" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="3">주 3회</SelectItem>
-              <SelectItem value="5">주 5회</SelectItem>
+              {term != 2 && (
+                <>
+                  <SelectItem value="3">주 3회</SelectItem>
+                  <SelectItem value="5">주 5회</SelectItem>
+                </>
+              )}
               <SelectItem value="7">매일</SelectItem>
             </SelectContent>
           </Select>
@@ -361,7 +391,7 @@ function ChallengeCreate() {
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
                 <SelectContent>
-                  {hours.map((hour, i) => {
+                  {StartHours.map((hour, i) => {
                     return (
                       <SelectItem key={i} value={hour.toString()}>
                         {hour}시
@@ -379,7 +409,7 @@ function ChallengeCreate() {
                   <SelectValue placeholder="인증 시간" />
                 </SelectTrigger>
                 <SelectContent>
-                  {hours.map((hour, i) => {
+                  {EndHours.map((hour, i) => {
                     return (
                       <SelectItem key={i} value={hour.toString()}>
                         {hour}시
@@ -397,14 +427,7 @@ function ChallengeCreate() {
         ) : (
           <></>
         )}
-        <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
-          <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
-          <div className="flex bg-white px-8  pb-8 ">
-            <Button onClick={onSubmit} className="w-full rounded-md p-6">
-              생성하기
-            </Button>
-          </div>
-        </div>
+        <Cta text={'생성하기'} onclick={handleSubmit(onSubmit, invalid)} />
       </form>
     </div>
   );
