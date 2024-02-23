@@ -36,7 +36,6 @@ export default function ListComponent3() {
     privateApi
       .get(`/history`)
       .then((response) => {
-        console.log(response);
         const detail = response.data.history.find((item: any) => item.challenge_id.toString() === userid_num);
         setChallengeDetail(detail);
         setRecord(response.data);
@@ -59,7 +58,6 @@ export default function ListComponent3() {
     ? format(new Date(challengeDetail.authentication_end_date), 'yyyy-MM-dd')
     : '';
 
-  console.log(opponent);
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -77,9 +75,7 @@ export default function ListComponent3() {
         <div className="flex">
           <div className="mt-2 text-black">{}</div>
           <div className="mt-2 text-black">
-            <Badge variant="default">
-              {challengeDetail?.winner_userid_num?.includes(userIdNum.toString()) ? '+100P' : '-50P'}
-            </Badge>
+            <Badge variant="default">{challengeDetail?.winner_userid_num ? '+100P' : '-50P'}</Badge>
           </div>
           <div className="flex w-[100%] justify-end">
             <div className="mt-2 text-black ">{challengeDetail?.winner_userid_num ? '승' : '패배'}</div>
