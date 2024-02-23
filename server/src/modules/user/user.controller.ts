@@ -37,6 +37,7 @@ export class UserController {
 
   // 아이디 중복검사 (register UserID duplicate check)
   @UseGuards(JwtService)
+
   @Post('/checkid')
   duplicateCheck(@Body() userid: string) {
     return this.userService.duplicateCheck(userid);
