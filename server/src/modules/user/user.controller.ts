@@ -35,6 +35,12 @@ export class UserController {
   }
 
   @UseGuards(JwtService)
+  @Post('/register/checkid')
+  duplicateCheck(@Body() body: string) {
+    return this.userService.duplicateCheck(body);
+  }
+
+  @UseGuards(JwtService)
   @Post('/profileUpload/:type')
   postProfileUpload(
     @Param('type') login_type: string,
