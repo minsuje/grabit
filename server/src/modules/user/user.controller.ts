@@ -25,6 +25,7 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
+  // 회원가입 (register)
   @UseGuards(JwtService)
   @Post('/register/:type')
   createUserDto(
@@ -34,13 +35,15 @@ export class UserController {
     return this.userService.createNewUser(login_type, createUserDto);
   }
 
+  // 아이디 중복검사 (register UserID duplicate check)
   @UseGuards(JwtService)
-  @Post('/register/checkid')
-  duplicateCheck(@Body() body: string) {
-    console.log(body);
-    return this.userService.duplicateCheck(body);
+
+  @Post('/checkid')
+  duplicateCheck(@Body() userid: string) {
+    return this.userService.duplicateCheck(userid);
   }
 
+  // 회원 가입시, 이미지 업로드 (register, Img upload)
   @UseGuards(JwtService)
   @Post('/profileUpload/:type')
   postProfileUpload(
@@ -52,7 +55,7 @@ export class UserController {
     return this.userService.postProfileUpload(login_type, body, file);
   }
 
-  // 마이페이지 조회
+  // 마이페이지 조회 (Mypage)
   @UseGuards(JwtService)
   @Get('/myPage')
   async getMyPage(@Req() req, @Req() request: Request) {
@@ -67,7 +70,7 @@ export class UserController {
     return this.userService.getMyPage(userid_num, file);
   }
 
-  // 다른 사람 프로필 조회
+  // 다른 사람 프로필 조회 (Other User Page)
   @UseGuards(JwtService)
   @Get('/profile/:userid')
   async getProfilePage(
@@ -84,7 +87,7 @@ export class UserController {
     return this.userService.getProfilePage(login_userid_num, userid, file);
   }
 
-  // 마이페이지 수정
+  // 마이페이지 수정 (Edit Mypage)
   @UseGuards(JwtService)
   @Patch('/myPage')
   async patchMyPage(@Body() body: any, @Req() req, @Req() request: Request) {
@@ -98,18 +101,19 @@ export class UserController {
     return this.userService.patchMyPage(userid_num, file, body, login_type);
   }
 
-  @UseGuards(JwtService)
-  @Get('/profile/:userid')
-  async getProfile(@Param('userid') userid: number) {
-    // return this.userService.getProfile(userid);
-  }
+  // @UseGuards(JwtService)
+  // @Get('/profile/:userid')
+  // async getProfile(@Param('userid') userid: number) {
+  //   // return this.userService.getProfile(userid);
+  // }
 
+  // 점수 (score)
   @Get('score/:userid')
   getScore(@Param('userid') userid: number) {
     return this.userService.getScore(userid);
   }
 
-  //결제페이지
+  //결제페이지 (payment page)
   @UseGuards(JwtService)
   @Post('/userInfo')
   async payment(@Req() request: Request) {
@@ -122,12 +126,14 @@ export class UserController {
     return this.userService.payment(userid_num);
   }
 
+  // 결제 승인 (payment accept)
   @UseGuards(JwtService)
   @Post('/checkout/confirm')
   async confirm(@Body() paymentDTO: PaymentDTO) {
     return this.userService.tossPayment(paymentDTO);
   }
 
+  // 돈 업데이트 (charge User Money)
   @UseGuards(JwtService)
   @Post('/updateMoney')
   async updateMoney(@Body() body, @Req() request: Request) {
@@ -141,12 +147,14 @@ export class UserController {
     return this.userService.updateMoney(amount, userid_num);
   }
 
+  // 결제 성공 페이지 (payment success page)
   @UseGuards(JwtService)
   @Get('/checkout/success')
   success(@Res() res: Response, @Req() req: Request, @Req() request) {
     return res.send('success');
   }
 
+  // 전체 랭킹 (All User Ranking)
   @UseGuards(JwtService)
   @Get('/ranking')
   async getRank() {
@@ -154,6 +162,7 @@ export class UserController {
     return rank;
   }
 
+  // 내 랭킹 (My Ranking)
   @UseGuards(JwtService)
   @Get('/myRanking')
   async getMyRank(@Req() req: Request, @Res() res: Response) {
@@ -169,6 +178,7 @@ export class UserController {
     return res.send(String(rank));
   }
 
+  // 출금 신청 (Withdrawal Application)
   @UseGuards(JwtService)
   @Post('/requsetWithdraw')
   async requestWithdraw(@Req() req: Request, @Body() change) {

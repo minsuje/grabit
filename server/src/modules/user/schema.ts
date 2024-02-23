@@ -45,13 +45,6 @@ export const account = pgTable('account', {
   }),
 });
 
-// export const postsRelations = relations(account, ({ one }) => ({
-//     author: one(user, {
-//         fields: [account.userid_num],
-//         references: [user.userid_num],
-//     }),
-// }));
-
 export const userWithNotificationRelations = relations(users, ({ many }) => ({
   posts: many(notification),
 }));
