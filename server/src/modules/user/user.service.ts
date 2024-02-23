@@ -18,11 +18,13 @@ import { friend } from '../friend/schema';
 @Injectable()
 export class UserService {
   duplicateCheck = async (userid: string) => {
+    console.log(userid);
     const checkid = await db
       .select({ userid: users.userid })
       .from(users)
       .where(eq(users.userid, userid));
-    if (checkid) {
+    console.log(checkid);
+    if (checkid.length > 0) {
       return { msg: '이미 존재하는 아이디입니다.' };
     } else {
       return { msg: '사용가능한 아이디입니다.' };

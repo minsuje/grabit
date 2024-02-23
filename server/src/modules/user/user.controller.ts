@@ -39,7 +39,8 @@ export class UserController {
   @UseGuards(JwtService)
 
   @Post('/checkid')
-  duplicateCheck(@Body() userid: string) {
+  duplicateCheck(@Body() body: any) {
+    const { userid } = body;
     return this.userService.duplicateCheck(userid);
   }
 
