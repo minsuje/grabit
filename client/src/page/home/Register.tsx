@@ -68,10 +68,13 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegisterForm>({ resolver: yupResolver(schema) });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const userid = watch('userid'); // 아이디 필드를 실시간으로 관찰
 
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '회원가입', backPath: '/' }));
@@ -128,33 +131,28 @@ export default function Register() {
         alert('회원가입 실패');
         console.error('회원가입 실패:', err);
       }
-
-      // axios({
-      //   method: 'put',
-      //   url: res.data,
-      //   data: profilePic,
-      //   headers: {
-      //     'Content-Type': profilePic?.type,
-      //   },
-      // }).then(() => {
-      //   try {
-      //     axios({
-      //       method: 'post',
-      //       url: '/register/normal',
-      //       data: {
-      //         name: form.name,
-      //         userid: form.userid,
-      //         nickname: form.nickname,
-      //         password: form.password,
-      //         profile_img: fileName,
-      //       },
-      //     });
-      //     navigate('/login');
-      //   } catch (err) {
-      //     console.error('회원가입 실패:', err);
-      //   }
-      // });
     });
+  };
+
+  const duplicateCheck = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // 버튼 클릭 시 폼 제출을 방지
+
+    console.log('input 값>>>>', userid);
+    await axios({
+      method: 'post',
+      url: '/checkid',
+      data: {
+        userid: userid, // 관찰하고 있는 아이디 값을 사용
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        // 중복 검사 결과에 따른 추가 처리...
+      })
+      .catch((err) => {
+        console.error(err);
+        // 오류 처리...
+      });
   };
 
   return (
@@ -182,6 +180,7 @@ export default function Register() {
           </Label>
           <Input id="userid" {...register('userid')} />
           {errors.userid && <p className="text-xs text-red-500">{errors.userid.message}</p>}
+          <button onClick={duplicateCheck}>아이디 중복검사</button>
         </div>
         <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
           <Label className="flex w-full" htmlFor="profile_img">

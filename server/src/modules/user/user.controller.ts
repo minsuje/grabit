@@ -37,6 +37,7 @@ export class UserController {
   @UseGuards(JwtService)
   @Post('/register/checkid')
   duplicateCheck(@Body() body: string) {
+    console.log(body);
     return this.userService.duplicateCheck(body);
   }
 
