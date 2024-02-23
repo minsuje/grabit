@@ -172,7 +172,7 @@ function Header() {
               </Link>
 
               {accessToken ? (
-                <div className="flex items-center gap-3 ">
+                <div className="mt-8 flex items-center gap-3">
                   <Button onClick={handleLogout}>로그아웃</Button>
                 </div>
               ) : (

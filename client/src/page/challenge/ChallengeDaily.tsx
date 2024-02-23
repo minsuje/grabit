@@ -5,6 +5,7 @@ import OpenAI from 'openai';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { Button } from '@/components/ui/button';
 import { privateApi } from '@/api/axios';
+import Cta from '@/components/Cta';
 
 function ChallengeDaily() {
   const [dailymission, setDailymission] = useState<string>('');
@@ -152,16 +153,14 @@ function ChallengeDaily() {
             }}
           />
           {!imgUrl ? (
-            <Button
-              onClick={() => {
+            <Cta
+              text={'인증하기'}
+              onclick={() => {
                 if (inputRef.current) {
                   inputRef.current.click();
                 }
               }}
-              className="w-full rounded-md p-6"
-            >
-              인증하기
-            </Button>
+            />
           ) : (
             <>
               <Button
@@ -170,11 +169,11 @@ function ChallengeDaily() {
                     inputRef.current.click();
                   }
                 }}
-                className="my-2 w-full rounded-md p-6"
+                className="my-2 w-full p-5"
               >
                 다시 찍기
               </Button>
-              <Button onClick={openaiFunction} className="w-full rounded-md p-6">
+              <Button onClick={openaiFunction} className="w-full p-5">
                 업로드
               </Button>
             </>
