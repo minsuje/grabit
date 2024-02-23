@@ -17,6 +17,19 @@ import { friend } from '../friend/schema';
 
 @Injectable()
 export class UserService {
+  duplicateCheck = async (userid: string) => {
+    const checkid = await db
+      .select({ userid: users.userid })
+      .from(users)
+      .where(eq(users.userid, userid));
+    if (checkid) {
+      return { msg: '이미 존재하는 아이디입니다.' };
+    } else {
+      return { msg: '사용가능한 아이디입니다.' };
+    }
+  };
+
+  // 신규유저 생성
   createNewUser = async (login_type: any, createUserDto: CreateUserDto) => {
     let {
       userid,
@@ -56,7 +69,6 @@ export class UserService {
       const CUser = await db.insert(users).values(userInfo);
       return (isLogins = true);
     }
-    // return userInfo;
   };
 
   postProfileUpload = async (
@@ -402,6 +414,7 @@ export class UserService {
     return { userInfo, userAccount };
   };
 
+  // 랭크
   async rank() {
     // 상위 3명의 랭크 표시
     const topRank = await db
@@ -417,6 +430,7 @@ export class UserService {
     return topRank;
   }
 
+  // 내 랭킹
   async myRank(userid_num: number) {
     const allRank = await db
       .select({
@@ -434,6 +448,7 @@ export class UserService {
     return myRank;
   }
 
+  // 출금 신청
   async requestWithdraw(userid_num: number, change: any) {
     const { money, bank_num, bank_name, name } = change;
     // 유저 정보 확인

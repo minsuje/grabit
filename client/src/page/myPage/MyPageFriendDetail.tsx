@@ -144,14 +144,16 @@ export default function MyPageFriendDetail() {
         </div>
         <div className="flex w-full basis-1/4  flex-col items-center justify-center">
           {/* <h3 className="text-xl font-medium text-stone-500">전적</h3> */}
-          <p className="flex text-2xl font-bold text-stone-700">
+
+          <div className="flex text-2xl font-bold text-stone-700">
             {win}
             <p className="ml-1 flex">승</p>
-          </p>
-          <p className="flex text-2xl font-bold text-stone-700">
+          </div>
+          <div className="flex text-2xl font-bold text-stone-700">
             {lose}
             <p className="ml-1 flex">패</p>
-          </p>
+          </div>
+
         </div>
       </div>
 
@@ -174,7 +176,7 @@ export default function MyPageFriendDetail() {
       {friendStatus === '상대가 친구 신청 해놓은거 수락바람' && (
         <div>
           <Button onClick={() => handleFriendRequest('accept')}>친구수락</Button>
-          {/* <Button onClick={() => handleFriendRequest('reject')}>친구거절</Button> */}
+          <Button onClick={() => handleFriendRequest('reject')}>친구거절</Button>
         </div>
       )}
     </div>

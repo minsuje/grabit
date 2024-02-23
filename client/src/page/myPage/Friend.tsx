@@ -20,9 +20,7 @@ export default function Friend() {
   const [friends, setFriends] = useState<Friend[]>([]); // 전체 친구 목록
   const [searchTerm, setSearchTerm] = useState(''); // 검색어
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>([]); // 필터링된 친구 목록
-
   // 내 친구 목록 불러오기
-
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '친구 목록', backPath: `/mypage` }));
   }, [dispatch]);

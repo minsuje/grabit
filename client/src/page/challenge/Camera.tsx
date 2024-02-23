@@ -8,6 +8,7 @@ import { privateApi } from '@/api/axios';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
 import axios from '@/api/axios';
+import Cta from '@/components/Cta';
 
 function Camera() {
   const location = useLocation();
@@ -148,16 +149,14 @@ function Camera() {
             }}
           />
           {!imgUrl ? (
-            <Button
-              onClick={() => {
+            <Cta
+              text={'인증하기'}
+              onclick={() => {
                 if (inputRef.current) {
                   inputRef.current.click();
                 }
               }}
-              className="w-full rounded-md p-6"
-            >
-              인증하기
-            </Button>
+            />
           ) : (
             <>
               <Button
@@ -166,11 +165,11 @@ function Camera() {
                     inputRef.current.click();
                   }
                 }}
-                className="my-2 w-full rounded-md p-6"
+                className="my-2 w-full p-5"
               >
                 다시 찍기
               </Button>
-              <Button onClick={openaiFunction} className="w-full rounded-md p-6">
+              <Button onClick={openaiFunction} className="w-full p-5">
                 업로드
               </Button>
             </>

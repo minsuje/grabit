@@ -68,7 +68,7 @@ export default function MyPageEdit() {
     }
     // 비밀번호 변경을 원하는 경우 검증
 
-    await axios({
+    await privateApi({
       method: 'patch',
       url: '/myPage',
 

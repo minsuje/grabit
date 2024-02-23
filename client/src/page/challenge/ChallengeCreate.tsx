@@ -427,7 +427,9 @@ function ChallengeCreate() {
         ) : (
           <></>
         )}
+
         <Cta text={'생성하기'} onclick={handleSubmit(onSubmit, invalid)} />
+
       </form>
     </div>
   );
