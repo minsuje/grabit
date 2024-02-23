@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
 import { PiTimerDuotone } from 'react-icons/pi';
 import { RiVipDiamondFill } from 'react-icons/ri';
+import { Console } from 'console';
 
 // ~~~일 후 종료
 
@@ -65,14 +66,17 @@ export function ListComponent2({ challenge }: ChallengeProp) {
 export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: number; challenge_name: string }) => {
   const { userid_num } = useParams<any>();
   const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
-  const [winnerUseridNum, setWinnerUseridNum] = useState<number[]>([]);
+  const [winnerUseridNum, setWinnerUseridNum] = useState([]);
+
   useEffect(() => {
     // 챌린지 테이블 요청
     privateApi
       .get(`/history`)
       .then((response) => {
-        console.log(response);
-        setWinnerUseridNum(response.data.history);
+        const data = response.data; // 응답 데이터를 data 변수에 할당
+        console.log('history>>>', response);
+        const winnerUseridNum = data.history[0].winner_userid_num;
+        setWinnerUseridNum(winnerUseridNum);
       })
       .catch((error) => {
         console.error(' 히스토리 오류 axios 오류', error);
@@ -88,9 +92,6 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
     return startDateB - startDateA; // 날짜를 오름차순으로 정렬
   });
   // 정렬 후 결과 확인
-
-  console.log('history', history);
-  console.log('winnerUseridNum', winnerUseridNum);
 
   return (
     <>
@@ -114,11 +115,13 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
             </div>
             <div className="mt-2 text-black">
               <Badge variant="default" className="ml-2">
-                {item.winner_userid_num?.includes(userIdNum) ? '+100' : '-50P'}
+                {item.winner_userid_num ? '+100' : '-50P'}
               </Badge>
             </div>
             <div className="flex w-[100%] justify-end">
-              <div className="mt-2 text-black ">{item.winner_userid_num?.includes(userIdNum) ? '승' : '패배'}</div>
+              <div className="mt-2 text-black ">
+                <div className="mt-2 text-black ">{item.winner_userid_num ? '승' : '패배'}</div>
+              </div>
             </div>
           </div>
         </div>

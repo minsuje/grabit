@@ -51,10 +51,9 @@ export default function MyPageFriendList({ friends }: any) {
           </Avatar>
           <div className="flex flex-col">
             <span className="text-lg font-bold text-stone-700">{friends.nickname}</span>
-            <p className="flex text-sm font-bold text-grabit-600">
-              {friends.score_num}
-              <p className="ml-[2px]">포인트</p>
-            </p>
+            <p className="flex text-sm font-bold text-grabit-600"> </p>
+            {friends.score_num}
+            <p className="ml-[2px]">포인트</p>
           </div>
         </div>
 
