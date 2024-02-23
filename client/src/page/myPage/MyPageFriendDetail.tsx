@@ -144,14 +144,14 @@ export default function MyPageFriendDetail() {
         </div>
         <div className="flex w-full basis-1/4  flex-col items-center justify-center">
           {/* <h3 className="text-xl font-medium text-stone-500">전적</h3> */}
-          <p className="flex text-2xl font-bold text-stone-700">
+          <div className="flex text-2xl font-bold text-stone-700">
             {win}
             <p className="ml-1 flex">승</p>
-          </p>
-          <p className="flex text-2xl font-bold text-stone-700">
+          </div>
+          <div className="flex text-2xl font-bold text-stone-700">
             {lose}
             <p className="ml-1 flex">패</p>
-          </p>
+          </div>
         </div>
       </div>
 
