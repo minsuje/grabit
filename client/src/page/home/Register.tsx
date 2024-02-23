@@ -161,9 +161,14 @@ export default function Register() {
     <div className="flex justify-center">
       <form
         // onSubmit={handleSubmit(onSubmit)}
-        className="mt-20 flex max-w-sm flex-col items-center justify-center gap-4"
+        className="mt-4 flex max-w-sm flex-col items-center justify-center gap-4"
       >
-        <h1>회원가입</h1>
+        <h1 className="w-full">회원가입</h1>
+        <span className="w-full text-gray-500">
+          반가워요!
+          <br />
+          그래빗과 함께 습관을 길러봐요
+        </span>
         <div className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
           <Label className="flex w-full" htmlFor="name">
             이름

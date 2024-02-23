@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import Cta from '@/components/Cta';
 
 const schema = yup
   .object({
@@ -400,9 +401,7 @@ function ChallengeCreate() {
         <div className="cta fixed bottom-0 left-0 right-0 flex flex-col">
           <div className="flex h-8 bg-gradient-to-b from-transparent to-white"></div>
           <div className="flex bg-white px-8  pb-8 ">
-            <Button onClick={onSubmit} className="w-full rounded-md p-6">
-              생성하기
-            </Button>
+            <Cta text={'생성하기'} onclick={onSubmit} />
           </div>
         </div>
       </form>

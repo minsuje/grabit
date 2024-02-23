@@ -36,7 +36,7 @@ function ListComponentWithButton({ challenge }: ChallengeProp) {
           </Button>
         </div>
         <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
-          <RiVipDiamondFill />
+          <RiVipDiamondFill className="text-grabit-400" />
           <div className="flex items-end gap-1">
             <p>{challenge.goal_money}</p>
             <span className="mb-[3px] align-top text-sm font-bold text-grabit-400">캐럿</span>
@@ -64,7 +64,7 @@ function ListComponentWithoutButton({ challenge }: ChallengeProp) {
           </div>
         </div>
         <div className="flex w-full items-center justify-end gap-2 text-right text-2xl font-extrabold text-grabit-800">
-          <RiVipDiamondFill />
+          <RiVipDiamondFill className="text-grabit-400" />
           <div className="flex items-end gap-1">
             <p>{challenge.goal_money}</p>
             <span className="mb-[3px] align-top text-sm font-bold text-grabit-400">캐럿</span>

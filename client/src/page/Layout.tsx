@@ -9,7 +9,7 @@ function Layout() {
   return accessToken ? (
     <div>
       <Header />
-      <div className="container mb-40 mt-16 min-h-40 py-4">
+      <div className="container mb-40 mt-16 min-h-40 px-6 py-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
