@@ -25,13 +25,13 @@ import Cta from '@/components/Cta';
 import {
   setSliceChallengeName,
   setSliceTopic,
-  setSliceIsPublic,
+  // setSliceIsPublic,
   setSliceTerm,
-  setSliceGoalMoney,
-  setSliceDate,
-  setSliceAuthTerm,
-  setSliceAuthStart,
-  setSliceAuthEnd,
+  // setSliceGoalMoney,
+  // setSliceDate,
+  // setSliceAuthTerm,
+  // setSliceAuthStart,
+  // setSliceAuthEnd,
   setSave,
 } from '@/store/challengeSlice';
 import { resetFriendList } from '@/store/friendSlice';
@@ -199,7 +199,7 @@ function ChallengeCreate() {
     EndHours.push(i);
   }
 
-  async function onSubmit(form: any) {
+  async function onSubmit() {
     console.log('submit 실행');
     try {
       const friendId: number[] = selectedFriends.map((friend) => friend.userid_num);
