@@ -22,8 +22,11 @@ export const friendSlice = createSlice({
     removeFriend: (state, action: PayloadAction<FriendSelect>) => {
       state.selectedFriends = state.selectedFriends.filter((friend) => friend.userid_num !== action.payload.userid_num);
     },
+    resetFriendList: (state) => {
+      state.selectedFriends = [];
+    },
   },
 });
 
-export const { addFriend, removeFriend } = friendSlice.actions;
+export const { addFriend, removeFriend, resetFriendList } = friendSlice.actions;
 export default friendSlice.reducer;

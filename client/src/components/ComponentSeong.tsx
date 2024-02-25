@@ -6,11 +6,10 @@ import { ChallengeProp } from '@/types/types';
 import { differenceInCalendarDays } from 'date-fns';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import { Challenge } from '@/types/types';
 import { PiTimerDuotone } from 'react-icons/pi';
 import { RiVipDiamondFill } from 'react-icons/ri';
-import { Console } from 'console';
 
 // ~~~일 후 종료
 
@@ -64,8 +63,8 @@ export function ListComponent2({ challenge }: ChallengeProp) {
 // const formattedEndDate = format(new Date(history.authentication_end_date), 'yyyy-MM-dd');
 // const formattedStartDate = format(new Date(history.authentication_start_date), 'yyyy-MM-dd');
 export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: number; challenge_name: string }) => {
-  const { userid_num } = useParams<any>();
-  const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
+  // const { userid_num } = useParams<any>();
+  // const userIdNum = Number(userid_num); // 문자열을 숫자로 변환
   const [winnerUseridNum, setWinnerUseridNum] = useState([]);
 
   useEffect(() => {
@@ -82,6 +81,7 @@ export const ListComponent3 = ({ history }: { history: Challenge; scoreNum: numb
         console.error(' 히스토리 오류 axios 오류', error);
       });
   }, []);
+  console.log(winnerUseridNum);
 
   // history를 배열로 변환
   const historyArray = [history];
