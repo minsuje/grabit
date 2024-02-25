@@ -12,7 +12,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { privateApi } from '@/api/axios';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHeaderInfo } from '@/store/headerSlice';
 import { RootState } from '@/store/store';
@@ -22,13 +22,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import Cta from '@/components/Cta';
+import {
+  setSliceChallengeName,
+  setSliceTopic,
+  setSliceIsPublic,
+  setSliceTerm,
+  setSliceGoalMoney,
+  setSliceDate,
+  setSliceAuthTerm,
+  setSliceAuthStart,
+  setSliceAuthEnd,
+  setSave,
+} from '@/store/challengeSlice';
+import { resetFriendList } from '@/store/friendSlice';
 
 const schema = yup
   .object({
     name: yup
       .string()
       .required('* 이름은 필수입니다.')
-      .matches(/^[가-힣]+$/, '* 이름은 한글로만 작성해주세요.'),
+      .matches(/^[가-힣\s]+$/, '* 이름은 한글로만 작성해주세요.'),
     topic: yup.string().notOneOf([''], '주제를 선택하세요.'),
     keyword: yup
       .string()
@@ -37,7 +50,6 @@ const schema = yup
         message:
           '키워드는 영어로만 작성해야 하며, 특수문자를 사용할 수 없습니다. 최소 2글자 이상 15글자 이하로 작성해주세요.',
       }),
-
     goalMoney: yup.number().required('* 금액을 작성해주세요.').min(1000, '* 최소 금액은 1000원 이상이어야 합니다.'),
     startDate: yup.string().required('날짜를 입력해주세요'),
     term: yup.string().required('기간을 선택하세요.'),
@@ -48,16 +60,31 @@ const schema = yup
   .required();
 
 function ChallengeCreate() {
+  const dispatch = useDispatch();
+  const challengeState = useSelector((state: RootState) => state.challenge);
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm({
+    resolver: yupResolver(schema),
+    // defaultValues: {
+    //   topic: challengeState.topic,
+    // },
+  });
+
+  function handleChallengeNameChange(value: string) {
+    setValue('name', value, { shouldValidate: true });
+    dispatch(setSliceChallengeName(value));
+    setChallengeName(value);
+  }
 
   const handleTopicChange = (value: string) => {
+    console.log(value);
     setValue('topic', value, { shouldValidate: true });
+    dispatch(setSliceTopic(value));
     setTopic(value);
   };
 
@@ -67,6 +94,7 @@ function ChallengeCreate() {
     if (term == 2) {
       setAuthTerm('7');
     }
+    setSliceTerm(value);
   };
 
   const handleAuthTermChange = (value: string) => {
@@ -98,16 +126,6 @@ function ChallengeCreate() {
     }
   };
 
-  // const handleSelectChange = (value) => {
-  //   setTopic(value);
-  //   setAuthTerm(value);
-  //   setAuthStart(value);
-  //   setValue('topic', value, { shouldValidate: true });
-  //   setValue('term', value, { shouldValidate: true });
-  //   setValue('authTerm', value, { shouldValidate: true });
-  //   setValue('authStart', value, { shouldValidate: true });
-  // };
-
   const handleDateChange = (selectedDate: any) => {
     if (selectedDate) {
       if (addDays(selectedDate, 1) < new Date()) {
@@ -128,16 +146,24 @@ function ChallengeCreate() {
     register('startDate');
   }, [register]);
 
-  const dispatch = useDispatch();
-  const challengeState = useSelector((state: RootState) => state.challenge);
-
-  useEffect(() => {
-    setChallengeName(challengeState.challengeName);
-  }, [challengeState]);
-
   useEffect(() => {
     dispatch(setHeaderInfo({ title: '챌린지 생성', backPath: '/main' }));
   }, [dispatch]);
+
+  // 친구 목록에서 돌아오면 상태 불러오기
+  useEffect(() => {
+    if (challengeState.save) {
+      console.log('정보 불러오기 시작');
+      setValue('name', challengeState.challengeName, { shouldValidate: true });
+      setValue('topic', challengeState.topic);
+      dispatch(setSave(false));
+    } else {
+      console.log('메인에서 돌아옴');
+      dispatch(resetFriendList());
+      dispatch(setSliceChallengeName(''));
+      dispatch(setSliceTopic(''));
+    }
+  }, []);
 
   const [friendList, setFriendList] = useState<FriendSelect[]>([]);
 
@@ -172,10 +198,6 @@ function ChallengeCreate() {
   for (let i = 1; i <= 24; i++) {
     EndHours.push(i);
   }
-
-  // const handleChallengeNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   dispatch(setChallengeName(e.target.value));
-  // };
 
   async function onSubmit(form: any) {
     console.log('submit 실행');
@@ -213,6 +235,11 @@ function ChallengeCreate() {
 
   function invalid(err: any) {
     console.log('에러', err);
+  }
+
+  function handleFriend() {
+    dispatch(setSave(true));
+    navigate('/friendSelect');
   }
 
   return (
@@ -253,16 +280,18 @@ function ChallengeCreate() {
               </div>
             ))}
           </div>
-          <Link to={'/friendSelect'}>
-            <Button className="w-full">추가하기</Button>
-          </Link>
+          {/* <Link to={'/friendSelect'}> */}
+          <Button className="w-full" onClick={handleFriend}>
+            추가하기
+          </Button>
+          {/* </Link> */}
         </div>
         <div className="challengeName flex flex-col">
           <h2 className="py-4 text-xl font-bold">챌린지 이름</h2>
           <Input
             {...register('name')}
             onChange={(e) => {
-              setChallengeName(e.target.value);
+              handleChallengeNameChange(e.target.value);
             }}
           />
           {errors.name && <p className=" p-1 text-xs text-red-500">{errors.name.message}</p>}
@@ -271,7 +300,7 @@ function ChallengeCreate() {
         <div className="challengeTopic flex flex-col">
           <h2 className="py-4 text-xl font-bold">주제</h2>
 
-          <Select onValueChange={handleTopicChange}>
+          <Select onValueChange={handleTopicChange} value={challengeState.topic !== '' ? challengeState.topic : ''}>
             <SelectTrigger className="w-[180px]" {...register('topic')}>
               <SelectValue placeholder="주제" {...register('topic')} />
             </SelectTrigger>
@@ -429,7 +458,6 @@ function ChallengeCreate() {
         )}
 
         <Cta text={'생성하기'} onclick={handleSubmit(onSubmit, invalid)} />
-
       </form>
     </div>
   );

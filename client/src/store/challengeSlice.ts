@@ -5,70 +5,76 @@ interface ChallengeState {
   challengeName: string;
   goalMoney: number;
   date: Date | null;
-  term: number;
+  term: string;
   isPublic: boolean;
   topic: string;
   authTerm: string;
   authStart: string;
   authEnd: string;
+  save: boolean;
 }
 
 const initialState: ChallengeState = {
   challengeName: '',
   goalMoney: 0,
   date: null,
-  term: 0,
+  term: '',
   isPublic: false,
   topic: '',
   authTerm: '',
   authStart: '',
   authEnd: '',
+  save: false,
 };
 
 export const challengeSlice = createSlice({
   name: 'challenge',
   initialState,
   reducers: {
-    setChallengeName: (state, action: PayloadAction<string>) => {
+    setSliceChallengeName: (state, action: PayloadAction<string>) => {
       state.challengeName = action.payload;
     },
-    setGoalMoney: (state, action: PayloadAction<number>) => {
+    setSliceGoalMoney: (state, action: PayloadAction<number>) => {
       state.goalMoney = action.payload;
     },
-    setDate: (state, action: PayloadAction<Date | null>) => {
+    setSliceDate: (state, action: PayloadAction<Date | null>) => {
       state.date = action.payload;
     },
-    setTerm: (state, action: PayloadAction<number>) => {
+    setSliceTerm: (state, action: PayloadAction<string>) => {
       state.term = action.payload;
     },
-    setIsPublic: (state, action: PayloadAction<boolean>) => {
+    setSliceIsPublic: (state, action: PayloadAction<boolean>) => {
       state.isPublic = action.payload;
     },
-    setTopic: (state, action: PayloadAction<string>) => {
+    setSliceTopic: (state, action: PayloadAction<string>) => {
       state.topic = action.payload;
     },
-    setAuthTerm: (state, action: PayloadAction<string>) => {
+    setSliceAuthTerm: (state, action: PayloadAction<string>) => {
       state.authTerm = action.payload;
     },
-    setAuthStart: (state, action: PayloadAction<string>) => {
+    setSliceAuthStart: (state, action: PayloadAction<string>) => {
       state.authStart = action.payload;
     },
-    setAuthEnd: (state, action: PayloadAction<string>) => {
+    setSliceAuthEnd: (state, action: PayloadAction<string>) => {
       state.authEnd = action.payload;
+    },
+    setSave: (state, action: PayloadAction<boolean>) => {
+      state.save = action.payload;
     },
   },
 });
 
 export const {
-  setChallengeName,
-  setGoalMoney,
-  setDate,
-  setTerm,
-  setIsPublic,
-  setTopic,
-  setAuthTerm,
-  setAuthStart,
-  setAuthEnd,
+  setSliceChallengeName,
+  setSliceGoalMoney,
+  setSliceDate,
+  setSliceTerm,
+  setSliceIsPublic,
+  setSliceTopic,
+  setSliceAuthTerm,
+  setSliceAuthStart,
+  setSliceAuthEnd,
+  setSave,
 } = challengeSlice.actions;
 
 export default challengeSlice.reducer;
