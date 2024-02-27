@@ -149,7 +149,7 @@ export default function Main() {
           <div>전체 챌린지 보러가기</div>
         </Link>
       </div>
-      <Link to="/challengeCreate">
+      <Link to="/challengeNotice">
         <motion.div
           initial={{ scale: 1, rotate: 0 }}
           whileHover={{ scale: 1.1, rotate: 90 }}
